@@ -1,10 +1,10 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace BurstBotNET.Shared.Models.Data.Serializables;
 
 public record NewPlayer
 {
-    [JsonPropertyName("player_id")] public string PlayerId { get; init; } = "";
-    [JsonPropertyName("avatar_url")] public string? AvatarUrl { get; init; }
-    [JsonPropertyName("name")] public string Name { get; init; } = "";
+    [JsonProperty("player_id")] public string PlayerId { get; init; } = "";
+    [JsonProperty("avatar_url")] public string? AvatarUrl { get; init; }
+    [JsonProperty("name")] public string Name { get; init; } = "";
 };

@@ -1,31 +1,29 @@
 using System.Collections.Immutable;
+using BurstBotNET.Api;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
-using Microsoft.Extensions.Logging;
 
-namespace BurstBotNET;
+namespace BurstBotNET.Handlers;
 
-public class Handlers
+public partial class Handlers
 {
     private readonly GameStates _gameStates;
     private readonly Localizations _localizations;
     private readonly Commands.Commands _commands;
+    private readonly BurstApi _burstApi;
+    private readonly Config _config;
 
-    public Handlers(GameStates gameStates, Localizations localizations, Commands.Commands commands)
+    public Handlers(GameStates gameStates, Localizations localizations, Commands.Commands commands, BurstApi burstApi,
+        Config config)
     {
         _gameStates = gameStates;
         _localizations = localizations;
         _commands = commands;
-    }
-    
-    public static async Task HandleReady(DiscordClient client, ReadyEventArgs e)
-    {
-        client.Logger.LogInformation("Successfully connected to the gateway");
-        client.Logger.LogInformation("{Name}#{Discriminator} is now online", client.CurrentUser.Username,
-            client.CurrentUser.Discriminator);
+        _burstApi = burstApi;
+        _config = config;
     }
 
     public async Task HandleSlashCommands(DiscordClient client, InteractionCreateEventArgs e)
@@ -37,14 +35,14 @@ public class Handlers
             .TryGetValue(e.Interaction.Data.Name, out var globalCommand);
         if (result)
         {
-            await globalCommand!.Item2.Invoke(client, e, _gameStates);
+            await globalCommand!.Item2.Invoke(client, e, _config, _gameStates, _burstApi, _localizations);
             return;
         }
 
         result = _commands.GuildCommands
             .TryGetValue(e.Interaction.Data.Name, out var guildCommand);
         if (result)
-            await guildCommand!.Item2.Invoke(client, e, _gameStates);
+            await guildCommand!.Item2.Invoke(client, e, _config, _gameStates, _burstApi, _localizations);
     }
 
     public async Task RegisterSlashCommands(DiscordClient client, Config config)

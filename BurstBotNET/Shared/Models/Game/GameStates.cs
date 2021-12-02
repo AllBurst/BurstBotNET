@@ -5,7 +5,7 @@ namespace BurstBotNET.Shared.Models.Game;
 
 public class GameStates
 {
-    public Tuple<ConcurrentDictionary<string, BlackJackGameState>, HashSet<long>> BlackJackGameStates { get; set; } =
+    public Tuple<ConcurrentDictionary<string, BlackJackGameState>, HashSet<ulong>> BlackJackGameStates { get; set; } =
         new(
-            new ConcurrentDictionary<string, BlackJackGameState>(10, 100), new HashSet<long>());
+            new ConcurrentDictionary<string, BlackJackGameState>(10, 100), new HashSet<ulong>());
 }

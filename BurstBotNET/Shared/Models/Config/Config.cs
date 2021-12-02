@@ -5,13 +5,13 @@ namespace BurstBotNET.Shared.Models.Config;
 
 public record Config
 {
-    public string Token { get; init; }
-    public string LogLevel { get; init; }
-    public List<string> TestGuilds { get; init; }
+    public string Token { get; init; } = "";
+    public string LogLevel { get; init; } = "";
+    public List<string> TestGuilds { get; init; } = new();
     public bool RecreateGlobals { get; init; }
     public bool RecreateGuilds { get; init; }
-    public string ServerEndpoint { get; init; }
-    public string SocketEndpoint { get; init; }
+    public string ServerEndpoint { get; init; } = "";
+    public string SocketEndpoint { get; init; } = "";
     public int SocketPort { get; init; }
     public long Timeout { get; init; }
     

@@ -1,5 +1,8 @@
+using BurstBotNET.Api;
 using BurstBotNET.Shared.Interfaces;
+using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Game;
+using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -15,7 +18,10 @@ public class Ping : ISlashCommand
         Command = new DiscordApplicationCommand("ping", "Returns the latency between the bot and Discord API.");
     }
 
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, GameStates gameStates)
+    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
+        Config config,
+        GameStates gameStates,
+        BurstApi burstApi, Localizations localizations)
     {
         var startTime = DateTime.Now;
         await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,

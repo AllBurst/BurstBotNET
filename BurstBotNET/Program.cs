@@ -1,10 +1,12 @@
-﻿using BurstBotNET;
+﻿using BurstBotNET.Api;
 using BurstBotNET.Commands;
+using BurstBotNET.Handlers;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,9 +16,7 @@ static async Task MainAsync()
     var config = Config.LoadConfig();
 
     if (config == null)
-    {
         return;
-    }
 
     var configuration = new DiscordConfiguration
     {
@@ -57,12 +57,17 @@ static async Task MainAsync()
     var gameStates = new GameStates();
     var localizations = new Localizations();
     var commands = new Commands();
-    var handlers = new Handlers(gameStates, localizations, commands);
+    var burstApi = new BurstApi(config);
+    var handlers = new Handlers(gameStates, localizations, commands, burstApi, config);
     
     client.Ready += Handlers.HandleReady;
     client.InteractionCreated += handlers.HandleSlashCommands;
+    client.ClientErrored += handlers.HandleClientError;
+    client.SocketErrored += handlers.HandleSocketError;
     
+    await client.ConnectAsync(new DiscordActivity("Black Jack", ActivityType.Playing), UserStatus.Online);
     await handlers.RegisterSlashCommands(client, config);
+    await Task.Delay(-1);
 }
 
-Console.WriteLine("Hello, World!");
+MainAsync().GetAwaiter().GetResult();

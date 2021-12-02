@@ -24,7 +24,7 @@ public record BlackJackLocalization
     [JsonPropertyName("draw")] public string Draw { get; init; } = "";
     [JsonPropertyName("cardPoints")] public string CardPoints { get; init; } = "";
     [JsonPropertyName("stand")] public string Stand { get; init; } = "";
-    [JsonPropertyName("draw")] public string Raise { get; init; } = "";
+    [JsonPropertyName("raise")] public string Raise { get; init; } = "";
     [JsonPropertyName("unknown")] public string Unknown { get; init; } = "";
 
     [JsonPropertyName("raiseExcessNumber")]

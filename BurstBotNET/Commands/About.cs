@@ -1,6 +1,9 @@
+using BurstBotNET.Api;
 using BurstBotNET.Shared;
 using BurstBotNET.Shared.Interfaces;
+using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Game;
+using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -19,11 +22,14 @@ public class About : ISlashCommand
         Command = new DiscordApplicationCommand("about", "Show information about All Burst bot.");
     }
     
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, GameStates gameStates)
+    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
+        Config config,
+        GameStates gameStates,
+        BurstApi burstApi, Localizations localizations)
     {
         var botUser = client.CurrentUser;
         
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource,
+        await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
             new DiscordInteractionResponseBuilder()
                 .AddEmbed(new DiscordEmbedBuilder()
                     .WithAuthor("All Burst from Project 21", botUser.GetAvatarUrl(ImageFormat.Auto))

@@ -1,6 +1,20 @@
+using System.Net.WebSockets;
+using System.Text.Json;
+using BurstBotNET.Commands.BlackJack;
+using BurstBotNET.Shared;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Data;
+using BurstBotNET.Shared.Models.Data.Serializables;
+using BurstBotNET.Shared.Models.Game;
+using BurstBotNET.Shared.Models.Game.BlackJack;
+using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotNET.Shared.Models.Localization;
+using DSharpPlus;
+using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using Flurl.Http;
+using Microsoft.Extensions.Logging;
+using Utilities = BurstBotNET.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Api;
 
@@ -10,6 +24,24 @@ public class BurstApi
     private readonly int _socketPort;
     private readonly string _socketEndpoint;
 
+    private const Permissions DefaultPlayerPermissions
+        = Permissions.AddReactions
+          | Permissions.EmbedLinks
+          | Permissions.ReadMessageHistory
+          | Permissions.SendMessages
+          | Permissions.UseExternalEmojis
+          | Permissions.AccessChannels;
+
+    private const Permissions DefaultBotPermissions
+        = Permissions.AddReactions
+          | Permissions.EmbedLinks
+          | Permissions.ReadMessageHistory
+          | Permissions.SendMessages
+          | Permissions.UseExternalEmojis
+          | Permissions.AccessChannels
+          | Permissions.ManageChannels
+          | Permissions.ManageMessages;
+
     public BurstApi(Config config)
     {
         _serverEndpoint = config.ServerEndpoint;
@@ -17,19 +49,16 @@ public class BurstApi
         _socketPort = config.SocketPort;
     }
 
-    public async Task<TResponseType> SendRawRequest<TResponseType, TPayloadType>(string endpoint, ApiRequestType requestType, TPayloadType? payload)
+    public async Task<IFlurlResponse> SendRawRequest<TPayloadType>(string endpoint, ApiRequestType requestType, TPayloadType? payload)
     {
         var url = _serverEndpoint + endpoint;
         return requestType switch
         {
-            ApiRequestType.Get => await url.GetJsonAsync<TResponseType>(),
-            ApiRequestType.Post => await Post<TResponseType, TPayloadType>(url, payload),
+            ApiRequestType.Get => await url.GetAsync(),
+            ApiRequestType.Post => await Post(url, payload),
             _ => throw new InvalidOperationException("Unsupported raw request type.")
         };
     }
-
-    public async Task<IFlurlResponse> JoinGame<TPayloadType>(string endpoint, TPayloadType payload)
-        => await (_serverEndpoint + endpoint).PostJsonAsync(payload);
 
     public async Task<IFlurlResponse> GetReward(PlayerRewardType rewardType, long playerId)
     {
@@ -43,14 +72,99 @@ public class BurstApi
         return await endpoint.GetAsync();
     }
 
-    private static async Task<TResponseType> Post<TResponseType, TPayloadType>(string url, TPayloadType? payload)
+    public async Task WaitForGame(
+        BlackJack blackJack,
+        BlackJackJoinStatus waitingData,
+        InteractionCreateEventArgs e,
+        DiscordMember invokingMember,
+        DiscordUser botUser,
+        string description,
+        GameStates gameStates,
+        Config config,
+        Localizations localizations,
+        ILogger logger)
     {
-        if (payload == null)
+        using var socketSession = new ClientWebSocket();
+        socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
+        var cancellationTokenSource = new CancellationTokenSource();
+        await socketSession.ConnectAsync(new Uri($"wss://{_socketEndpoint}:{_socketPort}"), cancellationTokenSource.Token);
+
+        while (true)
         {
-            throw new ArgumentException("The payload cannot be null when sending POST requests.");
+            if (socketSession.State == WebSocketState.Open)
+                break;
         }
 
-        var response = await url.PostJsonAsync(payload);
-        return await response.GetJsonAsync<TResponseType>();
+        await socketSession.SendAsync(new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(waitingData)),
+            WebSocketMessageType.Text, WebSocketMessageFlags.None, cancellationTokenSource.Token);
+        
+        while (true)
+        {
+            var buffer = new byte[2048];
+            await socketSession.ReceiveAsync(new Memory<byte>(buffer), cancellationTokenSource.Token);
+            var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(buffer);
+
+            if (matchData?.StatusType == BlackJackJoinStatusType.Matched && matchData.GameId != null)
+            {
+                await e.Interaction.CreateFollowupMessageAsync(
+                    new DiscordFollowupMessageBuilder()
+                        .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,
+                            null)));
+
+                var guild = e.Interaction.Guild;
+                var textChannel = await CreatePlayerChannel(guild, invokingMember);
+                var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
+                    .ReceiveJson<RawTip>();
+                await BlackJack.AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
+                {
+                    GameId = matchData.GameId ?? "",
+                    PlayerId = invokingMember.Id,
+                    PlayerName = invokingMember.DisplayName,
+                    TextChannel = textChannel,
+                    OwnTips = invokerTip?.Amount ?? 0,
+                    BetTips = Constants.StartingBet,
+                    Order = 0,
+                    AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
+                }, gameStates);
+                _ = Task.Run(() =>
+                    blackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+            }
+        }
+    }
+
+    public async Task<DiscordChannel> CreatePlayerChannel(DiscordGuild guild, DiscordMember invokingMember)
+    {
+        while (true)
+        {
+            var category = await CreateCategory(guild);
+            var botMember = guild.CurrentMember;
+            var denyEveryone = new DiscordOverwriteBuilder(guild.EveryoneRole).Allow(Permissions.None)
+                .Deny(Permissions.AccessChannels);
+            var permitPlayer = new DiscordOverwriteBuilder(invokingMember).Allow(DefaultPlayerPermissions)
+                .Deny(Permissions.None);
+            var permitBot = new DiscordOverwriteBuilder(botMember).Allow(DefaultBotPermissions)
+                .Deny(Permissions.None);
+
+            var channel = await guild.CreateTextChannelAsync($"{invokingMember.DisplayName}-All-Burst", category, overwrites: new[] { denyEveryone, permitPlayer, permitBot });
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            if (channel == null)
+                continue;
+
+            return channel;
+        }
+    }
+
+    private async Task<DiscordChannel> CreateCategory(DiscordGuild guild)
+    {
+        return await guild.CreateChannelCategoryAsync("All-Burst-Category");
+    }
+
+    private static async Task<IFlurlResponse> Post<TPayloadType>(string url, TPayloadType? payload)
+    {
+        if (payload == null)
+            throw new ArgumentException("The payload cannot be null when sending POST requests.");
+
+        return await url.PostJsonAsync(payload);
     }
 }
