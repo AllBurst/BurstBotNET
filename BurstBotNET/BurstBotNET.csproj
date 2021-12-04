@@ -21,6 +21,8 @@
       <None Update="assets\**\*.*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Remove="Dockerfile" />
+      <None Remove=".dockerignore" />
     </ItemGroup>
 
 </Project>
