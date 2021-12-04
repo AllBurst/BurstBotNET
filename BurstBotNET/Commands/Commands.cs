@@ -1,8 +1,6 @@
-using BurstBotNET.Api;
-using BurstBotNET.Shared.Models.Config;
+using BurstBotNET.Commands.Rewards;
+using BurstBotNET.Shared.Interfaces;
 using BurstBotNET.Shared.Models.Data;
-using BurstBotNET.Shared.Models.Game;
-using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -26,39 +24,30 @@ public class Commands
     {
         var about = new About();
         var ping = new Ping();
+        var balance = new Balance();
+        var start = new Start();
+        var daily = new Daily();
+        var weekly = new Weekly();
 
         GlobalCommands =
             new CommandGroup
             {
-                {
-                    "about",
-                    new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
-                        about.Command,
-                        (client, e, state) =>
-                            about.Handle(client, e, state))
-                },
-                {
-                    "ping",
-                    new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
-                        ping.Command,
-                        (client, e, state) =>
-                            ping.Handle(client, e, state))
-                }
+                { about.ToString(), ((ISlashCommand)about).GetCommandTuple() },
+                { ping.ToString(), ((ISlashCommand)ping).GetCommandTuple() },
+                { balance.ToString(), ((ISlashCommand)balance).GetCommandTuple() },
+                { start.ToString(), ((ISlashCommand)start).GetCommandTuple() },
+                { daily.ToString(), ((ISlashCommand)daily).GetCommandTuple() },
+                { weekly.ToString(), ((ISlashCommand)weekly).GetCommandTuple() }
             };
 
         var blackJack = new BlackJack.BlackJack();
+        var help = new Help.Help();
 
         GuildCommands =
             new CommandGroup
             {
-                {
-                    "blackjack",
-                    new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
-                        blackJack.Command, (client, e, state) => blackJack.Handle(client, e, state))
-                }
+                { blackJack.ToString(), ((ISlashCommand)blackJack).GetCommandTuple() },
+                { help.ToString(), ((ISlashCommand)help).GetCommandTuple() }
             };
     }
 }

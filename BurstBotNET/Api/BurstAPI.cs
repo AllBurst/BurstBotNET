@@ -1,5 +1,7 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Net.WebSockets;
+using System.Text;
 using System.Text.Json;
 using BurstBotNET.Commands.BlackJack;
 using BurstBotNET.Shared;
@@ -21,11 +23,12 @@ namespace BurstBotNET.Api;
 
 public class BurstApi
 {
+    private const int DefaultBufferSize = 2048;
     private const string DefaultCategoryName = "All-Burst-Category";
     private readonly string _serverEndpoint;
     private readonly int _socketPort;
     private readonly string _socketEndpoint;
-    private readonly Dictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
+    private readonly ConcurrentDictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
 
     private const Permissions DefaultPlayerPermissions
         = Permissions.AddReactions
@@ -55,15 +58,22 @@ public class BurstApi
     public async Task<IFlurlResponse> SendRawRequest<TPayloadType>(string endpoint, ApiRequestType requestType, TPayloadType? payload)
     {
         var url = _serverEndpoint + endpoint;
-        return requestType switch
+        try
         {
-            ApiRequestType.Get => await url.GetAsync(),
-            ApiRequestType.Post => await Post(url, payload),
-            _ => throw new InvalidOperationException("Unsupported raw request type.")
-        };
+            return requestType switch
+            {
+                ApiRequestType.Get => await url.GetAsync(),
+                ApiRequestType.Post => await Post(url, payload),
+                _ => throw new InvalidOperationException("Unsupported raw request type.")
+            };
+        }
+        catch (FlurlHttpException ex)
+        {
+            return ex.Call.Response;
+        }
     }
 
-    public async Task<IFlurlResponse> GetReward(PlayerRewardType rewardType, long playerId)
+    public async Task<IFlurlResponse> GetReward(PlayerRewardType rewardType, ulong playerId)
     {
         var endpoint = rewardType switch
         {
@@ -72,7 +82,14 @@ public class BurstApi
             _ => throw new ArgumentException("Incorrect reward type.")
         };
 
-        return await endpoint.GetAsync();
+        try
+        {
+            return await endpoint.GetAsync();
+        }
+        catch (FlurlHttpException ex)
+        {
+            return ex.Call.Response;
+        }
     }
 
     public async Task WaitForGame(
@@ -90,7 +107,8 @@ public class BurstApi
         using var socketSession = new ClientWebSocket();
         socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
         using var cancellationTokenSource = new CancellationTokenSource();
-        await socketSession.ConnectAsync(new Uri($"wss://{_socketEndpoint}:{_socketPort}"), cancellationTokenSource.Token);
+        var url = new Uri(_socketPort != 0 ? $"ws://{_socketEndpoint}:{_socketPort}" : $"wss://{_socketEndpoint}");
+        await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
 
         while (true)
         {
@@ -99,13 +117,15 @@ public class BurstApi
         }
 
         await socketSession.SendAsync(new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(waitingData)),
-            WebSocketMessageType.Text, WebSocketMessageFlags.None, cancellationTokenSource.Token);
+            WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, cancellationTokenSource.Token);
         
         while (true)
         {
-            var buffer = new byte[2048];
-            await socketSession.ReceiveAsync(new Memory<byte>(buffer), cancellationTokenSource.Token);
-            var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(buffer);
+            var buffer = new byte[DefaultBufferSize];
+            var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), cancellationTokenSource.Token);
+            var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
+            logger.LogDebug("Payload text: {Text}", payloadText);
+            var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(payloadText);
 
             if (matchData?.StatusType == BlackJackJoinStatusType.Matched && matchData.GameId != null)
             {
@@ -130,7 +150,8 @@ public class BurstApi
                     AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
                 }, gameStates);
                 _ = Task.Run(() =>
-                    blackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+                    BlackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+                break;
             }
         }
     }
@@ -173,7 +194,7 @@ public class BurstApi
         }
 
         var channels = await guild.GetChannelsAsync();
-        _guildChannelList.Add(guild.Id, channels.ToList());
+        _guildChannelList.GetOrAdd(guild.Id, channels.ToList());
         
         var retrievedCategory = channels
             .Where(c => c.Name.ToLowerInvariant().Equals(DefaultCategoryName.ToLowerInvariant()))

@@ -2,5 +2,6 @@ namespace BurstBotNET.Shared;
 
 public enum BurstColor
 {
-    Kotlin = 0x7f52ff
+    CSharp = 0x3a0093,
+    Burst = 0x786fa8
 }

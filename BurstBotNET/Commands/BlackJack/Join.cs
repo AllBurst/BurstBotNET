@@ -21,10 +21,14 @@ public partial class BlackJack
     private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
     {
         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
-        var mentionedPlayers = e.Interaction.Data.Options.ToImmutableList()[0]
-            .Options
-            .Select(opt => (ulong)opt.Value)
-            .ToList();
+        var mentionedPlayers = new List<ulong>();
+        var options = e.Interaction.Data.Options.ToImmutableList();
+        if (options[0].Options != null && options[0].Options.Any())
+        {
+            mentionedPlayers.AddRange(options[0]
+                .Options
+                .Select(opt => (ulong)opt.Value));
+        }
         var invoker = e.Interaction.User;
         mentionedPlayers.Add(invoker.Id);
         

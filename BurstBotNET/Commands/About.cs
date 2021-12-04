@@ -28,10 +28,12 @@ public class About : ISlashCommand
             new DiscordInteractionResponseBuilder()
                 .AddEmbed(new DiscordEmbedBuilder()
                     .WithAuthor("All Burst from Project 21", botUser.GetAvatarUrl(ImageFormat.Auto))
-                    .WithColor((int)BurstColor.Kotlin)
+                    .WithColor((int)BurstColor.Burst)
                     .WithThumbnail(Constants.BurstLogo)
                     .WithDescription(AboutText.Value)
                     .WithFooter("All Burst: Development 1.0 | 2021-12-01")
                     .Build()));
     }
+
+    public override string ToString() => "about";
 }

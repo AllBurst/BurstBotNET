@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using BurstBotNET.Shared.Extensions;
 using BurstBotNET.Shared.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -34,7 +35,7 @@ public record Card : IValueRealizable<ImmutableList<int>>
         return values.ToImmutableList();
     }
 
-    public override string ToString()
+    public string ToStringSimple()
     {
         var n = Number switch
         {
@@ -45,5 +46,18 @@ public record Card : IValueRealizable<ImmutableList<int>>
             _ => Number.ToString()
         };
         return $"{Suit} {n}";
+    }
+
+    public override string ToString()
+    {
+        var n = Number switch
+        {
+            1 => "A",
+            11 => "J",
+            12 => "Q",
+            13 => "K",
+            _ => Number.ToString()
+        };
+        return $"{Suit.ToSuitPretty()} {n}";
     }
 }

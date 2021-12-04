@@ -31,10 +31,9 @@ public partial class BlackJack
     private static readonly ImmutableList<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
         .ToImmutableList();
-    //private readonly ArrayPool<byte> _channelBuffer = ArrayPool<byte>.Create();
-    private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
-    public async Task StartListening(
+    public static async Task StartListening(
         string gameId,
         Config config,
         GameStates gameStates,
@@ -49,8 +48,12 @@ public partial class BlackJack
             .GetOrAdd(gameId, new BlackJackGameState());
         logger.LogDebug("Game progress: {Progress}", state.Progress);
 
+        await Semaphore.WaitAsync();
         if (state.Progress != BlackJackGameProgress.NotAvailable)
+        {
+            Semaphore.Release();
             return;
+        }
 
         state.Progress = BlackJackGameProgress.Starting;
         state.GameId = gameId;
@@ -71,6 +74,7 @@ public partial class BlackJack
                 break;
         
         logger.LogDebug("WebSocket session for BlackJack successfully established");
+        Semaphore.Release();
 
         while (!state.Progress.Equals(BlackJackGameProgress.Closed))
         {
@@ -169,6 +173,7 @@ public partial class BlackJack
             return;
 
         var channel = e.Message.Channel;
+        await Help.Help.GenericBlackJackHelp(channel, e.Message.Content, localizations);
 
         if (state.CurrentPlayerOrder != playerState.Order)
             return;
@@ -310,29 +315,6 @@ public partial class BlackJack
             return SocketOperation.Close;
         }
 
-        /*var buffer = _channelBuffer.Rent(DefaultBufferSize);
-        var socketResponse = await socketSession.ReceiveAsync(buffer.AsMemory(), token);
-
-        try
-        {
-            var bufferText = Encoding.UTF8.GetString(buffer[..socketResponse.Count]);
-            _channelBuffer.Return(buffer, true);
-            var deserializedStateData = JsonSerializer.Deserialize<RawBlackJackGameState>(bufferText);
-            var previousHighestBet = state.HighestBet;
-            var __ = UpdateGameState(state, deserializedStateData, guild);
-
-            var result = state.Players.TryGetValue(playerId, out var playerState);
-            if (!result)
-                return SocketOperation.Continue;
-
-            await SendProgressMessages(state, playerState, requestType, previousHighestBet, deserializedStateData,
-                localizations, logger);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("An error occurred when deserializing received response from WebSocket: {Exception}", ex.Message);
-        }*/
-
         return SocketOperation.Continue;
     }
 
@@ -357,7 +339,8 @@ public partial class BlackJack
             if (!state.Progress.Equals(deserializedIncomingData.Progress))
             {
                 logger.LogDebug("Progress changed, handling progress change...");
-                var progressChangeResult = await HandleProgressChange(deserializedIncomingData, state, gameStates, localizations);
+                var progressChangeResult =
+                    await HandleProgressChange(deserializedIncomingData, state, gameStates, guild, localizations);
                 Semaphore.Release();
                 logger.LogDebug("Semaphore released");
                 return progressChangeResult;
@@ -371,17 +354,17 @@ public partial class BlackJack
                 return false;
 
             result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
-                out var requestType);
+                out var previousRequestType);
             if (!result)
                 return false;
 
-            await SendProgressMessages(state, playerState, requestType, previousHighestBet,
+            await SendProgressMessages(state, playerState, previousRequestType, previousHighestBet,
                 deserializedIncomingData, localizations, logger);
 
             Semaphore.Release();
             logger.LogDebug("Semaphore released");
         }
-        catch (JsonSerializationException _)
+        catch (JsonSerializationException)
         {
             return false;
         }
@@ -399,13 +382,31 @@ public partial class BlackJack
         return true;
     }
 
-    private static async Task<bool> HandleProgressChange(RawBlackJackGameState deserializedIncomingData, BlackJackGameState state,
-        GameStates gameStates, Localizations localizations)
+    private static async Task<bool> HandleProgressChange(
+        RawBlackJackGameState deserializedIncomingData,
+        BlackJackGameState state,
+        GameStates gameStates,
+        DiscordGuild guild,
+        Localizations localizations)
     {
         if (deserializedIncomingData.Progress.Equals(BlackJackGameProgress.Ending))
             return true;
 
+        {
+            var playerId = deserializedIncomingData.PreviousPlayerId;
+            var result = state.Players.TryGetValue(playerId, out var playerState);
+            if (result)
+            {
+                result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
+                    out var previousRequestType);
+                if (result)
+                    await SendPreviousPlayerActionMessage(state, playerState!,
+                        previousRequestType, localizations, state.HighestBet);
+            }
+        }
+
         state.Progress = deserializedIncomingData.Progress;
+        await UpdateGameState(state, deserializedIncomingData, guild);
         var firstPlayer = state.Players
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
@@ -482,7 +483,7 @@ public partial class BlackJack
                 .Replace("{totalRewards}", deserializedEndingData.TotalRewards.ToString());
 
             var embed = new DiscordEmbedBuilder()
-                .WithColor((int)BurstColor.Kotlin)
+                .WithColor((int)BurstColor.Burst)
                 .WithTitle(localization.WinTitle.Replace("{playerName}", winner.PlayerName))
                 .WithDescription(description)
                 .WithImageUrl(winner.AvatarUrl);
@@ -494,7 +495,7 @@ public partial class BlackJack
                 embed = embed.AddField(
                     playerState.PlayerName,
                     localization.TotalPointsMessage.Replace("{cardNames}", cardNames)
-                        .Replace("{totalPoints}", totalPoints.ToString()));
+                        .Replace("{totalPoints}", totalPoints.ToString()), true);
             }
 
             foreach (var (_, playerState) in state.Players)
@@ -515,6 +516,8 @@ public partial class BlackJack
         }
         catch (Exception ex)
         {
+            if (string.IsNullOrWhiteSpace(messageContent))
+                return;
             logger.LogError("An exception occurred when handling ending result: {Exception}", ex.Message);
             logger.LogError("Message content: {Content}", messageContent);
         }
@@ -554,7 +557,7 @@ public partial class BlackJack
     private static async Task SendProgressMessages(
         BlackJackGameState state,
         BlackJackPlayerState? playerState,
-        BlackJackInGameRequestType requestType,
+        BlackJackInGameRequestType previousRequestType,
         int previousHighestBet,
         RawBlackJackGameState? deserializedStateData,
         Localizations localizations,
@@ -574,14 +577,14 @@ public partial class BlackJack
                     state,
                     playerState,
                     state.CurrentPlayerOrder,
-                    requestType,
+                    previousRequestType,
                     deserializedStateData.Progress,
                     localizations
                 );
                 break;
             case BlackJackGameProgress.Gambling:
                 await SendGamblingMessage(
-                    state, playerState, state.CurrentPlayerOrder, requestType, previousHighestBet,
+                    state, playerState, state.CurrentPlayerOrder, previousRequestType, previousHighestBet,
                     deserializedStateData.Progress, localizations);
                 break;
         }
@@ -606,7 +609,7 @@ public partial class BlackJack
 
         await playerState.TextChannel.SendMessageAsync(new DiscordEmbedBuilder()
             .WithAuthor(playerState.PlayerName, iconUrl: playerState.AvatarUrl)
-            .WithColor((int)BurstColor.Kotlin)
+            .WithColor((int)BurstColor.Burst)
             .WithTitle(localization.InitialMessageTitle)
             .WithDescription(description)
             .WithFooter(localization.InitialMessageFooter)
@@ -617,7 +620,7 @@ public partial class BlackJack
         BlackJackGameState gameState,
         BlackJackPlayerState? playerState,
         int currentPlayerOrder,
-        BlackJackInGameRequestType requestType,
+        BlackJackInGameRequestType previousRequestType,
         BlackJackGameProgress nextProgress,
         Localizations localizations
     )
@@ -625,34 +628,7 @@ public partial class BlackJack
         if (playerState == null || playerState.TextChannel == null)
             return;
 
-        var previousPlayerOrder = playerState.Order;
-        var lastCard = playerState.Cards.Last();
-        var currentPoints = playerState.Cards.GetRealizedValues(100);
-        var localization = localizations.GetLocalization();
-        
-        foreach (var (_, state) in gameState.Players)
-        {
-            if (state.TextChannel == null)
-                continue;
-            
-            var isPreviousPlayer = previousPlayerOrder == state.Order;
-            var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : playerState.PlayerName;
-
-            var authorText = BuildPlayerActionMessage(localizations, requestType, pronoun, lastCard);
-
-            var embed = new DiscordEmbedBuilder()
-                .WithAuthor(authorText, iconUrl: playerState.AvatarUrl)
-                .WithColor((int)BurstColor.Kotlin);
-
-            if (isPreviousPlayer)
-            {
-                embed = embed
-                    .WithDescription(
-                        localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString()));
-            }
-
-            await state.TextChannel.SendMessageAsync(embed);
-        }
+        await SendPreviousPlayerActionMessage(gameState, playerState, previousRequestType, localizations);
 
         if (!gameState.Progress.Equals(nextProgress)) 
             return;
@@ -675,7 +651,7 @@ public partial class BlackJack
         BlackJackGameState gameState,
         BlackJackPlayerState? playerState,
         int currentPlayerOrder,
-        BlackJackInGameRequestType requestType,
+        BlackJackInGameRequestType previousRequestType,
         int previousHighestBet,
         BlackJackGameProgress nextProgress,
         Localizations localizations
@@ -684,44 +660,8 @@ public partial class BlackJack
         if (playerState == null || playerState.TextChannel == null)
             return;
 
-        var previousPlayerOrder = playerState.Order;
-        var currentPoints = playerState.Cards.GetRealizedValues(100);
-        var localization = localizations.GetLocalization();
-
-        foreach (var (_, state) in gameState.Players)
-        {
-            if (state.TextChannel == null)
-                continue;
-
-            var isPreviousPlayer = previousPlayerOrder == state.Order;
-            var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : playerState.PlayerName;
-
-            var verb = isPreviousPlayer
-                ? localization.GenericWords.ParticipateSecond
-                : localization.GenericWords.ParticipateThird;
-
-            var authorText = BuildPlayerActionMessage(
-                localizations, requestType, pronoun,
-                highestBet: gameState.HighestBet,
-                verb: verb,
-                diff: gameState.HighestBet - previousHighestBet);
-
-            var embed = new DiscordEmbedBuilder()
-                .WithAuthor(authorText, null, playerState.AvatarUrl)
-                .WithColor((int)BurstColor.Kotlin);
-
-            if (isPreviousPlayer)
-            {
-                embed = embed.WithDescription(
-                    localization.BlackJack.CardPoints.Replace(
-                        "{cardPoints}",
-                        currentPoints.ToString()
-                    )
-                );
-            }
-
-            await state.TextChannel.SendMessageAsync(embed);
-        }
+        await SendPreviousPlayerActionMessage(gameState, playerState, previousRequestType,
+            localizations, previousHighestBet);
 
         if (gameState.Progress != nextProgress)
             return;
@@ -740,6 +680,79 @@ public partial class BlackJack
         }
     }
 
+    private static async Task SendPreviousPlayerActionMessage(
+        BlackJackGameState gameState,
+        BlackJackPlayerState playerState,
+        BlackJackInGameRequestType previousRequestType,
+        Localizations localizations,
+        int? previousHighestBet = null)
+    {
+        var previousPlayerOrder = playerState.Order;
+        var localization = localizations.GetLocalization();
+        
+        foreach (var (_, state) in gameState.Players)
+        {
+            if (state.TextChannel == null)
+                continue;
+            
+            var isPreviousPlayer = previousPlayerOrder == state.Order;
+            var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : playerState.PlayerName;
+            var currentPoints = playerState.Cards.GetRealizedValues(100);
+
+            switch (gameState.Progress)
+            {
+                case BlackJackGameProgress.Progressing:
+                {
+                    var lastCard = playerState.Cards.Last();
+                    var authorText = BuildPlayerActionMessage(localizations, previousRequestType, pronoun, lastCard);
+
+                    var embed = new DiscordEmbedBuilder()
+                        .WithAuthor(authorText, iconUrl: playerState.AvatarUrl)
+                        .WithColor((int)BurstColor.Burst);
+
+                    if (isPreviousPlayer)
+                    {
+                        embed = embed
+                            .WithDescription(
+                                localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString()));
+                    }
+
+                    await state.TextChannel.SendMessageAsync(embed);
+                    break;
+                }
+                case BlackJackGameProgress.Gambling:
+                {
+                    var verb = isPreviousPlayer
+                        ? localization.GenericWords.ParticipateSecond
+                        : localization.GenericWords.ParticipateThird;
+                    
+                    var authorText = BuildPlayerActionMessage(
+                        localizations, previousRequestType, pronoun,
+                        highestBet: gameState.HighestBet,
+                        verb: verb,
+                        diff: gameState.HighestBet - previousHighestBet!.Value);
+
+                    var embed = new DiscordEmbedBuilder()
+                        .WithAuthor(authorText, null, playerState.AvatarUrl)
+                        .WithColor((int)BurstColor.Burst);
+
+                    if (isPreviousPlayer)
+                    {
+                        embed = embed.WithDescription(
+                            localization.BlackJack.CardPoints.Replace(
+                                "{cardPoints}",
+                                currentPoints.ToString()
+                            )
+                        );
+                    }
+
+                    await state.TextChannel.SendMessageAsync(embed);
+                    break;
+                }
+            }
+        }
+    }
+
     private static string BuildPlayerActionMessage(
         Localizations localizations,
         BlackJackInGameRequestType requestType,
@@ -755,7 +768,7 @@ public partial class BlackJack
         {
             BlackJackInGameRequestType.Draw => localization.Draw
                 .Replace("{playerName}", playerName)
-                .Replace("{lastCard}", lastCard!.ToString()),
+                .Replace("{lastCard}", lastCard!.ToStringSimple()),
             BlackJackInGameRequestType.Stand => localization.Stand
                 .Replace("{playerName}", playerName),
             BlackJackInGameRequestType.Call => localization.Call
@@ -806,7 +819,7 @@ public partial class BlackJack
 
         var embed = new DiscordEmbedBuilder()
             .WithAuthor(currentPlayer.PlayerName, iconUrl: currentPlayer.AvatarUrl)
-            .WithColor((int)BurstColor.Kotlin)
+            .WithColor((int)BurstColor.Burst)
             .WithTitle(title);
 
         switch (gameState.Progress)

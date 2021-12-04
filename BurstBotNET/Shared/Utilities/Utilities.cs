@@ -25,7 +25,7 @@ public static class Utilities
         return new DiscordEmbedBuilder()
             .WithAuthor(invokingMember.DisplayName, iconUrl: invokingMember.GetAvatarUrl(ImageFormat.Auto))
             .WithTitle(title)
-            .WithColor((int)BurstColor.Kotlin)
+            .WithColor((int)BurstColor.Burst)
             .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
             .WithDescription(actualDescription)
             .WithFooter(joinStatus.StatusType == BlackJackJoinStatusType.Start

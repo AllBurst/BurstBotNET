@@ -26,4 +26,6 @@ public class Ping : ISlashCommand
         await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
             .WithContent($"Pong!!\nLatency is {latency.Milliseconds} ms"));
     }
+
+    public override string ToString() => "ping";
 }

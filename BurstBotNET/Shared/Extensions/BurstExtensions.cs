@@ -5,6 +5,11 @@ namespace BurstBotNET.Shared.Extensions;
 
 public static class BurstExtensions
 {
+    private const string SpadeIcon = "<:burst_spade:910826637657010226>";
+    private const string HeartIcon = "<:burst_heart:910826529511051284>";
+    private const string DiamondIcon = "<:burst_diamond:910826609576140821>";
+    private const string ClubIcon = "<:burst_club:910826578336948234>";
+    
     public static int GetValue(this IEnumerable<Card> cards)
     {
         return cards.Sum(card => card.GetValue().Max());
@@ -49,4 +54,14 @@ public static class BurstExtensions
         var value = cardList.GetValue();
         return rem.HasValue ? value % rem.Value : value;
     }
+
+    public static string ToSuitPretty(this Suit suit)
+        => suit switch
+        {
+            Suit.Spade => $"{SpadeIcon} {suit}",
+            Suit.Heart => $"{HeartIcon} {suit}",
+            Suit.Diamond => $"{DiamondIcon} {suit}",
+            Suit.Club => $"{ClubIcon} {suit}",
+            _ => ""
+        };
 }

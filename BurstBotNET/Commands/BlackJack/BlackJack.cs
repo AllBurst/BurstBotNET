@@ -52,4 +52,5 @@ public partial class BlackJack : ISlashCommand
         State state)
         => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
 
+    public override string ToString() => "blackjack";
 }
