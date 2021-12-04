@@ -2,17 +2,14 @@ using System.Collections.Immutable;
 using System.Net;
 using BurstBotNET.Api;
 using BurstBotNET.Shared;
-using BurstBotNET.Shared.Models.Config;
+using BurstBotNET.Shared.Models.Data;
 using BurstBotNET.Shared.Models.Data.Serializables;
-using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Game.BlackJack;
 using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotNET.Shared.Models.Game.Serializables;
-using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity.Extensions;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
 using Utilities = BurstBotNET.Shared.Utilities.Utilities;
@@ -21,7 +18,7 @@ namespace BurstBotNET.Commands.BlackJack;
 
 public partial class BlackJack
 {
-    private async Task Join(DiscordClient client, InteractionCreateEventArgs e, Config config, GameStates gameStates, BurstApi burstApi, Localizations localizations)
+    private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
     {
         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var mentionedPlayers = e.Interaction.Data.Options.ToImmutableList()[0]
@@ -36,7 +33,7 @@ public partial class BlackJack
         var getTipTasks = mentionedPlayers
             .Select(async p =>
             {
-                var response = await burstApi.SendRawRequest<object>($"/tip/{p}", ApiRequestType.Get, null);
+                var response = await state.BurstApi.SendRawRequest<object>($"/tip/{p}", ApiRequestType.Get, null);
 
                 if (!response.ResponseMessage.IsSuccessStatusCode)
                     return null;
@@ -66,7 +63,7 @@ public partial class BlackJack
             ClientType = ClientType.Discord,
             PlayerIds = mentionedPlayers
         };
-        var joinGameResponse = await burstApi.SendRawRequest("/black_jack/join", ApiRequestType.Post, joinRequest);
+        var joinGameResponse = await state.BurstApi.SendRawRequest("/black_jack/join", ApiRequestType.Post, joinRequest);
         var responseCode = joinGameResponse.ResponseMessage.StatusCode;
 
         var playerCount = mentionedPlayers.Count;
@@ -103,8 +100,9 @@ public partial class BlackJack
                 {
                     try
                     {
-                        await burstApi.WaitForGame(this, joinStatus, e, invokingMember, botUser, "", gameStates, config,
-                            localizations, client.Logger);
+                        await state.BurstApi.WaitForGame(this, joinStatus, e, invokingMember, botUser, "",
+                            state.GameStates, state.Config,
+                            state.Localizations, client.Logger);
                     }
                     catch (Exception ex)
                     {
@@ -118,8 +116,7 @@ public partial class BlackJack
                 reply = reply.AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, "", null));
                 var message = await e.Interaction.EditOriginalResponseAsync(reply);
                 await HandleStartGameReactions(e, message, invokingMember, botUser, joinStatus, mentionedPlayers,
-                    gameStates,
-                    burstApi, localizations, config, client.Logger);
+                    state, client.Logger);
                 break;
             }
             case BlackJackJoinStatusType.Matched:
@@ -128,7 +125,7 @@ public partial class BlackJack
                 await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
                     .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, "", null)));
                 var guild = e.Interaction.Guild;
-                var textChannel = await burstApi.CreatePlayerChannel(guild, invokingMember);
+                var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
                 await AddBlackJackPlayerState(
                     joinStatus.GameId ?? "",
                     new BlackJackPlayerState
@@ -141,10 +138,10 @@ public partial class BlackJack
                         BetTips = Constants.StartingBet,
                         Order = 0,
                         AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
-                    }, gameStates
+                    }, state.GameStates
                 );
                 _ = Task.Run(() =>
-                    StartListening(joinStatus.GameId ?? "", config, gameStates, guild, localizations, client.Logger));
+                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates, guild, state.Localizations, client.Logger));
                 break;
             }
             default:
@@ -159,10 +156,7 @@ public partial class BlackJack
         DiscordUser botUser,
         BlackJackJoinStatus joinStatus,
         IEnumerable<ulong> playerIds,
-        GameStates gameStates,
-        BurstApi burstApi,
-        Localizations localizations,
-        Config config,
+        State state,
         ILogger logger)
     {
         await originalMessage.CreateReactionAsync(Constants.CheckMarkEmoji);
@@ -170,43 +164,36 @@ public partial class BlackJack
         await originalMessage.CreateReactionAsync(Constants.PlayMarkEmoji);
         var secondsRemained = 30;
         var cancelled = false;
-        var fastStarted = false;
         var confirmedUsers = new List<DiscordUser>();
 
         while (secondsRemained > 0)
         {
-            var reactions = await originalMessage.CollectReactionsAsync(TimeSpan.FromSeconds(5));
-            foreach (var reaction in reactions)
-            {
-                if (reaction.Emoji.Equals(Constants.CheckMarkEmoji))
-                {
-                    confirmedUsers = reaction.Users
-                        .Where(u => !u.IsBot && playerIds.Contains(u.Id))
-                        .ToList();
-                }
-                else if (reaction.Emoji.Equals(Constants.CrossMarkEmoji))
-                {
-                    var cancelledUsers = reaction.Users
-                        .Where(u => !u.IsBot)
-                        .Select(u => u.Id)
-                        .ToImmutableList();
-                    if (!cancelledUsers.Contains(invokingMember.Id)) continue;
-                    await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                        .WithContent("❌ Cancelled."));
-                    cancelled = true;
-                }
-                else if (reaction.Emoji.Equals(Constants.PlayMarkEmoji))
-                {
-                    var fastStartUsers = reaction
-                        .Users
-                        .Where(u => !u.IsBot)
-                        .Select(u => u.Id)
-                        .ToImmutableList();
-                    fastStarted = fastStartUsers.Contains(invokingMember.Id);
-                }
-            }
+            await Task.Delay(TimeSpan.FromSeconds(5));
             
-            if (cancelled || fastStarted)
+            confirmedUsers = (await originalMessage
+                .GetReactionsAsync(Constants.CheckMarkEmoji))
+                .Where(u => !u.IsBot && playerIds.Contains(u.Id))
+                .ToList();
+
+            var cancelledUsers = (await originalMessage
+                    .GetReactionsAsync(Constants.CrossMarkEmoji))
+                .Where(u => !u.IsBot)
+                .Select(u => u.Id)
+                .ToImmutableList();
+            if (cancelledUsers.Contains(invokingMember.Id))
+            {
+                await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                    .WithContent("❌ Cancelled."));
+                cancelled = true;
+                break;
+            }
+
+            var fastStartUsers = (await originalMessage
+                    .GetReactionsAsync(Constants.PlayMarkEmoji))
+                .Where(u => !u.IsBot)
+                .Select(u => u.Id)
+                .ToImmutableList();
+            if (fastStartUsers.Contains(invokingMember.Id))
                 break;
 
             secondsRemained -= 5;
@@ -227,7 +214,7 @@ public partial class BlackJack
         var guild = e.Interaction.Guild;
         var members = await Task.WhenAll(confirmedUsers
             .Select(async u => await guild.GetMemberAsync(u.Id)));
-        var matchData = await burstApi
+        var matchData = await state.BurstApi
             .SendRawRequest("/black_jack/join/confirm", ApiRequestType.Post, new BlackJackJoinStatus
             {
                 StatusType = BlackJackJoinStatusType.Start,
@@ -237,10 +224,10 @@ public partial class BlackJack
 
         foreach (var member in members)
         {
-            var playerTip = await burstApi
+            var playerTip = await state.BurstApi
                 .SendRawRequest<object>($"/tip/{member.Id}", ApiRequestType.Get, null)
                 .ReceiveJson<RawTip>();
-            var textChannel = await burstApi.CreatePlayerChannel(guild, member);
+            var textChannel = await state.BurstApi.CreatePlayerChannel(guild, member);
             await AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
             {
                 AvatarUrl = member.AvatarUrl,
@@ -251,16 +238,16 @@ public partial class BlackJack
                 TextChannel = textChannel,
                 OwnTips = playerTip.Amount,
                 Order = 0
-            }, gameStates);
+            }, state.GameStates);
             _ = Task.Run(() =>
-                StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+                StartListening(matchData.GameId ?? "", state.Config, state.GameStates, guild, state.Localizations, logger));
         }
     }
 
     private static string HandleSuccessfulJoinStatus(IFlurlResponse response, string unit, ref BlackJackJoinStatus joinStatus)
     {
         var newJoinStatus = response.GetJsonAsync<BlackJackJoinStatus>().GetAwaiter().GetResult();
-        joinStatus = joinStatus! with
+        joinStatus = joinStatus with
         {
             StatusType = newJoinStatus.StatusType,
             SocketIdentifier = newJoinStatus.SocketIdentifier,

@@ -1,5 +1,6 @@
 using BurstBotNET.Api;
 using BurstBotNET.Shared.Models.Config;
+using BurstBotNET.Shared.Models.Data;
 using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
@@ -8,7 +9,7 @@ using DSharpPlus.EventArgs;
 
 namespace BurstBotNET.Commands;
 
-using CommandGroup = Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, Config, GameStates, BurstApi, Localizations, Task>>>;
+using CommandGroup = Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>>;
 
 public class Commands
 {
@@ -32,18 +33,18 @@ public class Commands
                 {
                     "about",
                     new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, Config, GameStates, BurstApi, Localizations, Task>>(
+                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
                         about.Command,
-                        (client, e, config, gameStates, burstApi, localizations) =>
-                            about.Handle(client, e, config, gameStates, burstApi, localizations))
+                        (client, e, state) =>
+                            about.Handle(client, e, state))
                 },
                 {
                     "ping",
                     new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, Config, GameStates, BurstApi, Localizations, Task>>(
+                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
                         ping.Command,
-                        (client, e, config, gameStates, burstApi, localizations) =>
-                            ping.Handle(client, e, config, gameStates, burstApi, localizations))
+                        (client, e, state) =>
+                            ping.Handle(client, e, state))
                 }
             };
 
@@ -55,8 +56,8 @@ public class Commands
                 {
                     "blackjack",
                     new Tuple<DiscordApplicationCommand,
-                        Func<DiscordClient, InteractionCreateEventArgs, Config, GameStates, BurstApi, Localizations, Task>>(
-                        blackJack.Command, (client, e, config, gameStates, burstApi, localizations) => blackJack.Handle(client, e, config, gameStates, burstApi, localizations))
+                        Func<DiscordClient, InteractionCreateEventArgs, State, Task>>(
+                        blackJack.Command, (client, e, state) => blackJack.Handle(client, e, state))
                 }
             };
     }

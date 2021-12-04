@@ -1,22 +1,26 @@
-using BurstBotNET.Api;
 using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Config;
-using BurstBotNET.Shared.Models.Game;
-using BurstBotNET.Shared.Models.Localization;
+using BurstBotNET.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Newtonsoft.Json;
 
 namespace BurstBotNET.Commands.BlackJack;
 
-using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, Config, GameStates, BurstApi, Localizations, Task>>;
+using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>;
 
 public partial class BlackJack : ISlashCommand
 {
     public DiscordApplicationCommand Command { get; init; }
 
+    private static readonly JsonSerializerSettings JsonSerializerSettings = new();
     private readonly CommandGroup _dispatchables;
 
+    static BlackJack()
+    {
+        JsonSerializerSettings.MissingMemberHandling = MissingMemberHandling.Error;
+    }
+    
     public BlackJack()
     {
         Command = new DiscordApplicationCommand("blackjack", "Play a black jack-like game with other people.", new[]
@@ -45,9 +49,7 @@ public partial class BlackJack : ISlashCommand
     }
 
     public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
-        Config config,
-        GameStates gameStates,
-        BurstApi burstApi, Localizations localizations)
-        => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, config, gameStates, burstApi, localizations);
+        State state)
+        => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
 
 }

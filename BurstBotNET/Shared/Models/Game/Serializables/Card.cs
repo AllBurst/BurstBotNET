@@ -1,14 +1,26 @@
 using System.Collections.Immutable;
+using System.Text.Json.Serialization;
 using BurstBotNET.Shared.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace BurstBotNET.Shared.Models.Game.Serializables;
 
 public record Card : IValueRealizable<ImmutableList<int>>
 {
-    [JsonProperty("suit")] public Suit Suit { get; init; }
-    [JsonProperty("number")] public int Number { get; init; }
-    [JsonProperty("is_front")] public bool IsFront { get; init; }
+    [JsonPropertyName("suit")]
+    [JsonProperty("suit")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+    public Suit Suit { get; init; }
+    
+    [JsonPropertyName("number")]
+    [JsonProperty("number")]
+    public int Number { get; init; }
+    
+    [JsonPropertyName("is_front")]
+    [JsonProperty("is_front")]
+    public bool IsFront { get; init; }
 
     public ImmutableList<int> GetValue()
     {

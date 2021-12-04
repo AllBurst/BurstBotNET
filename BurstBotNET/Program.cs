@@ -2,6 +2,7 @@
 using BurstBotNET.Commands;
 using BurstBotNET.Handlers;
 using BurstBotNET.Shared.Models.Config;
+using BurstBotNET.Shared.Models.Data;
 using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
@@ -58,12 +59,19 @@ static async Task MainAsync()
     var localizations = new Localizations();
     var commands = new Commands();
     var burstApi = new BurstApi(config);
-    var handlers = new Handlers(gameStates, localizations, commands, burstApi, config);
+    var handlers = new Handlers(commands, new State
+    {
+        BurstApi = burstApi,
+        Config = config,
+        GameStates = gameStates,
+        Localizations = localizations
+    });
     
     client.Ready += Handlers.HandleReady;
     client.InteractionCreated += handlers.HandleSlashCommands;
     client.ClientErrored += handlers.HandleClientError;
     client.SocketErrored += handlers.HandleSocketError;
+    client.MessageCreated += handlers.HandleMessage;
     
     await client.ConnectAsync(new DiscordActivity("Black Jack", ActivityType.Playing), UserStatus.Online);
     await handlers.RegisterSlashCommands(client, config);

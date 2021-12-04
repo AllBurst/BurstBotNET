@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Net.WebSockets;
 using System.Text.Json;
 using BurstBotNET.Commands.BlackJack;
@@ -20,9 +21,11 @@ namespace BurstBotNET.Api;
 
 public class BurstApi
 {
+    private const string DefaultCategoryName = "All-Burst-Category";
     private readonly string _serverEndpoint;
     private readonly int _socketPort;
     private readonly string _socketEndpoint;
+    private readonly Dictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
 
     private const Permissions DefaultPlayerPermissions
         = Permissions.AddReactions
@@ -86,7 +89,7 @@ public class BurstApi
     {
         using var socketSession = new ClientWebSocket();
         socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-        var cancellationTokenSource = new CancellationTokenSource();
+        using var cancellationTokenSource = new CancellationTokenSource();
         await socketSession.ConnectAsync(new Uri($"wss://{_socketEndpoint}:{_socketPort}"), cancellationTokenSource.Token);
 
         while (true)
@@ -157,7 +160,31 @@ public class BurstApi
 
     private async Task<DiscordChannel> CreateCategory(DiscordGuild guild)
     {
-        return await guild.CreateChannelCategoryAsync("All-Burst-Category");
+        if (_guildChannelList.ContainsKey(guild.Id))
+        {
+            var category = _guildChannelList[guild.Id]
+                .Where(c => c.Name.ToLowerInvariant().Equals(DefaultCategoryName.ToLowerInvariant()))
+                .ToImmutableList();
+            if (!category.IsEmpty) return category.First();
+            
+            var newCategory = await guild.CreateChannelCategoryAsync(DefaultCategoryName);
+            _guildChannelList[guild.Id].Add(newCategory);
+            return newCategory;
+        }
+
+        var channels = await guild.GetChannelsAsync();
+        _guildChannelList.Add(guild.Id, channels.ToList());
+        
+        var retrievedCategory = channels
+            .Where(c => c.Name.ToLowerInvariant().Equals(DefaultCategoryName.ToLowerInvariant()))
+            .ToImmutableList();
+        if (!retrievedCategory.IsEmpty) return retrievedCategory.First();
+        
+        {
+            var newCategory = await guild.CreateChannelCategoryAsync(DefaultCategoryName);
+            _guildChannelList[guild.Id].Add(newCategory);
+            return newCategory;
+        }
     }
 
     private static async Task<IFlurlResponse> Post<TPayloadType>(string url, TPayloadType? payload)

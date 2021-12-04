@@ -6,9 +6,9 @@ namespace BurstBotNET.Shared.Models.Localization;
 
 public record Localization
 {
-    public string? Bot { get; init; }
-    public BlackJackLocalization? BlackJack { get; init; }
-    public GenericWords? GenericWords { get; init; }
+    public string Bot { get; init; } = null!;
+    public BlackJackLocalization BlackJack { get; private init; } = null!;
+    public GenericWords GenericWords { get; private init; } = null!;
 
     public static Localization FromRaw(RawLocalization rawLocalization)
         => new()

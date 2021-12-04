@@ -3,5 +3,5 @@
   "participateSecond": "participate",
   "participateThird": "participates",
   "possessiveSecond": "Your",
-  "possessiveThird": "His"
+  "possessiveThird": "{playerName}'s"
 }

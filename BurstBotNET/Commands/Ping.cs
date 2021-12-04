@@ -1,8 +1,5 @@
-using BurstBotNET.Api;
 using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Config;
-using BurstBotNET.Shared.Models.Game;
-using BurstBotNET.Shared.Models.Localization;
+using BurstBotNET.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -19,9 +16,7 @@ public class Ping : ISlashCommand
     }
 
     public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
-        Config config,
-        GameStates gameStates,
-        BurstApi burstApi, Localizations localizations)
+        State state)
     {
         var startTime = DateTime.Now;
         await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,

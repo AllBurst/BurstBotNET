@@ -1,8 +1,6 @@
 using System.Collections.Immutable;
-using BurstBotNET.Api;
 using BurstBotNET.Shared.Models.Config;
-using BurstBotNET.Shared.Models.Game;
-using BurstBotNET.Shared.Models.Localization;
+using BurstBotNET.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 
@@ -10,20 +8,13 @@ namespace BurstBotNET.Handlers;
 
 public partial class Handlers
 {
-    private readonly GameStates _gameStates;
-    private readonly Localizations _localizations;
     private readonly Commands.Commands _commands;
-    private readonly BurstApi _burstApi;
-    private readonly Config _config;
+    private readonly State _state;
 
-    public Handlers(GameStates gameStates, Localizations localizations, Commands.Commands commands, BurstApi burstApi,
-        Config config)
+    public Handlers(Commands.Commands commands, State state)
     {
-        _gameStates = gameStates;
-        _localizations = localizations;
         _commands = commands;
-        _burstApi = burstApi;
-        _config = config;
+        _state = state;
     }
 
     public async Task HandleSlashCommands(DiscordClient client, InteractionCreateEventArgs e)
@@ -35,14 +26,14 @@ public partial class Handlers
             .TryGetValue(e.Interaction.Data.Name, out var globalCommand);
         if (result)
         {
-            await globalCommand!.Item2.Invoke(client, e, _config, _gameStates, _burstApi, _localizations);
+            await globalCommand!.Item2.Invoke(client, e, _state);
             return;
         }
 
         result = _commands.GuildCommands
             .TryGetValue(e.Interaction.Data.Name, out var guildCommand);
         if (result)
-            await guildCommand!.Item2.Invoke(client, e, _config, _gameStates, _burstApi, _localizations);
+            await guildCommand!.Item2.Invoke(client, e, _state);
     }
 
     public async Task RegisterSlashCommands(DiscordClient client, Config config)
