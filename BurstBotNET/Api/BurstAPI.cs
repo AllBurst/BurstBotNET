@@ -124,11 +124,12 @@ public class BurstApi
             var buffer = new byte[DefaultBufferSize];
             var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), cancellationTokenSource.Token);
             var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-            logger.LogDebug("Payload text: {Text}", payloadText);
             var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(payloadText);
 
             if (matchData?.StatusType == BlackJackJoinStatusType.Matched && matchData.GameId != null)
             {
+                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Received match data from server.",
+                    cancellationTokenSource.Token);
                 await e.Interaction.CreateFollowupMessageAsync(
                     new DiscordFollowupMessageBuilder()
                         .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,

@@ -49,9 +49,11 @@ public partial class BlackJack
         logger.LogDebug("Game progress: {Progress}", state.Progress);
 
         await Semaphore.WaitAsync();
+        logger.LogDebug("Semaphore acquired in StartListening");
         if (state.Progress != BlackJackGameProgress.NotAvailable)
         {
             Semaphore.Release();
+            logger.LogDebug("Semaphore released in StartListening (game state existed)");
             return;
         }
 
@@ -75,6 +77,7 @@ public partial class BlackJack
         
         logger.LogDebug("WebSocket session for BlackJack successfully established");
         Semaphore.Release();
+        logger.LogDebug("Semaphore released in StartListening (game state created)");
 
         while (!state.Progress.Equals(BlackJackGameProgress.Closed))
         {
@@ -334,7 +337,7 @@ public partial class BlackJack
                 return false;
 
             await Semaphore.WaitAsync();
-            logger.LogDebug("Semaphore acquired");
+            logger.LogDebug("Semaphore acquired in HandleProgress");
 
             if (!state.Progress.Equals(deserializedIncomingData.Progress))
             {
@@ -342,7 +345,7 @@ public partial class BlackJack
                 var progressChangeResult =
                     await HandleProgressChange(deserializedIncomingData, state, gameStates, guild, localizations);
                 Semaphore.Release();
-                logger.LogDebug("Semaphore released");
+                logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
             
@@ -362,7 +365,7 @@ public partial class BlackJack
                 deserializedIncomingData, localizations, logger);
 
             Semaphore.Release();
-            logger.LogDebug("Semaphore released");
+            logger.LogDebug("Semaphore released after sending progress messages");
         }
         catch (JsonSerializationException)
         {
@@ -375,7 +378,7 @@ public partial class BlackJack
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
             Semaphore.Release();
-            logger.LogDebug("Semaphore released");
+            logger.LogDebug("Semaphore released in an exception");
             return false;
         }
 
