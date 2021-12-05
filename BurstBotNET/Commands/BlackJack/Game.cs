@@ -349,7 +349,7 @@ public partial class BlackJack
             var previousHighestBet = state.HighestBet;
             await UpdateGameState(state, deserializedIncomingData, guild);
             var playerId = deserializedIncomingData.PreviousPlayerId;
-            var result = state.Players.TryGetValue(playerId, out var playerState);
+            var result = state.Players.TryGetValue(playerId, out var previousPlayerState);
             if (!result)
                 return false;
 
@@ -358,7 +358,7 @@ public partial class BlackJack
             if (!result)
                 return false;
 
-            await SendProgressMessages(state, playerState, previousRequestType, previousHighestBet,
+            await SendProgressMessages(state, previousPlayerState, previousRequestType, previousHighestBet,
                 deserializedIncomingData, localizations, logger);
 
             Semaphore.Release();
@@ -389,21 +389,21 @@ public partial class BlackJack
         DiscordGuild guild,
         Localizations localizations)
     {
-        if (deserializedIncomingData.Progress.Equals(BlackJackGameProgress.Ending))
-            return true;
-
         {
             var playerId = deserializedIncomingData.PreviousPlayerId;
-            var result = state.Players.TryGetValue(playerId, out var playerState);
+            var result = deserializedIncomingData.Players.TryGetValue(playerId, out var previousPlayerState);
             if (result)
             {
                 result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
                     out var previousRequestType);
                 if (result)
-                    await SendPreviousPlayerActionMessage(state, playerState!,
+                    await SendPreviousPlayerActionMessage(state, previousPlayerState!,
                         previousRequestType, localizations, state.HighestBet);
             }
         }
+        
+        if (deserializedIncomingData.Progress.Equals(BlackJackGameProgress.Ending))
+            return true;
 
         state.Progress = deserializedIncomingData.Progress;
         await UpdateGameState(state, deserializedIncomingData, guild);
@@ -556,7 +556,7 @@ public partial class BlackJack
 
     private static async Task SendProgressMessages(
         BlackJackGameState state,
-        BlackJackPlayerState? playerState,
+        BlackJackPlayerState? previousPlayerState,
         BlackJackInGameRequestType previousRequestType,
         int previousHighestBet,
         RawBlackJackGameState? deserializedStateData,
@@ -570,12 +570,12 @@ public partial class BlackJack
         switch (state.Progress)
         {
             case BlackJackGameProgress.Starting:
-                await SendInitialMessage(playerState, localizations, logger);
+                await SendInitialMessage(previousPlayerState, localizations, logger);
                 break;
             case BlackJackGameProgress.Progressing:
                 await SendDrawingMessage(
                     state,
-                    playerState,
+                    previousPlayerState,
                     state.CurrentPlayerOrder,
                     previousRequestType,
                     deserializedStateData.Progress,
@@ -584,7 +584,7 @@ public partial class BlackJack
                 break;
             case BlackJackGameProgress.Gambling:
                 await SendGamblingMessage(
-                    state, playerState, state.CurrentPlayerOrder, previousRequestType, previousHighestBet,
+                    state, previousPlayerState, state.CurrentPlayerOrder, previousRequestType, previousHighestBet,
                     deserializedStateData.Progress, localizations);
                 break;
         }
@@ -618,22 +618,22 @@ public partial class BlackJack
 
     private static async Task SendDrawingMessage(
         BlackJackGameState gameState,
-        BlackJackPlayerState? playerState,
+        BlackJackPlayerState? previousPlayerState,
         int currentPlayerOrder,
         BlackJackInGameRequestType previousRequestType,
         BlackJackGameProgress nextProgress,
         Localizations localizations
     )
     {
-        if (playerState == null || playerState.TextChannel == null)
+        if (previousPlayerState == null || previousPlayerState.TextChannel == null)
             return;
 
-        await SendPreviousPlayerActionMessage(gameState, playerState, previousRequestType, localizations);
+        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType, localizations);
 
         if (!gameState.Progress.Equals(nextProgress)) 
             return;
 
-        var currentPlayer = gameState
+        var nextPlayer = gameState
             .Players
             .First(pair => pair.Value.Order == currentPlayerOrder)
             .Value;
@@ -642,14 +642,14 @@ public partial class BlackJack
             if (state.Value.TextChannel == null)
                 continue;
             
-            var embed = BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState, localizations);
+            var embed = BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState, localizations);
             await state.Value.TextChannel.SendMessageAsync(embed);
         }
     }
 
     private static async Task SendGamblingMessage(
         BlackJackGameState gameState,
-        BlackJackPlayerState? playerState,
+        BlackJackPlayerState? previousPlayerState,
         int currentPlayerOrder,
         BlackJackInGameRequestType previousRequestType,
         int previousHighestBet,
@@ -657,10 +657,10 @@ public partial class BlackJack
         Localizations localizations
     )
     {
-        if (playerState == null || playerState.TextChannel == null)
+        if (previousPlayerState == null || previousPlayerState.TextChannel == null)
             return;
 
-        await SendPreviousPlayerActionMessage(gameState, playerState, previousRequestType,
+        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
             localizations, previousHighestBet);
 
         if (gameState.Progress != nextProgress)
@@ -682,12 +682,12 @@ public partial class BlackJack
 
     private static async Task SendPreviousPlayerActionMessage(
         BlackJackGameState gameState,
-        BlackJackPlayerState playerState,
+        RawBlackJackPlayerState previousPlayerState,
         BlackJackInGameRequestType previousRequestType,
         Localizations localizations,
         int? previousHighestBet = null)
     {
-        var previousPlayerOrder = playerState.Order;
+        var previousPlayerOrder = previousPlayerState.Order;
         var localization = localizations.GetLocalization();
         
         foreach (var (_, state) in gameState.Players)
@@ -696,18 +696,18 @@ public partial class BlackJack
                 continue;
             
             var isPreviousPlayer = previousPlayerOrder == state.Order;
-            var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : playerState.PlayerName;
-            var currentPoints = playerState.Cards.GetRealizedValues(100);
+            var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : previousPlayerState.PlayerName;
+            var currentPoints = previousPlayerState.Cards.GetRealizedValues(100);
 
             switch (gameState.Progress)
             {
                 case BlackJackGameProgress.Progressing:
                 {
-                    var lastCard = playerState.Cards.Last();
+                    var lastCard = previousPlayerState.Cards.Last();
                     var authorText = BuildPlayerActionMessage(localizations, previousRequestType, pronoun, lastCard);
 
                     var embed = new DiscordEmbedBuilder()
-                        .WithAuthor(authorText, iconUrl: playerState.AvatarUrl)
+                        .WithAuthor(authorText, iconUrl: previousPlayerState.AvatarUrl)
                         .WithColor((int)BurstColor.Burst);
 
                     if (isPreviousPlayer)
@@ -733,7 +733,7 @@ public partial class BlackJack
                         diff: gameState.HighestBet - previousHighestBet!.Value);
 
                     var embed = new DiscordEmbedBuilder()
-                        .WithAuthor(authorText, null, playerState.AvatarUrl)
+                        .WithAuthor(authorText, null, previousPlayerState.AvatarUrl)
                         .WithColor((int)BurstColor.Burst);
 
                     if (isPreviousPlayer)
