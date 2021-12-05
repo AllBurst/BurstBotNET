@@ -128,7 +128,7 @@ public class BurstApi
 
             if (matchData?.StatusType == BlackJackJoinStatusType.Matched && matchData.GameId != null)
             {
-                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Received match data from server.",
+                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
                     cancellationTokenSource.Token);
                 await e.Interaction.CreateFollowupMessageAsync(
                     new DiscordFollowupMessageBuilder()
