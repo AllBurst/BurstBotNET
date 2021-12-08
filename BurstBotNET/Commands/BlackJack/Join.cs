@@ -72,7 +72,7 @@ public partial class BlackJack
 
         var playerCount = mentionedPlayers.Count;
         var unit = playerCount == 1 ? "player" : "players";
-        var joinStatus = new BlackJackJoinStatus();
+        BlackJackJoinStatus? joinStatus = null;
 
         var reply = new DiscordWebhookBuilder()
             .WithContent(responseCode switch
@@ -104,7 +104,7 @@ public partial class BlackJack
                 {
                     try
                     {
-                        await state.BurstApi.WaitForGame(this, joinStatus, e, invokingMember, botUser, "",
+                        await state.BurstApi.WaitForGame(joinStatus, e, invokingMember, botUser, "",
                             state.GameStates, state.Config,
                             state.Localizations, client.Logger);
                     }
@@ -153,7 +153,7 @@ public partial class BlackJack
         }
     }
 
-    private async Task HandleStartGameReactions(
+    private static async Task HandleStartGameReactions(
         InteractionCreateEventArgs e,
         DiscordMessage originalMessage,
         DiscordMember invokingMember,
@@ -248,10 +248,11 @@ public partial class BlackJack
         }
     }
 
-    private static string HandleSuccessfulJoinStatus(IFlurlResponse response, string unit, ref BlackJackJoinStatus joinStatus)
+    // ReSharper disable once RedundantAssignment
+    private static string HandleSuccessfulJoinStatus(IFlurlResponse response, string unit, ref BlackJackJoinStatus? joinStatus)
     {
         var newJoinStatus = response.GetJsonAsync<BlackJackJoinStatus>().GetAwaiter().GetResult();
-        joinStatus = joinStatus with
+        joinStatus = new BlackJackJoinStatus
         {
             StatusType = newJoinStatus.StatusType,
             SocketIdentifier = newJoinStatus.SocketIdentifier,

@@ -79,6 +79,8 @@ public partial class BlackJack
         Semaphore.Release();
         logger.LogDebug("Semaphore released in StartListening (game state created)");
 
+        var timeout = config.Timeout;
+
         while (!state.Progress.Equals(BlackJackGameProgress.Closed))
         {
             var channelTask = RunChannelTask(socketSession,
@@ -94,8 +96,10 @@ public partial class BlackJack
                 localizations,
                 logger,
                 cancellationTokenSource);
+
+            var timeoutTask = RunTimeoutTask(timeout, state, logger);
             
-            await (await Task.WhenAny(channelTask, broadcastTask));
+            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
         }
         
         logger.LogDebug("Cleaning up resource...");
@@ -285,6 +289,13 @@ public partial class BlackJack
         buffer.Return(rentBuffer, true);
         if (!await HandleProgress(receiveContent, state, gameStates, localizations, guild, logger))
             await HandleEndingResult(receiveContent, state, localizations, logger);
+    }
+
+    private static async Task RunTimeoutTask(long timeout, BlackJackGameState state, ILogger logger)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(timeout));
+        logger.LogDebug("Game timed out due to inactivity");
+        state.Progress = BlackJackGameProgress.Closed;
     }
 
     private static async Task<SocketOperation> HandleChannelMessage(ulong playerId,

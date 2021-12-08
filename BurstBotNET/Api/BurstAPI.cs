@@ -92,9 +92,7 @@ public class BurstApi
         }
     }
 
-    public async Task WaitForGame(
-        BlackJack blackJack,
-        BlackJackJoinStatus waitingData,
+    public async Task WaitForGame(BlackJackJoinStatus waitingData,
         InteractionCreateEventArgs e,
         DiscordMember invokingMember,
         DiscordUser botUser,
@@ -121,39 +119,56 @@ public class BurstApi
         
         while (true)
         {
-            var buffer = new byte[DefaultBufferSize];
-            var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), cancellationTokenSource.Token);
-            var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-            var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(payloadText);
-
-            if (matchData?.StatusType == BlackJackJoinStatusType.Matched && matchData.GameId != null)
+            var receiveTask = ReceiveMatchData(socketSession, cancellationTokenSource.Token);
+            var timeoutTask = Task.Run(async () =>
             {
-                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
-                    cancellationTokenSource.Token);
-                await e.Interaction.CreateFollowupMessageAsync(
-                    new DiscordFollowupMessageBuilder()
-                        .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,
-                            null)));
-
-                var guild = e.Interaction.Guild;
-                var textChannel = await CreatePlayerChannel(guild, invokingMember);
-                var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
-                    .ReceiveJson<RawTip>();
-                await BlackJack.AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
+                await Task.Delay(TimeSpan.FromSeconds(60));
+                return new BlackJackJoinStatus
                 {
-                    GameId = matchData.GameId ?? "",
-                    PlayerId = invokingMember.Id,
-                    PlayerName = invokingMember.DisplayName,
-                    TextChannel = textChannel,
-                    OwnTips = invokerTip?.Amount ?? 0,
-                    BetTips = Constants.StartingBet,
-                    Order = 0,
-                    AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
-                }, gameStates);
-                _ = Task.Run(() =>
-                    BlackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+                    SocketIdentifier = null,
+                    GameId = null,
+                    StatusType = BlackJackJoinStatusType.TimedOut
+                };
+            }, cancellationTokenSource.Token);
+
+            var matchData = await await Task.WhenAny(new[] { receiveTask!, timeoutTask });
+
+            if (matchData.StatusType.Equals(BlackJackJoinStatusType.TimedOut))
+            {
+                const string message = "Timeout because no match game is found";
+                logger.LogDebug(message);
+                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
+                    cancellationTokenSource.Token);
                 break;
             }
+
+            if (matchData.StatusType != BlackJackJoinStatusType.Matched || matchData.GameId == null) continue;
+            
+            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
+                cancellationTokenSource.Token);
+            await e.Interaction.CreateFollowupMessageAsync(
+                new DiscordFollowupMessageBuilder()
+                    .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,
+                        null)));
+
+            var guild = e.Interaction.Guild;
+            var textChannel = await CreatePlayerChannel(guild, invokingMember);
+            var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
+                .ReceiveJson<RawTip>();
+            await BlackJack.AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
+            {
+                GameId = matchData.GameId ?? "",
+                PlayerId = invokingMember.Id,
+                PlayerName = invokingMember.DisplayName,
+                TextChannel = textChannel,
+                OwnTips = invokerTip?.Amount ?? 0,
+                BetTips = Constants.StartingBet,
+                Order = 0,
+                AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
+            }, gameStates);
+            _ = Task.Run(() =>
+                BlackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+            break;
         }
     }
 
@@ -215,5 +230,14 @@ public class BurstApi
             throw new ArgumentException("The payload cannot be null when sending POST requests.");
 
         return await url.PostJsonAsync(payload);
+    }
+
+    private static async Task<BlackJackJoinStatus?> ReceiveMatchData(WebSocket socketSession, CancellationToken token)
+    {
+        var buffer = new byte[DefaultBufferSize];
+        var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
+        var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
+        var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(payloadText);
+        return matchData;
     }
 }
