@@ -193,11 +193,18 @@ public partial class BlackJack
         {
             case BlackJackGameProgress.Progressing:
             {
-                await SendGenericData(state, playerState, splitContent switch
+                switch (splitContent[0])
                 {
-                    var x when x[0] == "draw" => BlackJackInGameRequestType.Draw,
-                    var x when x[0] == "stand" => BlackJackInGameRequestType.Stand
-                });
+                    case "draw":
+                        await SendGenericData(state, playerState,
+                            BlackJackInGameRequestType.Draw);
+                        break;
+                    case "stand":
+                        await SendGenericData(state, playerState,
+                            BlackJackInGameRequestType.Stand);
+                        break;
+                }
+
                 break;
             }
             case BlackJackGameProgress.Gambling:
@@ -240,9 +247,14 @@ public partial class BlackJack
                         }
                     }
                 }
-
                 break;
             }
+            case BlackJackGameProgress.NotAvailable:
+            case BlackJackGameProgress.Starting:
+            case BlackJackGameProgress.Ending:
+            case BlackJackGameProgress.Closed:
+            default:
+                break;
         }
     }
 
@@ -322,14 +334,12 @@ public partial class BlackJack
         await socketSession.SendAsync(new ReadOnlyMemory<byte>(payload), WebSocketMessageType.Text,
             true, token);
 
-        if (requestType.Equals(BlackJackInGameRequestType.Close))
-        {
-            state.Progress = BlackJackGameProgress.Closed;
-            logger.LogDebug("Received close response. Closing the session...");
-            return SocketOperation.Close;
-        }
+        if (!requestType.Equals(BlackJackInGameRequestType.Close)) return SocketOperation.Continue;
+        
+        state.Progress = BlackJackGameProgress.Closed;
+        logger.LogDebug("Received close response. Closing the session...");
+        return SocketOperation.Close;
 
-        return SocketOperation.Continue;
     }
 
     private static async Task<bool> HandleProgress(
