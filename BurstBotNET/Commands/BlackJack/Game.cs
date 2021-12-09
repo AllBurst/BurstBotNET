@@ -328,8 +328,15 @@ public partial class BlackJack
 
         var requestTypeString = InGameRequestTypes
             .Where(s => payloadText.Contains(s))
-            .First(s => Enum.TryParse<BlackJackInGameRequestType>(s, out var _));
-        var _ = Enum.TryParse<BlackJackInGameRequestType>(requestTypeString, out var requestType);
+            .FirstOrDefault(s => Enum.TryParse<BlackJackInGameRequestType>(s, out var _));
+
+        if (string.IsNullOrWhiteSpace(requestTypeString))
+            return SocketOperation.Continue;
+        
+        var parseResult = Enum.TryParse<BlackJackInGameRequestType>(requestTypeString, out var requestType);
+
+        if (!parseResult)
+            return SocketOperation.Continue;
 
         await socketSession.SendAsync(new ReadOnlyMemory<byte>(payload), WebSocketMessageType.Text,
             true, token);
@@ -339,7 +346,6 @@ public partial class BlackJack
         state.Progress = BlackJackGameProgress.Closed;
         logger.LogDebug("Received close response. Closing the session...");
         return SocketOperation.Close;
-
     }
 
     private static async Task<bool> HandleProgress(
