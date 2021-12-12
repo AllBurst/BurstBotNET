@@ -16,4 +16,5 @@ public class BlackJackGameState
     public int HighestBet { get; set; }
     public int CurrentTurn { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public SemaphoreSlim Semaphore = new(1, 1);
 }

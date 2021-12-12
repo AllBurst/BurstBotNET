@@ -31,7 +31,6 @@ public partial class BlackJack
     private static readonly ImmutableList<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
         .ToImmutableList();
-    private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
     public static async Task StartListening(
         string gameId,
@@ -48,11 +47,11 @@ public partial class BlackJack
             .GetOrAdd(gameId, new BlackJackGameState());
         logger.LogDebug("Game progress: {Progress}", state.Progress);
 
-        await Semaphore.WaitAsync();
+        await state.Semaphore.WaitAsync();
         logger.LogDebug("Semaphore acquired in StartListening");
         if (state.Progress != BlackJackGameProgress.NotAvailable)
         {
-            Semaphore.Release();
+            state.Semaphore.Release();
             logger.LogDebug("Semaphore released in StartListening (game state existed)");
             return;
         }
@@ -76,7 +75,7 @@ public partial class BlackJack
                 break;
         
         logger.LogDebug("WebSocket session for BlackJack successfully established");
-        Semaphore.Release();
+        state.Semaphore.Release();
         logger.LogDebug("Semaphore released in StartListening (game state created)");
 
         var timeout = config.Timeout;
@@ -363,7 +362,7 @@ public partial class BlackJack
             if (deserializedIncomingData == null)
                 return false;
 
-            await Semaphore.WaitAsync();
+            await state.Semaphore.WaitAsync();
             logger.LogDebug("Semaphore acquired in HandleProgress");
 
             if (!state.Progress.Equals(deserializedIncomingData.Progress))
@@ -371,7 +370,7 @@ public partial class BlackJack
                 logger.LogDebug("Progress changed, handling progress change...");
                 var progressChangeResult =
                     await HandleProgressChange(deserializedIncomingData, state, gameStates, guild, localizations);
-                Semaphore.Release();
+                state.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
@@ -391,7 +390,7 @@ public partial class BlackJack
             await SendProgressMessages(state, previousPlayerState, previousRequestType, previousHighestBet,
                 deserializedIncomingData, localizations, logger);
 
-            Semaphore.Release();
+            state.Semaphore.Release();
             logger.LogDebug("Semaphore released after sending progress messages");
         }
         catch (JsonSerializationException)
@@ -404,7 +403,7 @@ public partial class BlackJack
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
-            Semaphore.Release();
+            state.Semaphore.Release();
             logger.LogDebug("Semaphore released in an exception");
             return false;
         }
@@ -572,7 +571,6 @@ public partial class BlackJack
         BlackJackPlayerState playerState,
         int raiseBet)
     {
-        Console.WriteLine("Received raise action.");
         var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
             new BlackJackInGameRequest
             {
@@ -596,6 +594,8 @@ public partial class BlackJack
     {
         if (deserializedStateData == null)
             return;
+        
+        logger.LogDebug("Sending progress messages...");
         
         switch (state.Progress)
         {
@@ -655,18 +655,19 @@ public partial class BlackJack
         Localizations localizations
     )
     {
-        if (previousPlayerState == null || previousPlayerState.TextChannel == null)
+        if (previousPlayerState == null)
             return;
-
+        
         await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType, localizations);
 
         if (!gameState.Progress.Equals(nextProgress)) 
             return;
-
+        
         var nextPlayer = gameState
             .Players
             .First(pair => pair.Value.Order == currentPlayerOrder)
             .Value;
+        
         foreach (var state in gameState.Players)
         {
             if (state.Value.TextChannel == null)
@@ -687,7 +688,7 @@ public partial class BlackJack
         Localizations localizations
     )
     {
-        if (previousPlayerState == null || previousPlayerState.TextChannel == null)
+        if (previousPlayerState == null)
             return;
 
         await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
