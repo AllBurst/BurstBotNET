@@ -6,7 +6,7 @@ namespace BurstBotNET.Shared.Models.Localization;
 
 public class Localizations
 {
-    private const string LocalizationPath = "assets/localization/localizations.yaml";
+    private const string LocalizationPath = "Assets/localization/localizations.yaml";
     private readonly Localization _japanese;
     private readonly Localization _english;
     private readonly Localization _chinese;

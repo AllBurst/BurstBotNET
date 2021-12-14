@@ -1,0 +1,3 @@
+bot: "Assets/localization/bot/help_en.txt"
+blackJack: "Assets/localization/blackJack/EN/blackjackLocalization.json"
+generic: "Assets/localization/generic/genericWords-en.json"

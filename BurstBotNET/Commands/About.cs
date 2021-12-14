@@ -11,7 +11,7 @@ public class About : ISlashCommand
 {
     public DiscordApplicationCommand Command { get; init; }
 
-    private const string AboutTextPath = "assets/localization/bot/about.txt";
+    private const string AboutTextPath = "Assets/localization/bot/about.txt";
     private static readonly Lazy<string> AboutText = new(() => File.ReadAllText(AboutTextPath));
 
     public About()
@@ -27,11 +27,11 @@ public class About : ISlashCommand
         await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
             new DiscordInteractionResponseBuilder()
                 .AddEmbed(new DiscordEmbedBuilder()
-                    .WithAuthor("All Burst from Project 21", botUser.GetAvatarUrl(ImageFormat.Auto))
+                    .WithAuthor("Jack of All Trades", botUser.GetAvatarUrl(ImageFormat.Auto))
                     .WithColor((int)BurstColor.Burst)
                     .WithThumbnail(Constants.BurstLogo)
                     .WithDescription(AboutText.Value)
-                    .WithFooter("All Burst: Development 1.0 | 2021-12-01")
+                    .WithFooter("All Burst: Development 1.0 | 2021-12-14")
                     .Build()));
     }
 

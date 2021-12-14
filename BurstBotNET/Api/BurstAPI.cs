@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using BurstBotNET.Commands.BlackJack;
+using BurstBotNET.Services;
 using BurstBotNET.Shared;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Data;
@@ -97,9 +98,7 @@ public class BurstApi
         DiscordMember invokingMember,
         DiscordUser botUser,
         string description,
-        GameStates gameStates,
-        Config config,
-        Localizations localizations,
+        State state,
         ILogger logger)
     {
         using var socketSession = new ClientWebSocket();
@@ -165,9 +164,13 @@ public class BurstApi
                 BetTips = Constants.StartingBet,
                 Order = 0,
                 AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
-            }, gameStates);
+            }, state.GameStates);
             _ = Task.Run(() =>
-                BlackJack.StartListening(matchData.GameId ?? "", config, gameStates, guild, localizations, logger));
+                BlackJack.StartListening(matchData.GameId ?? "",
+                    state.Config,
+                    state.GameStates, guild,
+                    state.DeckService,
+                    state.Localizations, logger));
             break;
         }
     }
