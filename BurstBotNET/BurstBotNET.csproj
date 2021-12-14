@@ -15,6 +15,7 @@
       <PackageReference Include="Flurl" Version="3.0.2" />
       <PackageReference Include="Flurl.Http" Version="3.2.0" />
       <PackageReference Include="SkiaSharp" Version="2.88.0-preview.155" />
+      <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.0-preview.155" />
       <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 

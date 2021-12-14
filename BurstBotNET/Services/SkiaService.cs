@@ -31,7 +31,7 @@ public static class SkiaService
         canvas.Scale(ratio, ratio);
 
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Png, DefaultQuality).SaveTo(stream);
+        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, DefaultQuality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }

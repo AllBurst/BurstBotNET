@@ -29,7 +29,7 @@ public partial class BlackJack
     }
 
     private const int DefaultBufferSize = 4096;
-    private const string DefaultOutputFileName = "output.png";
+    private const string DefaultOutputFileName = "output.jpg";
     private const string DefaultAttachmentUri = $"attachment://{DefaultOutputFileName}";
     private static readonly ImmutableList<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
@@ -379,7 +379,8 @@ public partial class BlackJack
             {
                 logger.LogDebug("Progress changed, handling progress change...");
                 var progressChangeResult =
-                    await HandleProgressChange(deserializedIncomingData, state, gameStates, guild, localizations);
+                    await HandleProgressChange(deserializedIncomingData, state, gameStates, guild,
+                        deckService, localizations);
                 state.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
@@ -426,6 +427,7 @@ public partial class BlackJack
         BlackJackGameState state,
         GameStates gameStates,
         DiscordGuild guild,
+        DeckService deckService,
         Localizations localizations)
     {
         {
@@ -465,6 +467,7 @@ public partial class BlackJack
                         deserializedIncomingData.CurrentPlayerOrder,
                         firstPlayer,
                         state,
+                        deckService,
                         localizations
                     );
                     await playerState.Value.TextChannel.SendMessageAsync(embed);
@@ -486,6 +489,7 @@ public partial class BlackJack
                         deserializedIncomingData.CurrentPlayerOrder,
                         firstPlayer,
                         state,
+                        deckService,
                         localizations
                     );
                     await playerState.Value.TextChannel.SendMessageAsync(embed);
@@ -620,13 +624,14 @@ public partial class BlackJack
                     state.CurrentPlayerOrder,
                     previousRequestType,
                     deserializedStateData.Progress,
+                    deckService,
                     localizations
                 );
                 break;
             case BlackJackGameProgress.Gambling:
                 await SendGamblingMessage(
                     state, previousPlayerState, state.CurrentPlayerOrder, previousRequestType, previousHighestBet,
-                    deserializedStateData.Progress, localizations);
+                    deserializedStateData.Progress, deckService, localizations);
                 break;
         }
     }
@@ -661,7 +666,8 @@ public partial class BlackJack
                 .WithFooter(localization.InitialMessageFooter)
                 .WithThumbnail(Constants.BurstLogo)
                 .WithImageUrl(DefaultAttachmentUri))
-            .WithFile(DefaultOutputFileName, SkiaService.RenderDeck(deckService, playerState.Cards)));
+            .WithFile(DefaultOutputFileName, SkiaService.RenderDeck(deckService, 
+                playerState.Cards.Select(c => c with { IsFront = true }))));
     }
 
     private static async Task SendDrawingMessage(
@@ -670,6 +676,7 @@ public partial class BlackJack
         int currentPlayerOrder,
         BlackJackInGameRequestType previousRequestType,
         BlackJackGameProgress nextProgress,
+        DeckService deckService,
         Localizations localizations
     )
     {
@@ -691,7 +698,8 @@ public partial class BlackJack
             if (state.Value.TextChannel == null)
                 continue;
             
-            var embed = BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState, localizations);
+            var embed = BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState,
+                deckService, localizations);
             await state.Value.TextChannel.SendMessageAsync(embed);
         }
     }
@@ -703,6 +711,7 @@ public partial class BlackJack
         BlackJackInGameRequestType previousRequestType,
         int previousHighestBet,
         BlackJackGameProgress nextProgress,
+        DeckService deckService,
         Localizations localizations
     )
     {
@@ -724,7 +733,8 @@ public partial class BlackJack
             if (state.Value.TextChannel == null)
                 continue;
 
-            var embed = BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState, localizations);
+            var embed = BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState,
+                deckService, localizations);
             await state.Value.TextChannel.SendMessageAsync(embed);
         }
     }
@@ -838,11 +848,12 @@ public partial class BlackJack
         };
     }
 
-    private static DiscordEmbedBuilder BuildTurnMessage(
+    private static DiscordMessageBuilder BuildTurnMessage(
         KeyValuePair<ulong, BlackJackPlayerState> entry,
         int currentPlayerOrder,
         BlackJackPlayerState currentPlayer,
         BlackJackGameState gameState,
+        DeckService deckService,
         Localizations localizations)
     {
         var localization = localizations.GetLocalization();
@@ -869,7 +880,12 @@ public partial class BlackJack
         var embed = new DiscordEmbedBuilder()
             .WithAuthor(currentPlayer.PlayerName, iconUrl: currentPlayer.AvatarUrl)
             .WithColor((int)BurstColor.Burst)
-            .WithTitle(title);
+            .WithTitle(title)
+            .WithImageUrl(DefaultAttachmentUri);
+
+        var messageBuilder = new DiscordMessageBuilder()
+            .WithFile(DefaultOutputFileName, SkiaService.RenderDeck(deckService,
+                currentPlayer.Cards.Select(c => isCurrentPlayer ? c with { IsFront = true } : c)));
 
         switch (gameState.Progress)
         {
@@ -895,8 +911,8 @@ public partial class BlackJack
                 break;
             }
         }
-
-        return embed;
+        
+        return messageBuilder.WithEmbed(embed);
     }
 
     private static async Task UpdateGameState(BlackJackGameState state, RawBlackJackGameState? data, DiscordGuild guild)
