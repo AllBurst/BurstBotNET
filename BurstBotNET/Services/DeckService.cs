@@ -20,7 +20,7 @@ public class DeckService
 
         var suits = new[] { Suit.Spade, Suit.Heart, Suit.Diamond, Suit.Club };
         var numbers = Enumerable
-            .Range(0, 14)
+            .Range(1, 13)
             .ToImmutableDictionary(n => n, n => n switch
             {
                 1 => "A",
