@@ -27,7 +27,7 @@ public class About : ISlashCommand
         await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
             new DiscordInteractionResponseBuilder()
                 .AddEmbed(new DiscordEmbedBuilder()
-                    .WithAuthor("Jack of All Trades", botUser.GetAvatarUrl(ImageFormat.Auto))
+                    .WithAuthor("Jack of All Trades", iconUrl: botUser.GetAvatarUrl(ImageFormat.Auto))
                     .WithColor((int)BurstColor.Burst)
                     .WithThumbnail(Constants.BurstLogo)
                     .WithDescription(AboutText.Value)
