@@ -1,0 +1,84 @@
+[
+  {
+    "language":  "CN",
+    "listItem" :[
+      {
+        "command": "help",
+        "filePath": "Assets/localization/blackJack/CN/game_help_cn.txt"
+      },
+      {
+        "command": "helprule",
+        "filePath": "Assets/localization/blackJack/CN/game_rule_cn.txt"
+      },
+      {
+        "command": "helpflow",
+        "filePath": "Assets/localization/blackJack/CN/game_flow_cn.txt"
+      },
+      {
+        "command": "helpdraw",
+        "filePath": "Assets/localization/blackJack/CN/help_draw_cn.txt"
+      },
+      {
+        "command": "helpstand",
+        "filePath": "Assets/localization/blackJack/CN/help_stand_cn.txt"
+      },
+      {
+        "command": "helpraise",
+        "filePath": "Assets/localization/blackJack/CN/help_raise_cn.txt"
+      },
+      {
+        "command": "helpcall",
+        "filePath": "Assets/localization/blackJack/CN/help_call_cn.txt"
+      },
+      {
+        "command": "helpallin",
+        "filePath": "Assets/localization/blackJack/CN/help_allin_cn.txt"
+      },
+      {
+        "command": "helpfold",
+        "filePath": "Assets/localization/blackJack/CN/help_fold_cn.txt"
+      }
+    ]
+  },
+  {
+    "language": "JP",
+    "listItem": [
+      {
+        "command": "help",
+        "filePath" : "Assets/localization/blackJack/JP/game_help_jp.txt"
+      },
+      {
+        "command": "helprule",
+        "filePath" : "Assets/localization/blackJack/JP/game_rule_jp.txt"
+      },
+      {
+        "command": "helpflow",
+        "filePath" : "Assets/localization/blackJack/JP/game_flow_jp.txt"
+      },
+      {
+        "command": "helpdraw",
+        "filePath": "Assets/localization/blackJack/JP/help_draw_jp.txt"
+      },
+      {
+        "command": "helpstand",
+        "filePath": "Assets/localization/blackJack/JP/help_stand_jp.txt"
+      },
+      {
+        "command": "helpraise",
+        "filePath": "Assets/localization/blackJack/JP/help_raise_jp.txt"
+      },
+      {
+        "command": "helpcall",
+        "filePath": "Assets/localization/blackJack/JP/help_call_jp.txt"
+      },
+      {
+        "command": "helpallin",
+        "filePath": "Assets/localization/blackJack/JP/help_allin_jp.txt"
+      },
+      {
+        "command": "helpfold",
+        "filePath": "Assets/localization/blackJack/JP/help_fold_jp.txt"
+      }
+    ]
+  }
+]

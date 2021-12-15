@@ -1,0 +1,6 @@
+All Burst bot is a Discord bot dedicated to a variety of poker games.
+It features customized poker cards and the ability to allow people from both Discord clients and Unity clients to participate in the same game.
+
+All Burst version 1.0 was made and developed by:
+**kinleed2#4498, LEO037#5702, MorGen#4094, Tetsuki Syu#1250, and 馬崇舜#8790**
+All Burst bot is licensed under [BSD 3-Clause "New" or "Revised" License](https://spdx.org/licenses/BSD-3-Clause.html).

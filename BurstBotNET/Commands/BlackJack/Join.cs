@@ -105,8 +105,7 @@ public partial class BlackJack
                     try
                     {
                         await state.BurstApi.WaitForGame(joinStatus, e, invokingMember, botUser, "",
-                            state.GameStates, state.Config,
-                            state.Localizations, client.Logger);
+                            state, client.Logger);
                     }
                     catch (Exception ex)
                     {
@@ -145,7 +144,9 @@ public partial class BlackJack
                     }, state.GameStates
                 );
                 _ = Task.Run(() =>
-                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates, guild, state.Localizations, client.Logger));
+                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates, guild,
+                        state.DeckService,
+                        state.Localizations, client.Logger));
                 break;
             }
             default:
@@ -244,7 +245,9 @@ public partial class BlackJack
                 Order = 0
             }, state.GameStates);
             _ = Task.Run(() =>
-                StartListening(matchData.GameId ?? "", state.Config, state.GameStates, guild, state.Localizations, logger));
+                StartListening(matchData.GameId ?? "", state.Config, state.GameStates, guild,
+                    state.DeckService,
+                    state.Localizations, logger));
         }
     }
 
@@ -262,8 +265,8 @@ public partial class BlackJack
         return newJoinStatus.StatusType switch
         {
             BlackJackJoinStatusType.Waiting =>
-                $"Successfully started a game with $playerCount initial {unit}! Please wait for matching...",
-            BlackJackJoinStatusType.Start => $"Successfully started a game with $playerCount initial {unit}!",
+                $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}! Please wait for matching...",
+            BlackJackJoinStatusType.Start => $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}!",
             BlackJackJoinStatusType.Matched =>
                 $"Successfully matched a game with {joinStatus.PlayerIds.Count} players! Preparing the game...",
             _ => throw new InvalidOperationException("Incorrect join status found.")

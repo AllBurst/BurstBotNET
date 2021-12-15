@@ -1,6 +1,7 @@
 ﻿using BurstBotNET.Api;
 using BurstBotNET.Commands;
 using BurstBotNET.Handlers;
+using BurstBotNET.Services;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Data;
 using BurstBotNET.Shared.Models.Game;
@@ -59,12 +60,14 @@ static async Task MainAsync()
     var localizations = new Localizations();
     var commands = new Commands();
     var burstApi = new BurstApi(config);
+    var deckService = new DeckService();
     var handlers = new Handlers(commands, new State
     {
         BurstApi = burstApi,
         Config = config,
         GameStates = gameStates,
-        Localizations = localizations
+        Localizations = localizations,
+        DeckService = deckService
     });
     
     client.Ready += Handlers.HandleReady;
