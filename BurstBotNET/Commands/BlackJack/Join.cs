@@ -265,8 +265,8 @@ public partial class BlackJack
         return newJoinStatus.StatusType switch
         {
             BlackJackJoinStatusType.Waiting =>
-                $"Successfully started a game with $playerCount initial {unit}! Please wait for matching...",
-            BlackJackJoinStatusType.Start => $"Successfully started a game with $playerCount initial {unit}!",
+                $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}! Please wait for matching...",
+            BlackJackJoinStatusType.Start => $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}!",
             BlackJackJoinStatusType.Matched =>
                 $"Successfully matched a game with {joinStatus.PlayerIds.Count} players! Preparing the game...",
             _ => throw new InvalidOperationException("Incorrect join status found.")
