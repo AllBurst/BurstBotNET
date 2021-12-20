@@ -6,7 +6,7 @@ namespace BurstBotNET.Shared.Models.Localization;
 
 public record Localization
 {
-    public string Bot { get; init; } = null!;
+    public string Bot { get; private init; } = null!;
     public BlackJackLocalization BlackJack { get; private init; } = null!;
     public GenericWords GenericWords { get; private init; } = null!;
 
@@ -14,7 +14,9 @@ public record Localization
         => new()
         {
             Bot = File.ReadAllText(rawLocalization.Bot),
-            BlackJack = JsonSerializer.Deserialize<BlackJackLocalization>(File.ReadAllText(rawLocalization.BlackJack))!,
+            BlackJack = JsonSerializer.Deserialize<BlackJackLocalization>(File
+                    .ReadAllText(rawLocalization.BlackJack))!
+                .LoadCommandHelps(),
             GenericWords = JsonSerializer.Deserialize<GenericWords>(File.ReadAllText(rawLocalization.Generic))!
         };
 }

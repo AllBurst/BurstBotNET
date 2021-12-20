@@ -58,11 +58,13 @@ public record BlackJackLocalization
     [JsonPropertyName("totalPointsMessage")]
     public string TotalPointsMessage { get; init; } = "";
 
-    public BlackJackLocalization()
+    public BlackJackLocalization LoadCommandHelps()
     {
         foreach (var key in CommandList.Keys)
         {
             CommandList[key] = File.ReadAllText(CommandList[key]);
         }
+
+        return this;
     }
 };
