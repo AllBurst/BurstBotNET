@@ -942,7 +942,9 @@ public partial class BlackJack
                             .GetChannelsAsync();
                     if (channels == null || !channels.Any())
                         continue;
-                    var textChannel = channels.First(c => c.Id == playerState.ChannelId);
+                    var textChannel = channels.FirstOrDefault(c => c.Id == playerState.ChannelId);
+                    if (textChannel == null)
+                        continue;
                     player.TextChannel = textChannel;
                 }
                 
