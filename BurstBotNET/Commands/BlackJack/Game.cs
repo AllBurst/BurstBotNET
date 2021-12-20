@@ -435,7 +435,7 @@ public partial class BlackJack
                     out var previousRequestType);
                 if (result)
                     await SendPreviousPlayerActionMessage(state, previousPlayerState!,
-                        previousRequestType, localizations, state.HighestBet);
+                        previousRequestType, deckService, localizations, state.HighestBet);
             }
         }
         
@@ -679,7 +679,8 @@ public partial class BlackJack
         if (previousPlayerState == null)
             return;
         
-        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType, localizations);
+        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
+            deckService, localizations);
 
         if (!gameState.Progress.Equals(nextProgress)) 
             return;
@@ -715,7 +716,7 @@ public partial class BlackJack
             return;
 
         await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
-            localizations, previousHighestBet);
+            deckService, localizations, previousHighestBet);
 
         if (gameState.Progress != nextProgress)
             return;
@@ -739,11 +740,14 @@ public partial class BlackJack
         BlackJackGameState gameState,
         RawBlackJackPlayerState previousPlayerState,
         BlackJackInGameRequestType previousRequestType,
+        DeckService deck,
         Localizations localizations,
         int? previousHighestBet = null)
     {
         var previousPlayerOrder = previousPlayerState.Order;
         var localization = localizations.GetLocalization();
+        var lastCard = previousPlayerState.Cards.Last();
+        var lastCardImage = SkiaService.RenderCard(deck, lastCard);
         
         foreach (var (_, state) in gameState.Players)
         {
@@ -758,12 +762,19 @@ public partial class BlackJack
             {
                 case BlackJackGameProgress.Progressing:
                 {
-                    var lastCard = previousPlayerState.Cards.Last();
                     var authorText = BuildPlayerActionMessage(localizations, previousRequestType, pronoun, lastCard);
-
+                    
                     var embed = new DiscordEmbedBuilder()
                         .WithAuthor(authorText, iconUrl: previousPlayerState.AvatarUrl)
                         .WithColor((int)BurstColor.Burst);
+
+                    var message = new DiscordMessageBuilder();
+
+                    if (previousRequestType.Equals(BlackJackInGameRequestType.Draw))
+                    {
+                        embed = embed.WithImageUrl(DefaultAttachmentUri);
+                        message = message.WithFile(DefaultOutputFileName, lastCardImage, true);
+                    }
 
                     if (isPreviousPlayer)
                     {
@@ -772,7 +783,7 @@ public partial class BlackJack
                                 localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString()));
                     }
 
-                    await state.TextChannel.SendMessageAsync(embed);
+                    await state.TextChannel.SendMessageAsync(message.WithEmbed(embed));
                     break;
                 }
                 case BlackJackGameProgress.Gambling:
@@ -861,7 +872,7 @@ public partial class BlackJack
             : localization.GenericWords.PossessiveThird
                 .Replace("{playerName}", currentPlayer.PlayerName);
         
-        var cardNames = $"{possessive} cards:\n" + string.Join('\n', currentPlayer.Cards
+        var cardNames = $"{possessive}{localization.GenericWords.Card}:\n" + string.Join('\n', currentPlayer.Cards
             .Where(c => isCurrentPlayer || c.IsFront)
             .Select(c => c.IsFront ? c.ToString() : $"**{c}**"));
         

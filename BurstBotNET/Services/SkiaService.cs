@@ -35,4 +35,12 @@ public static class SkiaService
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
+
+    public static Stream RenderCard(DeckService deck, Card card)
+    {
+        var stream = new MemoryStream();
+        deck.GetBitmap(card).Encode(SKEncodedImageFormat.Jpeg, DefaultQuality).SaveTo(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
+    }
 }

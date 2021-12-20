@@ -3,5 +3,6 @@
   "participateSecond": "participate",
   "participateThird": "participates",
   "possessiveSecond": "Your",
-  "possessiveThird": "{playerName}'s"
+  "possessiveThird": "{playerName}'s",
+  "card": " card(s)"
 }
