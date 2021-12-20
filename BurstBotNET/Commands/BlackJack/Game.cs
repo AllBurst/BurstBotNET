@@ -39,7 +39,6 @@ public partial class BlackJack
         string gameId,
         Config config,
         GameStates gameStates,
-        DiscordGuild guild,
         DeckService deckService,
         Localizations localizations,
         ILogger logger)
@@ -94,7 +93,6 @@ public partial class BlackJack
             var broadcastTask = RunBroadcastTask(socketSession,
                 state,
                 gameStates,
-                guild,
                 buffer,
                 deckService,
                 localizations,
@@ -131,13 +129,14 @@ public partial class BlackJack
         cancellationTokenSource.Dispose();
     }
     
-    public static async Task AddBlackJackPlayerState(
-        string gameId,
+    public static async Task AddBlackJackPlayerState(string gameId,
+        DiscordGuild guild,
         BlackJackPlayerState playerState,
         GameStates gameStates)
     {
         var state = gameStates.BlackJackGameStates.Item1.GetOrAdd(gameId, new BlackJackGameState());
         state.Players.GetOrAdd(playerState.PlayerId, playerState);
+        state.Guilds.Add(guild);
         state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
 
         if (playerState.TextChannel == null)
@@ -293,7 +292,6 @@ public partial class BlackJack
         WebSocket socketSession,
         BlackJackGameState state,
         GameStates gameStates,
-        DiscordGuild guild,
         ArrayPool<byte> buffer,
         DeckService deckService,
         Localizations localizations,
@@ -307,7 +305,7 @@ public partial class BlackJack
         logger.LogDebug("Received broadcast message from WS");
         var receiveContent = Encoding.UTF8.GetString(rentBuffer[..receiveResult.Count]);
         buffer.Return(rentBuffer, true);
-        if (!await HandleProgress(receiveContent, state, gameStates, deckService, localizations, guild, logger))
+        if (!await HandleProgress(receiveContent, state, gameStates, deckService, localizations, logger))
             await HandleEndingResult(receiveContent, state, localizations, logger);
     }
 
@@ -362,7 +360,6 @@ public partial class BlackJack
         GameStates gameStates,
         DeckService deckService,
         Localizations localizations,
-        DiscordGuild guild,
         ILogger logger)
     {
         try
@@ -379,7 +376,7 @@ public partial class BlackJack
             {
                 logger.LogDebug("Progress changed, handling progress change...");
                 var progressChangeResult =
-                    await HandleProgressChange(deserializedIncomingData, state, gameStates, guild,
+                    await HandleProgressChange(deserializedIncomingData, state, gameStates,
                         deckService, localizations);
                 state.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
@@ -387,7 +384,7 @@ public partial class BlackJack
             }
             
             var previousHighestBet = state.HighestBet;
-            await UpdateGameState(state, deserializedIncomingData, guild);
+            await UpdateGameState(state, deserializedIncomingData);
             var playerId = deserializedIncomingData.PreviousPlayerId;
             var result = state.Players.TryGetValue(playerId, out var previousPlayerState);
             if (!result)
@@ -426,7 +423,6 @@ public partial class BlackJack
         RawBlackJackGameState deserializedIncomingData,
         BlackJackGameState state,
         GameStates gameStates,
-        DiscordGuild guild,
         DeckService deckService,
         Localizations localizations)
     {
@@ -447,7 +443,7 @@ public partial class BlackJack
             return true;
 
         state.Progress = deserializedIncomingData.Progress;
-        await UpdateGameState(state, deserializedIncomingData, guild);
+        await UpdateGameState(state, deserializedIncomingData);
         var firstPlayer = state.Players
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
@@ -915,7 +911,7 @@ public partial class BlackJack
         return messageBuilder.WithEmbed(embed);
     }
 
-    private static async Task UpdateGameState(BlackJackGameState state, RawBlackJackGameState? data, DiscordGuild guild)
+    private static async Task UpdateGameState(BlackJackGameState state, RawBlackJackGameState? data)
     {
         if (data == null)
             return;
@@ -940,10 +936,16 @@ public partial class BlackJack
                 player.AvatarUrl = playerState.AvatarUrl;
 
                 if (playerState.ChannelId == 0 || player.TextChannel != null) continue;
-                var textChannel = (await guild
-                        .GetChannelsAsync())
-                    .First(c => c.Id == playerState.ChannelId);
-                player.TextChannel = textChannel;
+                foreach (var guild in state.Guilds)
+                {
+                    var channels = await guild
+                            .GetChannelsAsync();
+                    if (channels == null || !channels.Any())
+                        continue;
+                    var textChannel = channels.First(c => c.Id == playerState.ChannelId);
+                    player.TextChannel = textChannel;
+                }
+                
             }
             else
             {

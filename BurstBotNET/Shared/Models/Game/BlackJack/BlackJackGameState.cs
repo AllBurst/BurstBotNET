@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
+using ConcurrentCollections;
+using DSharpPlus.Entities;
 
 namespace BurstBotNET.Shared.Models.Game.BlackJack;
 
@@ -16,5 +18,6 @@ public class BlackJackGameState
     public int HighestBet { get; set; }
     public int CurrentTurn { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
-    public SemaphoreSlim Semaphore = new(1, 1);
+    public readonly SemaphoreSlim Semaphore = new(1, 1);
+    public readonly ConcurrentHashSet<DiscordGuild> Guilds = new();
 }

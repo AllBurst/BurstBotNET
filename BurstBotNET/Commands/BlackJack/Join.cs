@@ -131,6 +131,7 @@ public partial class BlackJack
                 var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
                 await AddBlackJackPlayerState(
                     joinStatus.GameId ?? "",
+                    guild,
                     new BlackJackPlayerState
                     {
                         GameId = joinStatus.GameId ?? "",
@@ -144,7 +145,7 @@ public partial class BlackJack
                     }, state.GameStates
                 );
                 _ = Task.Run(() =>
-                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates, guild,
+                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates,
                         state.DeckService,
                         state.Localizations, client.Logger));
                 break;
@@ -233,7 +234,7 @@ public partial class BlackJack
                 .SendRawRequest<object>($"/tip/{member.Id}", ApiRequestType.Get, null)
                 .ReceiveJson<RawTip>();
             var textChannel = await state.BurstApi.CreatePlayerChannel(guild, member);
-            await AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
+            await AddBlackJackPlayerState(matchData.GameId ?? "", guild, new BlackJackPlayerState
             {
                 AvatarUrl = member.AvatarUrl,
                 BetTips = Constants.StartingBet,
@@ -245,7 +246,7 @@ public partial class BlackJack
                 Order = 0
             }, state.GameStates);
             _ = Task.Run(() =>
-                StartListening(matchData.GameId ?? "", state.Config, state.GameStates, guild,
+                StartListening(matchData.GameId ?? "", state.Config, state.GameStates,
                     state.DeckService,
                     state.Localizations, logger));
         }

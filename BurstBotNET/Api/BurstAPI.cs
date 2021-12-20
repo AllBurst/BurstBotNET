@@ -4,15 +4,12 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using BurstBotNET.Commands.BlackJack;
-using BurstBotNET.Services;
 using BurstBotNET.Shared;
 using BurstBotNET.Shared.Models.Config;
 using BurstBotNET.Shared.Models.Data;
 using BurstBotNET.Shared.Models.Data.Serializables;
-using BurstBotNET.Shared.Models.Game;
 using BurstBotNET.Shared.Models.Game.BlackJack;
 using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
-using BurstBotNET.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -154,7 +151,7 @@ public class BurstApi
             var textChannel = await CreatePlayerChannel(guild, invokingMember);
             var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
                 .ReceiveJson<RawTip>();
-            await BlackJack.AddBlackJackPlayerState(matchData.GameId ?? "", new BlackJackPlayerState
+            await BlackJack.AddBlackJackPlayerState(matchData.GameId ?? "", guild, new BlackJackPlayerState
             {
                 GameId = matchData.GameId ?? "",
                 PlayerId = invokingMember.Id,
@@ -168,7 +165,7 @@ public class BurstApi
             _ = Task.Run(() =>
                 BlackJack.StartListening(matchData.GameId ?? "",
                     state.Config,
-                    state.GameStates, guild,
+                    state.GameStates,
                     state.DeckService,
                     state.Localizations, logger));
             break;
