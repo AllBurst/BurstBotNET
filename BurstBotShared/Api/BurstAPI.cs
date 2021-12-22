@@ -8,7 +8,7 @@ using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
-using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -89,7 +89,7 @@ public class BurstApi
         }
     }
 
-    public async Task<(BlackJackJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(BlackJackJoinStatus waitingData,
+    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(GenericJoinStatus waitingData,
         InteractionCreateEventArgs e,
         DiscordMember invokingMember,
         DiscordUser botUser,
@@ -118,17 +118,17 @@ public class BurstApi
             var timeoutTask = Task.Run(async () =>
             {
                 await Task.Delay(TimeSpan.FromSeconds(60));
-                return new BlackJackJoinStatus
+                return new GenericJoinStatus
                 {
                     SocketIdentifier = null,
                     GameId = null,
-                    StatusType = BlackJackJoinStatusType.TimedOut
+                    StatusType = GenericJoinStatusType.TimedOut
                 };
             }, cancellationTokenSource.Token);
 
             var matchData = await await Task.WhenAny(new[] { receiveTask!, timeoutTask });
 
-            if (matchData.StatusType.Equals(BlackJackJoinStatusType.TimedOut))
+            if (matchData.StatusType.Equals(GenericJoinStatusType.TimedOut))
             {
                 const string message = "Timeout because no match game is found";
                 logger.LogDebug(message);
@@ -137,7 +137,7 @@ public class BurstApi
                 break;
             }
 
-            if (matchData.StatusType != BlackJackJoinStatusType.Matched || matchData.GameId == null) continue;
+            if (matchData.StatusType != GenericJoinStatusType.Matched || matchData.GameId == null) continue;
             
             await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
                 cancellationTokenSource.Token);
@@ -226,12 +226,12 @@ public class BurstApi
         return await url.PostJsonAsync(payload);
     }
 
-    private static async Task<BlackJackJoinStatus?> ReceiveMatchData(WebSocket socketSession, CancellationToken token)
+    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, CancellationToken token)
     {
         var buffer = new byte[BufferSize];
         var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
         var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-        var matchData = JsonSerializer.Deserialize<BlackJackJoinStatus>(payloadText);
+        var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
         return matchData;
     }
 }

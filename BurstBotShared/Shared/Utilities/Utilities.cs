@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 
@@ -8,7 +8,7 @@ namespace BurstBotShared.Shared.Utilities;
 public static class Utilities
 {
     public static DiscordEmbed BuildBlackJackEmbed(DiscordMember invokingMember, DiscordUser botUser,
-        BlackJackJoinStatus joinStatus, string description, int? secondsLeft)
+        GenericJoinStatus joinStatus, string description, int? secondsLeft)
     {
         var playerIds = joinStatus.PlayerIds
             .Select(id => $"💠<@!{id}>")
@@ -16,8 +16,8 @@ public static class Utilities
         var actualDescription = "Joined players: \n" + string.Join('\n', playerIds) + description;
         var title = joinStatus.StatusType switch
         {
-            BlackJackJoinStatusType.Start => $"{invokingMember.DisplayName} has started a Black Jack game!",
-            BlackJackJoinStatusType.Matched =>
+            GenericJoinStatusType.Start => $"{invokingMember.DisplayName} has started a Black Jack game!",
+            GenericJoinStatusType.Matched =>
                 $"{invokingMember.DisplayName}, you have successfully joined a Black Jack game!",
             _ => ""
         };
@@ -28,7 +28,7 @@ public static class Utilities
             .WithColor((int)BurstColor.Burst)
             .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
             .WithDescription(actualDescription)
-            .WithFooter(joinStatus.StatusType == BlackJackJoinStatusType.Start
+            .WithFooter(joinStatus.StatusType == GenericJoinStatusType.Start
                 ? $"React below to confirm to join! {secondsLeft ?? 30} seconds left!"
                 : "Starting game...");
     }

@@ -5,7 +5,6 @@ using BurstBotShared.Shared;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
-using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -73,7 +72,7 @@ public partial class BlackJack
 
         var playerCount = mentionedPlayers.Count;
         var unit = playerCount == 1 ? "player" : "players";
-        BlackJackJoinStatus? joinStatus = null;
+        GenericJoinStatus? joinStatus = null;
 
         var reply = new DiscordWebhookBuilder()
             .WithContent(responseCode switch
@@ -98,7 +97,7 @@ public partial class BlackJack
 
         switch (joinStatus.StatusType)
         {
-            case BlackJackJoinStatusType.Waiting:
+            case GenericJoinStatusType.Waiting:
             {
                 await e.Interaction.EditOriginalResponseAsync(reply);
                 _ = Task.Run(async () =>
@@ -126,7 +125,7 @@ public partial class BlackJack
                 });
                 break;
             }
-            case BlackJackJoinStatusType.Start:
+            case GenericJoinStatusType.Start:
             {
                 reply = reply.AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, "", null));
                 var message = await e.Interaction.EditOriginalResponseAsync(reply);
@@ -134,7 +133,7 @@ public partial class BlackJack
                     state, client.Logger);
                 break;
             }
-            case BlackJackJoinStatusType.Matched:
+            case GenericJoinStatusType.Matched:
             {
                 await e.Interaction.EditOriginalResponseAsync(reply);
                 await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
@@ -172,7 +171,7 @@ public partial class BlackJack
         DiscordMessage originalMessage,
         DiscordMember invokingMember,
         DiscordUser botUser,
-        BlackJackJoinStatus joinStatus,
+        GenericJoinStatus joinStatus,
         IEnumerable<ulong> playerIds,
         State state,
         ILogger logger)
@@ -233,12 +232,12 @@ public partial class BlackJack
         var members = await Task.WhenAll(confirmedUsers
             .Select(async u => await guild.GetMemberAsync(u.Id)));
         var matchData = await state.BurstApi
-            .SendRawRequest("/black_jack/join/confirm", ApiRequestType.Post, new BlackJackJoinStatus
+            .SendRawRequest("/black_jack/join/confirm", ApiRequestType.Post, new GenericJoinStatus
             {
-                StatusType = BlackJackJoinStatusType.Start,
+                StatusType = GenericJoinStatusType.Start,
                 PlayerIds = members.Select(m => m.Id).ToList()
             })
-            .ReceiveJson<BlackJackJoinStatus>();
+            .ReceiveJson<GenericJoinStatus>();
 
         foreach (var member in members)
         {
@@ -265,10 +264,10 @@ public partial class BlackJack
     }
 
     // ReSharper disable once RedundantAssignment
-    private static string HandleSuccessfulJoinStatus(IFlurlResponse response, string unit, ref BlackJackJoinStatus? joinStatus)
+    private static string HandleSuccessfulJoinStatus(IFlurlResponse response, string unit, ref GenericJoinStatus? joinStatus)
     {
-        var newJoinStatus = response.GetJsonAsync<BlackJackJoinStatus>().GetAwaiter().GetResult();
-        joinStatus = new BlackJackJoinStatus
+        var newJoinStatus = response.GetJsonAsync<GenericJoinStatus>().GetAwaiter().GetResult();
+        joinStatus = new GenericJoinStatus
         {
             StatusType = newJoinStatus.StatusType,
             SocketIdentifier = newJoinStatus.SocketIdentifier,
@@ -277,10 +276,10 @@ public partial class BlackJack
         };
         return newJoinStatus.StatusType switch
         {
-            BlackJackJoinStatusType.Waiting =>
+            GenericJoinStatusType.Waiting =>
                 $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}! Please wait for matching...",
-            BlackJackJoinStatusType.Start => $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}!",
-            BlackJackJoinStatusType.Matched =>
+            GenericJoinStatusType.Start => $"Successfully started a game with {joinStatus.PlayerIds.Count} initial {unit}!",
+            GenericJoinStatusType.Matched =>
                 $"Successfully matched a game with {joinStatus.PlayerIds.Count} players! Preparing the game...",
             _ => throw new InvalidOperationException("Incorrect join status found.")
         };

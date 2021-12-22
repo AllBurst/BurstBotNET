@@ -2,15 +2,15 @@ using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+namespace BurstBotShared.Shared.Models.Game.Serializables;
 
-public record BlackJackJoinStatus
+public record GenericJoinStatus
 {
     [JsonPropertyName("type")]
     [JsonProperty("type")]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
-    public BlackJackJoinStatusType StatusType { get; init; }
+    public GenericJoinStatusType StatusType { get; init; }
     
     [JsonPropertyName("socket_identifier")]
     [JsonProperty("socket_identifier")]
