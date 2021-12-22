@@ -1,0 +1,12 @@
+token: 
+logLevel: DEBUG
+testGuilds:
+  - "695202095401533450"
+  - "705036924330704968"
+  - "908364249636675665"
+recreateGlobals: "false"
+recreateGuilds: "false"
+serverEndpoint: ""
+socketEndpoint: "localhost"
+socketPort: 8080
+timeout: 300

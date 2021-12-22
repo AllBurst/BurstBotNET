@@ -1,8 +1,8 @@
-using BurstBotNET.Api;
-using BurstBotNET.Shared;
-using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Data;
-using BurstBotNET.Shared.Models.Data.Serializables;
+using BurstBotShared.Api;
+using BurstBotShared.Shared;
+using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Data.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;

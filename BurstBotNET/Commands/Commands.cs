@@ -1,6 +1,6 @@
 using BurstBotNET.Commands.Rewards;
-using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Data;
+using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -41,12 +41,14 @@ public class Commands
             };
 
         var blackJack = new BlackJack.BlackJack();
+        var ninetyNine = new NinetyNine.NinetyNine();
         var help = new Help.Help();
 
         GuildCommands =
             new CommandGroup
             {
                 { blackJack.ToString(), ((ISlashCommand)blackJack).GetCommandTuple() },
+                { ninetyNine.ToString(), ((ISlashCommand)ninetyNine).GetCommandTuple() },
                 { help.ToString(), ((ISlashCommand)help).GetCommandTuple() }
             };
     }

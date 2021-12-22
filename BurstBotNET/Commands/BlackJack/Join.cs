@@ -1,18 +1,18 @@
 using System.Collections.Immutable;
 using System.Net;
-using BurstBotNET.Api;
-using BurstBotNET.Shared;
-using BurstBotNET.Shared.Models.Data;
-using BurstBotNET.Shared.Models.Data.Serializables;
-using BurstBotNET.Shared.Models.Game.BlackJack;
-using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
-using BurstBotNET.Shared.Models.Game.Serializables;
+using BurstBotShared.Api;
+using BurstBotShared.Shared;
+using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Data.Serializables;
+using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
-using Utilities = BurstBotNET.Shared.Utilities.Utilities;
+using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.BlackJack;
 
@@ -62,9 +62,10 @@ public partial class BlackJack
             return;
         }
 
-        var joinRequest = new BlackJackJoinRequest
+        var joinRequest = new GenericJoinRequest
         {
             ClientType = ClientType.Discord,
+            GameType = GameType.BlackJack,
             PlayerIds = mentionedPlayers
         };
         var joinGameResponse = await state.BurstApi.SendRawRequest("/black_jack/join", ApiRequestType.Post, joinRequest);
@@ -104,8 +105,19 @@ public partial class BlackJack
                 {
                     try
                     {
-                        await state.BurstApi.WaitForGame(joinStatus, e, invokingMember, botUser, "",
+                        var waitingResult = await state.BurstApi.WaitForBlackJackGame(joinStatus, e, invokingMember, botUser, "",
                             state, client.Logger);
+                        if (!waitingResult.HasValue)
+                            throw new Exception("Failed to get waiting result for Black Jack.");
+
+                        var (matchData, playerState) = waitingResult.Value;
+                        await AddBlackJackPlayerState(matchData.GameId ?? "", e.Interaction.Guild, playerState, state.GameStates);
+                        _ = Task.Run(() =>
+                            StartListening(matchData.GameId ?? "",
+                                state.Config,
+                                state.GameStates,
+                                state.DeckService,
+                                state.Localizations, client.Logger));
                     }
                     catch (Exception ex)
                     {

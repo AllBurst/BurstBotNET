@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
-using BurstBotNET.Shared;
-using BurstBotNET.Shared.Models.Data;
-using BurstBotNET.Shared.Models.Data.Serializables;
+using BurstBotShared.Shared;
+using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Data.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;

@@ -1,5 +1,5 @@
-using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Data;
+using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;

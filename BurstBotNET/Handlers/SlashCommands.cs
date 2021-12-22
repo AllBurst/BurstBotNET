@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using BurstBotNET.Shared.Models.Config;
+using BurstBotShared.Shared.Models.Config;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 

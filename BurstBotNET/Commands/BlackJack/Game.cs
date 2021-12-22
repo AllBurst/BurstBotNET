@@ -3,15 +3,15 @@ using System.Collections.Immutable;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Channels;
-using BurstBotNET.Services;
-using BurstBotNET.Shared;
-using BurstBotNET.Shared.Extensions;
-using BurstBotNET.Shared.Models.Config;
-using BurstBotNET.Shared.Models.Game;
-using BurstBotNET.Shared.Models.Game.BlackJack;
-using BurstBotNET.Shared.Models.Game.BlackJack.Serializables;
-using BurstBotNET.Shared.Models.Game.Serializables;
-using BurstBotNET.Shared.Models.Localization;
+using BurstBotShared.Services;
+using BurstBotShared.Shared;
+using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Models.Config;
+using BurstBotShared.Shared.Models.Game;
+using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
+using BurstBotShared.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
@@ -28,9 +28,9 @@ public partial class BlackJack
         Continue, Shutdown, Close
     }
 
-    private const int DefaultBufferSize = 4096;
-    private const string DefaultOutputFileName = "output.jpg";
-    private const string DefaultAttachmentUri = $"attachment://{DefaultOutputFileName}";
+    private const int BufferSize = 4096;
+    private const string OutputFileName = "output.jpg";
+    private const string AttachmentUri = $"attachment://{OutputFileName}";
     private static readonly ImmutableList<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
         .ToImmutableList();
@@ -63,7 +63,7 @@ public partial class BlackJack
         state.GameId = gameId;
         logger.LogDebug("Initial game state successfully set");
 
-        var buffer = ArrayPool<byte>.Create(DefaultBufferSize, 1024);
+        var buffer = ArrayPool<byte>.Create(BufferSize, 1024);
         
         var cancellationTokenSource = new CancellationTokenSource();
         var socketSession = new ClientWebSocket();
@@ -299,7 +299,7 @@ public partial class BlackJack
         CancellationTokenSource cancellationTokenSource)
     {
         // Try receiving broadcast messages from WS server without blocking.
-        var rentBuffer = buffer.Rent(DefaultBufferSize);
+        var rentBuffer = buffer.Rent(BufferSize);
         var receiveResult = await socketSession.ReceiveAsync(rentBuffer, cancellationTokenSource.Token);
 
         logger.LogDebug("Received broadcast message from WS");
@@ -661,8 +661,8 @@ public partial class BlackJack
                 .WithDescription(description)
                 .WithFooter(localization.InitialMessageFooter)
                 .WithThumbnail(Constants.BurstLogo)
-                .WithImageUrl(DefaultAttachmentUri))
-            .WithFile(DefaultOutputFileName, SkiaService.RenderDeck(deckService, 
+                .WithImageUrl(AttachmentUri))
+            .WithFile(OutputFileName, SkiaService.RenderDeck(deckService, 
                 playerState.Cards.Select(c => c with { IsFront = true }))));
     }
 
@@ -772,8 +772,8 @@ public partial class BlackJack
 
                     if (previousRequestType.Equals(BlackJackInGameRequestType.Draw))
                     {
-                        embed = embed.WithImageUrl(DefaultAttachmentUri);
-                        message = message.WithFile(DefaultOutputFileName, lastCardImage, true);
+                        embed = embed.WithImageUrl(AttachmentUri);
+                        message = message.WithFile(OutputFileName, lastCardImage, true);
                     }
 
                     if (isPreviousPlayer)
@@ -888,10 +888,10 @@ public partial class BlackJack
             .WithAuthor(currentPlayer.PlayerName, iconUrl: currentPlayer.AvatarUrl)
             .WithColor((int)BurstColor.Burst)
             .WithTitle(title)
-            .WithImageUrl(DefaultAttachmentUri);
+            .WithImageUrl(AttachmentUri);
 
         var messageBuilder = new DiscordMessageBuilder()
-            .WithFile(DefaultOutputFileName, SkiaService.RenderDeck(deckService,
+            .WithFile(OutputFileName, SkiaService.RenderDeck(deckService,
                 currentPlayer.Cards.Select(c => isCurrentPlayer ? c with { IsFront = true } : c)));
 
         switch (gameState.Progress)

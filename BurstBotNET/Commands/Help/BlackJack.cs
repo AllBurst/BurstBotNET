@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using BurstBotNET.Shared;
-using BurstBotNET.Shared.Models.Data;
-using BurstBotNET.Shared.Models.Localization;
+using BurstBotShared.Shared;
+using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;

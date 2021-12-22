@@ -1,4 +1,4 @@
-using BurstBotNET.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Data;
 
 namespace BurstBotNET.Handlers;
 
