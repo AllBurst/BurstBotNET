@@ -20,6 +20,12 @@ public record GenericJoinStatus
     [JsonProperty("game_id")] 
     public string? GameId { get; init; }
     
+    [JsonPropertyName("game_type")]
+    [JsonProperty("game_type")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
+    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
+    public GameType GameType { get; init; }
+    
     [JsonPropertyName("player_ids")] 
     [JsonProperty("player_ids")] 
     public List<ulong> PlayerIds { get; init; } = new();
