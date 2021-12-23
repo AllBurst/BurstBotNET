@@ -99,7 +99,7 @@ public class BurstApi
     {
         using var socketSession = new ClientWebSocket();
         socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-        using var cancellationTokenSource = new CancellationTokenSource();
+        var cancellationTokenSource = new CancellationTokenSource();
         var url = new Uri(_socketPort != 0 ? $"ws://{_socketEndpoint}:{_socketPort}" : $"wss://{_socketEndpoint}");
         await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
 
@@ -114,33 +114,62 @@ public class BurstApi
         
         while (true)
         {
-            var receiveTask = ReceiveMatchData(socketSession, cancellationTokenSource.Token);
+            var timeoutCancellationTokenSource = new CancellationTokenSource();
+            var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
             var timeoutTask = Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(60));
-                return new GenericJoinStatus
+                try
                 {
-                    SocketIdentifier = null,
-                    GameId = null,
-                    StatusType = GenericJoinStatusType.TimedOut
-                };
+                    await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
+                    return new GenericJoinStatus
+                    {
+                        SocketIdentifier = null,
+                        GameId = null,
+                        StatusType = GenericJoinStatusType.TimedOut
+                    };
+                }
+                catch (TaskCanceledException ex)
+                {
+                    logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
+                }
+                finally
+                {
+                    timeoutCancellationTokenSource.Dispose();
+                }
+
+                return null;
             }, cancellationTokenSource.Token);
 
-            var matchData = await await Task.WhenAny(new[] { receiveTask!, timeoutTask });
+            var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
+            logger.LogDebug("Match data: {Data}", matchData?.ToString());
 
-            if (matchData.StatusType.Equals(GenericJoinStatusType.TimedOut))
+            if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
             {
                 const string message = "Timeout because no match game is found";
                 logger.LogDebug(message);
                 await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
                     cancellationTokenSource.Token);
+                _ = Task.Run(() =>
+                {
+                    cancellationTokenSource.Cancel();
+                    logger.LogDebug("All tasks for matching have been cancelled");
+                    cancellationTokenSource.Dispose();
+                });
+                logger.LogDebug("WebSocket closed due to timeout");
                 break;
             }
 
-            if (matchData.StatusType != GenericJoinStatusType.Matched || matchData.GameId == null) continue;
+            _ = Task.Run(() =>
+            {
+                timeoutCancellationTokenSource.Cancel();
+                logger.LogDebug("Timeout task for matching has been cancelled");
+            });
+
+            if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData?.GameId == null) continue;
             
             await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
                 cancellationTokenSource.Token);
+            cancellationTokenSource.Dispose();
             await e.Interaction.CreateFollowupMessageAsync(
                 new DiscordFollowupMessageBuilder()
                     .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,
@@ -226,11 +255,12 @@ public class BurstApi
         return await url.PostJsonAsync(payload);
     }
 
-    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, CancellationToken token)
+    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger, CancellationToken token)
     {
         var buffer = new byte[BufferSize];
         var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
         var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
+        logger.LogDebug("Received match data from WS server: {Payload}", payloadText);
         var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
         return matchData;
     }

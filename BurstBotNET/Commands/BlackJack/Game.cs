@@ -35,7 +35,7 @@ public partial class BlackJack
         .GetNames<BlackJackInGameRequestType>()
         .ToImmutableList();
 
-    public static async Task StartListening(
+    private static async Task StartListening(
         string gameId,
         Config config,
         GameStates gameStates,
@@ -85,6 +85,7 @@ public partial class BlackJack
 
         while (!state.Progress.Equals(BlackJackGameProgress.Closed))
         {
+            var timeoutCancellationTokenSource = new CancellationTokenSource();
             var channelTask = RunChannelTask(socketSession,
                 state,
                 logger,
@@ -99,15 +100,27 @@ public partial class BlackJack
                 logger,
                 cancellationTokenSource);
 
-            var timeoutTask = RunTimeoutTask(timeout, state, logger);
+            var timeoutTask = RunTimeoutTask(timeout, state, logger, timeoutCancellationTokenSource);
             
             await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
+            _ = Task.Run(() =>
+            {
+                timeoutCancellationTokenSource.Cancel();
+                logger.LogDebug("Timeout task cancelled");
+                timeoutCancellationTokenSource.Dispose();
+            });
         }
         
         logger.LogDebug("Cleaning up resource...");
         await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
             cancellationTokenSource.Token);
         logger.LogDebug("Socket session closed");
+        _ = Task.Run(() =>
+        {
+            cancellationTokenSource.Cancel();
+            logger.LogDebug("All tasks cancelled");
+            cancellationTokenSource.Dispose();
+        });
         await Task.Delay(TimeSpan.FromSeconds(20));
         var retrieveResult = gameStates.BlackJackGameStates.Item1.TryGetValue(state.GameId, out var gameState);
         if (!retrieveResult)
@@ -126,10 +139,9 @@ public partial class BlackJack
 
         gameStates.BlackJackGameStates.Item1.Remove(state.GameId, out _);
         socketSession.Dispose();
-        cancellationTokenSource.Dispose();
     }
-    
-    public static async Task AddBlackJackPlayerState(string gameId,
+
+    private static async Task AddBlackJackPlayerState(string gameId,
         DiscordGuild guild,
         BlackJackPlayerState playerState,
         GameStates gameStates)
@@ -309,11 +321,26 @@ public partial class BlackJack
             await HandleEndingResult(receiveContent, state, localizations, logger);
     }
 
-    private static async Task RunTimeoutTask(long timeout, BlackJackGameState state, ILogger logger)
+    private static async Task RunTimeoutTask(
+        long timeout,
+        BlackJackGameState state,
+        ILogger logger,
+        CancellationTokenSource cancellationTokenSource)
     {
-        await Task.Delay(TimeSpan.FromSeconds(timeout));
-        logger.LogDebug("Game timed out due to inactivity");
-        state.Progress = BlackJackGameProgress.Closed;
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(timeout), cancellationTokenSource.Token);
+            logger.LogDebug("Game timed out due to inactivity");
+            state.Progress = BlackJackGameProgress.Closed;
+        }
+        catch (TaskCanceledException ex)
+        {
+            logger.LogDebug("Timeout task has been cancelled: {@Exception}", ex);
+        }
+        catch (ObjectDisposedException ex)
+        {
+            logger.LogDebug("Cancellation source has been disposed (timeout task): {@Exception}", ex);
+        }
     }
 
     private static async Task<SocketOperation> HandleChannelMessage(ulong playerId,
