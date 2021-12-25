@@ -20,8 +20,8 @@ namespace BurstBotShared.Api;
 
 public class BurstApi
 {
+    public const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
-    private const string CategoryName = "All-Burst-Category";
     private readonly string _serverEndpoint;
     private readonly int _socketPort;
     private readonly string _socketEndpoint;
@@ -89,12 +89,12 @@ public class BurstApi
         }
     }
 
-    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(GenericJoinStatus waitingData,
+    public async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
         InteractionCreateEventArgs e,
         DiscordMember invokingMember,
         DiscordUser botUser,
+        string gameName,
         string description,
-        State state,
         ILogger logger)
     {
         using var socketSession = new ClientWebSocket();
@@ -102,97 +102,122 @@ public class BurstApi
         var cancellationTokenSource = new CancellationTokenSource();
         var url = new Uri(_socketPort != 0 ? $"ws://{_socketEndpoint}:{_socketPort}" : $"wss://{_socketEndpoint}");
         await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
-
+        
         while (true)
         {
             if (socketSession.State == WebSocketState.Open)
                 break;
         }
-
+        
         await socketSession.SendAsync(new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(waitingData)),
             WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, cancellationTokenSource.Token);
-        
+
         while (true)
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
-            var timeoutTask = Task.Run(async () =>
+        var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
+        var timeoutTask = Task.Run(async () =>
+        {
+            try
             {
-                try
+                await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
+                return new GenericJoinStatus
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
-                    return new GenericJoinStatus
-                    {
-                        SocketIdentifier = null,
-                        GameId = null,
-                        StatusType = GenericJoinStatusType.TimedOut
-                    };
-                }
-                catch (TaskCanceledException ex)
-                {
-                    logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
-                }
-                finally
-                {
-                    timeoutCancellationTokenSource.Dispose();
-                }
-
-                return null;
-            }, cancellationTokenSource.Token);
-
-            var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
-            logger.LogDebug("Match data: {Data}", matchData?.ToString());
-
-            if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
+                    SocketIdentifier = null,
+                    GameId = null,
+                    StatusType = GenericJoinStatusType.TimedOut
+                };
+            }
+            catch (TaskCanceledException ex)
             {
-                const string message = "Timeout because no match game is found";
-                logger.LogDebug(message);
-                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
-                    cancellationTokenSource.Token);
-                _ = Task.Run(() =>
-                {
-                    cancellationTokenSource.Cancel();
-                    logger.LogDebug("All tasks for matching have been cancelled");
-                    cancellationTokenSource.Dispose();
-                });
-                logger.LogDebug("WebSocket closed due to timeout");
-                break;
+                logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
+            }
+            finally
+            {
+                timeoutCancellationTokenSource.Dispose();
             }
 
+            return null;
+        }, cancellationTokenSource.Token);
+
+        var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
+        logger.LogDebug("Match data: {Data}", matchData?.ToString());
+        if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
+        {
+            const string message = "Timeout because no match game is found";
+            logger.LogDebug(message);
+            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
+                cancellationTokenSource.Token);
             _ = Task.Run(() =>
             {
-                timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task for matching has been cancelled");
+                cancellationTokenSource.Cancel();
+                logger.LogDebug("All tasks for matching have been cancelled");
+                cancellationTokenSource.Dispose();
             });
+            logger.LogDebug("WebSocket closed due to timeout");
+            break;
+        }
+        
+        _ = Task.Run(() =>
+        {
+            timeoutCancellationTokenSource.Cancel();
+            logger.LogDebug("Timeout task for matching has been cancelled");
+        });
 
-            if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData?.GameId == null) continue;
-            
-            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
-                cancellationTokenSource.Token);
-            cancellationTokenSource.Dispose();
-            await e.Interaction.CreateFollowupMessageAsync(
-                new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, matchData, description,
-                        null)));
+        if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
+        
+        await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
+            cancellationTokenSource.Token);
+        cancellationTokenSource.Dispose();
+        await e.Interaction.CreateFollowupMessageAsync(
+            new DiscordFollowupMessageBuilder()
+                .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
+                    null)));
 
-            var guild = e.Interaction.Guild;
-            var textChannel = await CreatePlayerChannel(guild, invokingMember);
-            var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
-                .ReceiveJson<RawTip>();
-            return (matchData, new BlackJackPlayerState
-            {
-                GameId = matchData.GameId ?? "",
-                PlayerId = invokingMember.Id,
-                PlayerName = invokingMember.DisplayName,
-                TextChannel = textChannel,
-                OwnTips = invokerTip?.Amount ?? 0,
-                BetTips = Constants.StartingBet,
-                Order = 0,
-                AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
-            });
+        return matchData;
         }
 
         return null;
+    }
+
+    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(GenericJoinStatus waitingData,
+        InteractionCreateEventArgs e,
+        DiscordMember invokingMember,
+        DiscordUser botUser,
+        string description,
+        ILogger logger)
+    {
+        var matchData =
+            await GenericWaitForGame(waitingData, e, invokingMember, botUser, "Black Jack", description, logger);
+
+        if (matchData == null)
+            return null;
+        
+        var guild = e.Interaction.Guild;
+        var textChannel = await CreatePlayerChannel(guild, invokingMember);
+        var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
+            .ReceiveJson<RawTip>();
+        return (matchData, new BlackJackPlayerState
+        {
+            GameId = matchData.GameId ?? "",
+            PlayerId = invokingMember.Id,
+            PlayerName = invokingMember.DisplayName,
+            TextChannel = textChannel,
+            OwnTips = invokerTip?.Amount ?? 0,
+            BetTips = Constants.StartingBet,
+            Order = 0,
+            AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
+        });
+    }
+    
+    public static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger, CancellationToken token)
+    {
+        var buffer = new byte[BufferSize];
+        var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
+        var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
+        logger.LogDebug("Received match data from WS server: {Payload}", payloadText);
+        var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
+        return matchData;
     }
 
     public async Task<DiscordChannel> CreatePlayerChannel(DiscordGuild guild, DiscordMember invokingMember)
@@ -253,15 +278,5 @@ public class BurstApi
             throw new ArgumentException("The payload cannot be null when sending POST requests.");
 
         return await url.PostJsonAsync(payload);
-    }
-
-    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger, CancellationToken token)
-    {
-        var buffer = new byte[BufferSize];
-        var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
-        var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-        logger.LogDebug("Received match data from WS server: {Payload}", payloadText);
-        var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
-        return matchData;
     }
 }

@@ -7,8 +7,8 @@ namespace BurstBotShared.Shared.Utilities;
 
 public static class Utilities
 {
-    public static DiscordEmbed BuildBlackJackEmbed(DiscordMember invokingMember, DiscordUser botUser,
-        GenericJoinStatus joinStatus, string description, int? secondsLeft)
+    public static DiscordEmbed BuildGameEmbed(DiscordMember invokingMember, DiscordUser botUser,
+        GenericJoinStatus joinStatus, string gameName, string description, int? secondsLeft)
     {
         var playerIds = joinStatus.PlayerIds
             .Select(id => $"💠<@!{id}>")
@@ -16,9 +16,9 @@ public static class Utilities
         var actualDescription = "Joined players: \n" + string.Join('\n', playerIds) + description;
         var title = joinStatus.StatusType switch
         {
-            GenericJoinStatusType.Start => $"{invokingMember.DisplayName} has started a Black Jack game!",
+            GenericJoinStatusType.Start => $"{invokingMember.DisplayName} has started a {gameName} game!",
             GenericJoinStatusType.Matched =>
-                $"{invokingMember.DisplayName}, you have successfully joined a Black Jack game!",
+                $"{invokingMember.DisplayName}, you have successfully joined a {gameName} game!",
             _ => ""
         };
 

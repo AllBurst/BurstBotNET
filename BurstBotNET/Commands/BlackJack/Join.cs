@@ -105,7 +105,7 @@ public partial class BlackJack
                     try
                     {
                         var waitingResult = await state.BurstApi.WaitForBlackJackGame(joinStatus, e, invokingMember, botUser, "",
-                            state, client.Logger);
+                            client.Logger);
                         if (!waitingResult.HasValue)
                             throw new Exception("Failed to get waiting result for Black Jack.");
 
@@ -127,7 +127,7 @@ public partial class BlackJack
             }
             case GenericJoinStatusType.Start:
             {
-                reply = reply.AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, "", null));
+                reply = reply.AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, "Black Jack", "", null));
                 var message = await e.Interaction.EditOriginalResponseAsync(reply);
                 await HandleStartGameReactions(e, message, invokingMember, botUser, joinStatus, mentionedPlayers,
                     state, client.Logger);
@@ -137,7 +137,7 @@ public partial class BlackJack
             {
                 await e.Interaction.EditOriginalResponseAsync(reply);
                 await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, "", null)));
+                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, "Black Jack", "", null)));
                 var guild = e.Interaction.Guild;
                 var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
                 await AddBlackJackPlayerState(
@@ -217,7 +217,7 @@ public partial class BlackJack
             var confirmedUsersString =
                 $"\nConfirmed players: \n{string.Join('\n', confirmedUsers.Select(u => $"💠<@!{u.Id}>"))}";
             await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .AddEmbed(Utilities.BuildBlackJackEmbed(invokingMember, botUser, joinStatus, confirmedUsersString,
+                .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, "Black Jack", confirmedUsersString,
                     secondsRemained)));
         }
 
