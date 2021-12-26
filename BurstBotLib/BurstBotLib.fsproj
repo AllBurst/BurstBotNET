@@ -6,23 +6,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Library.fs" />
-        <Compile Include="ChinesePoker\ChinesePoker.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerCards.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerCombination.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerGameProgress.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerNatural.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerPlayerState.fs" />
-        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerGameState.fs" />
-        <Compile Include="Api\BurstApi.fs" />
+        <Compile Include="Library.fs"/>
+        <Compile Include="Api\BurstApi.fs"/>
+        <Compile Include="ChinesePoker\ChinesePoker.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerCards.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerCombination.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerGameProgress.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerNatural.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerPlayerState.fs"/>
+        <Compile Include="Shared\Models\Game\ChinesePoker\ChinesePokerGameState.fs"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
+        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Thoth.Json.Net" Version="7.1.0" />
+        <PackageReference Include="Thoth.Json.Net" Version="7.1.0"/>
     </ItemGroup>
 
 </Project>

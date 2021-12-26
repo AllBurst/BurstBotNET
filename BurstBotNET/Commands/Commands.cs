@@ -7,19 +7,11 @@ using DSharpPlus.EventArgs;
 
 namespace BurstBotNET.Commands;
 
-using CommandGroup = Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>>;
+using CommandGroup =
+    Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>>;
 
 public class Commands
 {
-    public CommandGroup GlobalCommands
-    {
-        get;
-    }
-    public CommandGroup GuildCommands
-    {
-        get;
-    }
-
     public Commands()
     {
         var about = new About();
@@ -43,13 +35,19 @@ public class Commands
         var blackJack = new BlackJack.BlackJack();
         var ninetyNine = new NinetyNine.NinetyNine();
         var help = new Help.Help();
+        var chinesePoker = new ChinesePoker.ChinesePoker();
 
         GuildCommands =
             new CommandGroup
             {
                 { blackJack.ToString(), ((ISlashCommand)blackJack).GetCommandTuple() },
                 { ninetyNine.ToString(), ((ISlashCommand)ninetyNine).GetCommandTuple() },
-                { help.ToString(), ((ISlashCommand)help).GetCommandTuple() }
+                { help.ToString(), ((ISlashCommand)help).GetCommandTuple() },
+                { chinesePoker.ToString(), ((ISlashCommand)chinesePoker).GetCommandTuple() }
             };
     }
+
+    public CommandGroup GlobalCommands { get; }
+
+    public CommandGroup GuildCommands { get; }
 }

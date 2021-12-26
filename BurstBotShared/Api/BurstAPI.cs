@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -22,10 +23,6 @@ public class BurstApi
 {
     public const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
-    private readonly string _serverEndpoint;
-    private readonly int _socketPort;
-    private readonly string _socketEndpoint;
-    private readonly ConcurrentDictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
 
     private const Permissions PlayerPermissions
         = Permissions.AddReactions
@@ -45,6 +42,11 @@ public class BurstApi
           | Permissions.ManageChannels
           | Permissions.ManageMessages;
 
+    private readonly ConcurrentDictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
+    private readonly string _serverEndpoint;
+    private readonly string _socketEndpoint;
+    private readonly int _socketPort;
+
     public BurstApi(Config config)
     {
         _serverEndpoint = config.ServerEndpoint;
@@ -52,7 +54,8 @@ public class BurstApi
         _socketPort = config.SocketPort;
     }
 
-    public async Task<IFlurlResponse> SendRawRequest<TPayloadType>(string endpoint, ApiRequestType requestType, TPayloadType? payload)
+    public async Task<IFlurlResponse> SendRawRequest<TPayloadType>(string endpoint, ApiRequestType requestType,
+        TPayloadType? payload)
     {
         var url = _serverEndpoint + endpoint;
         try
@@ -102,82 +105,181 @@ public class BurstApi
         var cancellationTokenSource = new CancellationTokenSource();
         var url = new Uri(_socketPort != 0 ? $"ws://{_socketEndpoint}:{_socketPort}" : $"wss://{_socketEndpoint}");
         await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
-        
+
         while (true)
-        {
             if (socketSession.State == WebSocketState.Open)
                 break;
-        }
-        
+
         await socketSession.SendAsync(new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(waitingData)),
             WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, cancellationTokenSource.Token);
 
         while (true)
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
-        var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
-        var timeoutTask = Task.Run(async () =>
-        {
-            try
+            var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
+            var timeoutTask = Task.Run(async () =>
             {
-                await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
-                return new GenericJoinStatus
+                try
                 {
-                    SocketIdentifier = null,
-                    GameId = null,
-                    StatusType = GenericJoinStatusType.TimedOut
-                };
-            }
-            catch (TaskCanceledException ex)
+                    await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
+                    return new GenericJoinStatus
+                    {
+                        SocketIdentifier = null,
+                        GameId = null,
+                        StatusType = GenericJoinStatusType.TimedOut
+                    };
+                }
+                catch (TaskCanceledException ex)
+                {
+                    logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
+                }
+                finally
+                {
+                    timeoutCancellationTokenSource.Dispose();
+                }
+
+                return null;
+            }, cancellationTokenSource.Token);
+
+            var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
+            logger.LogDebug("Match data: {Data}", matchData?.ToString());
+            if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
             {
-                logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
-            }
-            finally
-            {
-                timeoutCancellationTokenSource.Dispose();
+                const string message = "Timeout because no match game is found";
+                logger.LogDebug(message);
+                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
+                    cancellationTokenSource.Token);
+                _ = Task.Run(() =>
+                {
+                    cancellationTokenSource.Cancel();
+                    logger.LogDebug("All tasks for matching have been cancelled");
+                    cancellationTokenSource.Dispose();
+                });
+                logger.LogDebug("WebSocket closed due to timeout");
+                break;
             }
 
-            return null;
-        }, cancellationTokenSource.Token);
-
-        var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
-        logger.LogDebug("Match data: {Data}", matchData?.ToString());
-        if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
-        {
-            const string message = "Timeout because no match game is found";
-            logger.LogDebug(message);
-            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
-                cancellationTokenSource.Token);
             _ = Task.Run(() =>
             {
-                cancellationTokenSource.Cancel();
-                logger.LogDebug("All tasks for matching have been cancelled");
-                cancellationTokenSource.Dispose();
+                timeoutCancellationTokenSource.Cancel();
+                logger.LogDebug("Timeout task for matching has been cancelled");
             });
-            logger.LogDebug("WebSocket closed due to timeout");
-            break;
-        }
-        
-        _ = Task.Run(() =>
-        {
-            timeoutCancellationTokenSource.Cancel();
-            logger.LogDebug("Timeout task for matching has been cancelled");
-        });
 
-        if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
-        
-        await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
-            cancellationTokenSource.Token);
-        cancellationTokenSource.Dispose();
-        await e.Interaction.CreateFollowupMessageAsync(
-            new DiscordFollowupMessageBuilder()
-                .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
-                    null)));
+            if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
 
-        return matchData;
+            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
+                cancellationTokenSource.Token);
+            cancellationTokenSource.Dispose();
+            await e.Interaction.CreateFollowupMessageAsync(
+                new DiscordFollowupMessageBuilder()
+                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
+                        null)));
+
+            return matchData;
         }
 
         return null;
+    }
+
+    public static (GenericJoinStatus?, DiscordWebhookBuilder) HandleMatchGameHttpStatuses(IFlurlResponse response,
+        string unit, GameType gameType)
+    {
+        var responseCode = response.ResponseMessage.StatusCode;
+        return responseCode switch
+        {
+            HttpStatusCode.BadRequest =>
+                (null,
+                    new DiscordWebhookBuilder().WithContent(
+                        "Sorry! It seems that at least one of the players you mentioned has already joined the waiting list!")),
+            HttpStatusCode.NotFound =>
+                (null,
+                    new DiscordWebhookBuilder().WithContent(
+                        "Sorry, but all players who want to join the game have to join the server first!")),
+            HttpStatusCode.InternalServerError =>
+                (null,
+                    new DiscordWebhookBuilder().WithContent(
+                        $"Sorry, but an unknown error occurred! Could you report this to the developers: **{responseCode}: {response.ResponseMessage.ReasonPhrase}**")),
+            _ => HandleSuccessfulJoinStatus(response, unit, gameType)
+        };
+    }
+
+    public static async Task<(DiscordMember[], GenericJoinStatus)?> HandleStartGameReactions(
+        string gameName,
+        InteractionCreateEventArgs e,
+        DiscordMessage originalMessage,
+        DiscordMember invokingMember,
+        DiscordUser botUser,
+        GenericJoinStatus joinStatus,
+        IEnumerable<ulong> playerIds,
+        string confirmationEndpoint,
+        State state,
+        ILogger logger)
+    {
+        await originalMessage.CreateReactionAsync(Constants.CheckMarkEmoji);
+        await originalMessage.CreateReactionAsync(Constants.CrossMarkEmoji);
+        await originalMessage.CreateReactionAsync(Constants.PlayMarkEmoji);
+        var secondsRemained = 30;
+        var cancelled = false;
+        var confirmedUsers = new List<DiscordUser>();
+
+        while (secondsRemained > 0)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5));
+
+            confirmedUsers = (await originalMessage
+                    .GetReactionsAsync(Constants.CheckMarkEmoji))
+                .Where(u => !u.IsBot && playerIds.Contains(u.Id))
+                .ToList();
+
+            var cancelledUsers = (await originalMessage
+                    .GetReactionsAsync(Constants.CrossMarkEmoji))
+                .Where(u => !u.IsBot)
+                .Select(u => u.Id)
+                .ToImmutableList();
+            if (cancelledUsers.Contains(invokingMember.Id))
+            {
+                await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                    .WithContent("❌ Cancelled."));
+                cancelled = true;
+                break;
+            }
+
+            var fastStartUsers = (await originalMessage
+                    .GetReactionsAsync(Constants.PlayMarkEmoji))
+                .Where(u => !u.IsBot)
+                .Select(u => u.Id)
+                .ToImmutableList();
+            if (fastStartUsers.Contains(invokingMember.Id))
+                break;
+
+            secondsRemained -= 5;
+            var confirmedUsersString =
+                $"\nConfirmed players: \n{string.Join('\n', confirmedUsers.Select(u => $"💠<@!{u.Id}>"))}";
+            await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, gameName,
+                    confirmedUsersString,
+                    secondsRemained)));
+        }
+
+        if (cancelled)
+            return null;
+
+        await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+            .WithContent(
+                "<:burst_spade:910826637657010226> <:burst_heart:910826529511051284> **GAME STARTED!** <:burst_diamond:910826609576140821> <:burst_club:910826578336948234>"));
+
+        var guild = e.Interaction.Guild;
+        var members = await Task.WhenAll(confirmedUsers
+            .Select(async u => await guild.GetMemberAsync(u.Id)));
+        var matchData = await state.BurstApi
+            .SendRawRequest(confirmationEndpoint, ApiRequestType.Post, new GenericJoinStatus
+            {
+                StatusType = GenericJoinStatusType.Start,
+                PlayerIds = members.Select(m => m.Id).ToList()
+            })
+            .ReceiveJson<GenericJoinStatus>();
+
+        return (members, matchData);
     }
 
     public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(GenericJoinStatus waitingData,
@@ -192,7 +294,7 @@ public class BurstApi
 
         if (matchData == null)
             return null;
-        
+
         var guild = e.Interaction.Guild;
         var textChannel = await CreatePlayerChannel(guild, invokingMember);
         var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
@@ -209,8 +311,9 @@ public class BurstApi
             AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
         });
     }
-    
-    public static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger, CancellationToken token)
+
+    public static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger,
+        CancellationToken token)
     {
         var buffer = new byte[BufferSize];
         var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
@@ -233,7 +336,8 @@ public class BurstApi
             var permitBot = new DiscordOverwriteBuilder(botMember).Allow(BotPermissions)
                 .Deny(Permissions.None);
 
-            var channel = await guild.CreateTextChannelAsync($"{invokingMember.DisplayName}-All-Burst", category, overwrites: new[] { denyEveryone, permitPlayer, permitBot });
+            var channel = await guild.CreateTextChannelAsync($"{invokingMember.DisplayName}-All-Burst", category,
+                overwrites: new[] { denyEveryone, permitPlayer, permitBot });
 
             await Task.Delay(TimeSpan.FromSeconds(1));
             if (channel == null)
@@ -241,6 +345,30 @@ public class BurstApi
 
             return channel;
         }
+    }
+
+    private static (GenericJoinStatus?, DiscordWebhookBuilder) HandleSuccessfulJoinStatus(IFlurlResponse response,
+        string unit, GameType gameType)
+    {
+        var newJoinStatus = response.GetJsonAsync<GenericJoinStatus>().GetAwaiter().GetResult();
+        newJoinStatus = newJoinStatus with { GameType = gameType };
+        return newJoinStatus.StatusType switch
+        {
+            GenericJoinStatusType.Waiting =>
+                (newJoinStatus,
+                    new DiscordWebhookBuilder().WithContent(
+                        $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}! Please wait for matching...")),
+            GenericJoinStatusType.Start => (newJoinStatus,
+                new DiscordWebhookBuilder().WithContent(
+                    $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}!")),
+            GenericJoinStatusType.Matched =>
+                (newJoinStatus,
+                    new DiscordWebhookBuilder().WithContent(
+                        $"Successfully matched a game with {newJoinStatus.PlayerIds.Count} players! Preparing the game...")),
+            GenericJoinStatusType.TimedOut =>
+                (null, new DiscordWebhookBuilder().WithContent("Matching has timed out. No match found.")),
+            var invalid => (null, new DiscordWebhookBuilder().WithContent($"Unknown status: {invalid}"))
+        };
     }
 
     private async Task<DiscordChannel> CreateCategory(DiscordGuild guild)
@@ -251,7 +379,7 @@ public class BurstApi
                 .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
                 .ToImmutableList();
             if (!category.IsEmpty) return category.First();
-            
+
             var newCategory = await guild.CreateChannelCategoryAsync(CategoryName);
             _guildChannelList[guild.Id].Add(newCategory);
             return newCategory;
@@ -259,12 +387,12 @@ public class BurstApi
 
         var channels = await guild.GetChannelsAsync();
         _guildChannelList.GetOrAdd(guild.Id, channels.ToList());
-        
+
         var retrievedCategory = channels
             .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
             .ToImmutableList();
         if (!retrievedCategory.IsEmpty) return retrievedCategory.First();
-        
+
         {
             var newCategory = await guild.CreateChannelCategoryAsync(CategoryName);
             _guildChannelList[guild.Id].Add(newCategory);
