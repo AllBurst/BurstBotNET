@@ -8,6 +8,14 @@
         <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <NoWarn>1701;1702;2252</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <NoWarn>1701;1702;2252</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
         <PackageReference Include="DSharpPlus" Version="4.1.0" />

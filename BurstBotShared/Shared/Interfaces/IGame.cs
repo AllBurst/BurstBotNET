@@ -18,7 +18,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
 {
 #pragma warning disable CA2252
     static abstract Task<bool> HandleProgress(
-        byte[] messageContent,
+        string messageContent,
         TState state,
         GameStates gameStates,
         DeckService deckService,
@@ -26,9 +26,10 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         ILogger logger);
 
     static abstract Task HandleEndingResult(
-        byte[] messageContent,
+        string messageContent,
         TState state,
         Localizations localizations,
+        DeckService deckService,
         ILogger logger);
 #pragma warning restore CA2252
     
@@ -67,14 +68,27 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
-        var rentBuffer = buffer.Rent(Constants.BufferSize);
-        var receiveResult = await socketSession.ReceiveAsync(rentBuffer, cancellationTokenSource.Token);
+        var contentStack = new Stack<string>();
+        WebSocketReceiveResult? receiveResult;
+
+        do
+        {
+            var rentBuffer = buffer.Rent(Constants.BufferSize);
+            receiveResult = await socketSession.ReceiveAsync(rentBuffer, cancellationTokenSource.Token);
+            logger.LogDebug("Received broadcast message from WS");
+            var receiveContent = rentBuffer[..receiveResult.Count];
+            var stringContent = Encoding.UTF8.GetString(receiveContent);
+            contentStack.Push(stringContent);
+            //logger.LogDebug("Received content: {Content}", stringContent);
+            buffer.Return(rentBuffer, true);
+        } while (!receiveResult.EndOfMessage);
+
+        var content = new StringBuilder();
+        while (contentStack.TryPop(out var str))
+            content.Append(str);
         
-        logger.LogDebug("Received broadcast message from WS");
-        var receiveContent = rentBuffer[..receiveResult.Count];
-        buffer.Return(rentBuffer, true);
-        if (!await TGame.HandleProgress(receiveContent, state, gameStates, deckService, localizations, logger))
-            await TGame.HandleEndingResult(receiveContent, state, localizations, logger);
+        if (!await TGame.HandleProgress(content.ToString(), state, gameStates, deckService, localizations, logger))
+            await TGame.HandleEndingResult(content.ToString(), state, localizations, deckService, logger);
     }
 
     static async Task RunTimeoutTask(long timeout, TState state, TProgress closedProgress, ILogger logger,

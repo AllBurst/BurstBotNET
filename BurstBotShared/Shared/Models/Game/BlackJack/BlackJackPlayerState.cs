@@ -1,10 +1,12 @@
+using System.Threading.Channels;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus.Entities;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
-public class BlackJackPlayerState
+public class BlackJackPlayerState : IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>
 {
     public string GameId { get; set; } = "";
     public ulong PlayerId { get; set; }
@@ -16,8 +18,11 @@ public class BlackJackPlayerState
     public List<Card> Cards { get; set; } = new();
     public string AvatarUrl { get; set; } = "";
 
-    public static Task<BlackJackPlayerState> FromRaw(DiscordGuild guild, RawBlackJackPlayerState rawState)
-        => rawState.ToPlayerState(guild);
+    public Channel<Tuple<ulong, byte[]>>? PayloadChannel => null;
 
-    public RawBlackJackPlayerState ToRaw() => RawBlackJackPlayerState.FromPlayerState(this);
+    public BlackJackGameProgress GameProgress
+    {
+        get => throw new InvalidOperationException("Player state doesn't have game progress.");
+        set => throw new InvalidOperationException("Player state doesn't have game progress.");
+    }
 }

@@ -40,7 +40,7 @@ public partial class Handlers
         var globalCommandsToCreate = _commands
             .GlobalCommands
             .Select(pair => pair.Value.Item1)
-            .ToImmutableList();
+            .ToImmutableArray();
 
         var globalCommands = await client.GetGlobalApplicationCommandsAsync();
 
@@ -54,21 +54,21 @@ public partial class Handlers
         {
             var existingGlobalCommandNames = globalCommands
                 .Select(cmd => cmd.Name)
-                .ToImmutableList();
+                .ToImmutableArray();
             var commandsToCreate = globalCommandsToCreate
                 .Where(cmd => !existingGlobalCommandNames.Contains(cmd.Name))
-                .ToImmutableList();
+                .ToImmutableArray();
             foreach (var cmd in commandsToCreate) await client.CreateGlobalApplicationCommandAsync(cmd);
         }
     }
 
     private async Task CreateGuildCommands(DiscordClient client, Config config)
     {
-        var guildIds = config.TestGuilds.Select(ulong.Parse).ToImmutableList();
+        var guildIds = config.TestGuilds.Select(ulong.Parse).ToImmutableArray();
         var guildCommandsToCreate = _commands
             .GuildCommands
             .Select(pair => pair.Value.Item1)
-            .ToImmutableList();
+            .ToImmutableArray();
 
         foreach (var guildId in guildIds)
         {
@@ -84,11 +84,11 @@ public partial class Handlers
             {
                 var existingGuildCommandNames = guildCommands
                     .Select(cmd => cmd.Name)
-                    .ToImmutableList();
+                    .ToImmutableArray();
 
                 var commandsToCreate = guildCommandsToCreate
                     .Where(cmd => !existingGuildCommandNames.Contains(cmd.Name))
-                    .ToImmutableList();
+                    .ToImmutableArray();
 
                 foreach (var cmd in commandsToCreate) await client.CreateGuildApplicationCommandAsync(guildId, cmd);
             }

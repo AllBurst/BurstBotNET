@@ -48,7 +48,7 @@ public record RawChinesePokerGameState : IRawState<ChinesePokerGameState, RawChi
                 ((IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress>)pair.Value).ToRaw());
         return new RawChinesePokerGameState
         {
-            GameId = gameState!.GameId,
+            GameId = gameState.GameId,
             BaseBet = gameState.BaseBet,
             LastActiveTime = gameState.LastActiveTime.ToString(CultureInfo.InvariantCulture),
             Players = players,

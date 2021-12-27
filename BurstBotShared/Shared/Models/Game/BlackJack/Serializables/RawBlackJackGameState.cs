@@ -1,13 +1,14 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using BurstBotShared.Shared.Interfaces;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 
-public record RawBlackJackGameState
+public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress>
 {
     [JsonPropertyName("game_id")] 
     [JsonProperty("game_id")] 
@@ -47,28 +48,31 @@ public record RawBlackJackGameState
     [JsonProperty("previous_request_type")]
     public string PreviousRequestType { get; init; } = "";
 
-    public static RawBlackJackGameState FromGameState(BlackJackGameState state)
-        => new()
+    public static RawBlackJackGameState FromState(IState<BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress> state)
+    {
+        var gameState = state as BlackJackGameState;
+        return new RawBlackJackGameState
         {
-            CurrentPlayerOrder = state.CurrentPlayerOrder,
-            CurrentTurn = state.CurrentTurn,
-            GameId = state.GameId,
-            HighestBet = state.HighestBet,
-            LastActiveTime = state.LastActiveTime.ToString(CultureInfo.InvariantCulture),
-            Players = state.Players.ToDictionary(pair => pair.Key, pair => pair.Value.ToRaw()),
-            PreviousPlayerId = state.PreviousPlayerId,
-            PreviousRequestType = state.PreviousRequestType,
-            Progress = state.Progress
+            CurrentPlayerOrder = gameState!.CurrentPlayerOrder,
+            CurrentTurn = gameState.CurrentTurn,
+            GameId = gameState.GameId,
+            HighestBet = gameState.HighestBet,
+            LastActiveTime = gameState.LastActiveTime.ToString(CultureInfo.InvariantCulture),
+            Players = gameState.Players.ToDictionary(pair => pair.Key, pair => ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)pair.Value).ToRaw()),
+            PreviousPlayerId = gameState.PreviousPlayerId,
+            PreviousRequestType = gameState.PreviousRequestType,
+            Progress = gameState.Progress
         };
+    }
 
-    public async Task<BlackJackGameState> ToGameState(DiscordGuild guild)
+    public async Task<BlackJackGameState> ToState(DiscordGuild guild)
     {
         var players = Players
             .AsEnumerable()
             .Select(async pair =>
             {
                 var (key, value) = pair;
-                var playerState = await value.ToPlayerState(guild);
+                var playerState = await value.ToState(guild);
                 return KeyValuePair.Create(key, playerState);
             })
             .ToList();

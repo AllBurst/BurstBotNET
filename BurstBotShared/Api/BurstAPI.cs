@@ -20,7 +20,7 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotShared.Api;
 
-public class BurstApi
+public sealed class BurstApi
 {
     private const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
@@ -237,7 +237,7 @@ public class BurstApi
                     .GetReactionsAsync(Constants.CrossMarkEmoji))
                 .Where(u => !u.IsBot)
                 .Select(u => u.Id)
-                .ToImmutableList();
+                .ToImmutableArray();
             if (cancelledUsers.Contains(invokingMember.Id))
             {
                 await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
@@ -250,7 +250,7 @@ public class BurstApi
                     .GetReactionsAsync(Constants.PlayMarkEmoji))
                 .Where(u => !u.IsBot)
                 .Select(u => u.Id)
-                .ToImmutableList();
+                .ToImmutableArray();
             if (fastStartUsers.Contains(invokingMember.Id))
                 break;
 
@@ -404,7 +404,7 @@ public class BurstApi
         {
             var category = _guildChannelList[guild.Id]
                 .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
-                .ToImmutableList();
+                .ToImmutableArray();
             if (!category.IsEmpty) return category.First();
 
             var newCategory = await guild.CreateChannelCategoryAsync(CategoryName);
@@ -417,7 +417,7 @@ public class BurstApi
 
         var retrievedCategory = channels
             .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
-            .ToImmutableList();
+            .ToImmutableArray();
         if (!retrievedCategory.IsEmpty) return retrievedCategory.First();
 
         {

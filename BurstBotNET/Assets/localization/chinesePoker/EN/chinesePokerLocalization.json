@@ -8,6 +8,21 @@
   "initialMessageDescription": "Chinese poker consists of 3 hands: **Front Hand**, **Middle Hand**, and **Back Hand**. While front hand consists of 3 cards, middle hand and back hand comprise 5 cards. In order to beat other players, you'll need to make the combination of each of your hands as big as possible.\n\n{cardNames}",
   "initialMessageTitle": "The Chinese Poker game is starting!",
   "initialMessageFooter": "Please wait until all players are ready.",
-  "winTitle": "{playerName} won the game!",
-  "winDescription": "{playerName} won {totalRewards} tips!\n\nAll players' cards:"
+  "winTitle": "{playerName} is the biggest winner!",
+  "won": "won",
+  "lost": "lost",
+  "winDescription": "{playerName} {verb} {totalRewards} tips!",
+  "allUnits": "\n\nAll players' units:",
+  "insufficientCards": "The {hand} has to be {num} cards! Please type EXACTLY the same amount of suits and ranks as required. E.g. **s3 h3 c5** for front hand, **c5 s5 h5 c7 d7** for middle and back hand.",
+  "frontHand": "Front Hand",
+  "middleHand": "Middle Hand",
+  "backHand": "Back Hand",
+  "cards": "Your cards:",
+  "setHandFooter": "Type and separate ranks with space to set your hand. E.g. sa s3 s4",
+  "invalidCard": "One or more cards you provided is invalid! Please type and separate ranks with space to set your hand. E.g. **sa s3 s4**",
+  "confirmCards": "Do you want to set these cards as your {hand}?",
+  "confirmCardsFooter": "React below to confirm or cancel setting these cards as your {hand}.",
+  "confirmCardsFailure": "Setting cards cancelled because no action is taken.",
+  "confirmed": "✅ Confirmed!",
+  "cancelled": "❌ Cancelled."
 }

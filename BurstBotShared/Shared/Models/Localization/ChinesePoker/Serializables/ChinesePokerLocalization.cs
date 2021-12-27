@@ -21,6 +21,31 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     
     [JsonPropertyName("winTitle")] public string WinTitle { get; init; } = "";
     [JsonPropertyName("winDescription")] public string WinDescription { get; init; } = "";
+    [JsonPropertyName("won")] public string Won { get; init; } = "";
+    [JsonPropertyName("lost")] public string Lost { get; init; } = "";
+    [JsonPropertyName("allUnits")] public string AllUnits { get; init; } = "";
+
+    [JsonPropertyName("insufficientCards")]
+    public string InsufficientCards { get; init; } = "";
+
+    [JsonPropertyName("frontHand")] public string FrontHand { get; init; } = "";
+    [JsonPropertyName("middleHand")] public string MiddleHand { get; init; } = "";
+    [JsonPropertyName("backHand")] public string BackHand { get; init; } = "";
+
+    [JsonPropertyName("cards")] public string Cards { get; init; } = "";
+    [JsonPropertyName("setHandFooter")] public string SetHandFooter { get; init; } = "";
+
+    [JsonPropertyName("invalidCard")] public string InvalidCard { get; init; } = "";
+    [JsonPropertyName("confirmCards")] public string ConfirmCards { get; init; } = "";
+
+    [JsonPropertyName("confirmCardsFooter")]
+    public string ConfirmCardsFooter { get; init; } = "";
+
+    [JsonPropertyName("confirmCardsFailure")]
+    public string ConfirmCardsFailure { get; init; } = "";
+
+    [JsonPropertyName("confirmed")] public string Confirmed { get; init; } = "";
+    [JsonPropertyName("cancelled")] public string Cancelled { get; init; } = "";
 
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

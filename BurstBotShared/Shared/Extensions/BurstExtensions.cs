@@ -36,11 +36,9 @@ public static class BurstExtensions
                     {
                         return v % rem.Value;
                     }
-                    else
-                    {
-                        return v;
-                    }
-                }).ToImmutableList())
+
+                    return v;
+                }).ToImmutableArray())
                 .ToImmutableList()
                 .ForEach(values =>
                 {

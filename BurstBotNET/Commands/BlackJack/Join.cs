@@ -14,13 +14,14 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.BlackJack;
 
+#pragma warning disable CA2252
 public partial class BlackJack
 {
     private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
     {
         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var mentionedPlayers = new List<ulong>();
-        var options = e.Interaction.Data.Options.ToImmutableList();
+        var options = e.Interaction.Data.Options.ToImmutableArray();
         if (options[0].Options != null && options[0].Options.Any())
             mentionedPlayers.AddRange(options[0]
                 .Options

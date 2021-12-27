@@ -24,6 +24,6 @@ public record ChinesePokerInGameRequest
     [JsonPropertyName("player_name")] public string? PlayerName { get; init; }
     [JsonPropertyName("avatar_url")] public string? AvatarUrl { get; init; }
     [JsonPropertyName("base_bet")] public float BaseBet { get; init; }
-    [JsonPropertyName("play_card")] public ImmutableList<Card>? PlayCard { get; init; }
+    [JsonPropertyName("play_card")] public ImmutableArray<Card>? PlayCard { get; init; }
     [JsonPropertyName("declared_natural")] public ChinesePokerNatural? DeclaredNatural { get; init; }
 };

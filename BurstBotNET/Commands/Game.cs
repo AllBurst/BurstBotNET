@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace BurstBotNET.Commands;
 
+#pragma warning disable CA2252
 public static class Game
 {
     public static readonly JsonSerializerSettings JsonSerializerSettings = new();

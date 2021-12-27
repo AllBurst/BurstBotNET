@@ -8,6 +8,7 @@ namespace BurstBotNET.Commands.BlackJack;
 
 using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>;
 
+#pragma warning disable CA2252
 public partial class BlackJack : ISlashCommand
 {
     public const string GameName = "Black Jack";

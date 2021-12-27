@@ -1,12 +1,10 @@
 using System.Buffers;
 using System.Collections.Immutable;
-using System.Net.WebSockets;
-using System.Text;
 using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
-using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.BlackJack;
@@ -22,11 +20,14 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
 
-public partial class BlackJack
+using BlackJackGame = IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackGameProgress, BlackJackInGameRequestType>;
+
+#pragma warning disable CA2252
+public partial class BlackJack : BlackJackGame
 {
-    private static readonly ImmutableList<string> InGameRequestTypes = Enum
+    private static readonly ImmutableArray<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
-        .ToImmutableList();
+        .ToImmutableArray();
 
     private static async Task StartListening(
         string gameId,
@@ -68,12 +69,15 @@ public partial class BlackJack
         while (!state.Progress.Equals(BlackJackGameProgress.Closed))
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var channelTask = RunChannelTask(socketSession,
+            var channelTask = BlackJackGame.RunChannelTask(socketSession,
                 state,
+                InGameRequestTypes,
+                BlackJackInGameRequestType.Close,
+                BlackJackGameProgress.Closed,
                 logger,
                 cancellationTokenSource);
 
-            var broadcastTask = RunBroadcastTask(socketSession,
+            var broadcastTask = BlackJackGame.RunBroadcastTask(socketSession,
                 state,
                 gameStates,
                 buffer,
@@ -82,7 +86,8 @@ public partial class BlackJack
                 logger,
                 cancellationTokenSource);
 
-            var timeoutTask = RunTimeoutTask(timeout, state, logger, timeoutCancellationTokenSource);
+            var timeoutTask = BlackJackGame.RunTimeoutTask(timeout, state, BlackJackGameProgress.Closed, logger,
+                timeoutCancellationTokenSource);
 
             await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
             _ = Task.Run(() =>
@@ -155,7 +160,7 @@ public partial class BlackJack
             .Item1
             .Where(pair => !pair.Value.Players
                 .Where(p => p.Value.TextChannel?.Id == channelId)
-                .ToImmutableList().IsEmpty)
+                .ToImmutableArray().IsEmpty)
             .Select(p => p.Value)
             .First();
 
@@ -170,14 +175,20 @@ public partial class BlackJack
             return;
 
         var channel = e.Message.Channel;
-        await Help.Help.GenericBlackJackHelp(channel, e.Message.Content, localizations);
+        var splitContent = e.Message.Content
+            .ToLowerInvariant()
+            .Trim()
+            .Split(' ')
+            .Select(s => s.Trim())
+            .Where(s => !string.IsNullOrEmpty(s))
+            .ToImmutableArray();
+        var helpExecuted = await Help.Help.GenericCommandHelp(channel, splitContent, localizations.GetLocalization().BlackJack);
+
+        if (helpExecuted)
+            return;
 
         if (state.CurrentPlayerOrder != playerState.Order)
             return;
-
-        var message = e.Message;
-        var lowercaseContent = message.Content.ToLowerInvariant().Trim();
-        var splitContent = lowercaseContent.Split(' ');
 
         switch (state.Progress)
         {
@@ -250,112 +261,7 @@ public partial class BlackJack
         }
     }
 
-    private static async Task RunChannelTask(
-        WebSocket socketSession,
-        BlackJackGameState state,
-        ILogger logger,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        // Receive serialized data from channel without blocking.
-        var channelMessage = await state.Channel!.Reader.ReadAsync();
-        var (playerId, payload) = channelMessage;
-        var operation = await HandleChannelMessage(playerId, payload, socketSession,
-            state, logger, cancellationTokenSource.Token);
-
-        if (operation.Equals(SocketOperation.Continue))
-            return;
-
-        var message = operation switch
-        {
-            SocketOperation.Shutdown => "WebSocket session ends due to timeout",
-            SocketOperation.Close => "Received close response",
-            _ => ""
-        };
-        logger.LogDebug("{Message}", message);
-    }
-
-    private static async Task RunBroadcastTask(
-        WebSocket socketSession,
-        BlackJackGameState state,
-        GameStates gameStates,
-        ArrayPool<byte> buffer,
-        DeckService deckService,
-        Localizations localizations,
-        ILogger logger,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        // Try receiving broadcast messages from WS server without blocking.
-        var rentBuffer = buffer.Rent(Constants.BufferSize);
-        var receiveResult = await socketSession.ReceiveAsync(rentBuffer, cancellationTokenSource.Token);
-
-        logger.LogDebug("Received broadcast message from WS");
-        var receiveContent = Encoding.UTF8.GetString(rentBuffer[..receiveResult.Count]);
-        buffer.Return(rentBuffer, true);
-        if (!await HandleProgress(receiveContent, state, gameStates, deckService, localizations, logger))
-            await HandleEndingResult(receiveContent, state, localizations, logger);
-    }
-
-    private static async Task RunTimeoutTask(
-        long timeout,
-        BlackJackGameState state,
-        ILogger logger,
-        CancellationTokenSource cancellationTokenSource)
-    {
-        try
-        {
-            await Task.Delay(TimeSpan.FromSeconds(timeout), cancellationTokenSource.Token);
-            logger.LogDebug("Game timed out due to inactivity");
-            state.Progress = BlackJackGameProgress.Closed;
-        }
-        catch (TaskCanceledException ex)
-        {
-            logger.LogDebug("Timeout task has been cancelled: {@Exception}", ex);
-        }
-        catch (ObjectDisposedException ex)
-        {
-            logger.LogDebug("Cancellation source has been disposed (timeout task): {@Exception}", ex);
-        }
-    }
-
-    private static async Task<SocketOperation> HandleChannelMessage(ulong playerId,
-        byte[] payload,
-        WebSocket socketSession,
-        BlackJackGameState state,
-        ILogger logger,
-        CancellationToken token)
-    {
-        logger.LogDebug("Received message from channel");
-        var payloadText = Encoding.UTF8.GetString(payload);
-        if (playerId == 0 && payloadText.Equals(SocketOperation.Shutdown.ToString()))
-        {
-            state.Progress = BlackJackGameProgress.Closed;
-            logger.LogDebug("Closing the session due to timeout");
-            return SocketOperation.Shutdown;
-        }
-
-        var requestTypeString = InGameRequestTypes
-            .Where(s => payloadText.Contains(s))
-            .FirstOrDefault(s => Enum.TryParse<BlackJackInGameRequestType>(s, out var _));
-
-        if (string.IsNullOrWhiteSpace(requestTypeString))
-            return SocketOperation.Continue;
-
-        var parseResult = Enum.TryParse<BlackJackInGameRequestType>(requestTypeString, out var requestType);
-
-        if (!parseResult)
-            return SocketOperation.Continue;
-
-        await socketSession.SendAsync(new ReadOnlyMemory<byte>(payload), WebSocketMessageType.Text,
-            true, token);
-
-        if (!requestType.Equals(BlackJackInGameRequestType.Close)) return SocketOperation.Continue;
-
-        state.Progress = BlackJackGameProgress.Closed;
-        logger.LogDebug("Received close response. Closing the session...");
-        return SocketOperation.Close;
-    }
-
-    private static async Task<bool> HandleProgress(
+    public static async Task<bool> HandleProgress(
         string messageContent,
         BlackJackGameState state,
         GameStates gameStates,
@@ -506,14 +412,18 @@ public partial class BlackJack
         return true;
     }
 
-    private static async Task HandleEndingResult(string messageContent, BlackJackGameState state,
-        Localizations localizations, ILogger logger)
+    public static async Task HandleEndingResult(
+        string messageContent,
+        BlackJackGameState state,
+        Localizations localizations,
+        DeckService deckService,
+        ILogger logger)
     {
         if (state.Progress.Equals(BlackJackGameProgress.Ending))
             return;
 
         logger.LogDebug("Handling ending result...");
-
+        
         try
         {
             var deserializedEndingData = JsonSerializer.Deserialize<BlackJackInGameResponseEndingData>(messageContent);
@@ -689,7 +599,9 @@ public partial class BlackJack
         if (previousPlayerState == null)
             return;
 
-        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
+        await SendPreviousPlayerActionMessage(gameState,
+            ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(),
+            previousRequestType,
             deckService, localizations);
 
         if (!gameState.Progress.Equals(nextProgress))
@@ -725,7 +637,7 @@ public partial class BlackJack
         if (previousPlayerState == null)
             return;
 
-        await SendPreviousPlayerActionMessage(gameState, previousPlayerState.ToRaw(), previousRequestType,
+        await SendPreviousPlayerActionMessage(gameState, ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(), previousRequestType,
             deckService, localizations, previousHighestBet);
 
         if (gameState.Progress != nextProgress)

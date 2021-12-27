@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace BurstBotShared.Shared.Models.Game.Serializables;
 
-public record Card : IValueRealizable<ImmutableList<int>>
+public record Card : IValueRealizable<ImmutableArray<int>>
 {
     [JsonPropertyName("suit")]
     [JsonProperty("suit")]
@@ -23,7 +23,7 @@ public record Card : IValueRealizable<ImmutableList<int>>
     [JsonProperty("is_front")]
     public bool IsFront { get; init; }
 
-    public ImmutableList<int> GetValue()
+    public ImmutableArray<int> GetValue()
     {
         var cardValue = (int)Suit + (Number >= 10 ? 10 : Number);
         var values = new List<int> { cardValue };
@@ -32,7 +32,7 @@ public record Card : IValueRealizable<ImmutableList<int>>
             values.Add((int)Suit + 11);
         }
 
-        return values.ToImmutableList();
+        return values.ToImmutableArray();
     }
 
     public string ToStringSimple()
@@ -59,5 +59,33 @@ public record Card : IValueRealizable<ImmutableList<int>>
             _ => Number.ToString()
         };
         return $"{Suit.ToSuitPretty()} {n}";
+    }
+
+    public static Card CreateCard(string suit, string rank)
+    {
+        var s = suit switch
+        {
+            "S" or "s" => Suit.Spade,
+            "H" or "h" => Suit.Heart,
+            "D" or "d" => Suit.Diamond,
+            "C" or "c" => Suit.Club,
+            _ => Suit.Club
+        };
+
+        var r = rank switch
+        {
+            "a" or "A" => 1,
+            "j" or "J" => 11,
+            "q" or "Q" => 12,
+            "k" or "K" => 13,
+            _ => int.Parse(rank)
+        };
+
+        return new Card
+        {
+            Suit = s,
+            IsFront = true,
+            Number = r
+        };
     }
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
@@ -11,8 +12,18 @@ using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEve
 #pragma warning disable CA2252
 public partial class ChinesePoker : ISlashCommand
 {
-    private const string GameName = "Chinese Poker";
+    public const string GameName = "Chinese Poker";
+    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly CommandGroup _dispatchables;
+
+    static ChinesePoker()
+    {
+        AvailableRanks = Enumerable
+            .Range(2, 9)
+            .Select(n => n.ToString())
+            .Concat(new[] { "a", "j", "q", "k" })
+            .ToArray();
+    }
 
     public ChinesePoker()
     {
