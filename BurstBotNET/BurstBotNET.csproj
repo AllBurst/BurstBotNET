@@ -5,29 +5,32 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EnablePreviewFeatures>True</EnablePreviewFeatures>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DSharpPlus" Version="4.1.0" />
-      <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
-      <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
-      <PackageReference Include="Flurl" Version="3.0.2" />
-      <PackageReference Include="Flurl.Http" Version="3.2.0" />
-      <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Include="DSharpPlus" Version="4.1.0" />
+        <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
+        <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
+        <PackageReference Include="Flurl" Version="3.0.2" />
+        <PackageReference Include="Flurl.Http" Version="3.2.0" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Assets\**\*.*">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Remove="Dockerfile" />
-      <None Remove=".dockerignore" />
+        <None Update="Assets\**\*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Remove="Dockerfile" />
+        <None Remove=".dockerignore" />
+        <None Update="Assets\localization\chinesePoker\EN\otherHands.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BurstBotLib\BurstBotLib.fsproj" />
-      <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
+        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
     </ItemGroup>
 
 </Project>

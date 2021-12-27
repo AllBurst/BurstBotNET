@@ -5,25 +5,28 @@ using DSharpPlus.EventArgs;
 
 namespace BurstBotNET.Handlers;
 
+#pragma warning disable CA2252
 public partial class Handlers
 {
-    public async Task HandleSlashCommands(DiscordClient client, InteractionCreateEventArgs e)
+    public Task HandleSlashCommands(DiscordClient client, InteractionCreateEventArgs e)
     {
         if (!e.Interaction.GuildId.HasValue)
-            return;
+            return Task.CompletedTask;
 
         var result = _commands.GlobalCommands
             .TryGetValue(e.Interaction.Data.Name, out var globalCommand);
         if (result)
         {
-            await globalCommand!.Item2.Invoke(client, e, _state);
-            return;
+            _ = Task.Run(async () => await globalCommand!.Item2.Invoke(client, e, _state));
+            return Task.CompletedTask;
         }
 
         result = _commands.GuildCommands
             .TryGetValue(e.Interaction.Data.Name, out var guildCommand);
         if (result)
-            await guildCommand!.Item2.Invoke(client, e, _state);
+            _ = Task.Run(async () => await guildCommand!.Item2.Invoke(client, e, _state));
+        
+        return Task.CompletedTask;
     }
 
     public async Task RegisterSlashCommands(DiscordClient client, Config config)
@@ -43,15 +46,9 @@ public partial class Handlers
 
         if (forceRecreate)
         {
-            foreach (var cmd in globalCommands)
-            {
-                await client.DeleteGlobalApplicationCommandAsync(cmd?.Id ?? 0);
-            }
-            
-            foreach (var cmd in globalCommandsToCreate)
-            {
-                await client.CreateGlobalApplicationCommandAsync(cmd);
-            }
+            foreach (var cmd in globalCommands) await client.DeleteGlobalApplicationCommandAsync(cmd?.Id ?? 0);
+
+            foreach (var cmd in globalCommandsToCreate) await client.CreateGlobalApplicationCommandAsync(cmd);
         }
         else
         {
@@ -61,10 +58,7 @@ public partial class Handlers
             var commandsToCreate = globalCommandsToCreate
                 .Where(cmd => !existingGlobalCommandNames.Contains(cmd.Name))
                 .ToImmutableList();
-            foreach (var cmd in commandsToCreate)
-            {
-                await client.CreateGlobalApplicationCommandAsync(cmd);
-            }
+            foreach (var cmd in commandsToCreate) await client.CreateGlobalApplicationCommandAsync(cmd);
         }
     }
 
@@ -81,15 +75,10 @@ public partial class Handlers
             var guildCommands = await client.GetGuildApplicationCommandsAsync(guildId);
             if (config.RecreateGuilds)
             {
-                foreach (var cmd in guildCommands)
-                {
-                    await client.DeleteGuildApplicationCommandAsync(guildId, cmd.Id);
-                }
+                foreach (var cmd in guildCommands) await client.DeleteGuildApplicationCommandAsync(guildId, cmd.Id);
 
                 foreach (var cmd in guildCommandsToCreate)
-                {
                     await client.CreateGuildApplicationCommandAsync(guildId, cmd);
-                }
             }
             else
             {
@@ -101,10 +90,7 @@ public partial class Handlers
                     .Where(cmd => !existingGuildCommandNames.Contains(cmd.Name))
                     .ToImmutableList();
 
-                foreach (var cmd in commandsToCreate)
-                {
-                    await client.CreateGuildApplicationCommandAsync(guildId, cmd);
-                }
+                foreach (var cmd in commandsToCreate) await client.CreateGuildApplicationCommandAsync(guildId, cmd);
             }
         }
     }

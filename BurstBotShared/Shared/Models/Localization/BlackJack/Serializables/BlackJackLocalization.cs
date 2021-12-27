@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
+using BurstBotShared.Shared.Interfaces;
 
 namespace BurstBotShared.Shared.Models.Localization.BlackJack.Serializables;
 
-public record BlackJackLocalization
+public record BlackJackLocalization : ILocalization<BlackJackLocalization>
 {
     [JsonPropertyName("commandList")] public Dictionary<string, string> CommandList { get; init; } = new();
 
@@ -58,13 +59,5 @@ public record BlackJackLocalization
     [JsonPropertyName("totalPointsMessage")]
     public string TotalPointsMessage { get; init; } = "";
 
-    public BlackJackLocalization LoadCommandHelps()
-    {
-        foreach (var key in CommandList.Keys)
-        {
-            CommandList[key] = File.ReadAllText(CommandList[key]);
-        }
-
-        return this;
-    }
-};
+    [JsonIgnore] public Dictionary<string, string> AvailableCommands => CommandList;
+}

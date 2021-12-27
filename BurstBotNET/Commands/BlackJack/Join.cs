@@ -108,22 +108,26 @@ public partial class BlackJack
                     }
                     catch (Exception ex)
                     {
-                        client.Logger.LogError("WebSocket failed: {Exception}", ex.Message);
+                        client.Logger.LogError("WebSocket failed: {Exception}", ex);
                     }
                 });
                 break;
             }
             case GenericJoinStatusType.Start:
             {
-                reply = reply.AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, "Black Jack", "",
+                reply = reply.AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "",
                     null));
                 var message = await e.Interaction.EditOriginalResponseAsync(reply);
-                var reactionResult = await BurstApi.HandleStartGameReactions("Black Jack", e, message, invokingMember,
+                var reactionResult = await BurstApi.HandleStartGameReactions(GameName, e, message, invokingMember,
                     botUser, joinStatus,
                     mentionedPlayers,
                     "/black_jack/join/confirm", state, client.Logger);
                 if (!reactionResult.HasValue)
-                    throw new Exception("Failed to handle reactions from invited players.");
+                {
+                    await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                        .WithContent(ErrorMessages.HandleReactionFailed));
+                    return;
+                }
 
                 var (members, matchData) = reactionResult.Value;
                 var guild = e.Interaction.Guild;
@@ -156,7 +160,7 @@ public partial class BlackJack
             {
                 await e.Interaction.EditOriginalResponseAsync(reply);
                 await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, "Black Jack", "", null)));
+                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "", null)));
                 var guild = e.Interaction.Guild;
                 var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
                 await AddBlackJackPlayerState(

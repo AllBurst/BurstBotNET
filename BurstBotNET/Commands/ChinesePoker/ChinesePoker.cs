@@ -3,18 +3,17 @@ using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using Microsoft.FSharp.Core;
 
 namespace BurstBotNET.Commands.ChinesePoker;
 
-using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task<Unit>>>;
+using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>;
 
-public class ChinesePoker : ISlashCommand
+#pragma warning disable CA2252
+public partial class ChinesePoker : ISlashCommand
 {
-    public DiscordApplicationCommand Command { get; init; }
+    private const string GameName = "Chinese Poker";
+    private readonly CommandGroup _dispatchables;
 
-    private CommandGroup _dispatchables;
-    
     public ChinesePoker()
     {
         Command = new DiscordApplicationCommand("chinese_poker", "Play a Chinese poker-like game with other 3 people.",
@@ -32,19 +31,25 @@ public class ChinesePoker : ISlashCommand
                         new DiscordApplicationCommandOption("player3", "(Optional) The 3rd player you want to invite.",
                             ApplicationCommandOptionType.User, false),
                         new DiscordApplicationCommandOption("player4", "(Optional) The 4th player you want to invite.",
-                            ApplicationCommandOptionType.User, false),
+                            ApplicationCommandOptionType.User, false)
                     })
             });
 
-        _dispatchables = new CommandGroup()
+        _dispatchables = new CommandGroup
         {
-            { "join", BurstBotLib.ChinesePoker.ChinesePoker.Join }
+            { "join", Join }
         };
     }
 
+    public DiscordApplicationCommand Command { get; init; }
+
     public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
-        => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
+    {
+        await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
+    }
 
     public override string ToString()
-        => "chinese_poker";
+    {
+        return "chinese_poker";
+    }
 }

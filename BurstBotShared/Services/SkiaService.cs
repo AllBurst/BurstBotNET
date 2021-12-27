@@ -43,4 +43,37 @@ public static class SkiaService
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
+
+    public static Stream RenderChinesePokerDeck(DeckService deck, IEnumerable<Card> cards)
+    {
+        var bitmaps = cards
+            .Select(deck.GetBitmap)
+            .ToImmutableList();
+        var width = bitmaps[0].Width * 5;
+        var height = bitmaps[0].Height * 3;
+        var surface = SKSurface.Create(new SKImageInfo(width, height));
+        var canvas = surface.Canvas;
+        
+        var currentX = 0.0f;
+        var currentY = 0.0f;
+        var indices = Enumerable.Range(1, 13);
+        var indexedBitmaps = bitmaps.Zip(indices);
+        foreach (var (bitmap, index) in indexedBitmaps)
+        {
+            canvas.DrawBitmap(bitmap, currentX, currentY);
+            currentX += bitmap.Width;
+            if (index is not (3 or 8)) continue;
+            currentX = 0.0f;
+            currentY += bitmap.Height;
+        }
+
+        var scaleRatio = (float) width / MaxWidth;
+        var ratio = MathF.Floor(1.0f / scaleRatio);
+        canvas.Scale(ratio, ratio);
+
+        var stream = new MemoryStream();
+        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
+    }
 }

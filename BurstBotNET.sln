@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurstBotNET", "BurstBotNET\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurstBotShared", "BurstBotShared\BurstBotShared.csproj", "{68D50861-50E1-4035-B262-9B0ACC330096}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BurstBotLib", "BurstBotLib\BurstBotLib.fsproj", "{FCD34AF6-5377-41E6-BEC7-3E492FE1008B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +18,5 @@ Global
 		{68D50861-50E1-4035-B262-9B0ACC330096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D50861-50E1-4035-B262-9B0ACC330096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D50861-50E1-4035-B262-9B0ACC330096}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCD34AF6-5377-41E6-BEC7-3E492FE1008B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCD34AF6-5377-41E6-BEC7-3E492FE1008B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCD34AF6-5377-41E6-BEC7-3E492FE1008B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCD34AF6-5377-41E6-BEC7-3E492FE1008B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -4,20 +4,22 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EnablePreviewFeatures>True</EnablePreviewFeatures>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
-      <PackageReference Include="DSharpPlus" Version="4.1.0" />
-      <PackageReference Include="Flurl" Version="3.0.2" />
-      <PackageReference Include="Flurl.Http" Version="3.2.0" />
-      <PackageReference Include="SkiaSharp" Version="2.88.0-preview.179" />
-      <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.0-preview.179" />
-      <PackageReference Include="YamlDotNet" Version="11.2.1" />
+        <PackageReference Include="ConcurrentHashSet" Version="1.1.0" />
+        <PackageReference Include="DSharpPlus" Version="4.1.0" />
+        <PackageReference Include="Flurl" Version="3.0.2" />
+        <PackageReference Include="Flurl.Http" Version="3.2.0" />
+        <PackageReference Include="SkiaSharp" Version="2.88.0-preview.179" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.0-preview.179" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Shared\Models" />
+        <Folder Include="Shared\Models" />
     </ItemGroup>
 
 </Project>

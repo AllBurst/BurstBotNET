@@ -13,6 +13,7 @@ using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+#pragma warning disable CA2252
 static async Task MainAsync()
 {
     var config = Config.LoadConfig();
@@ -55,7 +56,7 @@ static async Task MainAsync()
     var client = new DiscordClient(configuration);
     client.UseCommandsNext(commandsConfiguration);
     client.UseInteractivity();
-
+    
     var gameStates = new GameStates();
     var localizations = new Localizations();
     var commands = new Commands();

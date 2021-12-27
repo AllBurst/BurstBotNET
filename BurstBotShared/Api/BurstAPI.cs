@@ -9,6 +9,7 @@ using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -21,7 +22,7 @@ namespace BurstBotShared.Api;
 
 public class BurstApi
 {
-    public const string CategoryName = "All-Burst-Category";
+    private const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
 
     private const Permissions PlayerPermissions
@@ -92,7 +93,7 @@ public class BurstApi
         }
     }
 
-    public async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
+    private async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
         InteractionCreateEventArgs e,
         DiscordMember invokingMember,
         DiscordUser botUser,
@@ -213,7 +214,8 @@ public class BurstApi
         IEnumerable<ulong> playerIds,
         string confirmationEndpoint,
         State state,
-        ILogger logger)
+        ILogger logger,
+        int minPlayerCount = 2)
     {
         await originalMessage.CreateReactionAsync(Constants.CheckMarkEmoji);
         await originalMessage.CreateReactionAsync(Constants.CrossMarkEmoji);
@@ -261,7 +263,7 @@ public class BurstApi
                     secondsRemained)));
         }
 
-        if (cancelled)
+        if (cancelled || confirmedUsers.Count < minPlayerCount)
             return null;
 
         await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
@@ -312,7 +314,32 @@ public class BurstApi
         });
     }
 
-    public static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger,
+    public async Task<(GenericJoinStatus, ChinesePokerPlayerState)?> WaitForChinesePokerGame(
+        GenericJoinStatus waitingData,
+        InteractionCreateEventArgs e,
+        DiscordMember invokingMember,
+        DiscordUser botUser,
+        string description,
+        ILogger logger)
+    {
+        var matchData = await GenericWaitForGame(waitingData, e, invokingMember, botUser, "Chinese Poker", description,
+            logger);
+        if (matchData == null)
+            return null;
+
+        var guild = e.Interaction.Guild;
+        var textChannel = await CreatePlayerChannel(guild, invokingMember);
+        return (matchData, new ChinesePokerPlayerState
+        {
+            AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto),
+            GameId = matchData.GameId ?? "",
+            PlayerId = invokingMember.Id,
+            PlayerName = invokingMember.DisplayName,
+            TextChannel = textChannel
+        });
+    }
+
+    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger,
         CancellationToken token)
     {
         var buffer = new byte[BufferSize];

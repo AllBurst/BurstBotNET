@@ -10,6 +10,7 @@ namespace BurstBotNET.Commands;
 using CommandGroup =
     Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>>;
 
+#pragma warning disable CA2252
 public class Commands
 {
     public Commands()

@@ -3,7 +3,6 @@ using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
-using Newtonsoft.Json;
 
 namespace BurstBotNET.Commands.BlackJack;
 
@@ -11,16 +10,10 @@ using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEve
 
 public partial class BlackJack : ISlashCommand
 {
-    public DiscordApplicationCommand Command { get; init; }
+    public const string GameName = "Black Jack";
 
-    private static readonly JsonSerializerSettings JsonSerializerSettings = new();
     private readonly CommandGroup _dispatchables;
 
-    static BlackJack()
-    {
-        JsonSerializerSettings.MissingMemberHandling = MissingMemberHandling.Error;
-    }
-    
     public BlackJack()
     {
         Command = new DiscordApplicationCommand("blackjack", "Play a black jack-like game with other people.", new[]
@@ -48,9 +41,16 @@ public partial class BlackJack : ISlashCommand
         };
     }
 
+    public DiscordApplicationCommand Command { get; init; }
+
     public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
         State state)
-        => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
+    {
+        await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
+    }
 
-    public override string ToString() => "blackjack";
+    public override string ToString()
+    {
+        return "blackjack";
+    }
 }

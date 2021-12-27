@@ -36,7 +36,7 @@ public partial class Help
 
         await textChannel.SendMessageAsync(commandHelpText);
     }
-    
+
     private static async Task BlackJackHelp(BaseDiscordClient client, InteractionCreateEventArgs e, State state)
     {
         var botUser = client.CurrentUser;
@@ -49,7 +49,7 @@ public partial class Help
                     .WithAuthor(member.DisplayName, iconUrl: member.GetAvatarUrl(ImageFormat.Auto))
                     .WithColor((int)BurstColor.Burst)
                     .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
-                    .WithTitle("Black Jack")
+                    .WithTitle(BlackJack.BlackJack.GameName)
                     .WithDescription(state.Localizations.GetLocalization().BlackJack.CommandList["help"])));
     }
 }
