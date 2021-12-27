@@ -16,7 +16,6 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity.Extensions;
-using Flurl.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -299,8 +298,9 @@ public partial class ChinesePoker : ChinesePokerGame
 
         if (!reaction.Emoji.Equals(Constants.CheckMarkEmoji))
             return;
-
+        
         var currentProgress = state.Progress;
+        playerState.DeckImages.Add(currentProgress, renderedCards);
         await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             e.Message.Author.Id,
             JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
@@ -317,7 +317,6 @@ public partial class ChinesePoker : ChinesePokerGame
                 PlayCard = cards
             })));
         await e.Channel.SendMessageAsync(localization.Confirmed);
-        playerState.DeckImages.Add(currentProgress, renderedCards);
     }
 
     public static async Task<bool> HandleProgress(string messageContent, ChinesePokerGameState state, GameStates gameStates,
@@ -459,7 +458,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     return localization.WinDescription
                         .Replace("{playerName}", playerName)
                         .Replace("{verb}", pReward.Units > 0 ? localization.Won : localization.Lost)
-                        .Replace("{totalRewards}", pReward.Units.ToString());
+                        .Replace("{totalRewards}", Math.Abs(pReward.Units).ToString());
                 })
                 .ToImmutableArray();
 
@@ -475,7 +474,7 @@ public partial class ChinesePoker : ChinesePokerGame
 
             foreach (var (handType, hand) in zippedHands)
             {
-                await ShowAllHands(handType, hand, state, deckService);
+                await ShowAllHands(handType, hand, deserializedEndingData, state, deckService);
                 await Task.Delay(TimeSpan.FromSeconds(2));
             }
 
@@ -551,29 +550,21 @@ public partial class ChinesePoker : ChinesePokerGame
     private static async Task ShowAllHands(
         ChinesePokerGameProgress progress,
         string handName,
+        ChinesePokerInGameResponseEndingData endingData,
         ChinesePokerGameState gameState,
         DeckService deckService)
     {
-        var builder = new DiscordMessageBuilder();
         var playerStates = gameState
             .Players
             .Select(pair => pair.Value)
             .ToImmutableArray();
         var renderedImage = await SkiaService.RenderChinesePokerHand(playerStates, progress, deckService);
 
-        var description = playerStates
-            .Select(p =>
-            {
-                var playerName = p.PlayerName;
-                var cards = string.Join('\n', p.PlayedCards[progress].Cards);
-                return $"**{playerName} - {p.PlayedCards[progress].CombinationType}**\n{cards}";
-            }).ToImmutableArray();
-        
         foreach (var (_, playerState) in gameState.Players)
         {
             if (playerState.TextChannel == null)
                 continue;
-
+            
             var randomFileName = Utilities.GenerateRandomString() + ".jpg";
             var randomAttachmentUri = $"attachment://{randomFileName}";
             
@@ -581,14 +572,21 @@ public partial class ChinesePoker : ChinesePokerGame
                 .WithColor((int)BurstColor.Burst)
                 .WithTitle(handName)
                 .WithThumbnail(Constants.BurstLogo)
-                .WithImageUrl(randomAttachmentUri)
-                .WithDescription(string.Join('\n', description));
+                .WithImageUrl(randomAttachmentUri);
 
-            await playerState.TextChannel.SendMessageAsync(builder
+            foreach (var (_, pState) in endingData.Players)
+            {
+                var fieldName = pState.PlayerName;
+                var fieldValue =
+                    $"**{pState.PlayedCards[progress].CombinationType}**\n{string.Join('\n', pState.PlayedCards[progress].Cards)}";
+                embed = embed.AddField(fieldName, fieldValue, true);
+            }
+
+            await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
                 .WithEmbed(embed)
                 .WithFile(randomFileName, renderedImage, true));
 
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
         
     }

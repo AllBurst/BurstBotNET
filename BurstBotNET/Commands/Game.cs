@@ -27,7 +27,7 @@ public static class Game
             logger.LogDebug("All tasks cancelled");
             cancellationTokenSource.Dispose();
         });
-        await Task.Delay(TimeSpan.FromSeconds(20));
+        await Task.Delay(TimeSpan.FromSeconds(60));
     }
 
     public static async Task<WebSocket> GenericOpenWebSocketSession(string gameName, Config config, ILogger logger, CancellationTokenSource cancellationTokenSource)
