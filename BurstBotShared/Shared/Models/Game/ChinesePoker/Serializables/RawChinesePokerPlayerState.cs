@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -44,6 +45,7 @@ public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, Ra
     [JsonProperty("avatar_url")]
     public string AvatarUrl { get; init; } = "";
 
+    [Pure]
     public static RawChinesePokerPlayerState FromState(IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress> state)
     {
         var playerState = state as ChinesePokerPlayerState;

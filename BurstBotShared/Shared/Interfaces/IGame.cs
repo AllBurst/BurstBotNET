@@ -4,7 +4,6 @@ using System.Text;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Localization;
 using Microsoft.Extensions.Logging;
 

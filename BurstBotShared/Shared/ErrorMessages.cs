@@ -7,4 +7,6 @@ public static class ErrorMessages
 
     public const string HandleReactionFailed =
         "Failed to handle reaction from invited players";
+
+    public const string PlayerStateNoGameProgress = "Player state doesn't have game progress.";
 }

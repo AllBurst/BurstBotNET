@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
@@ -48,6 +49,7 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
     [JsonProperty("previous_request_type")]
     public string PreviousRequestType { get; init; } = "";
 
+    [Pure]
     public static RawBlackJackGameState FromState(IState<BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress> state)
     {
         var gameState = state as BlackJackGameState;
@@ -67,22 +69,15 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
 
     public async Task<BlackJackGameState> ToState(DiscordGuild guild)
     {
-        var players = Players
-            .AsEnumerable()
-            .Select(async pair =>
+        var playersTask = Players
+            .Values
+            .Select(async p =>
             {
-                var (key, value) = pair;
-                var playerState = await value.ToState(guild);
-                return KeyValuePair.Create(key, playerState);
-            })
-            .ToList();
+                var playerState = await p.ToState(guild);
+                return KeyValuePair.Create(playerState.PlayerId, playerState);
+            });
 
-        var playerList = new List<KeyValuePair<ulong, BlackJackPlayerState>>();
-        foreach (var task in players)
-        {
-            var pair = await task;
-            playerList.Add(pair);
-        }
+        var players = await Task.WhenAll(playersTask);
 
         return new BlackJackGameState
         {
@@ -91,7 +86,7 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
             GameId = GameId,
             HighestBet = HighestBet,
             LastActiveTime = DateTime.Parse(LastActiveTime, CultureInfo.InvariantCulture),
-            Players = new ConcurrentDictionary<ulong, BlackJackPlayerState>(playerList),
+            Players = new ConcurrentDictionary<ulong, BlackJackPlayerState>(players),
             PreviousPlayerId = PreviousPlayerId,
             PreviousRequestType = PreviousRequestType,
             Progress = Progress

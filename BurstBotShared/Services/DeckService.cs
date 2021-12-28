@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using SkiaSharp;
 
@@ -8,7 +9,7 @@ public class DeckService
 {
     private const string SpritePath = "Assets/cards";
     private const string UserInterfaceLogoPath = "/UI_logo";
-    private readonly Dictionary<Card, Lazy<SKBitmap>> _cardSprites = new();
+    private readonly Dictionary<Card, Lazy<SKBitmap>> _cardSprites = new(54);
     private readonly Lazy<SKBitmap> _cardBack;
 
     public DeckService()
@@ -50,6 +51,7 @@ public class DeckService
         _cardBack = new Lazy<SKBitmap>(() => SKBitmap.Decode($"{SpritePath}/back.png"));
     }
 
+    [Pure]
     public SKBitmap GetBitmap(Card card)
         => card.IsFront ? _cardSprites[card].Value : _cardBack.Value;
 

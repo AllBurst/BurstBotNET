@@ -1,4 +1,4 @@
-namespace BurstBotShared.Shared.Models.Game.NinetyNine;
+namespace BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 
 public enum NinetyNineVariation
 {

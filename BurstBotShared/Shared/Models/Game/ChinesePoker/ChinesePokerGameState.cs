@@ -11,11 +11,11 @@ public class ChinesePokerGameState : IState<ChinesePokerGameState, RawChinesePok
 {
     public string GameId { get; set; } = "";
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
-    public ConcurrentDictionary<ulong, ChinesePokerPlayerState> Players { get; set; } = new(10, 4);
+    public ConcurrentDictionary<ulong, ChinesePokerPlayerState> Players { get; init; } = new(10, 4);
     public ChinesePokerGameProgress Progress { get; set; }
     public float BaseBet { get; set; }
     public Dictionary<ulong, Dictionary<ulong, int>> Units { get; set; } = new();
-    public ulong PreviousPlayerId { get; set; }
+    public ulong PreviousPlayerId { get; init; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<DiscordGuild> Guilds { get; } = new();

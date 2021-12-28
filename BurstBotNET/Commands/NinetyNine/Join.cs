@@ -1,6 +1,7 @@
 using System.Globalization;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
+using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;

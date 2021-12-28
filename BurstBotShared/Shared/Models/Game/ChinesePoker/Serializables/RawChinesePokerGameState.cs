@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
@@ -40,6 +41,7 @@ public record RawChinesePokerGameState : IRawState<ChinesePokerGameState, RawChi
     [JsonProperty("previous_player_id")] 
     public ulong PreviousPlayerId { get; init; }
 
+    [Pure]
     public static RawChinesePokerGameState FromState(IState<ChinesePokerGameState, RawChinesePokerGameState, ChinesePokerGameProgress> state)
     {
         var gameState = state as ChinesePokerGameState;
@@ -60,12 +62,13 @@ public record RawChinesePokerGameState : IRawState<ChinesePokerGameState, RawChi
 
     public async Task<ChinesePokerGameState> ToState(DiscordGuild guild)
     {
-        var players = new List<KeyValuePair<ulong, ChinesePokerPlayerState>>(Players.Count);
-        foreach (var (k, v) in Players)
-        {
-            var playerState = await v.ToState(guild);
-            players.Add(new KeyValuePair<ulong, ChinesePokerPlayerState>(k, playerState));
-        }
+        var playersTask = Players.Values
+            .Select(async p =>
+            {
+                var playerState = await p.ToState(guild);
+                return KeyValuePair.Create(playerState.PlayerId, playerState);
+            });
+        var players = await Task.WhenAll(playersTask);
 
         return new ChinesePokerGameState
         {
