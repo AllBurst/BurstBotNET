@@ -183,7 +183,8 @@ public partial class ChinesePoker : ChinesePokerGame
 
         var cards = cardMatches
             .Select(m => Card.CreateCard(m.Groups[1].Value, m.Groups[2].Value))
-            .ToImmutableArray();
+            .ToImmutableArray()
+            .Sort((a, b) => a.Number.CompareTo(b.Number));
 
         if (cards.Any(c => !playerState.Cards.Contains(c)))
         {
