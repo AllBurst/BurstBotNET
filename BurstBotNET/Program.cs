@@ -9,6 +9,7 @@ using BurstBotShared.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,10 @@ static async Task MainAsync()
 
     var client = new DiscordClient(configuration);
     client.UseCommandsNext(commandsConfiguration);
-    client.UseInteractivity();
+    client.UseInteractivity(new InteractivityConfiguration
+    {
+        Timeout = TimeSpan.FromSeconds(config.Timeout * 2)
+    });
     
     var gameStates = new GameStates();
     var localizations = new Localizations();
