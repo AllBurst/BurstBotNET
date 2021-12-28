@@ -346,10 +346,7 @@ public partial class ChinesePoker : ChinesePokerGame
                         while (true)
                         {
                             var result = await message
-                                .WaitForSelectAsync(playerState.Member, "cards",
-                                    TimeSpan.FromSeconds(state.Config.Timeout));
-                            if (result.TimedOut)
-                                return;
+                                .WaitForSelectAsync(playerState.Member, "cards", null);
 
                             await result.Result.Interaction.CreateResponseAsync(InteractionResponseType
                                 .DeferredChannelMessageWithSource);
