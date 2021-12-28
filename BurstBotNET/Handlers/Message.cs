@@ -22,16 +22,6 @@ public partial class Handlers
                 _state.Localizations
             ));
 
-        if (_state.GameStates.ChinesePokerGameStates.Item2.Contains(e.Channel.Id))
-            _ = Task.Run(async () => await ChinesePoker.HandleChinesePokerMessage(
-                client,
-                e,
-                _state.GameStates,
-                e.Channel.Id,
-                _state.Config.Timeout,
-                _state.DeckService,
-                _state.Localizations));
-
         return Task.CompletedTask;
     }
 }

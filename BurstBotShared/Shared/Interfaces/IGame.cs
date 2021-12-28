@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Text;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
+using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Localization;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,8 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
 #pragma warning disable CA2252
     static abstract Task<bool> HandleProgress(
         string messageContent,
-        TState state,
-        GameStates gameStates,
-        DeckService deckService,
-        Localizations localizations,
+        TState gameState,
+        State state,
         ILogger logger);
 
     static abstract Task HandleEndingResult(
@@ -60,11 +59,9 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
 
     static async Task RunBroadcastTask(
         WebSocket socketSession,
-        TState state,
-        GameStates gameStates,
+        TState gameState,
         ArrayPool<byte> buffer,
-        DeckService deckService,
-        Localizations localizations,
+        State state,
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
@@ -87,8 +84,8 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         while (contentStack.TryPop(out var str))
             content.Append(str);
         
-        if (!await TGame.HandleProgress(content.ToString(), state, gameStates, deckService, localizations, logger))
-            await TGame.HandleEndingResult(content.ToString(), state, localizations, deckService, logger);
+        if (!await TGame.HandleProgress(content.ToString(), gameState, state, logger))
+            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService, logger);
     }
 
     static async Task RunTimeoutTask(long timeout, TState state, TProgress closedProgress, ILogger logger,

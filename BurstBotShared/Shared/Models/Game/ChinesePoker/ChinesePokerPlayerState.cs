@@ -18,6 +18,7 @@ public class ChinesePokerPlayerState : IState<ChinesePokerPlayerState, RawChines
     public string AvatarUrl { get; set; } = "";
 
     public Dictionary<ChinesePokerGameProgress, Stream> DeckImages { get; set; } = new();
+    public DiscordMember? Member { get; set; }
 
     public Channel<Tuple<ulong, byte[]>>? PayloadChannel => null;
 

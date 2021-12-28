@@ -61,6 +61,29 @@ public record Card : IValueRealizable<ImmutableArray<int>>
         return $"{Suit.ToSuitPretty()} {n}";
     }
 
+    public string ToSpecifier()
+    {
+        var suit = Suit switch
+        {
+            Suit.Spade => "s",
+            Suit.Heart => "h",
+            Suit.Diamond => "d",
+            Suit.Club => "c",
+            _ => ""
+        };
+
+        var rank = Number switch
+        {
+            1 => "a",
+            11 => "j",
+            12 => "q",
+            13 => "k",
+            _ => Number.ToString()
+        };
+
+        return suit + rank;
+    }
+
     public static Card CreateCard(string suit, string rank)
     {
         var s = suit switch

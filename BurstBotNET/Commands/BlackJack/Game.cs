@@ -5,7 +5,7 @@ using BurstBotShared.Services;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
-using BurstBotShared.Shared.Models.Config;
+using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
@@ -31,46 +31,43 @@ public partial class BlackJack : BlackJackGame
 
     private static async Task StartListening(
         string gameId,
-        Config config,
-        GameStates gameStates,
-        DeckService deckService,
-        Localizations localizations,
+        State state,
         ILogger logger)
     {
         if (string.IsNullOrWhiteSpace(gameId))
             return;
 
-        var state = gameStates.BlackJackGameStates.Item1
+        var gameState = state.GameStates.BlackJackGameStates.Item1
             .GetOrAdd(gameId, new BlackJackGameState());
-        logger.LogDebug("Game progress: {Progress}", state.Progress);
+        logger.LogDebug("Game progress: {Progress}", gameState.Progress);
 
-        await state.Semaphore.WaitAsync();
+        await gameState.Semaphore.WaitAsync();
         logger.LogDebug("Semaphore acquired in StartListening");
-        if (state.Progress != BlackJackGameProgress.NotAvailable)
+        if (gameState.Progress != BlackJackGameProgress.NotAvailable)
         {
-            state.Semaphore.Release();
+            gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released in StartListening (game state existed)");
             return;
         }
 
-        state.Progress = BlackJackGameProgress.Starting;
-        state.GameId = gameId;
+        gameState.Progress = BlackJackGameProgress.Starting;
+        gameState.GameId = gameId;
         logger.LogDebug("Initial game state successfully set");
 
         var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
 
         var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession = await Game.GenericOpenWebSocketSession(GameName, config, logger, cancellationTokenSource);
-        state.Semaphore.Release();
+        var socketSession = await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
+        gameState.Semaphore.Release();
         logger.LogDebug("Semaphore released in StartListening (game state created)");
 
-        var timeout = config.Timeout;
+        var timeout = state.Config.Timeout;
 
-        while (!state.Progress.Equals(BlackJackGameProgress.Closed))
+        while (!gameState.Progress.Equals(BlackJackGameProgress.Closed))
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
             var channelTask = BlackJackGame.RunChannelTask(socketSession,
-                state,
+                gameState,
                 InGameRequestTypes,
                 BlackJackInGameRequestType.Close,
                 BlackJackGameProgress.Closed,
@@ -78,15 +75,13 @@ public partial class BlackJack : BlackJackGame
                 cancellationTokenSource);
 
             var broadcastTask = BlackJackGame.RunBroadcastTask(socketSession,
-                state,
-                gameStates,
+                gameState,
                 buffer,
-                deckService,
-                localizations,
+                state,
                 logger,
                 cancellationTokenSource);
 
-            var timeoutTask = BlackJackGame.RunTimeoutTask(timeout, state, BlackJackGameProgress.Closed, logger,
+            var timeoutTask = BlackJackGame.RunTimeoutTask(timeout, gameState, BlackJackGameProgress.Closed, logger,
                 timeoutCancellationTokenSource);
 
             await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
@@ -99,22 +94,22 @@ public partial class BlackJack : BlackJackGame
         }
 
         await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
-        var retrieveResult = gameStates.BlackJackGameStates.Item1.TryGetValue(state.GameId, out var gameState);
+        var retrieveResult = state.GameStates.BlackJackGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
         if (!retrieveResult)
             return;
 
-        foreach (var (_, value) in gameState!.Players)
+        foreach (var (_, value) in retrievedState!.Players)
         {
             if (value.TextChannel == null)
                 continue;
 
             var channelId = value.TextChannel.Id;
             await value.TextChannel.DeleteAsync();
-            gameStates.BlackJackGameStates.Item2.Remove(channelId);
+            state.GameStates.BlackJackGameStates.Item2.Remove(channelId);
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
-        gameStates.BlackJackGameStates.Item1.Remove(state.GameId, out _);
+        state.GameStates.BlackJackGameStates.Item1.Remove(gameState.GameId, out _);
         socketSession.Dispose();
     }
 
@@ -263,10 +258,8 @@ public partial class BlackJack : BlackJackGame
 
     public static async Task<bool> HandleProgress(
         string messageContent,
-        BlackJackGameState state,
-        GameStates gameStates,
-        DeckService deckService,
-        Localizations localizations,
+        BlackJackGameState gameState,
+        State state,
         ILogger logger)
     {
         try
@@ -276,27 +269,27 @@ public partial class BlackJack : BlackJackGame
             if (deserializedIncomingData == null)
                 return false;
 
-            await state.Semaphore.WaitAsync();
+            await gameState.Semaphore.WaitAsync();
             logger.LogDebug("Semaphore acquired in HandleProgress");
 
-            if (!state.Progress.Equals(deserializedIncomingData.Progress))
+            if (!gameState.Progress.Equals(deserializedIncomingData.Progress))
             {
                 logger.LogDebug("Progress changed, handling progress change...");
                 var progressChangeResult =
-                    await HandleProgressChange(deserializedIncomingData, state, gameStates,
-                        deckService, localizations);
-                state.Semaphore.Release();
+                    await HandleProgressChange(deserializedIncomingData, gameState, state.GameStates,
+                        state.DeckService, state.Localizations);
+                gameState.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
 
-            var previousHighestBet = state.HighestBet;
-            await UpdateGameState(state, deserializedIncomingData);
+            var previousHighestBet = gameState.HighestBet;
+            await UpdateGameState(gameState, deserializedIncomingData);
             var playerId = deserializedIncomingData.PreviousPlayerId;
-            var result = state.Players.TryGetValue(playerId, out var previousPlayerState);
+            var result = gameState.Players.TryGetValue(playerId, out var previousPlayerState);
             if (!result)
             {
-                state.Semaphore.Release();
+                gameState.Semaphore.Release();
                 return false;
             }
 
@@ -304,14 +297,14 @@ public partial class BlackJack : BlackJackGame
                 out var previousRequestType);
             if (!result)
             {
-                state.Semaphore.Release();
+                gameState.Semaphore.Release();
                 return false;
             }
 
-            await SendProgressMessages(state, previousPlayerState, previousRequestType, previousHighestBet,
-                deserializedIncomingData, deckService, localizations, logger);
+            await SendProgressMessages(gameState, previousPlayerState, previousRequestType, previousHighestBet,
+                deserializedIncomingData, state.DeckService, state.Localizations, logger);
 
-            state.Semaphore.Release();
+            gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released after sending progress messages");
         }
         catch (JsonSerializationException)
@@ -324,7 +317,7 @@ public partial class BlackJack : BlackJackGame
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
-            state.Semaphore.Release();
+            gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released in an exception");
             return false;
         }

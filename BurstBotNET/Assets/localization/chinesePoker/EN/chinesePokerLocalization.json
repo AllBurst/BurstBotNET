@@ -23,6 +23,7 @@
   "confirmCards": "Do you want to set these cards as your {hand}?",
   "confirmCardsFooter": "React below to confirm or cancel setting these cards as your {hand}.",
   "confirmCardsFailure": "Setting cards cancelled because no action is taken.",
-  "confirmed": "✅ Confirmed!",
-  "cancelled": "❌ Cancelled."
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "dropDownMessage": "Select {num} cards for {hand}!"
 }

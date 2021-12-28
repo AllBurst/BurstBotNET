@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using DSharpPlus.Entities;
 
 namespace BurstBotShared.Shared.Extensions;
 
@@ -61,5 +62,15 @@ public static class BurstExtensions
             Suit.Diamond => $"{DiamondIcon} {suit}",
             Suit.Club => $"{ClubIcon} {suit}",
             _ => ""
+        };
+
+    public static DiscordComponentEmoji ToComponentEmoji(this Suit suit)
+        => suit switch
+        {
+            Suit.Spade => new DiscordComponentEmoji(910826637657010226),
+            Suit.Heart => new DiscordComponentEmoji(910826529511051284),
+            Suit.Diamond => new DiscordComponentEmoji(910826609576140821),
+            Suit.Club => new DiscordComponentEmoji(910826578336948234),
+            _ => new DiscordComponentEmoji("❓")
         };
 }

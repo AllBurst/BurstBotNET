@@ -102,10 +102,7 @@ public partial class BlackJack
                             state.GameStates);
                         _ = Task.Run(() =>
                             StartListening(matchData.GameId ?? "",
-                                state.Config,
-                                state.GameStates,
-                                state.DeckService,
-                                state.Localizations, client.Logger));
+                                state, client.Logger));
                     }
                     catch (Exception ex)
                     {
@@ -150,9 +147,7 @@ public partial class BlackJack
                         Order = 0
                     }, state.GameStates);
                     _ = Task.Run(() =>
-                        StartListening(matchData.GameId ?? "", state.Config, state.GameStates,
-                            state.DeckService,
-                            state.Localizations, client.Logger));
+                        StartListening(matchData.GameId ?? "", state, client.Logger));
                 }
 
                 break;
@@ -180,9 +175,7 @@ public partial class BlackJack
                     }, state.GameStates
                 );
                 _ = Task.Run(() =>
-                    StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates,
-                        state.DeckService,
-                        state.Localizations, client.Logger));
+                    StartListening(joinStatus.GameId ?? "", state, client.Logger));
                 break;
             }
             default:

@@ -335,7 +335,8 @@ public sealed class BurstApi
             GameId = matchData.GameId ?? "",
             PlayerId = invokingMember.Id,
             PlayerName = invokingMember.DisplayName,
-            TextChannel = textChannel
+            TextChannel = textChannel,
+            Member = invokingMember
         });
     }
 

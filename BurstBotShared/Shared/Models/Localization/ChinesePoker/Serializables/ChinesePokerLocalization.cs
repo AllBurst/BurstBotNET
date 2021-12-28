@@ -44,8 +44,9 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     [JsonPropertyName("confirmCardsFailure")]
     public string ConfirmCardsFailure { get; init; } = "";
 
-    [JsonPropertyName("confirmed")] public string Confirmed { get; init; } = "";
-    [JsonPropertyName("cancelled")] public string Cancelled { get; init; } = "";
+    [JsonPropertyName("confirm")] public string Confirm { get; init; } = "";
+    [JsonPropertyName("cancel")] public string Cancel { get; init; } = "";
+    [JsonPropertyName("dropDownMessage")] public string DropDownMessage { get; init; } = "";
 
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

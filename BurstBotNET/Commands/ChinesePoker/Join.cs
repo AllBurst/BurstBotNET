@@ -102,11 +102,10 @@ public partial class ChinesePoker
                         GameId = matchData.GameId ?? "",
                         PlayerId = member.Id,
                         PlayerName = member.DisplayName,
-                        TextChannel = textChannel
+                        TextChannel = textChannel,
+                        Member = member
                     }, state.GameStates, baseBet);
-                    _ = Task.Run(() => StartListening(matchData.GameId ?? "", state.Config, state.GameStates,
-                        state.DeckService,
-                        state.Localizations, client.Logger));
+                    _ = Task.Run(() => StartListening(matchData.GameId ?? "", state, client.Logger));
                 }
                 
                 break;
@@ -125,10 +124,10 @@ public partial class ChinesePoker
                     GameId = joinStatus.GameId ?? "",
                     PlayerId = invokingMember.Id,
                     PlayerName = invokingMember.DisplayName,
-                    TextChannel = textChannel
+                    TextChannel = textChannel,
+                    Member = invokingMember
                 }, state.GameStates, baseBet);
-                _ = Task.Run(() => StartListening(joinStatus.GameId ?? "", state.Config, state.GameStates,
-                    state.DeckService, state.Localizations, client.Logger));
+                _ = Task.Run(() => StartListening(joinStatus.GameId ?? "", state, client.Logger));
                 break;
             }
             case GenericJoinStatusType.Waiting:
@@ -146,8 +145,7 @@ public partial class ChinesePoker
                         var (matchData, playerState) = waitingResult.Value;
                         await AddChinesePokerPlayerState(matchData.GameId ?? "", e.Interaction.Guild, playerState,
                             state.GameStates, baseBet);
-                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", state.Config, state.GameStates,
-                            state.DeckService, state.Localizations, client.Logger));
+                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", state, client.Logger));
                     }
                     catch (Exception ex)
                     {
