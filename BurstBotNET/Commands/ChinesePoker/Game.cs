@@ -15,7 +15,6 @@ using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -270,13 +269,13 @@ public partial class ChinesePoker : ChinesePokerGame
             if (!gameState.Progress.Equals(deserializedIncomingData.Progress))
             {
                 logger.LogDebug("Progress changed, handling progress change...");
-                var progressChangeResult = await HandleProgressChange(deserializedIncomingData, gameState, state);
+                var progressChangeResult = await HandleProgressChange(deserializedIncomingData, gameState, state, logger);
                 gameState.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
 
-            await UpdateGameState(gameState, deserializedIncomingData);
+            await UpdateGameState(gameState, deserializedIncomingData, logger);
             if (gameState.Progress.Equals(ChinesePokerGameProgress.Starting))
             {
                 var result = gameState.Players.TryGetValue(deserializedIncomingData.PreviousPlayerId,
@@ -298,7 +297,8 @@ public partial class ChinesePoker : ChinesePokerGame
         }
         catch (Exception ex)
         {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex.Message);
+            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
@@ -313,13 +313,14 @@ public partial class ChinesePoker : ChinesePokerGame
     private static async Task<bool> HandleProgressChange(
         RawChinesePokerGameState deserializedIncomingData,
         ChinesePokerGameState gameState,
-        State state)
+        State state,
+        ILogger logger)
     {
         if (deserializedIncomingData.Progress.Equals(ChinesePokerGameProgress.Ending))
             return true;
 
         gameState.Progress = deserializedIncomingData.Progress;
-        await UpdateGameState(gameState, deserializedIncomingData);
+        await UpdateGameState(gameState, deserializedIncomingData, logger);
 
         switch (deserializedIncomingData.Progress)
         {
@@ -492,7 +493,8 @@ public partial class ChinesePoker : ChinesePokerGame
             if (string.IsNullOrWhiteSpace(messageContent))
                 return;
             
-            logger.LogError("An exception occurred when handling ending result: {Exception}", ex.Message);
+            logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
@@ -647,7 +649,7 @@ public partial class ChinesePoker : ChinesePokerGame
                 maxOptions: requiredCardCount));
     }
 
-    private static async Task UpdateGameState(ChinesePokerGameState state, RawChinesePokerGameState? data)
+    private static async Task UpdateGameState(ChinesePokerGameState state, RawChinesePokerGameState? data, ILogger logger)
     {
         if (data == null)
             return;
@@ -672,10 +674,17 @@ public partial class ChinesePoker : ChinesePokerGame
                 {
                     foreach (var guild in state.Guilds)
                     {
-                        var member = await guild.GetMemberAsync(player.PlayerId);
-                        if (member == null) continue;
-                        player.Member = member;
-                        break;
+                        try
+                        {
+                            var member = await guild.GetMemberAsync(player.PlayerId);
+                            if (member == null) continue;
+                            player.Member = member;
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogWarning("Exception caught when getting member: {Exception}", ex);
+                        }
                     }
                 }
                 

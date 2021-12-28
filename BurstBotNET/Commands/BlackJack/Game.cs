@@ -313,7 +313,8 @@ public partial class BlackJack : BlackJackGame
         }
         catch (Exception ex)
         {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex.Message);
+            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
@@ -470,7 +471,10 @@ public partial class BlackJack : BlackJackGame
         {
             if (string.IsNullOrWhiteSpace(messageContent))
                 return;
-            logger.LogError("An exception occurred when handling ending result: {Exception}", ex.Message);
+            logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
+            logger.LogError("Source: {Source}", ex.Source);
+            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
         }
     }
