@@ -712,10 +712,17 @@ public partial class ChinesePoker : ChinesePokerGame
                 
                 foreach (var guild in state.Guilds)
                 {
-                    var member = await guild.GetMemberAsync(playerState.PlayerId);
-                    if (member == null) continue;
-                    newPlayerState.Member = member;
-                    break;
+                    try
+                    {
+                        var member = await guild.GetMemberAsync(playerState.PlayerId);
+                        if (member == null) continue;
+                        newPlayerState.Member = member;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogWarning("Exception caught when getting member: {Exception}", ex);
+                    }
                 }
                 
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
