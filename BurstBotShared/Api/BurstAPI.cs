@@ -222,7 +222,7 @@ public sealed class BurstApi
         await originalMessage.CreateReactionAsync(Constants.PlayMarkEmoji);
         var secondsRemained = 30;
         var cancelled = false;
-        var confirmedUsers = new List<DiscordUser>();
+        var confirmedUsers = new ImmutableArray<DiscordUser>();
 
         while (secondsRemained > 0)
         {
@@ -231,7 +231,7 @@ public sealed class BurstApi
             confirmedUsers = (await originalMessage
                     .GetReactionsAsync(Constants.CheckMarkEmoji))
                 .Where(u => !u.IsBot && playerIds.Contains(u.Id))
-                .ToList();
+                .ToImmutableArray();
 
             var cancelledUsers = (await originalMessage
                     .GetReactionsAsync(Constants.CrossMarkEmoji))
@@ -263,7 +263,7 @@ public sealed class BurstApi
                     secondsRemained)));
         }
 
-        if (cancelled || confirmedUsers.Count < minPlayerCount)
+        if (cancelled || confirmedUsers.Length < minPlayerCount)
             return null;
 
         await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()

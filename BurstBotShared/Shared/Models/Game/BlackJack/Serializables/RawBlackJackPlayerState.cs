@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
@@ -10,44 +11,45 @@ namespace BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 
 public record RawBlackJackPlayerState : IRawState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>
 {
-    [JsonPropertyName("game_id")] 
+    [JsonPropertyName("game_id")]
     [JsonProperty("game_id")]
     public string GameId { get; init; } = "";
-    
-    [JsonPropertyName("player_id")] 
+
+    [JsonPropertyName("player_id")]
     [JsonProperty("player_id")]
     public ulong PlayerId { get; init; }
-    
+
     [JsonPropertyName("player_name")]
     [JsonProperty("player_name")]
     public string PlayerName { get; init; } = "";
-    
-    [JsonPropertyName("channel_id")] 
+
+    [JsonPropertyName("channel_id")]
     [JsonProperty("channel_id")]
     public ulong ChannelId { get; init; }
-    
-    [JsonPropertyName("own_tips")] 
-    [JsonProperty("own_tips")] 
+
+    [JsonPropertyName("own_tips")]
+    [JsonProperty("own_tips")]
     public long OwnTips { get; init; }
-    
-    [JsonPropertyName("bet_tips")] 
-    [JsonProperty("bet_tips")] 
+
+    [JsonPropertyName("bet_tips")]
+    [JsonProperty("bet_tips")]
     public int BetTips { get; init; }
-    
-    [JsonPropertyName("avatar_url")] 
-    [JsonProperty("avatar_url")] 
+
+    [JsonPropertyName("avatar_url")]
+    [JsonProperty("avatar_url")]
     public string AvatarUrl { get; init; } = "";
-    
-    [JsonPropertyName("order")] 
-    [JsonProperty("order")] 
+
+    [JsonPropertyName("order")]
+    [JsonProperty("order")]
     public int Order { get; init; }
-    
-    [JsonPropertyName("cards")] 
-    [JsonProperty("cards")] 
+
+    [JsonPropertyName("cards")]
+    [JsonProperty("cards")]
     public List<Card> Cards { get; init; } = new();
-    
+
     [Pure]
-    public static RawBlackJackPlayerState FromState(IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress> state)
+    public static RawBlackJackPlayerState FromState(
+        IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress> state)
     {
         var playerState = state as BlackJackPlayerState;
         return new RawBlackJackPlayerState
@@ -72,7 +74,7 @@ public record RawBlackJackPlayerState : IRawState<BlackJackPlayerState, RawBlack
         {
             AvatarUrl = member.GetAvatarUrl(ImageFormat.Auto),
             BetTips = BetTips,
-            Cards = Cards,
+            Cards = Cards.ToImmutableArray(),
             GameId = GameId,
             Order = Order,
             OwnTips = OwnTips,
@@ -81,4 +83,4 @@ public record RawBlackJackPlayerState : IRawState<BlackJackPlayerState, RawBlack
             TextChannel = channel
         };
     }
-};
+}

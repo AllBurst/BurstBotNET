@@ -9,11 +9,11 @@ public record ChinesePokerInGameRequest
     [JsonPropertyName("request_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ChinesePokerInGameRequestType RequestType { get; init; }
-    
+
     [JsonPropertyName("client_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ClientType? ClientType { get; init; }
-    
+
     [JsonPropertyName("game_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public GameType GameType { get; init; } = GameType.ChinesePoker;
@@ -25,5 +25,12 @@ public record ChinesePokerInGameRequest
     [JsonPropertyName("avatar_url")] public string? AvatarUrl { get; init; }
     [JsonPropertyName("base_bet")] public float BaseBet { get; init; }
     [JsonPropertyName("play_card")] public ImmutableArray<Card>? PlayCard { get; init; }
-    [JsonPropertyName("declared_natural")] public ChinesePokerNatural? DeclaredNatural { get; init; }
-};
+
+    [JsonPropertyName("declared_natural")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ChinesePokerNatural? DeclaredNatural { get; init; }
+
+    [JsonPropertyName("debug_natural")]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ChinesePokerNatural? DebugNatural { get; init; }
+}

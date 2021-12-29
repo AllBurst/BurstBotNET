@@ -16,11 +16,13 @@ public class ChinesePokerGameState : IState<ChinesePokerGameState, RawChinesePok
     public float BaseBet { get; set; }
     public Dictionary<ulong, Dictionary<ulong, int>> Units { get; set; } = new();
     public ulong PreviousPlayerId { get; init; }
+    public bool DebugNatural { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<DiscordGuild> Guilds { get; } = new();
 
     public Channel<Tuple<ulong, byte[]>>? PayloadChannel => Channel;
+
     public ChinesePokerGameProgress GameProgress
     {
         get => Progress;

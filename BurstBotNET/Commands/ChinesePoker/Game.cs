@@ -23,7 +23,9 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.ChinesePoker;
 
-using ChinesePokerGame = IGame<ChinesePokerGameState, RawChinesePokerGameState, ChinesePoker, ChinesePokerGameProgress, ChinesePokerInGameRequestType>;
+using ChinesePokerGame =
+    IGame<ChinesePokerGameState, RawChinesePokerGameState, ChinesePoker, ChinesePokerGameProgress,
+        ChinesePokerInGameRequestType>;
 
 #pragma warning disable CA2252
 public partial class ChinesePoker : ChinesePokerGame
@@ -35,221 +37,11 @@ public partial class ChinesePoker : ChinesePokerGame
     private static readonly Regex CardRegex = new(@"([shdc])([0-9ajqk]+)");
     private static readonly string[] AvailableRanks;
 
-    private static readonly ChinesePokerGameProgress[] Hands = {
+    private static readonly ChinesePokerGameProgress[] Hands =
+    {
         ChinesePokerGameProgress.FrontHand, ChinesePokerGameProgress.MiddleHand,
         ChinesePokerGameProgress.BackHand
     };
-
-    private static async Task StartListening(
-        string gameId,
-        State state,
-        ILogger logger)
-    {
-        if (string.IsNullOrWhiteSpace(gameId))
-            return;
-
-        var gameState = state.GameStates.ChinesePokerGameStates.Item1
-            .GetOrAdd(gameId, new ChinesePokerGameState());
-        logger.LogDebug("Chinese Poker game progress: {Progress}", gameState.Progress);
-
-        await gameState.Semaphore.WaitAsync();
-        logger.LogDebug("Semaphore acquired in StartListening");
-        if (gameState.Progress != ChinesePokerGameProgress.NotAvailable)
-        {
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in StartListening (game state existed)");
-            return;
-        }
-        
-        gameState.Progress = ChinesePokerGameProgress.Starting;
-        gameState.GameId = gameId;
-        logger.LogDebug("Initial game state successfully set");
-        
-        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
-
-        var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession = await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
-        gameState.Semaphore.Release();
-        logger.LogDebug("Semaphore released in StartListening (game state created)");
-
-        var timeout = state.Config.Timeout;
-        while (!gameState.Progress.Equals(ChinesePokerGameProgress.Closed))
-        {
-            var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var channelTask = ChinesePokerGame.RunChannelTask(socketSession, gameState, InGameRequestTypes,
-                ChinesePokerInGameRequestType.Close, ChinesePokerGameProgress.Closed, logger, cancellationTokenSource);
-
-            var broadcastTask = ChinesePokerGame.RunBroadcastTask(socketSession, gameState, buffer, state,
-                logger, cancellationTokenSource);
-
-            var timeoutTask = ChinesePokerGame.RunTimeoutTask(timeout, gameState, ChinesePokerGameProgress.Closed, logger,
-                timeoutCancellationTokenSource);
-
-            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
-            _ = Task.Run(() =>
-            {
-                timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task cancelled");
-                timeoutCancellationTokenSource.Dispose();
-            });
-        }
-
-        await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
-        var retrieveResult = state.GameStates.ChinesePokerGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
-        if (!retrieveResult)
-            return;
-
-        foreach (var (_, value) in retrievedState!.Players)
-        {
-            if (value.TextChannel == null)
-                continue;
-
-            var channelId = value.TextChannel.Id;
-            await value.TextChannel.DeleteAsync();
-            state.GameStates.ChinesePokerGameStates.Item2.Remove(channelId);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-        }
-
-        state.GameStates.ChinesePokerGameStates.Item1.Remove(gameState.GameId, out _);
-        socketSession.Dispose();
-    }
-
-    private static async Task AddChinesePokerPlayerState(string gameId, DiscordGuild guild,
-        ChinesePokerPlayerState playerState, GameStates gameStates, float baseBet)
-    {
-        var state = gameStates
-            .ChinesePokerGameStates
-            .Item1
-            .GetOrAdd(gameId, new ChinesePokerGameState());
-        state.Players.GetOrAdd(playerState.PlayerId, playerState);
-        state.Guilds.Add(guild);
-        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
-
-        if (playerState.TextChannel == null)
-            return;
-
-        gameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.Id);
-        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
-            {
-                AvatarUrl = playerState.AvatarUrl,
-                BaseBet = baseBet,
-                ChannelId = playerState.TextChannel.Id,
-                ClientType = ClientType.Discord,
-                GameId = gameId,
-                PlayerId = playerState.PlayerId,
-                PlayerName = playerState.PlayerName
-            })));
-    }
-
-    private static async Task<bool> HandleSettingHand(
-        ChinesePokerGameState state,
-        ChinesePokerPlayerState playerState,
-        ImmutableArray<string> splitMessage,
-        DiscordInteraction interaction,
-        long timeout,
-        DeckService deckService,
-        Localizations localizations
-    )
-    {
-        var localization = localizations.GetLocalization().ChinesePoker;
-
-        var handName = state.Progress switch
-        {
-            ChinesePokerGameProgress.FrontHand => localization.FrontHand.ToLowerInvariant(),
-            ChinesePokerGameProgress.MiddleHand => localization.MiddleHand.ToLowerInvariant(),
-            ChinesePokerGameProgress.BackHand => localization.BackHand.ToLowerInvariant(),
-            _ => ""
-        };
-        
-        if (splitMessage.Any(s => !CardRegex.IsMatch(s)))
-        {
-            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .WithContent(localization.InvalidCard));
-            return false;
-        }
-        
-        var cardMatches = splitMessage
-            .Select(s => CardRegex.Match(s))
-            .ToImmutableArray();
-        
-        if (cardMatches.Any(m => !AvailableRanks.Contains(m.Groups[2].Value)))
-        {
-            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .WithContent(localization.InvalidCard));
-            return false;
-        }
-
-        var cards = cardMatches
-            .Select(m => Card.CreateCard(m.Groups[1].Value, m.Groups[2].Value))
-            .ToImmutableArray()
-            .Sort((a, b) => a.Number.CompareTo(b.Number));
-
-        if (cards.Any(c => !playerState.Cards.Contains(c)))
-        {
-            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .WithContent(localization.InvalidCard));
-            return false;
-        }
-        
-        var renderedCards = SkiaService.RenderDeck(deckService, cards);
-        var reply = new DiscordFollowupMessageBuilder()
-            .AddEmbed(new DiscordEmbedBuilder()
-                .WithAuthor(playerState.PlayerName, iconUrl: playerState.AvatarUrl)
-                .WithColor((int)BurstColor.Burst)
-                .WithDescription($"{localization.Cards}\n{string.Join('\n', cards)}\n{localization.ConfirmCards.Replace("{hand}", handName)}")
-                .WithFooter(localization.ConfirmCardsFooter.Replace("{hand}", handName))
-                .WithThumbnail(Constants.BurstLogo)
-                .WithTitle(TextInfo.ToTitleCase(handName))
-                .WithImageUrl(Constants.AttachmentUri))
-            .AddComponents(
-                new DiscordButtonComponent(ButtonStyle.Primary, "confirm", localization.Confirm, emoji: new DiscordComponentEmoji(Constants.CheckMarkEmoji)),
-                new DiscordButtonComponent(ButtonStyle.Danger, "cancel", localization.Cancel, emoji: new DiscordComponentEmoji(Constants.CrossMarkEmoji))
-                )
-            .AddFile(Constants.OutputFileName, renderedCards, true);
-
-        var confirmMessage = await interaction.CreateFollowupMessageAsync(reply);
-        var confirmationAction = await confirmMessage
-            .WaitForButtonAsync(playerState.Member, TimeSpan.FromSeconds(timeout));
-        var customId = confirmationAction.Result.Interaction.Data.CustomId;
-
-        if (confirmationAction.TimedOut)
-        {
-            await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
-                .WithContent(localization.ConfirmCardsFailure));
-            return false;
-        }
-
-        if (string.Equals(customId, "cancel"))
-        {
-            await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
-                .WithContent(Constants.CrossMarkEmoji.GetDiscordName()));
-            return false;
-        }
-        
-        var currentProgress = state.Progress;
-        playerState.DeckImages.Add(currentProgress, renderedCards);
-        await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
-            {
-                RequestType = state.Progress switch
-                {
-                    ChinesePokerGameProgress.FrontHand => ChinesePokerInGameRequestType.FrontHand,
-                    ChinesePokerGameProgress.MiddleHand => ChinesePokerInGameRequestType.MiddleHand,
-                    ChinesePokerGameProgress.BackHand => ChinesePokerInGameRequestType.BackHand,
-                    _ => ChinesePokerInGameRequestType.Close
-                },
-                GameId = state.GameId,
-                PlayerId = playerState.PlayerId,
-                PlayCard = cards
-            })));
-
-        await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
-            .WithContent(Constants.CheckMarkEmoji.GetDiscordName()));
-        return true;
-    }
 
     public static async Task<bool> HandleProgress(
         string messageContent,
@@ -270,7 +62,8 @@ public partial class ChinesePoker : ChinesePokerGame
             if (!gameState.Progress.Equals(deserializedIncomingData.Progress))
             {
                 logger.LogDebug("Progress changed, handling progress change...");
-                var progressChangeResult = await HandleProgressChange(deserializedIncomingData, gameState, state, logger);
+                var progressChangeResult =
+                    await HandleProgressChange(deserializedIncomingData, gameState, state, logger);
                 gameState.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
@@ -289,6 +82,7 @@ public partial class ChinesePoker : ChinesePokerGame
 
                 await SendInitialMessage(previousPlayerState!, state.DeckService, state.Localizations, logger);
             }
+
             gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released after sending progress messages");
         }
@@ -306,64 +100,6 @@ public partial class ChinesePoker : ChinesePokerGame
             gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released in an exception");
             return false;
-        }
-
-        return true;
-    }
-
-    private static async Task<bool> HandleProgressChange(
-        RawChinesePokerGameState deserializedIncomingData,
-        ChinesePokerGameState gameState,
-        State state,
-        ILogger logger)
-    {
-        if (deserializedIncomingData.Progress.Equals(ChinesePokerGameProgress.Ending))
-            return true;
-
-        gameState.Progress = deserializedIncomingData.Progress;
-        await UpdateGameState(gameState, deserializedIncomingData, logger);
-
-        switch (deserializedIncomingData.Progress)
-        {
-            case ChinesePokerGameProgress.NotAvailable:
-            case ChinesePokerGameProgress.Starting:
-            case ChinesePokerGameProgress.Ending:
-            case ChinesePokerGameProgress.Closed:
-                break;
-            case ChinesePokerGameProgress.FrontHand:
-            case ChinesePokerGameProgress.MiddleHand:
-            case ChinesePokerGameProgress.BackHand:
-            {
-                foreach (var (_, playerState) in gameState.Players)
-                {
-                    if (playerState.TextChannel == null)
-                        continue;
-
-                    state.GameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.Id);
-                    var message = await playerState.TextChannel.SendMessageAsync(BuildHandMessage(playerState,
-                        deserializedIncomingData.Progress, state.DeckService, state.Localizations));
-                    _ = Task.Run(async () =>
-                    {
-                        while (true)
-                        {
-                            var result = await message
-                                .WaitForSelectAsync(playerState.Member, "cards", null);
-
-                            await result.Result.Interaction.CreateResponseAsync(InteractionResponseType
-                                .DeferredChannelMessageWithSource);
-
-                            result.Result.Handled = await HandleSettingHand(gameState, playerState,
-                                result.Result.Values.ToImmutableArray(), result.Result.Interaction,
-                                state.Config.Timeout, state.DeckService, state.Localizations);
-                            if (result.Result.Handled)
-                                break;
-                        }
-                    });
-                }
-                break;
-            }
-            default:
-                throw new InvalidOperationException("Unsupported Chinese poker game progress.");
         }
 
         return true;
@@ -439,7 +175,8 @@ public partial class ChinesePoker : ChinesePokerGame
                     .ToImmutableArray();
                 foreach (var (playerName, combination) in hs)
                 {
-                    var desc = $"{playerName} - *{combination.CombinationType}*\n{string.Join('\n', combination.Cards)}";
+                    var desc =
+                        $"{playerName} - *{combination.CombinationType}*\n{string.Join('\n', combination.Cards)}";
                     descriptionBuilder.Append(desc + '\n');
                 }
 
@@ -456,12 +193,10 @@ public partial class ChinesePoker : ChinesePokerGame
             {
                 var builder = new StringBuilder();
                 builder.Append($"{pReward.Units} tips\n");
-                
+
                 if (pReward.Rewards.Any())
-                {
                     builder.Append(string.Join('\n', pReward.Rewards.Select(r => r.RewardType.ToString())));
-                }
-                
+
                 var playerName = state
                     .Players
                     .Where(p => p.Value.PlayerId == pId)
@@ -490,13 +225,289 @@ public partial class ChinesePoker : ChinesePokerGame
         {
             if (string.IsNullOrWhiteSpace(messageContent))
                 return;
-            
+
             logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
             logger.LogError("Exception message: {Message}", ex.Message);
             logger.LogError("Source: {Source}", ex.Source);
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
         }
+    }
+
+    private static async Task StartListening(
+        string gameId,
+        State state,
+        ILogger logger)
+    {
+        if (string.IsNullOrWhiteSpace(gameId))
+            return;
+
+        var gameState = state.GameStates.ChinesePokerGameStates.Item1
+            .GetOrAdd(gameId, new ChinesePokerGameState());
+        logger.LogDebug("Chinese Poker game progress: {Progress}", gameState.Progress);
+
+        await gameState.Semaphore.WaitAsync();
+        logger.LogDebug("Semaphore acquired in StartListening");
+        if (gameState.Progress != ChinesePokerGameProgress.NotAvailable)
+        {
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released in StartListening (game state existed)");
+            return;
+        }
+
+        gameState.Progress = ChinesePokerGameProgress.Starting;
+        gameState.GameId = gameId;
+        logger.LogDebug("Initial game state successfully set");
+
+        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
+
+        var cancellationTokenSource = new CancellationTokenSource();
+        var socketSession =
+            await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
+        gameState.Semaphore.Release();
+        logger.LogDebug("Semaphore released in StartListening (game state created)");
+
+        var timeout = state.Config.Timeout;
+        while (!gameState.Progress.Equals(ChinesePokerGameProgress.Closed))
+        {
+            var timeoutCancellationTokenSource = new CancellationTokenSource();
+            var channelTask = ChinesePokerGame.RunChannelTask(socketSession, gameState, InGameRequestTypes,
+                ChinesePokerInGameRequestType.Close, ChinesePokerGameProgress.Closed, logger, cancellationTokenSource);
+
+            var broadcastTask = ChinesePokerGame.RunBroadcastTask(socketSession, gameState, buffer, state,
+                logger, cancellationTokenSource);
+
+            var timeoutTask = ChinesePokerGame.RunTimeoutTask(timeout, gameState, ChinesePokerGameProgress.Closed,
+                logger,
+                timeoutCancellationTokenSource);
+
+            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
+            _ = Task.Run(() =>
+            {
+                timeoutCancellationTokenSource.Cancel();
+                logger.LogDebug("Timeout task cancelled");
+                timeoutCancellationTokenSource.Dispose();
+            });
+        }
+
+        await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
+        var retrieveResult =
+            state.GameStates.ChinesePokerGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
+        if (!retrieveResult)
+            return;
+
+        foreach (var (_, value) in retrievedState!.Players)
+        {
+            if (value.TextChannel == null)
+                continue;
+
+            var channelId = value.TextChannel.Id;
+            await value.TextChannel.DeleteAsync();
+            state.GameStates.ChinesePokerGameStates.Item2.Remove(channelId);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        state.GameStates.ChinesePokerGameStates.Item1.Remove(gameState.GameId, out _);
+        socketSession.Dispose();
+    }
+
+    private static async Task AddChinesePokerPlayerState(string gameId, DiscordGuild guild,
+        ChinesePokerPlayerState playerState, GameStates gameStates, float baseBet)
+    {
+        var state = gameStates
+            .ChinesePokerGameStates
+            .Item1
+            .GetOrAdd(gameId, new ChinesePokerGameState());
+        state.Players.GetOrAdd(playerState.PlayerId, playerState);
+        state.Guilds.Add(guild);
+        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
+
+        if (playerState.TextChannel == null)
+            return;
+
+        gameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.Id);
+        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
+            {
+                AvatarUrl = playerState.AvatarUrl,
+                BaseBet = baseBet,
+                ChannelId = playerState.TextChannel.Id,
+                ClientType = ClientType.Discord,
+                GameId = gameId,
+                PlayerId = playerState.PlayerId,
+                PlayerName = playerState.PlayerName
+            })));
+    }
+
+    private static async Task<bool> HandleSettingHand(
+        ChinesePokerGameState state,
+        ChinesePokerPlayerState playerState,
+        ImmutableArray<string> splitMessage,
+        DiscordInteraction interaction,
+        long timeout,
+        DeckService deckService,
+        Localizations localizations
+    )
+    {
+        var localization = localizations.GetLocalization().ChinesePoker;
+
+        var handName = state.Progress switch
+        {
+            ChinesePokerGameProgress.FrontHand => localization.FrontHand.ToLowerInvariant(),
+            ChinesePokerGameProgress.MiddleHand => localization.MiddleHand.ToLowerInvariant(),
+            ChinesePokerGameProgress.BackHand => localization.BackHand.ToLowerInvariant(),
+            _ => ""
+        };
+
+        if (splitMessage.Any(s => !CardRegex.IsMatch(s)))
+        {
+            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                .WithContent(localization.InvalidCard));
+            return false;
+        }
+
+        var cardMatches = splitMessage
+            .Select(s => CardRegex.Match(s))
+            .ToImmutableArray();
+
+        if (cardMatches.Any(m => !AvailableRanks.Contains(m.Groups[2].Value)))
+        {
+            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                .WithContent(localization.InvalidCard));
+            return false;
+        }
+
+        var cards = cardMatches
+            .Select(m => Card.CreateCard(m.Groups[1].Value, m.Groups[2].Value))
+            .ToImmutableArray()
+            .Sort((a, b) => a.Number.CompareTo(b.Number));
+
+        if (cards.Any(c => !playerState.Cards.Contains(c)))
+        {
+            await interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                .WithContent(localization.InvalidCard));
+            return false;
+        }
+
+        var renderedCards = SkiaService.RenderDeck(deckService, cards);
+        var reply = new DiscordFollowupMessageBuilder()
+            .AddEmbed(new DiscordEmbedBuilder()
+                .WithAuthor(playerState.PlayerName, iconUrl: playerState.AvatarUrl)
+                .WithColor((int)BurstColor.Burst)
+                .WithDescription(
+                    $"{localization.Cards}\n{string.Join('\n', cards)}\n{localization.ConfirmCards.Replace("{hand}", handName)}")
+                .WithFooter(localization.ConfirmCardsFooter.Replace("{hand}", handName))
+                .WithThumbnail(Constants.BurstLogo)
+                .WithTitle(TextInfo.ToTitleCase(handName))
+                .WithImageUrl(Constants.AttachmentUri))
+            .AddComponents(
+                new DiscordButtonComponent(ButtonStyle.Primary, "confirm", localization.Confirm,
+                    emoji: new DiscordComponentEmoji(Constants.CheckMarkEmoji)),
+                new DiscordButtonComponent(ButtonStyle.Danger, "cancel", localization.Cancel,
+                    emoji: new DiscordComponentEmoji(Constants.CrossMarkEmoji))
+            )
+            .AddFile(Constants.OutputFileName, renderedCards, true);
+
+        var confirmMessage = await interaction.CreateFollowupMessageAsync(reply);
+        var confirmationAction = await confirmMessage
+            .WaitForButtonAsync(playerState.Member, TimeSpan.FromSeconds(timeout));
+        var customId = confirmationAction.Result.Interaction.Data.CustomId;
+
+        if (confirmationAction.TimedOut)
+        {
+            await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
+                .WithContent(localization.ConfirmCardsFailure));
+            return false;
+        }
+
+        if (string.Equals(customId, "cancel"))
+        {
+            await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
+                .WithContent(Constants.CrossMarkEmoji.GetDiscordName()));
+            return false;
+        }
+
+        var currentProgress = state.Progress;
+        playerState.DeckImages.Add(currentProgress, renderedCards);
+        await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
+            {
+                RequestType = state.Progress switch
+                {
+                    ChinesePokerGameProgress.FrontHand => ChinesePokerInGameRequestType.FrontHand,
+                    ChinesePokerGameProgress.MiddleHand => ChinesePokerInGameRequestType.MiddleHand,
+                    ChinesePokerGameProgress.BackHand => ChinesePokerInGameRequestType.BackHand,
+                    _ => ChinesePokerInGameRequestType.Close
+                },
+                GameId = state.GameId,
+                PlayerId = playerState.PlayerId,
+                PlayCard = cards
+            })));
+
+        await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
+            .WithContent(Constants.CheckMarkEmoji.GetDiscordName()));
+        return true;
+    }
+
+    private static async Task<bool> HandleProgressChange(
+        RawChinesePokerGameState deserializedIncomingData,
+        ChinesePokerGameState gameState,
+        State state,
+        ILogger logger)
+    {
+        if (deserializedIncomingData.Progress.Equals(ChinesePokerGameProgress.Ending))
+            return true;
+
+        gameState.Progress = deserializedIncomingData.Progress;
+        await UpdateGameState(gameState, deserializedIncomingData, logger);
+
+        switch (deserializedIncomingData.Progress)
+        {
+            case ChinesePokerGameProgress.NotAvailable:
+            case ChinesePokerGameProgress.Starting:
+            case ChinesePokerGameProgress.Ending:
+            case ChinesePokerGameProgress.Closed:
+                break;
+            case ChinesePokerGameProgress.FrontHand:
+            case ChinesePokerGameProgress.MiddleHand:
+            case ChinesePokerGameProgress.BackHand:
+            {
+                foreach (var (_, playerState) in gameState.Players)
+                {
+                    if (playerState.TextChannel == null)
+                        continue;
+
+                    state.GameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.Id);
+                    var message = await playerState.TextChannel.SendMessageAsync(BuildHandMessage(playerState,
+                        deserializedIncomingData.Progress, state.DeckService, state.Localizations));
+                    _ = Task.Run(async () =>
+                    {
+                        while (true)
+                        {
+                            var result = await message
+                                .WaitForSelectAsync(playerState.Member, "cards", null);
+
+                            await result.Result.Interaction.CreateResponseAsync(InteractionResponseType
+                                .DeferredChannelMessageWithSource);
+
+                            result.Result.Handled = await HandleSettingHand(gameState, playerState,
+                                result.Result.Values.ToImmutableArray(), result.Result.Interaction,
+                                state.Config.Timeout, state.DeckService, state.Localizations);
+                            if (result.Result.Handled)
+                                break;
+                        }
+                    });
+                }
+
+                break;
+            }
+            default:
+                throw new InvalidOperationException("Unsupported Chinese poker game progress.");
+        }
+
+        return true;
     }
 
     private static async Task ShowAllHands(
@@ -516,10 +527,10 @@ public partial class ChinesePoker : ChinesePokerGame
         {
             if (playerState.TextChannel == null)
                 continue;
-            
+
             var randomFileName = Utilities.GenerateRandomString() + ".jpg";
             var randomAttachmentUri = $"attachment://{randomFileName}";
-            
+
             var embed = new DiscordEmbedBuilder()
                 .WithColor((int)BurstColor.Burst)
                 .WithTitle(handName)
@@ -540,14 +551,14 @@ public partial class ChinesePoker : ChinesePokerGame
 
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
-        
     }
 
-    private static async Task SendInitialMessage(ChinesePokerPlayerState playerState, DeckService deckService, Localizations localizations, ILogger logger)
+    private static async Task SendInitialMessage(ChinesePokerPlayerState playerState, DeckService deckService,
+        Localizations localizations, ILogger logger)
     {
         if (playerState.TextChannel == null)
             return;
-        
+
         logger.LogDebug("Sending initial message...");
         var localization = localizations.GetLocalization().ChinesePoker;
         var prefix = localization.InitialMessagePrefix;
@@ -632,7 +643,7 @@ public partial class ChinesePoker : ChinesePokerGame
                 ChinesePokerGameProgress.BackHand => chinesePokerLocalization.BackHand.ToLowerInvariant(),
                 _ => ""
             });
-        
+
         var activeCards = playerState.Cards
             .Where(c => c.IsFront)
             .Select(c => new DiscordSelectComponentOption(c.ToStringSimple(),
@@ -647,7 +658,8 @@ public partial class ChinesePoker : ChinesePokerGame
                 maxOptions: requiredCardCount));
     }
 
-    private static async Task UpdateGameState(ChinesePokerGameState state, RawChinesePokerGameState? data, ILogger logger)
+    private static async Task UpdateGameState(ChinesePokerGameState state, RawChinesePokerGameState? data,
+        ILogger logger)
     {
         if (data == null)
             return;
@@ -662,16 +674,14 @@ public partial class ChinesePoker : ChinesePokerGame
             if (state.Players.ContainsKey(playerId))
             {
                 var player = state.Players.GetOrAdd(playerId, new ChinesePokerPlayerState());
-                player.Cards = playerState.Cards;
+                player.Cards = playerState.Cards.ToImmutableArray();
                 player.Naturals = playerState.Naturals;
                 player.AvatarUrl = playerState.AvatarUrl;
                 player.PlayedCards = playerState.PlayedCards;
                 player.PlayerName = playerState.PlayerName;
 
                 if (player.Member == null)
-                {
                     foreach (var guild in state.Guilds)
-                    {
                         try
                         {
                             var member = await guild.GetMemberAsync(player.PlayerId);
@@ -683,9 +693,7 @@ public partial class ChinesePoker : ChinesePokerGame
                         {
                             logger.LogWarning("Exception caught when getting member: {Exception}", ex);
                         }
-                    }
-                }
-                
+
                 if (playerState.ChannelId == 0 || player.TextChannel != null) continue;
                 foreach (var guild in state.Guilds)
                 {
@@ -702,17 +710,16 @@ public partial class ChinesePoker : ChinesePokerGame
                 var newPlayerState = new ChinesePokerPlayerState
                 {
                     AvatarUrl = playerState.AvatarUrl,
-                    Cards = playerState.Cards,
+                    Cards = playerState.Cards.ToImmutableArray(),
                     GameId = playerState.GameId,
                     Naturals = playerState.Naturals,
                     PlayedCards = playerState.PlayedCards,
                     PlayerId = playerState.PlayerId,
                     PlayerName = playerState.PlayerName,
-                    TextChannel = null,
+                    TextChannel = null
                 };
-                
+
                 foreach (var guild in state.Guilds)
-                {
                     try
                     {
                         var member = await guild.GetMemberAsync(playerState.PlayerId);
@@ -724,8 +731,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     {
                         logger.LogWarning("Exception caught when getting member: {Exception}", ex);
                     }
-                }
-                
+
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
             }
         }

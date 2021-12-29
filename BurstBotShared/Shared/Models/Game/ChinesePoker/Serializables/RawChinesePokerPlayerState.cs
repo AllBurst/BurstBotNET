@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
@@ -9,12 +10,14 @@ using Newtonsoft.Json.Converters;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 
-public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress>
+public record
+    RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, RawChinesePokerPlayerState,
+        ChinesePokerGameProgress>
 {
     [JsonPropertyName("game_id")]
     [JsonProperty("game_id")]
     public string GameId { get; init; } = "";
-    
+
     [JsonPropertyName("player_id")]
     [JsonProperty("player_id")]
     public ulong PlayerId { get; init; }
@@ -22,7 +25,7 @@ public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, Ra
     [JsonPropertyName("player_name")]
     [JsonProperty("player_name")]
     public string PlayerName { get; init; } = "";
-    
+
     [JsonPropertyName("channel_id")]
     [JsonProperty("channel_id")]
     public ulong ChannelId { get; init; }
@@ -39,14 +42,15 @@ public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, Ra
     [JsonProperty("naturals")]
     [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
-    public ChinesePokerNatural? Naturals { get; init; } = null;
+    public ChinesePokerNatural? Naturals { get; init; }
 
     [JsonPropertyName("avatar_url")]
     [JsonProperty("avatar_url")]
     public string AvatarUrl { get; init; } = "";
 
     [Pure]
-    public static RawChinesePokerPlayerState FromState(IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress> state)
+    public static RawChinesePokerPlayerState FromState(
+        IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress> state)
     {
         var playerState = state as ChinesePokerPlayerState;
         return new RawChinesePokerPlayerState
@@ -55,13 +59,13 @@ public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, Ra
             PlayerId = playerState.PlayerId,
             PlayerName = playerState.PlayerName,
             ChannelId = playerState.TextChannel!.Id,
-            Cards = playerState.Cards,
+            Cards = playerState.Cards.ToList(),
             PlayedCards = playerState.PlayedCards,
             Naturals = playerState.Naturals,
             AvatarUrl = playerState.AvatarUrl
         };
     }
-    
+
     public async Task<ChinesePokerPlayerState> ToState(DiscordGuild guild)
     {
         var channel = guild.GetChannel(ChannelId);
@@ -73,9 +77,9 @@ public record RawChinesePokerPlayerState : IRawState<ChinesePokerPlayerState, Ra
             PlayerId = PlayerId,
             PlayerName = PlayerName,
             TextChannel = channel,
-            Cards = Cards,
+            Cards = Cards.ToImmutableArray(),
             PlayedCards = PlayedCards,
             Naturals = Naturals
         };
     }
-};
+}

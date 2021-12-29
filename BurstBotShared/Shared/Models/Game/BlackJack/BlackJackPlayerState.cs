@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
@@ -15,7 +16,7 @@ public class BlackJackPlayerState : IState<BlackJackPlayerState, RawBlackJackPla
     public long OwnTips { get; set; }
     public int BetTips { get; set; }
     public int Order { get; set; }
-    public List<Card> Cards { get; set; } = new();
+    public ImmutableArray<Card> Cards { get; set; }
     public string AvatarUrl { get; set; } = "";
 
     public Channel<Tuple<ulong, byte[]>>? PayloadChannel => null;

@@ -20,7 +20,8 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
 
-using BlackJackGame = IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackGameProgress, BlackJackInGameRequestType>;
+using BlackJackGame =
+    IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackGameProgress, BlackJackInGameRequestType>;
 
 #pragma warning disable CA2252
 public partial class BlackJack : BlackJackGame
@@ -28,6 +29,149 @@ public partial class BlackJack : BlackJackGame
     private static readonly ImmutableArray<string> InGameRequestTypes = Enum
         .GetNames<BlackJackInGameRequestType>()
         .ToImmutableArray();
+
+    public static async Task<bool> HandleProgress(
+        string messageContent,
+        BlackJackGameState gameState,
+        State state,
+        ILogger logger)
+    {
+        try
+        {
+            var deserializedIncomingData =
+                JsonConvert.DeserializeObject<RawBlackJackGameState>(messageContent, Game.JsonSerializerSettings);
+            if (deserializedIncomingData == null)
+                return false;
+
+            await gameState.Semaphore.WaitAsync();
+            logger.LogDebug("Semaphore acquired in HandleProgress");
+
+            if (!gameState.Progress.Equals(deserializedIncomingData.Progress))
+            {
+                logger.LogDebug("Progress changed, handling progress change...");
+                var progressChangeResult =
+                    await HandleProgressChange(deserializedIncomingData, gameState, state.GameStates,
+                        state.DeckService, state.Localizations);
+                gameState.Semaphore.Release();
+                logger.LogDebug("Semaphore released after progress change");
+                return progressChangeResult;
+            }
+
+            var previousHighestBet = gameState.HighestBet;
+            await UpdateGameState(gameState, deserializedIncomingData);
+            var playerId = deserializedIncomingData.PreviousPlayerId;
+            var result = gameState.Players.TryGetValue(playerId, out var previousPlayerState);
+            if (!result)
+            {
+                gameState.Semaphore.Release();
+                return false;
+            }
+
+            result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
+                out var previousRequestType);
+            if (!result)
+            {
+                gameState.Semaphore.Release();
+                return false;
+            }
+
+            await SendProgressMessages(gameState, previousPlayerState, previousRequestType, previousHighestBet,
+                deserializedIncomingData, state.DeckService, state.Localizations, logger);
+
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released after sending progress messages");
+        }
+        catch (JsonSerializationException)
+        {
+            return false;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
+            logger.LogError("Source: {Source}", ex.Source);
+            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
+            logger.LogError("Message content: {Content}", messageContent);
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released in an exception");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static async Task HandleEndingResult(
+        string messageContent,
+        BlackJackGameState state,
+        Localizations localizations,
+        DeckService deckService,
+        ILogger logger)
+    {
+        if (state.Progress.Equals(BlackJackGameProgress.Ending))
+            return;
+
+        logger.LogDebug("Handling ending result...");
+
+        try
+        {
+            var deserializedEndingData = JsonSerializer.Deserialize<BlackJackInGameResponseEndingData>(messageContent);
+            if (deserializedEndingData == null)
+                return;
+
+            state.Progress = deserializedEndingData.Progress;
+            var result = state.Players.TryGetValue(deserializedEndingData.Winner?.PlayerId ?? 0, out var winner);
+            if (!result)
+                return;
+
+            var localization = localizations.GetLocalization().BlackJack;
+
+            var description = localization.WinDescription
+                .Replace("{playerName}", winner!.PlayerName)
+                .Replace("{totalRewards}", deserializedEndingData.TotalRewards.ToString());
+
+            var embed = new DiscordEmbedBuilder()
+                .WithColor((int)BurstColor.Burst)
+                .WithTitle(localization.WinTitle.Replace("{playerName}", winner.PlayerName))
+                .WithDescription(description)
+                .WithImageUrl(winner.AvatarUrl);
+
+            foreach (var (_, playerState) in deserializedEndingData.Players)
+            {
+                var cardNames = string.Join('\n', playerState.Cards.Select(c => c.ToString()));
+                var totalPoints = playerState.Cards.GetRealizedValues(100);
+                embed = embed.AddField(
+                    playerState.PlayerName,
+                    localization.TotalPointsMessage.Replace("{cardNames}", cardNames)
+                        .Replace("{totalPoints}", totalPoints.ToString()), true);
+            }
+
+            foreach (var (_, playerState) in state.Players)
+            {
+                if (playerState.TextChannel == null)
+                    continue;
+
+                await playerState.TextChannel.SendMessageAsync(embed);
+            }
+
+            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
+                new BlackJackInGameRequest
+                {
+                    RequestType = BlackJackInGameRequestType.Close,
+                    GameId = state.GameId,
+                    PlayerId = 0
+                })));
+        }
+        catch (Exception ex)
+        {
+            if (string.IsNullOrWhiteSpace(messageContent))
+                return;
+            logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
+            logger.LogError("Exception message: {Message}", ex.Message);
+            logger.LogError("Source: {Source}", ex.Source);
+            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
+            logger.LogError("Message content: {Content}", messageContent);
+        }
+    }
 
     private static async Task StartListening(
         string gameId,
@@ -57,7 +201,8 @@ public partial class BlackJack : BlackJackGame
         var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
 
         var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession = await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
+        var socketSession =
+            await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
         gameState.Semaphore.Release();
         logger.LogDebug("Semaphore released in StartListening (game state created)");
 
@@ -94,7 +239,8 @@ public partial class BlackJack : BlackJackGame
         }
 
         await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
-        var retrieveResult = state.GameStates.BlackJackGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
+        var retrieveResult =
+            state.GameStates.BlackJackGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
         if (!retrieveResult)
             return;
 
@@ -177,7 +323,8 @@ public partial class BlackJack : BlackJackGame
             .Select(s => s.Trim())
             .Where(s => !string.IsNullOrEmpty(s))
             .ToImmutableArray();
-        var helpExecuted = await Help.Help.GenericCommandHelp(channel, splitContent, localizations.GetLocalization().BlackJack);
+        var helpExecuted =
+            await Help.Help.GenericCommandHelp(channel, splitContent, localizations.GetLocalization().BlackJack);
 
         if (helpExecuted)
             return;
@@ -254,76 +401,6 @@ public partial class BlackJack : BlackJackGame
             default:
                 break;
         }
-    }
-
-    public static async Task<bool> HandleProgress(
-        string messageContent,
-        BlackJackGameState gameState,
-        State state,
-        ILogger logger)
-    {
-        try
-        {
-            var deserializedIncomingData =
-                JsonConvert.DeserializeObject<RawBlackJackGameState>(messageContent, Game.JsonSerializerSettings);
-            if (deserializedIncomingData == null)
-                return false;
-
-            await gameState.Semaphore.WaitAsync();
-            logger.LogDebug("Semaphore acquired in HandleProgress");
-
-            if (!gameState.Progress.Equals(deserializedIncomingData.Progress))
-            {
-                logger.LogDebug("Progress changed, handling progress change...");
-                var progressChangeResult =
-                    await HandleProgressChange(deserializedIncomingData, gameState, state.GameStates,
-                        state.DeckService, state.Localizations);
-                gameState.Semaphore.Release();
-                logger.LogDebug("Semaphore released after progress change");
-                return progressChangeResult;
-            }
-
-            var previousHighestBet = gameState.HighestBet;
-            await UpdateGameState(gameState, deserializedIncomingData);
-            var playerId = deserializedIncomingData.PreviousPlayerId;
-            var result = gameState.Players.TryGetValue(playerId, out var previousPlayerState);
-            if (!result)
-            {
-                gameState.Semaphore.Release();
-                return false;
-            }
-
-            result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
-                out var previousRequestType);
-            if (!result)
-            {
-                gameState.Semaphore.Release();
-                return false;
-            }
-
-            await SendProgressMessages(gameState, previousPlayerState, previousRequestType, previousHighestBet,
-                deserializedIncomingData, state.DeckService, state.Localizations, logger);
-
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released after sending progress messages");
-        }
-        catch (JsonSerializationException)
-        {
-            return false;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in an exception");
-            return false;
-        }
-
-        return true;
     }
 
     private static async Task<bool> HandleProgressChange(
@@ -404,79 +481,6 @@ public partial class BlackJack : BlackJackGame
         }
 
         return true;
-    }
-
-    public static async Task HandleEndingResult(
-        string messageContent,
-        BlackJackGameState state,
-        Localizations localizations,
-        DeckService deckService,
-        ILogger logger)
-    {
-        if (state.Progress.Equals(BlackJackGameProgress.Ending))
-            return;
-
-        logger.LogDebug("Handling ending result...");
-        
-        try
-        {
-            var deserializedEndingData = JsonSerializer.Deserialize<BlackJackInGameResponseEndingData>(messageContent);
-            if (deserializedEndingData == null)
-                return;
-
-            state.Progress = deserializedEndingData.Progress;
-            var result = state.Players.TryGetValue(deserializedEndingData.Winner?.PlayerId ?? 0, out var winner);
-            if (!result)
-                return;
-
-            var localization = localizations.GetLocalization().BlackJack;
-
-            var description = localization.WinDescription
-                .Replace("{playerName}", winner!.PlayerName)
-                .Replace("{totalRewards}", deserializedEndingData.TotalRewards.ToString());
-
-            var embed = new DiscordEmbedBuilder()
-                .WithColor((int)BurstColor.Burst)
-                .WithTitle(localization.WinTitle.Replace("{playerName}", winner.PlayerName))
-                .WithDescription(description)
-                .WithImageUrl(winner.AvatarUrl);
-
-            foreach (var (_, playerState) in deserializedEndingData.Players)
-            {
-                var cardNames = string.Join('\n', playerState.Cards.Select(c => c.ToString()));
-                var totalPoints = playerState.Cards.GetRealizedValues(100);
-                embed = embed.AddField(
-                    playerState.PlayerName,
-                    localization.TotalPointsMessage.Replace("{cardNames}", cardNames)
-                        .Replace("{totalPoints}", totalPoints.ToString()), true);
-            }
-
-            foreach (var (_, playerState) in state.Players)
-            {
-                if (playerState.TextChannel == null)
-                    continue;
-
-                await playerState.TextChannel.SendMessageAsync(embed);
-            }
-
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
-                new BlackJackInGameRequest
-                {
-                    RequestType = BlackJackInGameRequestType.Close,
-                    GameId = state.GameId,
-                    PlayerId = 0
-                })));
-        }
-        catch (Exception ex)
-        {
-            if (string.IsNullOrWhiteSpace(messageContent))
-                return;
-            logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
-        }
     }
 
     private static async Task SendGenericData(BlackJackGameState gameState,
@@ -634,7 +638,9 @@ public partial class BlackJack : BlackJackGame
         if (previousPlayerState == null)
             return;
 
-        await SendPreviousPlayerActionMessage(gameState, ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(), previousRequestType,
+        await SendPreviousPlayerActionMessage(gameState,
+            ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(),
+            previousRequestType,
             deckService, localizations, previousHighestBet);
 
         if (gameState.Progress != nextProgress)
@@ -851,7 +857,7 @@ public partial class BlackJack : BlackJackGame
             {
                 var player = state.Players[playerId];
                 player.BetTips = playerState.BetTips;
-                player.Cards = playerState.Cards;
+                player.Cards = playerState.Cards.ToImmutableArray();
                 player.Order = playerState.Order;
                 player.PlayerName = playerState.PlayerName;
                 player.OwnTips = playerState.OwnTips;
@@ -881,7 +887,7 @@ public partial class BlackJack : BlackJackGame
                     OwnTips = playerState.OwnTips,
                     BetTips = playerState.BetTips,
                     Order = playerState.Order,
-                    Cards = playerState.Cards,
+                    Cards = playerState.Cards.ToImmutableArray(),
                     AvatarUrl = playerState.AvatarUrl
                 };
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
