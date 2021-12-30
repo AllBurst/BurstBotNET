@@ -25,5 +25,19 @@
   "confirmCardsFailure": "Setting cards cancelled because no action is taken.",
   "confirm": "Confirm",
   "cancel": "Cancel",
-  "dropDownMessage": "Select {num} cards for {hand}!"
+  "dropDownMessage": "Select {num} cards for {hand}!",
+  "declareNatural": "Declare a natural",
+  "threeFlushes": "Three Flushes",
+  "threeStraights": "Three Straights",
+  "sixAndAHalfPairs": "Six and a Half Pairs",
+  "fourTriples": "Four Triples",
+  "fullColored": "Full-Colored",
+  "allLowHighs": "All Low/Highs",
+  "threeQuads": "Three Quads",
+  "threeStraightFlushes": "Three Straight Flushes",
+  "twelveRoyalties": "12 Royalties",
+  "dragon": "Dragon",
+  "cleanDragon": "Clean Dragon",
+  "naturalDeclared": "Successfully declared a natural! Please select your back hand now!",
+  "naturalHit": "**{player} hit a {natural}!!!**"
 }

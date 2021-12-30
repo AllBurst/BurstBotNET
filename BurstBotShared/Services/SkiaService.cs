@@ -146,4 +146,54 @@ public static class SkiaService
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
+
+    public static async Task<Stream> RenderChinesePokerNatural(
+        ChinesePokerPlayerState winner,
+        Dictionary<ChinesePokerGameProgress, ChinesePokerCombination> winnerPlayedCards,
+        ImmutableArray<ChinesePokerGameProgress> hands,
+        DeckService deck)
+    {
+        var winnerAvatar = await winner.AvatarUrl.GetStreamAsync();
+        var avatarBitmap = SKBitmap.Decode(winnerAvatar);
+        var handBitmaps = hands
+            .SelectMany(hand => winnerPlayedCards[hand].Cards.Select(deck.GetBitmap))
+            .ToImmutableList();
+
+        var totalCardWidth = handBitmaps.Sum(b => b.Width);
+        var cardHeight = handBitmaps[0].Height;
+        var avatarRatio = (float)avatarBitmap.Height / cardHeight;
+        var avatarWidth = avatarBitmap.Width / avatarRatio;
+        var avatarHeight = avatarBitmap.Height / avatarRatio;
+        var width = totalCardWidth + avatarWidth;
+
+        var scaleRatio = width / MaxWidth;
+        var ratio = 1.0f / scaleRatio;
+        var actualWidth = (int)MathF.Floor(width * ratio);
+        var actualHeight = (int)MathF.Floor(cardHeight * ratio);
+        var surface = SKSurface.Create(new SKImageInfo(actualWidth, actualHeight));
+        var canvas = surface.Canvas;
+
+        var singleCardWidth = (int)MathF.Floor(handBitmaps[0].Width * ratio);
+        var singleCardHeight = (int)MathF.Floor(cardHeight * ratio);
+        var cardImageInfo = new SKImageInfo(singleCardWidth, singleCardHeight);
+        var currentX = 0.0f;
+        var avatarImageInfo = new SKImageInfo((int)MathF.Floor(avatarWidth * ratio), (int)MathF.Floor(avatarHeight * ratio));
+        var avatarScaledBitmap = new SKBitmap(avatarImageInfo);
+        avatarBitmap.ScalePixels(avatarScaledBitmap, SKFilterQuality.High);
+        canvas.DrawBitmap(avatarScaledBitmap, currentX, 0.0f);
+        currentX += avatarWidth * ratio;
+
+        foreach (var bitmap in handBitmaps)
+        {
+            var scaledBitmap = new SKBitmap(cardImageInfo);
+            bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
+            canvas.DrawBitmap(scaledBitmap, currentX, 0.0f);
+            currentX += handBitmaps[0].Width * ratio;
+        }
+
+        var stream = new MemoryStream();
+        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+        return stream;
+    }
 }

@@ -48,5 +48,23 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     [JsonPropertyName("cancel")] public string Cancel { get; init; } = "";
     [JsonPropertyName("dropDownMessage")] public string DropDownMessage { get; init; } = "";
 
+    [JsonPropertyName("declareNatural")] public string DeclareNatural { get; init; } = "";
+    [JsonPropertyName("threeFlushes")] public string ThreeFlushes { get; init; } = "";
+    [JsonPropertyName("threeStraights")] public string ThreeStraights { get; init; } = "";
+    [JsonPropertyName("sixAndAHalfPairs")] public string SixAndAHalfPairs { get; init; } = "";
+    [JsonPropertyName("fourTriples")] public string FourTriples { get; init; } = "";
+    [JsonPropertyName("fullColored")] public string FullColored { get; init; } = "";
+    [JsonPropertyName("allLowHighs")] public string AllLowHighs { get; init; } = "";
+    [JsonPropertyName("threeQuads")] public string ThreeQuads { get; init; } = "";
+
+    [JsonPropertyName("threeStraightFlushes")]
+    public string ThreeStraightFlushes { get; init; } = "";
+
+    [JsonPropertyName("twelveRoyalties")] public string TwelveRoyalties { get; init; } = "";
+    [JsonPropertyName("dragon")] public string Dragon { get; init; } = "";
+    [JsonPropertyName("cleanDragon")] public string CleanDragon { get; init; } = "";
+    [JsonPropertyName("naturalDeclared")] public string NaturalDeclared { get; init; } = "";
+    [JsonPropertyName("naturalHit")] public string NaturalHit { get; init; } = "";
+    
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

@@ -15,6 +15,8 @@ using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
 using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -151,36 +153,51 @@ public partial class ChinesePoker : ChinesePokerGame
 
             var descriptionBuilder = new StringBuilder();
             descriptionBuilder.Append(string.Join('\n', playerResults) + "\n\n");
-            var hands = new[]
-            {
-                localization.FrontHand,
-                localization.MiddleHand,
-                localization.BackHand
-            };
-            var zippedHands = Hands.Zip(hands).ToImmutableArray();
 
-            foreach (var (handType, hand) in zippedHands)
+            if (!deserializedEndingData.DeclaredNatural.HasValue)
             {
-                await ShowAllHands(handType, hand, deserializedEndingData, state, deckService);
-                await Task.Delay(TimeSpan.FromSeconds(2));
-            }
-
-            foreach (var (handType, hand) in zippedHands)
-            {
-                descriptionBuilder.Append($"**{hand}**\n");
-                var hs = deserializedEndingData
-                    .Players
-                    .Values
-                    .Select(v => (v.PlayerName, v.PlayedCards[handType]))
-                    .ToImmutableArray();
-                foreach (var (playerName, combination) in hs)
+                var hands = new[]
                 {
-                    var desc =
-                        $"{playerName} - *{combination.CombinationType}*\n{string.Join('\n', combination.Cards)}";
-                    descriptionBuilder.Append(desc + '\n');
+                    localization.FrontHand,
+                    localization.MiddleHand,
+                    localization.BackHand
+                };
+                var zippedHands = Hands.Zip(hands).ToImmutableArray();
+
+                foreach (var (handType, hand) in zippedHands)
+                {
+                    await ShowAllHands(handType, hand, deserializedEndingData, state, deckService);
+                    await Task.Delay(TimeSpan.FromSeconds(2));
                 }
 
-                descriptionBuilder.Append("\n\n");
+                foreach (var (handType, hand) in zippedHands)
+                {
+                    descriptionBuilder.Append($"**{hand}**\n");
+                    var hs = deserializedEndingData
+                        .Players
+                        .Values
+                        .Select(v => (v.PlayerName, v.PlayedCards[handType]))
+                        .ToImmutableArray();
+                    foreach (var (playerName, combination) in hs)
+                    {
+                        var desc =
+                            $"{playerName} - *{combination.CombinationType}*\n{string.Join('\n', combination.Cards)}";
+                        descriptionBuilder.Append(desc + '\n');
+                    }
+
+                    descriptionBuilder.Append("\n\n");
+                }
+            }
+            else
+            {
+                var naturalMessage = localization.NaturalHit
+                    .Replace("{player}", winner.PlayerName)
+                    .Replace("{natural}", deserializedEndingData
+                        .DeclaredNatural.Value.ToNaturalString(localization));
+                descriptionBuilder.Append(naturalMessage);
+
+                await ShowNatural(winner, naturalMessage, deserializedEndingData.Players[winner.PlayerId].PlayedCards,
+                    state, deckService);
             }
 
             var embed = new DiscordEmbedBuilder()
@@ -340,15 +357,14 @@ public partial class ChinesePoker : ChinesePokerGame
             })));
     }
 
-    private static async Task<bool> HandleSettingHand(
-        ChinesePokerGameState state,
+    private static async Task<bool> HandleSettingHand(ChinesePokerGameState state,
         ChinesePokerPlayerState playerState,
         ImmutableArray<string> splitMessage,
         DiscordInteraction interaction,
+        ChinesePokerNatural? declaredNatural,
         long timeout,
         DeckService deckService,
-        Localizations localizations
-    )
+        Localizations localizations)
     {
         var localization = localizations.GetLocalization().ChinesePoker;
 
@@ -443,7 +459,8 @@ public partial class ChinesePoker : ChinesePokerGame
                 },
                 GameId = state.GameId,
                 PlayerId = playerState.PlayerId,
-                PlayCard = cards
+                PlayCard = cards,
+                DeclaredNatural = declaredNatural
             })));
 
         await interaction.EditFollowupMessageAsync(confirmMessage.Id, new DiscordWebhookBuilder()
@@ -480,20 +497,58 @@ public partial class ChinesePoker : ChinesePokerGame
                         continue;
 
                     state.GameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.Id);
+                    DiscordMessage? naturalMessage = null;
                     var message = await playerState.TextChannel.SendMessageAsync(BuildHandMessage(playerState,
                         deserializedIncomingData.Progress, state.DeckService, state.Localizations));
+
+                    if (deserializedIncomingData.Progress.Equals(ChinesePokerGameProgress.BackHand))
+                    {
+                        naturalMessage = await playerState.TextChannel.SendMessageAsync(BuildNaturalMessage(state.Localizations));
+                    }
+                    
                     _ = Task.Run(async () =>
                     {
+                        ChinesePokerNatural? declaredNatural = null;
+
                         while (true)
                         {
-                            var result = await message
-                                .WaitForSelectAsync(playerState.Member, "cards", null);
+                            var tasks = new List<Task<InteractivityResult<ComponentInteractionCreateEventArgs>>>
+                            {
+                                message
+                                    .WaitForSelectAsync(playerState.Member, "cards", null)
+                            };
+
+                            if (deserializedIncomingData.Progress.Equals(ChinesePokerGameProgress.BackHand) &&
+                                naturalMessage != null && declaredNatural == null)
+                            {
+                                tasks.Add(naturalMessage.WaitForSelectAsync(playerState.Member, "naturals", null));
+                            }
+                            
+                            var result = await await Task.WhenAny(tasks);
 
                             await result.Result.Interaction.CreateResponseAsync(InteractionResponseType
                                 .DeferredChannelMessageWithSource);
 
+                            var customId = result.Result.Interaction.Data.CustomId;
+                            Console.WriteLine($"Custom Id: {customId}");
+
+                            if (string.Equals(customId, "naturals"))
+                            {
+                                var value = result.Result.Values.FirstOrDefault();
+                                var parseResult = Enum.TryParse<ChinesePokerNatural>(value ?? "", out var natural);
+                                if (!parseResult)
+                                    continue;
+
+                                declaredNatural = natural;
+                                await result.Result.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
+                                    .WithContent(state.Localizations.GetLocalization().ChinesePoker.NaturalDeclared));
+                                result.Result.Handled = true;
+                                continue;
+                            }
+
                             result.Result.Handled = await HandleSettingHand(gameState, playerState,
                                 result.Result.Values.ToImmutableArray(), result.Result.Interaction,
+                                declaredNatural,
                                 state.Config.Timeout, state.DeckService, state.Localizations);
                             if (result.Result.Handled)
                                 break;
@@ -545,6 +600,36 @@ public partial class ChinesePoker : ChinesePokerGame
                 embed = embed.AddField(fieldName, fieldValue, true);
             }
 
+            await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
+                .WithEmbed(embed)
+                .WithFile(randomFileName, renderedImage, true));
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+    }
+
+    private static async Task ShowNatural(
+        ChinesePokerPlayerState winner,
+        string title,
+        Dictionary<ChinesePokerGameProgress, ChinesePokerCombination> winnerPlayedCards,
+        ChinesePokerGameState gameState,
+        DeckService deckService)
+    {
+        var renderedImage = await SkiaService.RenderChinesePokerNatural(winner, winnerPlayedCards, Hands.ToImmutableArray(), deckService);
+        foreach (var (_, playerState) in gameState.Players)
+        {
+            if (playerState.TextChannel == null)
+                continue;
+            
+            var randomFileName = Utilities.GenerateRandomString() + ".jpg";
+            var randomAttachmentUri = $"attachment://{randomFileName}";
+            
+            var embed = new DiscordEmbedBuilder()
+                .WithColor((int)BurstColor.Burst)
+                .WithTitle(title.ToUpperInvariant())
+                .WithThumbnail(Constants.BurstLogo)
+                .WithImageUrl(randomAttachmentUri);
+            
             await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
                 .WithEmbed(embed)
                 .WithFile(randomFileName, renderedImage, true));
@@ -656,6 +741,22 @@ public partial class ChinesePoker : ChinesePokerGame
             .WithFile(Constants.OutputFileName, deck, true)
             .AddComponents(new DiscordSelectComponent("cards", placeholder, activeCards, minOptions: requiredCardCount,
                 maxOptions: requiredCardCount));
+
+        
+    }
+
+    private static DiscordMessageBuilder BuildNaturalMessage(Localizations localizations)
+    {
+        var chinesePokerLocalization = localizations.GetLocalization().ChinesePoker;
+        var allNaturals = Enum.GetValues<ChinesePokerNatural>()
+            .Select(n => (n, n.ToNaturalString(chinesePokerLocalization)))
+            .Select(pair => new DiscordSelectComponentOption(pair.Item2, pair.n.ToString(), pair.Item2));
+        var builder = new DiscordMessageBuilder()
+            .WithContent(chinesePokerLocalization.DeclareNatural)
+            .AddComponents(new DiscordSelectComponent("naturals", chinesePokerLocalization.DeclareNatural,
+                allNaturals, minOptions: 0, maxOptions: 1));
+
+        return builder;
     }
 
     private static async Task UpdateGameState(ChinesePokerGameState state, RawChinesePokerGameState? data,

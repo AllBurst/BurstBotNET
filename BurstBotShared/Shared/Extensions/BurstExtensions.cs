@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using DSharpPlus.Entities;
 
 namespace BurstBotShared.Shared.Extensions;
@@ -72,5 +74,22 @@ public static class BurstExtensions
             Suit.Diamond => new DiscordComponentEmoji(910826609576140821),
             Suit.Club => new DiscordComponentEmoji(910826578336948234),
             _ => new DiscordComponentEmoji("❓")
+        };
+
+    public static string ToNaturalString(this ChinesePokerNatural natural, ChinesePokerLocalization localization)
+        => natural switch
+        {
+            ChinesePokerNatural.ThreeFlushes => localization.ThreeFlushes,
+            ChinesePokerNatural.ThreeStraights => localization.ThreeStraights,
+            ChinesePokerNatural.SixAndAHalfPairs => localization.SixAndAHalfPairs,
+            ChinesePokerNatural.FourTriples => localization.FourTriples,
+            ChinesePokerNatural.FullColored => localization.FullColored,
+            ChinesePokerNatural.AllLowHighs => localization.AllLowHighs,
+            ChinesePokerNatural.ThreeQuads => localization.ThreeQuads,
+            ChinesePokerNatural.ThreeStraightFlushes => localization.ThreeStraightFlushes,
+            ChinesePokerNatural.TwelveRoyalties => localization.TwelveRoyalties,
+            ChinesePokerNatural.Dragon => localization.Dragon,
+            ChinesePokerNatural.CleanDragon => localization.CleanDragon,
+            _ => throw new ArgumentOutOfRangeException(nameof(natural), natural, "Invalid natural.")
         };
 }
