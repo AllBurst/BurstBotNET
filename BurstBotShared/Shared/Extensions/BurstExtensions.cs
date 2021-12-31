@@ -76,7 +76,7 @@ public static class BurstExtensions
             _ => new DiscordComponentEmoji("❓")
         };
 
-    public static string ToNaturalString(this ChinesePokerNatural natural, ChinesePokerLocalization localization)
+    public static string ToLocalizedString(this ChinesePokerNatural natural, ChinesePokerLocalization localization)
         => natural switch
         {
             ChinesePokerNatural.ThreeFlushes => localization.ThreeFlushes,
@@ -91,5 +91,38 @@ public static class BurstExtensions
             ChinesePokerNatural.Dragon => localization.Dragon,
             ChinesePokerNatural.CleanDragon => localization.CleanDragon,
             _ => throw new ArgumentOutOfRangeException(nameof(natural), natural, "Invalid natural.")
+        };
+
+    public static string ToLocalizedString(this ChinesePokerCombinationType combinationType,
+        ChinesePokerLocalization localization)
+        => combinationType switch
+        {
+            ChinesePokerCombinationType.None => localization.None,
+            ChinesePokerCombinationType.OnePair => localization.OnePair,
+            ChinesePokerCombinationType.TwoPairs => localization.TwoPairs,
+            ChinesePokerCombinationType.ThreeOfAKind => localization.ThreeOfAKind,
+            ChinesePokerCombinationType.Straight => localization.Straight,
+            ChinesePokerCombinationType.Flush => localization.Flush,
+            ChinesePokerCombinationType.FullHouse => localization.FullHouse,
+            ChinesePokerCombinationType.FourOfAKind => localization.FourOfAKind,
+            ChinesePokerCombinationType.StraightFlush => localization.StraightFlush,
+            _ => throw new ArgumentOutOfRangeException(nameof(combinationType), combinationType, "Invalid combination.")
+        };
+
+    public static string ToLocalizedString(this ChinesePokerInGameResponseRewardType rewardType,
+        ChinesePokerLocalization localization)
+        => rewardType switch
+        {
+            ChinesePokerInGameResponseRewardType.MisSet => localization.MisSet,
+            ChinesePokerInGameResponseRewardType.Scoop => localization.Scoop,
+            ChinesePokerInGameResponseRewardType.HomeRun => localization.HomeRun,
+            ChinesePokerInGameResponseRewardType.FrontThreeOfAKind => localization.FrontThreeOfAKind,
+            ChinesePokerInGameResponseRewardType.MiddleFullHouse => localization.MiddleFullHouse,
+            ChinesePokerInGameResponseRewardType.MiddleFourOfAKind => localization.MiddleFourOfAKind,
+            ChinesePokerInGameResponseRewardType.MiddleStraightFlush => localization.MiddleStraightFlush,
+            ChinesePokerInGameResponseRewardType.BackFourOfAKind => localization.BackFourOfAKind,
+            ChinesePokerInGameResponseRewardType.BackStraightFlush => localization.BackStraightFlush,
+            ChinesePokerInGameResponseRewardType.Natural => localization.Natural,
+            _ => throw new ArgumentOutOfRangeException(nameof(rewardType), rewardType, "Invalid reward type.")
         };
 }

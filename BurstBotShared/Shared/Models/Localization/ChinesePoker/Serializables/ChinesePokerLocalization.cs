@@ -65,6 +65,26 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     [JsonPropertyName("cleanDragon")] public string CleanDragon { get; init; } = "";
     [JsonPropertyName("naturalDeclared")] public string NaturalDeclared { get; init; } = "";
     [JsonPropertyName("naturalHit")] public string NaturalHit { get; init; } = "";
+    [JsonPropertyName("none")] public string None { get; init; } = "";
+    [JsonPropertyName("onePair")] public string OnePair { get; init; } = "";
+    [JsonPropertyName("twoPairs")] public string TwoPairs { get; init; } = "";
+    [JsonPropertyName("threeOfAKind")] public string ThreeOfAKind { get; init; } = "";
+    [JsonPropertyName("straight")] public string Straight { get; init; } = "";
+    [JsonPropertyName("flush")] public string Flush { get; init; } = "";
+    [JsonPropertyName("fullHouse")] public string FullHouse { get; init; } = "";
+    [JsonPropertyName("fourOfAKind")] public string FourOfAKind { get; init; } = "";
+    [JsonPropertyName("straightFlush")] public string StraightFlush { get; init; } = "";
+    [JsonPropertyName("misSet")] public string MisSet { get; init; } = "";
+    [JsonPropertyName("scoop")] public string Scoop { get; init; } = "";
+    [JsonPropertyName("homeRun")] public string HomeRun { get; init; } = "";
+    [JsonPropertyName("frontThreeOfAKind")] public string FrontThreeOfAKind { get; init; } = "";
+    [JsonPropertyName("middleFullHouse")] public string MiddleFullHouse { get; init; } = "";
+    [JsonPropertyName("middleFourOfAKind")] public string MiddleFourOfAKind { get; init; } = "";
+    [JsonPropertyName("middleStraightFlush")] public string MiddleStraightFlush { get; init; } = "";
+    [JsonPropertyName("backFourOfAKind")] public string BackFourOfAKind { get; init; } = "";
+    [JsonPropertyName("backStraightFlush")] public string BackStraightFlush { get; init; } = "";
+    [JsonPropertyName("natural")] public string Natural { get; init; } = "";
+    [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
     
     public Dictionary<string, string> AvailableCommands => CommandList;
 };
