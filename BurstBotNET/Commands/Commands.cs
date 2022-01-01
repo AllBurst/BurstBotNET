@@ -1,42 +1,20 @@
+using System.Collections.Immutable;
 using BurstBotNET.Commands.Rewards;
-using BurstBotShared.Shared.Interfaces;
-using BurstBotShared.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using Remora.Discord.API.Abstractions.Objects;
 
 namespace BurstBotNET.Commands;
 
-using CommandGroup =
-    Dictionary<string, Tuple<DiscordApplicationCommand, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>>;
-
 #pragma warning disable CA2252
-public class Commands
+public static class Commands
 {
-    public Commands()
+    /*public Commands()
     {
-        var about = new About();
-        var ping = new Ping();
-        var balance = new Balance();
-        var start = new Start();
-        var daily = new Daily();
-        var weekly = new Weekly();
-
-        GlobalCommands =
-            new CommandGroup
-            {
-                { about.ToString(), ((ISlashCommand)about).GetCommandTuple() },
-                { ping.ToString(), ((ISlashCommand)ping).GetCommandTuple() },
-                { balance.ToString(), ((ISlashCommand)balance).GetCommandTuple() },
-                { start.ToString(), ((ISlashCommand)start).GetCommandTuple() },
-                { daily.ToString(), ((ISlashCommand)daily).GetCommandTuple() },
-                { weekly.ToString(), ((ISlashCommand)weekly).GetCommandTuple() }
-            };
-
         var blackJack = new BlackJack.BlackJack();
         var ninetyNine = new NinetyNine.NinetyNine();
         var help = new Help.Help();
         var chinesePoker = new ChinesePoker.ChinesePoker();
+
+        var a = About;
 
         GuildCommands =
             new CommandGroup
@@ -46,9 +24,22 @@ public class Commands
                 { help.ToString(), ((ISlashCommand)help).GetCommandTuple() },
                 { chinesePoker.ToString(), ((ISlashCommand)chinesePoker).GetCommandTuple() }
             };
-    }
+    }*/
 
-    public CommandGroup GlobalCommands { get; }
+    public static readonly List<Tuple<string, string, ImmutableArray<IApplicationCommandOption>>> GlobalCommands
+        = new()
+        {
+            About.GetCommandTuple(),
+            Balance.GetCommandTuple(),
+            Ping.GetCommandTuple(),
+            Start.GetCommandTuple(),
+            Daily.GetCommandTuple(),
+            Weekly.GetCommandTuple()
+        };
 
-    public CommandGroup GuildCommands { get; }
+    public static readonly List<Tuple<string, string, ImmutableArray<IApplicationCommandOption>>> GuildCommands
+        = new()
+        {
+
+        };
 }

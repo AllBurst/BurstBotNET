@@ -8,7 +8,7 @@ namespace BurstBotNET.Handlers;
 #pragma warning disable CA2252
 public partial class Handlers
 {
-    public Task HandleMessage(DiscordClient client, MessageCreateEventArgs e)
+    /*public Task HandleMessage(DiscordClient client, MessageCreateEventArgs e)
     {
         if (e.Author.IsBot || e.Guild == null)
             return Task.CompletedTask;
@@ -23,5 +23,5 @@ public partial class Handlers
             ));
 
         return Task.CompletedTask;
-    }
+    }*/
 }

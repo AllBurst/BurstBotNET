@@ -17,7 +17,7 @@ namespace BurstBotNET.Commands.BlackJack;
 #pragma warning disable CA2252
 public partial class BlackJack
 {
-    private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
+    /*private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
     {
         await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
         var mentionedPlayers = new List<ulong>();
@@ -181,5 +181,5 @@ public partial class BlackJack
             default:
                 throw new InvalidOperationException("Unsupported join status type.");
         }
-    }
+    }*/
 }

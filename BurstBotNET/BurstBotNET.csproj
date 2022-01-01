@@ -23,6 +23,8 @@
         <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
         <PackageReference Include="Flurl" Version="3.0.2" />
         <PackageReference Include="Flurl.Http" Version="3.2.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+        <PackageReference Include="OneOf" Version="3.0.205" />
         <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 

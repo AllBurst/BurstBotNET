@@ -6,6 +6,7 @@ using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Localization;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API.Abstractions.Rest;
 
 namespace BurstBotShared.Shared.Interfaces;
 
@@ -21,6 +22,8 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         string messageContent,
         TState gameState,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger);
 
     static abstract Task HandleEndingResult(
@@ -28,6 +31,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         TState state,
         Localizations localizations,
         DeckService deckService,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger);
 #pragma warning restore CA2252
     
@@ -61,6 +65,8 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         TState gameState,
         ArrayPool<byte> buffer,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
@@ -82,9 +88,10 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         var content = new StringBuilder();
         while (contentStack.TryPop(out var str))
             content.Append(str);
-        
-        if (!await TGame.HandleProgress(content.ToString(), gameState, state, logger))
-            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService, logger);
+
+        if (!await TGame.HandleProgress(content.ToString(), gameState, state, channelApi, guildApi, logger))
+            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService,
+                channelApi, logger);
     }
 
     static async Task RunTimeoutTask(long timeout, TState state, TProgress closedProgress, ILogger logger,

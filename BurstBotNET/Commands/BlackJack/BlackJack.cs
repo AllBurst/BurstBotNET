@@ -1,8 +1,12 @@
+using System.Collections.Immutable;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Results;
+using ApplicationCommandOptionType = DSharpPlus.ApplicationCommandOptionType;
 
 namespace BurstBotNET.Commands.BlackJack;
 
@@ -38,7 +42,7 @@ public partial class BlackJack : ISlashCommand
 
         _dispatchables = new CommandGroup
         {
-            { "join", Join }
+            //{ "join", Join }
         };
     }
 
@@ -53,5 +57,21 @@ public partial class BlackJack : ISlashCommand
     public override string ToString()
     {
         return "blackjack";
+    }
+
+    public static string Name => throw new NotImplementedException();
+
+    public static string Description => throw new NotImplementedException();
+
+    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => throw new NotImplementedException();
+
+    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResult> Handle()
+    {
+        throw new NotImplementedException();
     }
 }

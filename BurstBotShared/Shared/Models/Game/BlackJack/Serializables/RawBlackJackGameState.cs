@@ -3,9 +3,10 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 
@@ -67,13 +68,13 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
         };
     }
 
-    public async Task<BlackJackGameState> ToState(DiscordGuild guild)
+    public async Task<BlackJackGameState> ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)
     {
         var playersTask = Players
             .Values
             .Select(async p =>
             {
-                var playerState = await p.ToState(guild);
+                var playerState = await p.ToState(guildApi, guild);
                 return KeyValuePair.Create(playerState.PlayerId, playerState);
             });
 

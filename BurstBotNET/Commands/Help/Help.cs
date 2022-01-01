@@ -5,6 +5,9 @@ using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Results;
+using ApplicationCommandOptionType = DSharpPlus.ApplicationCommandOptionType;
 
 namespace BurstBotNET.Commands.Help;
 
@@ -105,5 +108,21 @@ public partial class Help : ISlashCommand
                     .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
                     .WithTitle(gameName)
                     .WithDescription(localization.AvailableCommands["help"])));
+    }
+
+    public static string Name => throw new NotImplementedException();
+
+    public static string Description => throw new NotImplementedException();
+
+    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => throw new NotImplementedException();
+
+    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResult> Handle()
+    {
+        throw new NotImplementedException();
     }
 }

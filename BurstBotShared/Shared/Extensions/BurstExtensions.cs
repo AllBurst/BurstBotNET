@@ -1,8 +1,11 @@
 using System.Collections.Immutable;
+using System.Drawing;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using DSharpPlus.Entities;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Extensions;
 
@@ -12,6 +15,38 @@ public static class BurstExtensions
     private const string HeartIcon = "<:burst_heart:910826529511051284>";
     private const string DiamondIcon = "<:burst_diamond:910826609576140821>";
     private const string ClubIcon = "<:burst_club:910826578336948234>";
+
+    public static string GetAvatarUrl(this IUser user, ushort size = 1024)
+    {
+        var num = size >= 16 && size <= 2048
+            ? Math.Log(size, 2.0)
+            : throw new ArgumentOutOfRangeException(nameof(size));
+        if (num < 4.0 || num > 11.0 || num % 1.0 != 0.0)
+            throw new ArgumentOutOfRangeException(nameof(size));
+        
+        var avatarHash = user.Avatar?.Value ?? "";
+        var str1 = !string.IsNullOrWhiteSpace(avatarHash) ? avatarHash.StartsWith("a_") ? "gif" : "png" : "png";
+        return !string.IsNullOrWhiteSpace(avatarHash)
+            ? $"https://cdn.discordapp.com/avatars/{user.ID.Value}/{avatarHash}.{str1}?size={size}"
+            : $"https://cdn.discordapp.com/embed/avatars/{user.Discriminator % 5}.{str1}?size={size}";
+    }
+
+    public static string GetAvatarUrl(this IGuildMember member, ushort size = 1024)
+        => member.User.Value.GetAvatarUrl(size);
+
+    public static Color ToColor(this BurstColor color)
+        => color switch
+        {
+            BurstColor.CSharp => Color.FromArgb(58, 0, 147),
+            BurstColor.Burst => Color.FromArgb(120, 111, 168),
+            _ => throw new ArgumentOutOfRangeException(nameof(color), color, "Invalid burst color.")
+        };
+
+    public static string GetDisplayName(this IGuildMember member)
+    {
+        var _ = member.Nickname.IsDefined(out var nickname);
+        return nickname ?? member.User.Value.Username;
+    }
     
     public static int GetValue(this IEnumerable<Card> cards)
     {
@@ -66,14 +101,14 @@ public static class BurstExtensions
             _ => ""
         };
 
-    public static DiscordComponentEmoji ToComponentEmoji(this Suit suit)
+    public static Snowflake ToSnowflake(this Suit suit)
         => suit switch
         {
-            Suit.Spade => new DiscordComponentEmoji(910826637657010226),
-            Suit.Heart => new DiscordComponentEmoji(910826529511051284),
-            Suit.Diamond => new DiscordComponentEmoji(910826609576140821),
-            Suit.Club => new DiscordComponentEmoji(910826578336948234),
-            _ => new DiscordComponentEmoji("❓")
+            Suit.Spade => DiscordSnowflake.New(910826637657010226),
+            Suit.Heart => DiscordSnowflake.New(910826529511051284),
+            Suit.Diamond => DiscordSnowflake.New(910826609576140821),
+            Suit.Club => DiscordSnowflake.New(910826578336948234),
+            _ => throw new ArgumentOutOfRangeException(nameof(suit), suit, "Invalid suit.")
         };
 
     public static string ToLocalizedString(this ChinesePokerNatural natural, ChinesePokerLocalization localization)

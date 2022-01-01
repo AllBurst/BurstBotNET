@@ -1,41 +1,34 @@
-using System.Collections.Immutable;
-using BurstBotShared.Shared.Models.Config;
-using DSharpPlus;
-using DSharpPlus.EventArgs;
+using BurstBotNET.Commands;
+using BurstBotNET.Commands.ChinesePoker;
+using BurstBotNET.Commands.Rewards;
+using BurstBotShared.Shared.Models.Game.ChinesePoker;
+using Microsoft.Extensions.DependencyInjection;
+using Remora.Commands.Extensions;
+using Remora.Discord.Commands.Extensions;
+using Remora.Discord.Interactivity.Extensions;
+using Remora.Discord.Pagination.Extensions;
 
 namespace BurstBotNET.Handlers;
 
 #pragma warning disable CA2252
-public partial class Handlers
+public static class SlashCommandExtensions
 {
-    public Task HandleSlashCommands(DiscordClient client, InteractionCreateEventArgs e)
+    public static IServiceCollection AddSlashCommands(this IServiceCollection serviceCollection)
     {
-        if (!e.Interaction.GuildId.HasValue)
-            return Task.CompletedTask;
-
-        var result = _commands.GlobalCommands
-            .TryGetValue(e.Interaction.Data.Name, out var globalCommand);
-        if (result)
-        {
-            _ = Task.Run(async () => await globalCommand!.Item2.Invoke(client, e, _state));
-            return Task.CompletedTask;
-        }
-
-        result = _commands.GuildCommands
-            .TryGetValue(e.Interaction.Data.Name, out var guildCommand);
-        if (result)
-            _ = Task.Run(async () => await guildCommand!.Item2.Invoke(client, e, _state));
-        
-        return Task.CompletedTask;
+        return serviceCollection
+            .AddCommandGroup<About>()
+            .AddCommandGroup<Balance>()
+            .AddCommandGroup<Daily>()
+            .AddCommandGroup<Ping>()
+            .AddCommandGroup<Start>()
+            .AddCommandGroup<Weekly>()
+            .AddCommandGroup<ChinesePoker>()
+            .AddPagination()
+            .AddInteractiveEntity<ChinesePokerDropDownEntity>()
+            .AddInteractiveEntity<ChinesePokerButtonEntity>();
     }
 
-    public async Task RegisterSlashCommands(DiscordClient client, Config config)
-    {
-        await CreateGuildCommands(client, config);
-        await CreateGlobalCommands(client, config.RecreateGlobals);
-    }
-
-    private async Task CreateGlobalCommands(DiscordClient client, bool forceRecreate)
+    /*private async Task CreateGlobalCommands(DiscordClient client, bool forceRecreate)
     {
         var globalCommandsToCreate = _commands
             .GlobalCommands
@@ -93,5 +86,5 @@ public partial class Handlers
                 foreach (var cmd in commandsToCreate) await client.CreateGuildApplicationCommandAsync(guildId, cmd);
             }
         }
-    }
+    }*/
 }

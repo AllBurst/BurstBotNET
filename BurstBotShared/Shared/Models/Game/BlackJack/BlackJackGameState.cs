@@ -3,7 +3,7 @@ using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using ConcurrentCollections;
-using DSharpPlus.Entities;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
@@ -20,7 +20,7 @@ public class BlackJackGameState : IState<BlackJackGameState, RawBlackJackGameSta
     public int CurrentTurn { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public readonly SemaphoreSlim Semaphore = new(1, 1);
-    public readonly ConcurrentHashSet<DiscordGuild> Guilds = new();
+    public readonly ConcurrentHashSet<Snowflake> Guilds = new();
     public Channel<Tuple<ulong, byte[]>>? PayloadChannel => Channel;
 
     public BlackJackGameProgress GameProgress

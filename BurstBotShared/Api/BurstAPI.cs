@@ -5,17 +5,21 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using BurstBotShared.Shared;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.API.Objects;
+using Remora.Discord.Commands.Contexts;
+using Remora.Rest.Core;
+using ChannelType = Remora.Discord.API.Abstractions.Objects.ChannelType;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotShared.Api;
@@ -25,25 +29,25 @@ public sealed class BurstApi
     private const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
 
-    private const Permissions PlayerPermissions
-        = Permissions.AddReactions
-          | Permissions.EmbedLinks
-          | Permissions.ReadMessageHistory
-          | Permissions.SendMessages
-          | Permissions.UseExternalEmojis
-          | Permissions.AccessChannels;
+    private static readonly DiscordPermissionSet PlayerPermissions = new(
+        DiscordPermission.AddReactions,
+        DiscordPermission.EmbedLinks,
+        DiscordPermission.ReadMessageHistory,
+        DiscordPermission.SendMessages,
+        DiscordPermission.UseExternalEmojis,
+        DiscordPermission.ViewChannel);
 
-    private const Permissions BotPermissions
-        = Permissions.AddReactions
-          | Permissions.EmbedLinks
-          | Permissions.ReadMessageHistory
-          | Permissions.SendMessages
-          | Permissions.UseExternalEmojis
-          | Permissions.AccessChannels
-          | Permissions.ManageChannels
-          | Permissions.ManageMessages;
+    private static readonly DiscordPermissionSet BotPermissions = new(
+        DiscordPermission.AddReactions,
+        DiscordPermission.EmbedLinks,
+        DiscordPermission.ReadMessageHistory,
+        DiscordPermission.SendMessages,
+        DiscordPermission.UseExternalEmojis,
+        DiscordPermission.ViewChannel,
+        DiscordPermission.ManageChannels,
+        DiscordPermission.ManageMessages);
 
-    private readonly ConcurrentDictionary<ulong, List<DiscordChannel>> _guildChannelList = new();
+    private readonly ConcurrentDictionary<ulong, List<IChannel>> _guildChannelList = new();
     private readonly string _serverEndpoint;
     private readonly string _socketEndpoint;
     private readonly int _socketPort;
@@ -94,11 +98,12 @@ public sealed class BurstApi
     }
 
     private async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
-        InteractionCreateEventArgs e,
-        DiscordMember invokingMember,
-        DiscordUser botUser,
+        InteractionContext context,
+        IGuildMember invokingMember,
+        IUser botUser,
         string gameName,
         string description,
+        IDiscordRestInteractionAPI interactionApi,
         ILogger logger)
     {
         using var socketSession = new ClientWebSocket();
@@ -171,10 +176,22 @@ public sealed class BurstApi
             await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
                 cancellationTokenSource.Token);
             cancellationTokenSource.Dispose();
-            await e.Interaction.CreateFollowupMessageAsync(
-                new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
-                        null)));
+
+            var followUpResult = await interactionApi
+                .CreateFollowupMessageAsync(
+                    context.ApplicationID,
+                    context.Token,
+                    embeds: new[]
+                    {
+                        Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
+                            null)
+                    });
+
+            if (!followUpResult.IsSuccess)
+            {
+                logger.LogError("Failed to create follow-up message: {Reason}, inner: {Inner}",
+                    followUpResult.Error.Message, followUpResult.Inner);
+            } 
 
             return matchData;
         }
@@ -182,7 +199,7 @@ public sealed class BurstApi
         return null;
     }
 
-    public static (GenericJoinStatus?, DiscordWebhookBuilder) HandleMatchGameHttpStatuses(IFlurlResponse response,
+    public static (GenericJoinStatus?, string) HandleMatchGameHttpStatuses(IFlurlResponse response,
         string unit, GameType gameType)
     {
         var responseCode = response.ResponseMessage.StatusCode;
@@ -190,151 +207,247 @@ public sealed class BurstApi
         {
             HttpStatusCode.BadRequest =>
                 (null,
-                    new DiscordWebhookBuilder().WithContent(
-                        "Sorry! It seems that at least one of the players you mentioned has already joined the waiting list!")),
+                    "Sorry! It seems that at least one of the players you mentioned has already joined the waiting list!"),
             HttpStatusCode.NotFound =>
                 (null,
-                    new DiscordWebhookBuilder().WithContent(
-                        "Sorry, but all players who want to join the game have to join the server first!")),
+                    "Sorry, but all players who want to join the game have to join the server first!"),
             HttpStatusCode.InternalServerError =>
                 (null,
-                    new DiscordWebhookBuilder().WithContent(
-                        $"Sorry, but an unknown error occurred! Could you report this to the developers: **{responseCode}: {response.ResponseMessage.ReasonPhrase}**")),
+                    $"Sorry, but an unknown error occurred! Could you report this to the developers: **{responseCode}: {response.ResponseMessage.ReasonPhrase}**"),
             _ => HandleSuccessfulJoinStatus(response, unit, gameType)
         };
     }
 
-    public static async Task<(DiscordMember[], GenericJoinStatus)?> HandleStartGameReactions(
+    public static async Task<(ImmutableArray<IGuildMember>, GenericJoinStatus)?> HandleStartGameReactions(
         string gameName,
-        InteractionCreateEventArgs e,
-        DiscordMessage originalMessage,
-        DiscordMember invokingMember,
-        DiscordUser botUser,
+        InteractionContext context,
+        IMessage originalMessage,
+        IGuildMember invokingMember,
+        IUser botUser,
         GenericJoinStatus joinStatus,
         IEnumerable<ulong> playerIds,
         string confirmationEndpoint,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger,
         int minPlayerCount = 2)
     {
-        await originalMessage.CreateReactionAsync(Constants.CheckMarkEmoji);
-        await originalMessage.CreateReactionAsync(Constants.CrossMarkEmoji);
-        await originalMessage.CreateReactionAsync(Constants.PlayMarkEmoji);
+        await channelApi.CreateReactionAsync(originalMessage.ChannelID, originalMessage.ID, Constants.CheckMark);
+        await channelApi.CreateReactionAsync(originalMessage.ChannelID, originalMessage.ID, Constants.CrossMark);
+        await channelApi.CreateReactionAsync(originalMessage.ChannelID, originalMessage.ID, Constants.PlayMark);
+        
         var secondsRemained = 30;
         var cancelled = false;
-        var confirmedUsers = new ImmutableArray<DiscordUser>();
+        var confirmedUsers = new ImmutableArray<IUser>();
 
         while (secondsRemained > 0)
         {
             await Task.Delay(TimeSpan.FromSeconds(5));
 
-            confirmedUsers = (await originalMessage
-                    .GetReactionsAsync(Constants.CheckMarkEmoji))
-                .Where(u => !u.IsBot && playerIds.Contains(u.Id))
-                .ToImmutableArray();
+            var checkMarkResult = await channelApi
+                .GetReactionsAsync(originalMessage.ChannelID, originalMessage.ID, Constants.CheckMark);
 
-            var cancelledUsers = (await originalMessage
-                    .GetReactionsAsync(Constants.CrossMarkEmoji))
-                .Where(u => !u.IsBot)
-                .Select(u => u.Id)
+            if (!checkMarkResult.IsSuccess)
+                logger.LogError("Failed to get reactions for message: {Reason}, inner: {Inner}",
+                    checkMarkResult.Error, checkMarkResult.Inner);
+
+            confirmedUsers = checkMarkResult
+                .Entity
+                .Where(u =>
+                {
+                    var _ = u.IsBot.IsDefined(out var bot);
+                    return !bot && playerIds.Contains(u.ID.Value);
+                })
                 .ToImmutableArray();
-            if (cancelledUsers.Contains(invokingMember.Id))
+            
+            var crossMarkResult = await channelApi
+                .GetReactionsAsync(originalMessage.ChannelID, originalMessage.ID, Constants.CrossMark);
+
+            if (!crossMarkResult.IsSuccess)
+                logger.LogError("Failed to get reactions for message: {Reason}, inner: {Inner}",
+                    crossMarkResult.Error, crossMarkResult.Inner);
+
+            var cancelledUsers = crossMarkResult
+                .Entity
+                .Where(u =>
+                {
+                    var _ = u.IsBot.IsDefined(out var bot);
+                    return !bot;
+                })
+                .Select(u => u.ID.Value)
+                .ToImmutableArray();
+            if (cancelledUsers.Contains(invokingMember.User.Value.ID.Value))
             {
-                await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                    .WithContent("❌ Cancelled."));
+                var failureResult = await interactionApi
+                    .EditOriginalInteractionResponseAsync(
+                        context.ApplicationID,
+                        context.Token,
+                        "❌ Cancelled.");
+
+                if (!failureResult.IsSuccess)
+                {
+                    logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
+                        failureResult.Error.Message, failureResult.Inner);
+                    continue;
+                }
+                
                 cancelled = true;
                 break;
             }
+            
+            var playMarkResult = await channelApi
+                .GetReactionsAsync(originalMessage.ChannelID, originalMessage.ID, Constants.PlayMark);
 
-            var fastStartUsers = (await originalMessage
-                    .GetReactionsAsync(Constants.PlayMarkEmoji))
-                .Where(u => !u.IsBot)
-                .Select(u => u.Id)
+            if (!playMarkResult.IsSuccess)
+                logger.LogError("Failed to get reactions for message: {Reason}, inner: {Inner}",
+                    playMarkResult.Error, playMarkResult.Inner);
+
+            var fastStartUsers = playMarkResult
+                .Entity
+                .Where(u =>
+                {
+                    var _ = u.IsBot.IsDefined(out var bot);
+                    return !bot;
+                })
+                .Select(u => u.ID.Value)
                 .ToImmutableArray();
-            if (fastStartUsers.Contains(invokingMember.Id))
+            if (fastStartUsers.Contains(invokingMember.User.Value.ID.Value))
                 break;
 
             secondsRemained -= 5;
             var confirmedUsersString =
-                $"\nConfirmed players: \n{string.Join('\n', confirmedUsers.Select(u => $"💠<@!{u.Id}>"))}";
-            await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, gameName,
-                    confirmedUsersString,
-                    secondsRemained)));
+                $"\nConfirmed players: \n{string.Join('\n', confirmedUsers.Select(u => $"💠<@!{u.ID.Value}>"))}";
+            
+            var editResult = await interactionApi
+                .EditOriginalInteractionResponseAsync(
+                    context.ApplicationID,
+                    context.Token,
+                    embeds: new[]
+                    {
+                        Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, gameName,
+                            confirmedUsersString,
+                            secondsRemained)
+                    });
+            if (!editResult.IsSuccess)
+            {
+                logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
+                    editResult.Error.Message, editResult.Inner);
+            }
         }
 
         if (cancelled || confirmedUsers.Length < minPlayerCount)
             return null;
 
-        await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-            .WithContent(
-                "<:burst_spade:910826637657010226> <:burst_heart:910826529511051284> **GAME STARTED!** <:burst_diamond:910826609576140821> <:burst_club:910826578336948234>"));
+        var startMessageResult = await interactionApi
+            .EditOriginalInteractionResponseAsync(
+                context.ApplicationID,
+                context.Token,
+                Constants.GameStarted);
 
-        var guild = e.Interaction.Guild;
-        var members = await Task.WhenAll(confirmedUsers
-            .Select(async u => await guild.GetMemberAsync(u.Id)));
+        if (!startMessageResult.IsSuccess)
+        {
+            logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
+                startMessageResult.Error.Message, startMessageResult.Inner);
+            return null;
+        }
+
+        var guildResult = context.GuildID.IsDefined(out var guild);
+        if (!guildResult)
+        {
+            var errorMessageResult = await interactionApi
+                .EditOriginalInteractionResponseAsync(
+                    context.ApplicationID,
+                    context.Token,
+                    ErrorMessages.JoinNotInGuild);
+            if (!errorMessageResult.IsSuccess)
+                logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
+                    errorMessageResult.Error.Message, errorMessageResult.Inner);
+
+            return null;
+        }
+        
+        var members = (await Task.WhenAll(confirmedUsers
+            .Select(async u => await guildApi.GetGuildMemberAsync(guild, u.ID))))
+            .Select(result => result.Entity)
+            .ToImmutableArray();
         var matchData = await state.BurstApi
             .SendRawRequest(confirmationEndpoint, ApiRequestType.Post, new GenericJoinStatus
             {
                 StatusType = GenericJoinStatusType.Start,
-                PlayerIds = members.Select(m => m.Id).ToList()
+                PlayerIds = members.Select(m => m.User.Value.ID.Value).ToList()
             })
             .ReceiveJson<GenericJoinStatus>();
 
         return (members, matchData);
     }
 
-    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(GenericJoinStatus waitingData,
-        InteractionCreateEventArgs e,
-        DiscordMember invokingMember,
-        DiscordUser botUser,
+    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(
+        GenericJoinStatus waitingData,
+        InteractionContext context,
+        IGuildMember invokingMember,
+        IUser botUser,
         string description,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
         var matchData =
-            await GenericWaitForGame(waitingData, e, invokingMember, botUser, "Black Jack", description, logger);
+            await GenericWaitForGame(waitingData, context, invokingMember, botUser, "Black Jack", description,
+                interactionApi, logger);
 
         if (matchData == null)
             return null;
 
-        var guild = e.Interaction.Guild;
-        var textChannel = await CreatePlayerChannel(guild, invokingMember);
-        var invokerTip = await SendRawRequest<object>($"/tip/{invokingMember.Id}", ApiRequestType.Get, null)
-            .ReceiveJson<RawTip>();
+        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
+        if (!guild.HasValue)
+            return null;
+
+        var textChannel = await CreatePlayerChannel(guild.Value, botUser, invokingMember, guildApi, logger);
+        var invokerTip =
+            await SendRawRequest<object>($"/tip/{invokingMember.User.Value.ID.Value}", ApiRequestType.Get, null)
+                .ReceiveJson<RawTip>();
         return (matchData, new BlackJackPlayerState
         {
             GameId = matchData.GameId ?? "",
-            PlayerId = invokingMember.Id,
-            PlayerName = invokingMember.DisplayName,
+            PlayerId = invokingMember.User.Value.ID.Value,
+            PlayerName = invokingMember.GetDisplayName(),
             TextChannel = textChannel,
             OwnTips = invokerTip?.Amount ?? 0,
             BetTips = Constants.StartingBet,
             Order = 0,
-            AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
+            AvatarUrl = invokingMember.GetAvatarUrl()
         });
     }
 
     public async Task<(GenericJoinStatus, ChinesePokerPlayerState)?> WaitForChinesePokerGame(
         GenericJoinStatus waitingData,
-        InteractionCreateEventArgs e,
-        DiscordMember invokingMember,
-        DiscordUser botUser,
+        InteractionContext context,
+        IGuildMember invokingMember,
+        IUser botUser,
         string description,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
-        var matchData = await GenericWaitForGame(waitingData, e, invokingMember, botUser, "Chinese Poker", description,
-            logger);
+        var matchData = await GenericWaitForGame(waitingData, context, invokingMember, botUser, "Chinese Poker",
+            description,
+            interactionApi, logger);
         if (matchData == null)
             return null;
 
-        var guild = e.Interaction.Guild;
-        var textChannel = await CreatePlayerChannel(guild, invokingMember);
+        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
+        if (!guild.HasValue)
+            return null;
+        
+        var textChannel = await CreatePlayerChannel(guild.Value, botUser, invokingMember, guildApi, logger);
         return (matchData, new ChinesePokerPlayerState
         {
-            AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto),
+            AvatarUrl = invokingMember.GetAvatarUrl(),
             GameId = matchData.GameId ?? "",
-            PlayerId = invokingMember.Id,
-            PlayerName = invokingMember.DisplayName,
+            PlayerId = invokingMember.User.Value.ID.Value,
+            PlayerName = invokingMember.GetDisplayName(),
             TextChannel = textChannel,
             Member = invokingMember
         });
@@ -351,31 +464,55 @@ public sealed class BurstApi
         return matchData;
     }
 
-    public async Task<DiscordChannel> CreatePlayerChannel(DiscordGuild guild, DiscordMember invokingMember)
+    public async Task<IChannel?> CreatePlayerChannel(
+        Snowflake guild,
+        IUser botUser,
+        IGuildMember invokingMember,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger)
     {
         while (true)
         {
-            var category = await CreateCategory(guild);
-            var botMember = guild.CurrentMember;
-            var denyEveryone = new DiscordOverwriteBuilder(guild.EveryoneRole).Allow(Permissions.None)
-                .Deny(Permissions.AccessChannels);
-            var permitPlayer = new DiscordOverwriteBuilder(invokingMember).Allow(PlayerPermissions)
-                .Deny(Permissions.None);
-            var permitBot = new DiscordOverwriteBuilder(botMember).Allow(BotPermissions)
-                .Deny(Permissions.None);
+            var category = await CreateCategory(guild, guildApi, logger);
 
-            var channel = await guild.CreateTextChannelAsync($"{invokingMember.DisplayName}-All-Burst", category,
-                overwrites: new[] { denyEveryone, permitPlayer, permitBot });
+            if (category == null)
+            {
+                logger.LogError("Failed to create category");
+                return null;
+            }
+            
+            var channelCreateResult = await guildApi
+                .CreateGuildChannelAsync(guild,
+                    $"{invokingMember.GetDisplayName()}-All-Burst",
+                    ChannelType.GuildText,
+                    permissionOverwrites: new[]
+                    {
+                        new PermissionOverwrite(guild, PermissionOverwriteType.Role,
+                            DiscordPermissionSet.Empty,
+                            new DiscordPermissionSet(DiscordPermission.ViewChannel)),
+                        new PermissionOverwrite(invokingMember.User.Value.ID, PermissionOverwriteType.Member,
+                            PlayerPermissions,
+                            DiscordPermissionSet.Empty),
+                        new PermissionOverwrite(botUser.ID, PermissionOverwriteType.Member,
+                            BotPermissions,
+                            DiscordPermissionSet.Empty)
+                    }, parentID: category.ID);
 
+            if (!channelCreateResult.IsSuccess)
+            {
+                logger.LogError("Failed to create channel: {Reason}, inner: {Inner}",
+                    channelCreateResult.Error.Message, channelCreateResult.Inner);
+                return null;
+            }
+
+            var channel = channelCreateResult.Entity;
             await Task.Delay(TimeSpan.FromSeconds(1));
-            if (channel == null)
-                continue;
-
+            
             return channel;
         }
     }
 
-    private static (GenericJoinStatus?, DiscordWebhookBuilder) HandleSuccessfulJoinStatus(IFlurlResponse response,
+    private static (GenericJoinStatus?, string) HandleSuccessfulJoinStatus(IFlurlResponse response,
         string unit, GameType gameType)
     {
         var newJoinStatus = response.GetJsonAsync<GenericJoinStatus>().GetAwaiter().GetResult();
@@ -384,46 +521,74 @@ public sealed class BurstApi
         {
             GenericJoinStatusType.Waiting =>
                 (newJoinStatus,
-                    new DiscordWebhookBuilder().WithContent(
-                        $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}! Please wait for matching...")),
+                    $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}! Please wait for matching..."),
             GenericJoinStatusType.Start => (newJoinStatus,
-                new DiscordWebhookBuilder().WithContent(
-                    $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}!")),
+                $"Successfully started a game with {newJoinStatus.PlayerIds.Count} initial {unit}!"),
             GenericJoinStatusType.Matched =>
                 (newJoinStatus,
-                    new DiscordWebhookBuilder().WithContent(
-                        $"Successfully matched a game with {newJoinStatus.PlayerIds.Count} players! Preparing the game...")),
+                    $"Successfully matched a game with {newJoinStatus.PlayerIds.Count} players! Preparing the game..."),
             GenericJoinStatusType.TimedOut =>
-                (null, new DiscordWebhookBuilder().WithContent("Matching has timed out. No match found.")),
-            var invalid => (null, new DiscordWebhookBuilder().WithContent($"Unknown status: {invalid}"))
+                (null, "Matching has timed out. No match found."),
+            var invalid => (null, $"Unknown status: {invalid}")
         };
     }
 
-    private async Task<DiscordChannel> CreateCategory(DiscordGuild guild)
+    private async Task<IChannel?> CreateCategory(
+        Snowflake guild,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger)
     {
-        if (_guildChannelList.ContainsKey(guild.Id))
+        if (_guildChannelList.ContainsKey(guild.Value))
         {
-            var category = _guildChannelList[guild.Id]
-                .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
+            var category = _guildChannelList[guild.Value]
+                .Where(c => c.Name.Value.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
                 .ToImmutableArray();
             if (!category.IsEmpty) return category.First();
 
-            var newCategory = await guild.CreateChannelCategoryAsync(CategoryName);
-            _guildChannelList[guild.Id].Add(newCategory);
+            var createResult = await guildApi
+                .CreateGuildChannelAsync(guild, CategoryName, ChannelType.GuildCategory);
+
+            if (!createResult.IsSuccess)
+            {
+                logger.LogError("Failed to create channel category: {Reason}, inner: {Inner}",
+                    createResult.Error.Message, createResult.Inner);
+                return null;
+            }
+
+            var newCategory = createResult.Entity;
+            _guildChannelList[guild.Value].Add(newCategory);
             return newCategory;
         }
 
-        var channels = await guild.GetChannelsAsync();
-        _guildChannelList.GetOrAdd(guild.Id, channels.ToList());
+        var channels = await guildApi.GetGuildChannelsAsync(guild);
+        if (!channels.IsSuccess)
+        {
+            logger.LogError("Failed to get guild channels: {Reason}, inner: {Inner}",
+                channels.Error.Message, channels.Inner);
+            return null;
+        }
+        
+        _guildChannelList.GetOrAdd(guild.Value, channels.Entity.ToList());
 
         var retrievedCategory = channels
-            .Where(c => c.Name.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
+            .Entity
+            .Where(c => c.Name.Value.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
             .ToImmutableArray();
         if (!retrievedCategory.IsEmpty) return retrievedCategory.First();
 
         {
-            var newCategory = await guild.CreateChannelCategoryAsync(CategoryName);
-            _guildChannelList[guild.Id].Add(newCategory);
+            var createResult = await guildApi
+                .CreateGuildChannelAsync(guild, CategoryName, ChannelType.GuildCategory);
+
+            if (!createResult.IsSuccess)
+            {
+                logger.LogError("Failed to create channel category: {Reason}, inner: {Inner}",
+                    createResult.Error.Message, createResult.Inner);
+                return null;
+            }
+
+            var newCategory = createResult.Entity;
+            _guildChannelList[guild.Value].Add(newCategory);
             return newCategory;
         }
     }

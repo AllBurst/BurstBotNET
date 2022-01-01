@@ -1,8 +1,13 @@
+using System.Collections.Immutable;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using Remora.Commands.Attributes;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Results;
+using ApplicationCommandOptionType = DSharpPlus.ApplicationCommandOptionType;
 
 namespace BurstBotNET.Commands.NinetyNine;
 
@@ -60,8 +65,20 @@ public partial class NinetyNine : ISlashCommand
         };
     }
 
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
-        => await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
+    public static string Name => throw new NotImplementedException();
+
+    public static string Description => throw new NotImplementedException();
+
+    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => throw new NotImplementedException();
+
+    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
+    {
+        throw new NotImplementedException();
+    }
+
+    [Command("ninety_nine")]
+    public async Task<IResult> Handle()
+        => throw new NotImplementedException();
 
     public override string ToString()
         => "ninety_nine";

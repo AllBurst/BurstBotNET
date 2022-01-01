@@ -3,7 +3,7 @@ using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using ConcurrentCollections;
-using DSharpPlus.Entities;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
@@ -19,7 +19,7 @@ public class ChinesePokerGameState : IState<ChinesePokerGameState, RawChinesePok
     public bool DebugNatural { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
-    public ConcurrentHashSet<DiscordGuild> Guilds { get; } = new();
+    public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 
     public Channel<Tuple<ulong, byte[]>>? PayloadChannel => Channel;
 

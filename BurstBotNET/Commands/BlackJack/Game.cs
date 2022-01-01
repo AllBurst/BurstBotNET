@@ -1,6 +1,5 @@
 using System.Buffers;
 using System.Collections.Immutable;
-using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
@@ -16,6 +15,10 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.API.Objects;
+using Remora.Rest.Core;
+using Channel = System.Threading.Channels.Channel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
@@ -31,10 +34,8 @@ public partial class BlackJack : BlackJackGame
         .ToImmutableArray();
 
     public static async Task<bool> HandleProgress(
-        string messageContent,
-        BlackJackGameState gameState,
-        State state,
-        ILogger logger)
+        string messageContent, BlackJackGameState gameState, State state,
+        IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
         try
         {
@@ -105,6 +106,7 @@ public partial class BlackJack : BlackJackGame
         BlackJackGameState state,
         Localizations localizations,
         DeckService deckService,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
         if (state.Progress.Equals(BlackJackGameProgress.Ending))
@@ -129,28 +131,35 @@ public partial class BlackJack : BlackJackGame
                 .Replace("{playerName}", winner!.PlayerName)
                 .Replace("{totalRewards}", deserializedEndingData.TotalRewards.ToString());
 
-            var embed = new DiscordEmbedBuilder()
-                .WithColor((int)BurstColor.Burst)
-                .WithTitle(localization.WinTitle.Replace("{playerName}", winner.PlayerName))
-                .WithDescription(description)
-                .WithImageUrl(winner.AvatarUrl);
+            var fields = new List<EmbedField>(state.Players.Count);
 
             foreach (var (_, playerState) in deserializedEndingData.Players)
             {
                 var cardNames = string.Join('\n', playerState.Cards.Select(c => c.ToString()));
                 var totalPoints = playerState.Cards.GetRealizedValues(100);
-                embed = embed.AddField(
-                    playerState.PlayerName,
-                    localization.TotalPointsMessage.Replace("{cardNames}", cardNames)
-                        .Replace("{totalPoints}", totalPoints.ToString()), true);
+                fields.Add(new EmbedField(playerState.PlayerName, localization.TotalPointsMessage
+                    .Replace("{cardNames}", cardNames)
+                    .Replace("{totalPoints}", totalPoints.ToString()), true));
             }
+
+            var embed = new Embed(
+                Colour: BurstColor.Burst.ToColor(),
+                Title: localization.WinTitle.Replace("{playerName}", winner.PlayerName),
+                Description: description,
+                Image: new EmbedImage(winner.AvatarUrl),
+                Fields: fields);
 
             foreach (var (_, playerState) in state.Players)
             {
                 if (playerState.TextChannel == null)
                     continue;
 
-                await playerState.TextChannel.SendMessageAsync(embed);
+                var sendEmbedResult = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: new[] { embed });
+                if (!sendEmbedResult.IsSuccess)
+                    logger.LogError("Failed to send ending result to player's channel: {Reason}, inner: {Inner}",
+                        sendEmbedResult.Error.Message, sendEmbedResult.Inner);
             }
 
             await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
@@ -176,6 +185,8 @@ public partial class BlackJack : BlackJackGame
     private static async Task StartListening(
         string gameId,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
         if (string.IsNullOrWhiteSpace(gameId))
@@ -223,6 +234,8 @@ public partial class BlackJack : BlackJackGame
                 gameState,
                 buffer,
                 state,
+                channelApi,
+                guildApi,
                 logger,
                 cancellationTokenSource);
 
@@ -249,9 +262,15 @@ public partial class BlackJack : BlackJackGame
             if (value.TextChannel == null)
                 continue;
 
-            var channelId = value.TextChannel.Id;
-            await value.TextChannel.DeleteAsync();
-            state.GameStates.BlackJackGameStates.Item2.Remove(channelId);
+            var channelId = value.TextChannel.ID;
+            
+            var deleteResult = await channelApi
+                .DeleteChannelAsync(value.TextChannel.ID);
+            if (!deleteResult.IsSuccess)
+                logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
+                    deleteResult.Error.Message, deleteResult.Inner);
+            
+            state.GameStates.BlackJackGameStates.Item2.TryRemove(channelId);
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
@@ -260,7 +279,7 @@ public partial class BlackJack : BlackJackGame
     }
 
     private static async Task AddBlackJackPlayerState(string gameId,
-        DiscordGuild guild,
+        Snowflake guild,
         BlackJackPlayerState playerState,
         GameStates gameStates)
     {
@@ -272,7 +291,7 @@ public partial class BlackJack : BlackJackGame
         if (playerState.TextChannel == null)
             return;
 
-        gameStates.BlackJackGameStates.Item2.Add(playerState.TextChannel.Id);
+        gameStates.BlackJackGameStates.Item2.Add(playerState.TextChannel.ID);
         await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new BlackJackInGameRequest
@@ -280,7 +299,7 @@ public partial class BlackJack : BlackJackGame
                 GameId = gameId,
                 AvatarUrl = playerState.AvatarUrl,
                 PlayerId = playerState.PlayerId,
-                ChannelId = playerState.TextChannel.Id,
+                ChannelId = playerState.TextChannel.ID.Value,
                 PlayerName = playerState.PlayerName,
                 OwnTips = playerState.OwnTips,
                 ClientType = ClientType.Discord,
@@ -300,14 +319,14 @@ public partial class BlackJack : BlackJackGame
             .BlackJackGameStates
             .Item1
             .Where(pair => !pair.Value.Players
-                .Where(p => p.Value.TextChannel?.Id == channelId)
+                .Where(p => p.Value.TextChannel?.ID.Value == channelId)
                 .ToImmutableArray().IsEmpty)
             .Select(p => p.Value)
             .First();
 
         var playerState = state
             .Players
-            .Where(p => p.Value.TextChannel?.Id == channelId)
+            .Where(p => p.Value.TextChannel?.ID.Value == channelId)
             .Select(p => p.Value)
             .First();
 
@@ -410,7 +429,7 @@ public partial class BlackJack : BlackJackGame
         DeckService deckService,
         Localizations localizations)
     {
-        {
+        /*{
             var playerId = deserializedIncomingData.PreviousPlayerId;
             var result = deserializedIncomingData.Players.TryGetValue(playerId, out var previousPlayerState);
             if (result)
@@ -478,7 +497,7 @@ public partial class BlackJack : BlackJackGame
 
                 break;
             }
-        }
+        }*/
 
         return true;
     }
@@ -574,7 +593,7 @@ public partial class BlackJack : BlackJackGame
         var description = localization.InitialMessageDescription
             .Replace("{cardsNames}", cardNames);
 
-        await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
+        /*await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
             .WithEmbed(new DiscordEmbedBuilder()
                 .WithAuthor(playerState.PlayerName, iconUrl: playerState.AvatarUrl)
                 .WithColor((int)BurstColor.Burst)
@@ -584,7 +603,7 @@ public partial class BlackJack : BlackJackGame
                 .WithThumbnail(Constants.BurstLogo)
                 .WithImageUrl(Constants.AttachmentUri))
             .WithFile(Constants.OutputFileName, SkiaService.RenderDeck(deckService,
-                playerState.Cards.Select(c => c with { IsFront = true }))));
+                playerState.Cards.Select(c => c with { IsFront = true }))));*/
     }
 
     private static async Task SendDrawingMessage(
@@ -620,7 +639,7 @@ public partial class BlackJack : BlackJackGame
 
             var embed = BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState,
                 deckService, localizations);
-            await state.Value.TextChannel.SendMessageAsync(embed);
+            //await state.Value.TextChannel.SendMessageAsync(embed);
         }
     }
 
@@ -657,7 +676,7 @@ public partial class BlackJack : BlackJackGame
 
             var embed = BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState,
                 deckService, localizations);
-            await state.Value.TextChannel.SendMessageAsync(embed);
+            //await state.Value.TextChannel.SendMessageAsync(embed);
         }
     }
 
@@ -706,7 +725,7 @@ public partial class BlackJack : BlackJackGame
                             .WithDescription(
                                 localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString()));
 
-                    await state.TextChannel.SendMessageAsync(message.WithEmbed(embed));
+                    //await state.TextChannel.SendMessageAsync(message.WithEmbed(embed));
                     break;
                 }
                 case BlackJackGameProgress.Gambling:
@@ -733,7 +752,7 @@ public partial class BlackJack : BlackJackGame
                             )
                         );
 
-                    await state.TextChannel.SendMessageAsync(embed);
+                    //await state.TextChannel.SendMessageAsync(embed);
                     break;
                 }
             }
@@ -852,7 +871,7 @@ public partial class BlackJack : BlackJackGame
         state.PreviousPlayerId = data.PreviousPlayerId;
         state.PreviousRequestType = data.PreviousRequestType;
 
-        foreach (var (playerId, playerState) in data.Players)
+        /*foreach (var (playerId, playerState) in data.Players)
             if (state.Players.ContainsKey(playerId))
             {
                 var player = state.Players[playerId];
@@ -891,6 +910,6 @@ public partial class BlackJack : BlackJackGame
                     AvatarUrl = playerState.AvatarUrl
                 };
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
-            }
+            }*/
     }
 }

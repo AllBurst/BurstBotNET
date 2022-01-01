@@ -1,55 +1,106 @@
+using System.Collections.Immutable;
+using System.ComponentModel;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using Microsoft.Extensions.Logging;
+using Remora.Commands.Attributes;
+using Remora.Commands.Groups;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.API.Objects;
+using Remora.Discord.Commands.Contexts;
+using Remora.Results;
+using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands;
 
-public class Start : ISlashCommand
+public class Start : CommandGroup, ISlashCommand
 {
-    public DiscordApplicationCommand Command { get; init; }
+    private readonly InteractionContext _context;
+    private readonly IDiscordRestUserAPI _userApi;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly State _state;
+    private readonly ILogger<Start> _logger;
 
-    public Start()
+    public Start(InteractionContext context,
+        IDiscordRestUserAPI userApi,
+        IDiscordRestInteractionAPI interactionApi,
+        State state,
+        ILogger<Start> logger)
     {
-        Command = new DiscordApplicationCommand("start", "Opt-in and create an account to start joining games!");
+        _context = context;
+        _userApi = userApi;
+        _interactionApi = interactionApi;
+        _state = state;
+        _logger = logger;
     }
-    
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
+
+    public static string Name => "start";
+
+    public static string Description => "Opt-in and create an account to start joining games!";
+
+    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
+
+    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
     {
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
-        var user = e.Interaction.User;
-        var guild = e.Interaction.Guild;
-        var member = await guild.GetMemberAsync(user.Id);
+        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(Name, Description,
+            ApplicationCommandOptions);
+    }
+
+    [Command("start")]
+    [Description("Opt-in and create an account to start joining games!")]
+    public async Task<IResult> Handle()
+    {
+        var member = await Utilities.GetUserMember(_context, _interactionApi,
+            "You can only join the games in a guild!", _logger);
+        
+        if (member == null) return Result.FromSuccess();
+        
+        var botUser = await Utilities.GetBotUser(_userApi, _logger);
+        
+        if (botUser == null) return Result.FromSuccess();
+
         var newPlayer = new NewPlayer
         {
-            PlayerId = user.Id.ToString(),
-            Name = member.DisplayName,
-            AvatarUrl = member.GetAvatarUrl(ImageFormat.Auto)
+            PlayerId = _context.User.ID.Value.ToString(),
+            Name = member.GetDisplayName(),
+            AvatarUrl = _context.User.GetAvatarUrl()
         };
 
-        var playerData = await state.BurstApi.SendRawRequest("/player", ApiRequestType.Post, newPlayer);
-        var botUser = client.CurrentUser;
-
+        var playerData = await _state.BurstApi.SendRawRequest("/player", ApiRequestType.Post, newPlayer);
         if (!playerData.ResponseMessage.IsSuccessStatusCode)
         {
-            await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .WithContent("Sorry! But you seem to have already joined!"));
-            return;
+            var errorResult = await _interactionApi
+                .EditOriginalInteractionResponseAsync(
+                    _context.ApplicationID,
+                    _context.Token,
+                    "Sorry! But you seem to have already joined!");
+
+            return Result.FromError(errorResult);
         }
 
-        await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-            .AddEmbed(new DiscordEmbedBuilder()
-                .WithAuthor(member.DisplayName, iconUrl: member.GetAvatarUrl(ImageFormat.Auto))
-                .WithColor((int)BurstColor.Burst)
-                .WithDescription(
-                    "Congratulations! You can now start joining games to play poker with other people!\nAs a first time bonus, **you also have received 100 tips!**\nEnjoy!")
-                .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
-                .WithTitle("Welcome to the All Burst!")
-                .AddField("Current Tips", (await playerData.GetJsonAsync<RawPlayer>()).Amount.ToString())));
+        var embed = new Embed(
+            Author: new EmbedAuthor(member.GetDisplayName(), IconUrl: _context.User.GetAvatarUrl()),
+            Colour: BurstColor.Burst.ToColor(),
+            Description:
+            "Congratulations! You can now start joining games to play poker with other people!\nAs a first time bonus, **you also have received 100 tips!**\nEnjoy!",
+            Thumbnail: new EmbedThumbnail(botUser.GetAvatarUrl()),
+            Title: "Welcome to the Jack of All Trades!",
+            Fields: new[]
+            {
+                new EmbedField("Current Tips", (await playerData.GetJsonAsync<RawPlayer>()).Amount.ToString())
+            });
+
+        var result = await _interactionApi
+            .EditOriginalInteractionResponseAsync(
+                _context.ApplicationID,
+                _context.Token,
+                embeds: new[] { embed });
+        return result.IsSuccess ? Result.FromSuccess() : Result.FromError(result);
     }
 
     public override string ToString() => "start";
