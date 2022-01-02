@@ -2,5 +2,5 @@ namespace BurstBotShared.Shared.Models.Game.Serializables;
 
 public enum GameType
 {
-    BlackJack, NinetyNine, ChinesePoker, OldMaid
+    None, BlackJack, NinetyNine, ChinesePoker, OldMaid
 }

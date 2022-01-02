@@ -11,7 +11,7 @@ public partial class NinetyNine
 {
     private static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
     
-    private async Task<IResult> Join(NinetyNineDifficulty difficulty, NinetyNineVariation? variation, params IUser?[] users)
+    private async Task<IResult> Join(NinetyNineDifficulty difficulty, NinetyNineVariation variation, params IUser?[] users)
     {
         var mentionedPlayers = new List<ulong> { _context.User.ID.Value };
         var additionalPlayers = users

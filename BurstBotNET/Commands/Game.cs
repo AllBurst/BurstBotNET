@@ -60,7 +60,7 @@ public static class Game
         var playerCount = playerIds.Count;
         var unit = playerCount > 1 ? "players" : "player";
 
-        var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinResponse, unit, GameType.ChinesePoker);
+        var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinResponse, unit, gameType);
         if (joinStatus != null) return (joinStatus, reply);
         var _ = await interactionApi
             .EditOriginalInteractionResponseAsync(

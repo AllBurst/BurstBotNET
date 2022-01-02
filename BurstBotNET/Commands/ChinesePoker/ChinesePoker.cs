@@ -44,8 +44,8 @@ public partial class ChinesePoker : Remora.Commands.Groups.CommandGroup
     [Command("join")]
     [Description("Request to be enqueued to the waiting list to match with other players.")]
     public async Task<IResult> Handle(
-        [Description("The base bet. Each player's final reward will be units won/lost multiplied by this.")]
-        float baseBet,
+        [Description("The requested base bet. Each player's final reward will be units won/lost multiplied by this.")]
+        float baseBet = 1.0f,
         [Description("(Optional) The 2nd player you want to invite.")] 
         IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]

@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
@@ -84,8 +85,11 @@ public partial class ChinesePoker : ChinesePokerGame
                     return false;
                 }
 
-                await SendInitialMessage(previousPlayerState!, state.DeckService, state.Localizations, channelApi,
-                    logger);
+                await SendInitialMessage(
+                    gameState,
+                    previousPlayerState!,
+                    state.DeckService, state.Localizations,
+                    channelApi, logger);
             }
 
             gameState.Semaphore.Release();
@@ -521,6 +525,7 @@ public partial class ChinesePoker : ChinesePokerGame
     }
 
     private static async Task SendInitialMessage(
+        ChinesePokerGameState gameState,
         ChinesePokerPlayerState playerState,
         DeckService deckService,
         Localizations localizations,
@@ -535,7 +540,8 @@ public partial class ChinesePoker : ChinesePokerGame
         var prefix = localization.InitialMessagePrefix;
         var cardNames = prefix + string.Join('\n', playerState.Cards.Select(c => c.ToString()));
         var description = localization.InitialMessageDescription
-            .Replace("{cardNames}", cardNames);
+            .Replace("{cardNames}", cardNames)
+            .Replace("{baseBet}", gameState.BaseBet.ToString(CultureInfo.InvariantCulture));
 
         var deck = SkiaService.RenderChinesePokerDeck(deckService, playerState.Cards);
 
@@ -627,7 +633,6 @@ public partial class ChinesePoker : ChinesePokerGame
                 .Build()
                 .Entity with
             {
-                Footer = new EmbedFooter(chinesePokerLocalization.SetHandFooter),
                 Image = new EmbedImage(Constants.AttachmentUri)
             };
 
