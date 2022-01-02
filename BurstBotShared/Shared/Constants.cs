@@ -1,5 +1,3 @@
-using DSharpPlus.Entities;
-
 namespace BurstBotShared.Shared;
 
 public static class Constants
@@ -18,8 +16,4 @@ public static class Constants
 
     public const string GameStarted =
         "<:burst_spade:910826637657010226> <:burst_heart:910826529511051284> **GAME STARTED!** <:burst_diamond:910826609576140821> <:burst_club:910826578336948234>";
-
-    public static readonly DiscordEmoji CheckMarkEmoji = DiscordEmoji.FromUnicode(CheckMark);
-    public static readonly DiscordEmoji CrossMarkEmoji = DiscordEmoji.FromUnicode(CrossMark);
-    public static readonly DiscordEmoji PlayMarkEmoji = DiscordEmoji.FromUnicode(PlayMark);
 }

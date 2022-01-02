@@ -2,23 +2,19 @@ using System.Collections.Immutable;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using Remora.Commands.Groups;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Results;
-using ApplicationCommandOptionType = DSharpPlus.ApplicationCommandOptionType;
 
 namespace BurstBotNET.Commands.Help;
 
 #pragma warning disable CA2252
-public partial class Help : ISlashCommand
-{
-    public DiscordApplicationCommand Command { get; init; }
 
+public class Help : CommandGroup
+{
     public Help()
     {
-        Command = new DiscordApplicationCommand("help", "Show help and guide of each game.", new[]
+        /*Command = new DiscordApplicationCommand("help", "Show help and guide of each game.", new[]
         {
             new DiscordApplicationCommandOption("game_name",
                 "The game of which you want to show help/guide.",
@@ -30,10 +26,10 @@ public partial class Help : ISlashCommand
                     new DiscordApplicationCommandOptionChoice("chinese poker", "chinese_poker"),
                     new DiscordApplicationCommandOptionChoice("ninety nine", "ninety_nine")
                 })
-        });
+        });*/
     }
     
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
+    /*public async Task Handle()
     {
         if (e.Interaction.Data.Options != null && e.Interaction.Data.Options.Any())
         {
@@ -64,9 +60,9 @@ public partial class Help : ISlashCommand
                     .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
                     .WithTitle("📋Command List")
                     .WithDescription(state.Localizations.GetLocalization().Bot)));
-    }
+    }*/
     
-    public static async Task<bool> GenericCommandHelp<T>(
+    /*public static async Task<bool> GenericCommandHelp<T>(
         DiscordChannel textChannel,
         ImmutableArray<string> splitMessage,
         ILocalization<T> localization) where T : class
@@ -86,11 +82,11 @@ public partial class Help : ISlashCommand
 
         await textChannel.SendMessageAsync(commandHelpText);
         return true;
-    }
+    }*/
 
     public override string ToString() => "help";
     
-    private static async Task GenericHelp<T>(
+    /*private static async Task GenericHelp<T>(
         BaseDiscordClient client,
         InteractionCreateEventArgs e,
         string gameName,
@@ -108,21 +104,5 @@ public partial class Help : ISlashCommand
                     .WithThumbnail(botUser.GetAvatarUrl(ImageFormat.Auto))
                     .WithTitle(gameName)
                     .WithDescription(localization.AvailableCommands["help"])));
-    }
-
-    public static string Name => throw new NotImplementedException();
-
-    public static string Description => throw new NotImplementedException();
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => throw new NotImplementedException();
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IResult> Handle()
-    {
-        throw new NotImplementedException();
-    }
+    }*/
 }

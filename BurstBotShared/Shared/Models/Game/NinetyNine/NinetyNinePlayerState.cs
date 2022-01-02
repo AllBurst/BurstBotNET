@@ -7,10 +7,10 @@ using Remora.Discord.API.Abstractions.Objects;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
-public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress>
+public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress>, IPlayerState
 {
     public string GameId { get; set; } = null!;
-    public ulong PlayerId { get; set; }
+    public ulong PlayerId { get; init; }
     public string PlayerName { get; set; } = null!;
     public IChannel? TextChannel { get; set; }
     public int Order { get; set; }

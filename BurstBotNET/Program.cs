@@ -122,6 +122,7 @@ namespace BurstBotNET
                     .AddInteractivity()
                     .AddSingleton(state)
                     .AddResponder<ReadyResponder>()
+                    .AddResponder<MessageResponder>()
                     .AddSlashCommands()
                     .Configure<DiscordGatewayClientOptions>(opt =>
                     {
@@ -130,9 +131,9 @@ namespace BurstBotNET
                         opt.Presence = new UpdatePresence(ClientStatus.Online, false, null, Activities);
                     }))
                 .ConfigureLogging(builder => builder
-                    .AddConsole());
-            //.AddFilter("System.Net.Http.HttpClient.*.LogicalHandler", LogLevel.Warning)
-            //.AddFilter("System.Net.Http.HttpClient.*.ClientHandler", LogLevel.Warning));
+                    .AddConsole()
+                    .AddFilter("System.Net.Http.HttpClient.*.LogicalHandler", LogLevel.Warning)
+                    .AddFilter("System.Net.Http.HttpClient.*.ClientHandler", LogLevel.Warning));
         }
     }
 }

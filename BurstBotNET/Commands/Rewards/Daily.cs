@@ -1,18 +1,15 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
-using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
-using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.Rewards;
 
-public class Daily : CommandGroup, ISlashCommand
+public class Daily : CommandGroup
 {
     private readonly InteractionContext _context;
     private readonly IDiscordRestUserAPI _userApi;
@@ -31,18 +28,6 @@ public class Daily : CommandGroup, ISlashCommand
         _logger = logger;
         _interactionApi = interactionApi;
         _state = state;
-    }
-
-    public static string Name => "daily";
-
-    public static string Description => "Get your daily reward of 10 tips here.";
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(Name, Description,
-            ApplicationCommandOptions);
     }
 
     [Command("daily")]

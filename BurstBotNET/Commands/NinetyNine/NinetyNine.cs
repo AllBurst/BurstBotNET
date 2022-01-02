@@ -1,84 +1,69 @@
-using System.Collections.Immutable;
-using BurstBotShared.Shared.Interfaces;
+using System.ComponentModel;
 using BurstBotShared.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
+using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
+using Remora.Commands.Groups;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.Commands.Contexts;
 using Remora.Results;
-using ApplicationCommandOptionType = DSharpPlus.ApplicationCommandOptionType;
 
 namespace BurstBotNET.Commands.NinetyNine;
 
-using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>;
-
-public partial class NinetyNine : ISlashCommand
+[Group("ninety_nine")]
+[Description("Play a ninety nine-like game with other people.")]
+public partial class NinetyNine : CommandGroup
 {
-    public DiscordApplicationCommand Command { get; init; }
-
-    private readonly CommandGroup _dispatchables;
-
-    public NinetyNine()
+    public const string GameName = "Ninety Nine";
+    
+    private readonly InteractionContext _context;
+    private readonly IDiscordRestUserAPI _userApi;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly IDiscordRestGuildAPI _guildApi;
+    private readonly IDiscordRestChannelAPI _channelApi;
+    private readonly State _state;
+    private readonly ILogger<NinetyNine> _logger;
+    
+    public NinetyNine(InteractionContext context,
+        IDiscordRestUserAPI userApi,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestGuildAPI guildApi,
+        IDiscordRestChannelAPI channelApi,
+        State state,
+        ILogger<NinetyNine> logger)
     {
-        Command = new DiscordApplicationCommand("ninety_nine", "Play a ninety nine-like game with other people.", new[]
-        {
-            new DiscordApplicationCommandOption("join",
-                "Request to be enqueued to the waiting list to match with other players.",
-                ApplicationCommandOptionType.SubCommand, options: new[]
-                {
-                    new DiscordApplicationCommandOption("difficulty",
-                        "The difficulty. Players will only have 4 cards instead of 5 in the hard mode.",
-                        ApplicationCommandOptionType.String, true, new[]
-                        {
-                            new DiscordApplicationCommandOptionChoice("normal", "normal"),
-                            new DiscordApplicationCommandOptionChoice("hard", "hard")
-                        }),
-                    new DiscordApplicationCommandOption("variation",
-                        "Choose flavors of Ninety-Nine. Available variations: Taiwanese (default), Icelandic, Standard.",
-                        ApplicationCommandOptionType.String, false, new[]
-                        {
-                            new DiscordApplicationCommandOptionChoice("Taiwanese", "Taiwanese"),
-                            new DiscordApplicationCommandOptionChoice("Icelandic", "Icelandic"),
-                            new DiscordApplicationCommandOptionChoice("Standard", "Standard")
-                        }),
-                    new DiscordApplicationCommandOption("player2", "(Optional) The 2nd player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player3", "(Optional) The 3rd player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player4", "(Optional) The 4th player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player5", "(Optional) The 5th player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player6", "(Optional) The 6th player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player7", "(Optional) The 7th player you want to invite.",
-                        ApplicationCommandOptionType.User, false),
-                    new DiscordApplicationCommandOption("player8", "(Optional) The 8th player you want to invite.",
-                        ApplicationCommandOptionType.User, false)
-                })
-        });
-
-        _dispatchables = new CommandGroup
-        {
-            { "join", Join }
-        };
+        _context = context;
+        _userApi = userApi;
+        _interactionApi = interactionApi;
+        _guildApi = guildApi;
+        _channelApi = channelApi;
+        _state = state;
+        _logger = logger;
     }
 
-    public static string Name => throw new NotImplementedException();
-
-    public static string Description => throw new NotImplementedException();
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => throw new NotImplementedException();
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        throw new NotImplementedException();
-    }
-
-    [Command("ninety_nine")]
-    public async Task<IResult> Handle()
-        => throw new NotImplementedException();
+    [Command("join")]
+    [Description("Request to be enqueued to the waiting list to match with other players.")]
+    public async Task<IResult> Handle(
+        [Description("The difficulty. Players will only have 4 cards instead of 5 in the hard mode.")]
+        NinetyNineDifficulty difficulty,
+        [Description("Choose flavors of Ninety-Nine. Available variations: Taiwanese (default), Icelandic, Standard.")]
+        NinetyNineVariation? variation = null,
+        [Description("(Optional) The 2nd player you want to invite.")]
+        IUser? player2 = null,
+        [Description("(Optional) The 3rd player you want to invite.")]
+        IUser? player3 = null,
+        [Description("(Optional) The 4th player you want to invite.")]
+        IUser? player4 = null,
+        [Description("(Optional) The 5th player you want to invite.")]
+        IUser? player5 = null,
+        [Description("(Optional) The 6th player you want to invite.")]
+        IUser? player6 = null,
+        [Description("(Optional) The 7th player you want to invite.")]
+        IUser? player7 = null,
+        [Description("(Optional) The 8th player you want to invite.")]
+        IUser? player8 = null
+    ) => await Join(difficulty, variation, player2, player3, player4, player5, player6, player7, player8);
 
     public override string ToString()
         => "ninety_nine";

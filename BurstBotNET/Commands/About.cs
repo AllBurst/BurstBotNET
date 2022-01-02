@@ -1,12 +1,9 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
-using BurstBotShared.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
-using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
@@ -15,7 +12,7 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands;
 
-public class About : CommandGroup, ISlashCommand
+public class About : CommandGroup
 {
     private const string AboutTextPath = "Assets/localization/bot/about.txt";
     private static readonly Lazy<string> AboutText = new(() => File.ReadAllText(AboutTextPath));
@@ -35,18 +32,6 @@ public class About : CommandGroup, ISlashCommand
         _userApi = userApi;
         _interactionApi = interactionApi;
         _logger = logger;
-    }
-
-    public static string Name => "about";
-
-    public static string Description => "Show information about All Burst bot.";
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(
-            Name, Description, ApplicationCommandOptions);
     }
 
     [Command("about")]

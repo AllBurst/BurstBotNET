@@ -1,5 +1,7 @@
 using BurstBotNET.Commands;
+using BurstBotNET.Commands.BlackJack;
 using BurstBotNET.Commands.ChinesePoker;
+using BurstBotNET.Commands.NinetyNine;
 using BurstBotNET.Commands.Rewards;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +24,9 @@ public static class SlashCommandExtensions
             .AddCommandGroup<Ping>()
             .AddCommandGroup<Start>()
             .AddCommandGroup<Weekly>()
+            .AddCommandGroup<BlackJack>()
             .AddCommandGroup<ChinesePoker>()
+            .AddCommandGroup<NinetyNine>()
             .AddPagination()
             .AddInteractiveEntity<ChinesePokerDropDownEntity>()
             .AddInteractiveEntity<ChinesePokerButtonEntity>();

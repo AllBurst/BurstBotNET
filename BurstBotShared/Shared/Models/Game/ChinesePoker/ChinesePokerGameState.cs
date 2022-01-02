@@ -7,7 +7,10 @@ using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
-public class ChinesePokerGameState : IState<ChinesePokerGameState, RawChinesePokerGameState, ChinesePokerGameProgress>
+public class ChinesePokerGameState : 
+    IState<ChinesePokerGameState, RawChinesePokerGameState, ChinesePokerGameProgress>,
+    IGameState<ChinesePokerPlayerState, ChinesePokerGameProgress>,
+    IDisposable
 {
     public string GameId { get; set; } = "";
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
@@ -21,11 +24,26 @@ public class ChinesePokerGameState : IState<ChinesePokerGameState, RawChinesePok
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 
-    public Channel<Tuple<ulong, byte[]>>? PayloadChannel => Channel;
+    private bool _disposed;
 
-    public ChinesePokerGameProgress GameProgress
+    protected virtual void Dispose(bool disposing)
     {
-        get => Progress;
-        set => Progress = value;
+        if (_disposed) return;
+
+        if (disposing)
+        {
+            foreach (var (_, player) in Players)
+                player.Dispose();
+            
+            Semaphore.Dispose();
+        }
+
+        _disposed = true;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

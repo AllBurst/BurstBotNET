@@ -1,16 +1,13 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
-using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
-using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
@@ -18,7 +15,7 @@ using Remora.Results;
 
 namespace BurstBotNET.Commands;
 
-public class Balance : CommandGroup, ISlashCommand
+public class Balance : CommandGroup
 {
     private readonly InteractionContext _context;
     private readonly IDiscordRestInteractionAPI _interactionApi;
@@ -38,17 +35,6 @@ public class Balance : CommandGroup, ISlashCommand
         _userApi = userApi;
         _logger = logger;
         _state = state;
-    }
-
-    public static string Name => "balance";
-
-    public static string Description => "Check how many tips you currently have.";
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(Name, Description, ApplicationCommandOptions);
     }
 
     [Command("balance")]

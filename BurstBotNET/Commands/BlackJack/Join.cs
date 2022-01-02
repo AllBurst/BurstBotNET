@@ -1,15 +1,14 @@
 using System.Collections.Immutable;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
-using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Results;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.BlackJack;
@@ -17,169 +16,175 @@ namespace BurstBotNET.Commands.BlackJack;
 #pragma warning disable CA2252
 public partial class BlackJack
 {
-    /*private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
+    private async Task<IResult> Join(params IUser?[] users)
     {
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
-        var mentionedPlayers = new List<ulong>();
-        var options = e.Interaction.Data.Options.ToImmutableArray();
-        if (options[0].Options != null && options[0].Options.Any())
-            mentionedPlayers.AddRange(options[0]
-                .Options
-                .Select(opt => (ulong)opt.Value));
-        var invoker = e.Interaction.User;
-        mentionedPlayers.Add(invoker.Id);
+        var mentionedPlayers = new List<ulong> { _context.User.ID.Value };
+        var additionalPlayers = users
+            .Where(u => u != null)
+            .Select(u => u!.ID.Value)
+            .ToImmutableArray();
+        mentionedPlayers.AddRange(additionalPlayers);
 
-        // Try getting all players' tips and check if they have enough tips.
-        RawTip? invokerTip = null;
-        var getTipTasks = mentionedPlayers
-            .Select(async p =>
-            {
-                var response = await state.BurstApi.SendRawRequest<object>($"/tip/{p}", ApiRequestType.Get, null);
+        var (validationResult, invokerTip) = await Game.ValidatePlayers(_context.User.ID.Value, mentionedPlayers,
+            _state.BurstApi,
+            _context, 1.0f, _interactionApi);
+        
+        if (!validationResult) return Result.FromSuccess();
 
-                if (!response.ResponseMessage.IsSuccessStatusCode)
-                    return null;
+        var joinResult = await Game.GenericJoinGame(
+            mentionedPlayers, GameType.BlackJack, "/black_jack/join", _state.BurstApi,
+            _context, _interactionApi);
+        
+        if (joinResult == null) return Result.FromSuccess();
 
-                var playerTip = await response.GetJsonAsync<RawTip>();
+        var (joinStatus, reply) = joinResult.Value;
 
-                if (invoker.Id == p)
-                    invokerTip = playerTip;
-
-                return playerTip is { Amount: < 1 } ? null : playerTip;
-            });
-
-        var hasInvalidPlayers = (await Task.WhenAll(getTipTasks))
-            .Any(tip => tip == null);
-
-        if (hasInvalidPlayers)
-        {
-            await e.Interaction.EditOriginalResponseAsync(
-                new DiscordWebhookBuilder()
-                    .WithContent(
-                        "Sorry, but either one of the players you invited hasn't joined the server yet, or he doesn't have enough tips to join a game!"));
-            return;
-        }
-
-        var joinRequest = new GenericJoinRequest
-        {
-            ClientType = ClientType.Discord,
-            GameType = GameType.BlackJack,
-            PlayerIds = mentionedPlayers
-        };
-        var joinGameResponse =
-            await state.BurstApi.SendRawRequest("/black_jack/join", ApiRequestType.Post, joinRequest);
-
-        var playerCount = mentionedPlayers.Count;
-        var unit = playerCount == 1 ? "player" : "players";
-
-        var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinGameResponse, unit, GameType.BlackJack);
-
-        if (joinStatus == null)
-        {
-            await e.Interaction.EditOriginalResponseAsync(reply);
-            return;
-        }
-
-        var invokingMember = await e.Interaction.Guild.GetMemberAsync(invoker.Id);
-        var botUser = client.CurrentUser;
+        var invokingMember = await Utilities.GetUserMember(_context, _interactionApi,
+            ErrorMessages.JoinNotInGuild, _logger);
+        var botUser = await Utilities.GetBotUser(_userApi, _logger);
+        
+        if (invokingMember == null || botUser == null) return Result.FromSuccess();
 
         switch (joinStatus.StatusType)
         {
-            case GenericJoinStatusType.Waiting:
-            {
-                await e.Interaction.EditOriginalResponseAsync(reply);
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        var waitingResult = await state.BurstApi.WaitForBlackJackGame(joinStatus, e, invokingMember,
-                            botUser, "",
-                            client.Logger);
-                        if (!waitingResult.HasValue)
-                            throw new Exception("Failed to get waiting result for Black Jack.");
-
-                        var (matchData, playerState) = waitingResult.Value;
-                        await AddBlackJackPlayerState(matchData.GameId ?? "", e.Interaction.Guild, playerState,
-                            state.GameStates);
-                        _ = Task.Run(() =>
-                            StartListening(matchData.GameId ?? "",
-                                state, client.Logger));
-                    }
-                    catch (Exception ex)
-                    {
-                        client.Logger.LogError("WebSocket failed: {Exception}", ex);
-                    }
-                });
-                break;
-            }
             case GenericJoinStatusType.Start:
             {
-                reply = reply.AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "",
-                    null));
-                var message = await e.Interaction.EditOriginalResponseAsync(reply);
-                var reactionResult = await BurstApi.HandleStartGameReactions(GameName, e, message, invokingMember,
-                    botUser, joinStatus,
-                    mentionedPlayers,
-                    "/black_jack/join/confirm", state, client.Logger);
-                if (!reactionResult.HasValue)
+                var result = await Game.GenericStartGame(
+                    _context, reply, invokingMember, botUser,
+                    joinStatus, GameName, "/black_jack/join/confirm", mentionedPlayers,
+                    _state, 2, _interactionApi, _channelApi,
+                    _guildApi, _logger);
+
+                if (!result.HasValue)
                 {
-                    await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                        .WithContent(ErrorMessages.HandleReactionFailed));
-                    return;
+                    var failureResult = await _interactionApi
+                        .EditOriginalInteractionResponseAsync(
+                            _context.ApplicationID,
+                            _context.Token,
+                            ErrorMessages.HandleReactionFailed);
+                    return !failureResult.IsSuccess ? Result.FromError(failureResult) : Result.FromSuccess();
                 }
 
-                var (members, matchData) = reactionResult.Value;
-                var guild = e.Interaction.Guild;
+                var (members, matchData) = result.Value;
+                var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                if (!guild.HasValue) return Result.FromSuccess();
+                
                 foreach (var member in members)
                 {
-                    var playerTip = await state.BurstApi
-                        .SendRawRequest<object>($"/tip/{member.Id}", ApiRequestType.Get, null)
+                    var playerTip = await _state.BurstApi
+                        .SendRawRequest<object>($"/tip/{member.User.Value.ID.Value}", ApiRequestType.Get, null)
                         .ReceiveJson<RawTip>();
-                    var textChannel = await state.BurstApi.CreatePlayerChannel(guild, member);
-                    await AddBlackJackPlayerState(matchData.GameId ?? "", guild, new BlackJackPlayerState
+                    var textChannel =
+                        await _state.BurstApi.CreatePlayerChannel(guild.Value, botUser, invokingMember, _guildApi,
+                            _logger);
+                    await AddPlayerState(matchData.GameId ?? "", guild.Value, new BlackJackPlayerState
                     {
-                        AvatarUrl = member.AvatarUrl,
+                        AvatarUrl = member.GetAvatarUrl(),
                         BetTips = Constants.StartingBet,
                         GameId = matchData.GameId ?? "",
-                        PlayerId = member.Id,
-                        PlayerName = member.DisplayName,
+                        PlayerId = member.User.Value.ID.Value,
+                        PlayerName = member.GetDisplayName(),
                         TextChannel = textChannel,
                         OwnTips = playerTip.Amount,
                         Order = 0
-                    }, state.GameStates);
+                    }, _state.GameStates);
                     _ = Task.Run(() =>
-                        StartListening(matchData.GameId ?? "", state, client.Logger));
+                        StartListening(matchData.GameId ?? "", _state,
+                            _channelApi,
+                            _guildApi,
+                            _logger));
                 }
 
                 break;
             }
             case GenericJoinStatusType.Matched:
             {
-                await e.Interaction.EditOriginalResponseAsync(reply);
-                await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "", null)));
-                var guild = e.Interaction.Guild;
-                var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
-                await AddBlackJackPlayerState(
+                var matchedMessageResult = await _interactionApi
+                    .EditOriginalInteractionResponseAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        reply);
+                if (!matchedMessageResult.IsSuccess) return Result.FromError(matchedMessageResult);
+
+                var followUpResult = await _interactionApi
+                    .CreateFollowupMessageAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        embeds: new[]
+                        {
+                            Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "",
+                                null)
+                        });
+
+                if (!followUpResult.IsSuccess) return Result.FromError(followUpResult);
+                
+                var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                if (!guild.HasValue) return Result.FromSuccess();
+                var textChannel = await _state.BurstApi.CreatePlayerChannel(guild.Value, botUser, invokingMember,
+                    _guildApi, _logger);
+                
+                await AddPlayerState(
                     joinStatus.GameId ?? "",
-                    guild,
+                    guild.Value,
                     new BlackJackPlayerState
                     {
                         GameId = joinStatus.GameId ?? "",
-                        PlayerId = invokingMember.Id,
-                        PlayerName = invokingMember.DisplayName,
+                        PlayerId = invokingMember.User.Value.ID.Value,
+                        PlayerName = invokingMember.GetDisplayName(),
                         TextChannel = textChannel,
                         OwnTips = invokerTip?.Amount ?? 0,
                         BetTips = Constants.StartingBet,
                         Order = 0,
-                        AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto)
-                    }, state.GameStates
+                        AvatarUrl = invokingMember.GetAvatarUrl()
+                    }, _state.GameStates
                 );
                 _ = Task.Run(() =>
-                    StartListening(joinStatus.GameId ?? "", state, client.Logger));
+                    StartListening(joinStatus.GameId ?? "", _state, _channelApi, _guildApi, _logger));
+                break;
+            }
+            case GenericJoinStatusType.Waiting:
+            {
+                var waitingMessageResult = await _interactionApi
+                    .EditOriginalInteractionResponseAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        reply);
+                if (!waitingMessageResult.IsSuccess) return Result.FromError(waitingMessageResult);
+                
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        var waitingResult = await _state.BurstApi
+                            .WaitForBlackJackGame(joinStatus, _context, invokingMember,
+                            botUser, "",
+                            _interactionApi, _guildApi,
+                            _logger);
+                        
+                        if (!waitingResult.HasValue)
+                            throw new Exception($"Failed to get waiting result for {GameName}.");
+
+                        var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                        if (!guild.HasValue) return;
+                        
+                        var (matchData, playerState) = waitingResult.Value;
+                        await AddPlayerState(matchData.GameId ?? "", guild.Value, playerState,
+                            _state.GameStates);
+                        _ = Task.Run(() =>
+                            StartListening(matchData.GameId ?? "",
+                                _state, _channelApi, _guildApi, _logger));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("WebSocket failed: {Exception}", ex);
+                    }
+                });
                 break;
             }
             default:
                 throw new InvalidOperationException("Unsupported join status type.");
         }
-    }*/
+        
+        return Result.FromSuccess();
+    }
 }

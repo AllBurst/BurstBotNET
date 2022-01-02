@@ -5,7 +5,7 @@ using Remora.Rest.Core;
 namespace BurstBotShared.Shared.Interfaces;
 
 public interface IState<TState, out TRaw, TProgress>
-    where TRaw : IRawState<TState, TRaw, TProgress> 
+    where TRaw : IRawState<TState, TRaw, TProgress>
     where TState : IState<TState, TRaw, TProgress>
     where TProgress: Enum
 {
@@ -13,7 +13,4 @@ public interface IState<TState, out TRaw, TProgress>
         => rawState.ToState(guildApi, guild);
 
     TRaw ToRaw() => TRaw.FromState(this);
-    
-    Channel<Tuple<ulong, byte[]>>? PayloadChannel { get; }
-    TProgress? GameProgress { get; set; }
 }

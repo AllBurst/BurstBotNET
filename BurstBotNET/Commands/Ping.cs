@@ -1,17 +1,14 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
-using BurstBotShared.Shared.Interfaces;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
-using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
 using Remora.Results;
 
 namespace BurstBotNET.Commands;
 
-public class Ping : CommandGroup, ISlashCommand
+public class Ping : CommandGroup
 {
     private readonly InteractionContext _context;
     private readonly ILogger<Ping> _logger;
@@ -24,18 +21,6 @@ public class Ping : CommandGroup, ISlashCommand
         _context = context;
         _logger = logger;
         _interactionApi = interactionApi;
-    }
-
-    public static string Name => "ping";
-
-    public static string Description => "Returns the latency between the bot and Discord API.";
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(Name, Description,
-            ApplicationCommandOptions);
     }
 
     [Command("ping")]

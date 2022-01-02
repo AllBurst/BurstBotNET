@@ -1,6 +1,8 @@
 using System.Collections.Immutable;
 using System.Text.Json;
 using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
@@ -10,16 +12,16 @@ using Remora.Discord.Commands.Contexts;
 using Remora.Discord.Interactivity;
 using Remora.Results;
 
-namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
+namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
-public class ChinesePokerButtonEntity : IButtonInteractiveEntity
+public class BlackJackButtonEntity : IButtonInteractiveEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
 
-    public ChinesePokerButtonEntity(
+    public BlackJackButtonEntity(
         InteractionContext context,
         State state,
         IDiscordRestChannelAPI channelApi,
@@ -30,12 +32,29 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         _channelApi = channelApi;
         _interactionApi = interactionApi;
     }
+
+    public static async Task SendRaiseData(
+        BlackJackGameState gameState,
+        BlackJackPlayerState playerState,
+        int raiseBet)
+    {
+        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
+            new BlackJackInGameRequest
+            {
+                RequestType = BlackJackInGameRequestType.Raise,
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId,
+                Bets = raiseBet
+            }));
+        await gameState.Channel!.Writer.WriteAsync(sendData);
+    }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
     {
+        var isValidButton = customId is "draw" or "stand" or "call" or "raise" or "fold" or "allin";
         return componentType is not ComponentType.Button
             ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(customId is "chinese_poker_confirm" or "chinese_poker_cancel" or "chinese_poker_help");
+            : Task.FromResult<Result<bool>>(isValidButton);
     }
 
     public async Task<Result> HandleInteractionAsync(IUser user, string customId, CancellationToken ct = new())
@@ -46,21 +65,64 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         var sanitizedCustomId = customId.Trim();
 
         var gameState = Utilities.Utilities
-            .GetGameState<ChinesePokerGameState, ChinesePokerPlayerState, ChinesePokerGameProgress>(user,
-                _state.GameStates.ChinesePokerGameStates.Item1,
-                _state.GameStates.ChinesePokerGameStates.Item2,
+            .GetGameState<BlackJackGameState, BlackJackPlayerState, BlackJackGameProgress>(user,
+                _state.GameStates.BlackJackGameStates.Item1,
+                _state.GameStates.BlackJackGameStates.Item2,
                 _context,
                 out var playerState);
         
-        if (playerState == null) return Result.FromSuccess();
+        if (playerState?.TextChannel == null) return Result.FromSuccess();
 
-        return sanitizedCustomId switch
+        switch (sanitizedCustomId)
         {
-            "chinese_poker_confirm" => await ConfirmSelection(playerState, gameState, message!, ct),
-            "chinese_poker_cancel" => await CancelSelection(playerState, message!, ct),
-            "chinese_poker_help" => await ShowHelpMenu(),
-            _ => Result.FromSuccess()
-        };
+            case "draw":
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Draw);
+                break;
+            case "stand":
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Stand);
+                break;
+            case "fold":
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Fold);
+                break;
+            case "call":
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Call);
+                break;
+            case "raise":
+                return await HandleRaise(playerState);
+            case "allin":
+            {
+                var remainingTips = playerState.OwnTips - playerState.BetTips - gameState.HighestBet;
+                await SendRaiseData(gameState, playerState, (int)remainingTips);
+                break;
+            }
+        }
+
+        return Result.FromSuccess();
+    }
+    
+    private static async Task SendGenericData(BlackJackGameState gameState,
+        BlackJackPlayerState playerState,
+        BlackJackInGameRequestType requestType)
+    {
+        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
+            new BlackJackInGameRequest
+            {
+                RequestType = requestType,
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId
+            }));
+        await gameState.Channel!.Writer.WriteAsync(sendData);
+    }
+
+    private async Task<Result> HandleRaise(BlackJackPlayerState playerState)
+    {
+        var localization = _state.Localizations.GetLocalization().BlackJack;
+        playerState.IsRaising = true;
+
+        var result = await _channelApi
+            .CreateMessageAsync(playerState.TextChannel!.ID, localization.RaisePrompt);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
     private async Task<Result> ConfirmSelection(

@@ -3,7 +3,6 @@ using System.Drawing;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
-using DSharpPlus.Entities;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Rest.Core;
 
@@ -18,7 +17,7 @@ public static class BurstExtensions
 
     public static string GetAvatarUrl(this IUser user, ushort size = 1024)
     {
-        var num = size >= 16 && size <= 2048
+        var num = size is >= 16 and <= 2048
             ? Math.Log(size, 2.0)
             : throw new ArgumentOutOfRangeException(nameof(size));
         if (num < 4.0 || num > 11.0 || num % 1.0 != 0.0)

@@ -1,9 +1,10 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Text;
 using BurstBotShared.Shared.Extensions;
-using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game.ChinesePoker;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -108,22 +109,27 @@ public static class Utilities
         return guild;
     }
 
-    public static ChinesePokerGameState GetChinesePokerGameState(
+    public static TGameState GetGameState<TGameState, TPlayerState, TProgress>(
         IUser user,
-        State state,
+        ConcurrentDictionary<string, TGameState> states,
+        ConcurrentHashSet<Snowflake> channels,
         InteractionContext context,
-        out ChinesePokerPlayerState? playerState)
+        out TPlayerState? playerState)
+        where TGameState: IGameState<TPlayerState, TProgress>
+        where TPlayerState: class, IPlayerState
+        where TProgress: Enum
     {
-        ChinesePokerPlayerState? pState = null;
-        var (_, gameState) = state.GameStates.ChinesePokerGameStates.Item1
+        TPlayerState? pState = null;
+        var (_, gameState) = states
             .First(item =>
             {
                 var (_, v) = item;
                 var hasPlayer = v.Players.ContainsKey(user.ID.Value);
+                var (_, channelId, _) = context;
                 var matchedPlayer = v.Players.Values
-                    .Where(p => p.TextChannel!.ID.Equals(context.ChannelID) && p.PlayerId.Equals(user.ID.Value))
+                    .Where(p => p.TextChannel!.ID.Equals(channelId) && p.PlayerId.Equals(user.ID.Value))
                     .ToImmutableList();
-                var hasChannel = state.GameStates.ChinesePokerGameStates.Item2.Contains(context.ChannelID);
+                var hasChannel = channels.Contains(channelId);
                 if (!hasPlayer || matchedPlayer.IsEmpty || !hasChannel) return false;
                 pState = matchedPlayer.First();
                 return true;

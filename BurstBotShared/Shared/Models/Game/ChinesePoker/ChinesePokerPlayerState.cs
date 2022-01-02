@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -9,7 +8,9 @@ using Remora.Discord.API.Abstractions.Objects;
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
 public class
-    ChinesePokerPlayerState : IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress>
+    ChinesePokerPlayerState : IState<ChinesePokerPlayerState, RawChinesePokerPlayerState, ChinesePokerGameProgress>,
+        IPlayerState,
+        IDisposable
 {
     public string GameId { get; init; } = "";
     public ulong PlayerId { get; init; }
@@ -22,13 +23,24 @@ public class
 
     public Dictionary<ChinesePokerGameProgress, Stream> DeckImages { get; } = new();
     public IGuildMember? Member { get; set; }
-    public ConcurrentQueue<(IMessage?, IMessage?)> OutstandingMessages { get; set; } = new();
+    public ConcurrentQueue<IMessage?> OutstandingMessages { get; set; } = new();
 
-    public Channel<Tuple<ulong, byte[]>>? PayloadChannel => null;
+    private bool _disposed;
 
-    public ChinesePokerGameProgress GameProgress
+    protected virtual void Dispose(bool disposing)
     {
-        get => throw new InvalidOperationException(ErrorMessages.PlayerStateNoGameProgress);
-        set => throw new InvalidOperationException(ErrorMessages.PlayerStateNoGameProgress);
+        if (_disposed) return;
+
+        if (disposing)
+            foreach (var (_, stream) in DeckImages)
+                stream.Dispose();
+
+        _disposed = true;
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Globalization;
 using BurstBotShared.Shared.Models.Data;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
@@ -15,7 +14,6 @@ namespace BurstBotNET.Commands.ChinesePoker;
 public partial class ChinesePoker : Remora.Commands.Groups.CommandGroup
 {
     public const string GameName = "Chinese Poker";
-    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
 
     private readonly InteractionContext _context;
     private readonly IDiscordRestUserAPI _userApi;
@@ -24,16 +22,7 @@ public partial class ChinesePoker : Remora.Commands.Groups.CommandGroup
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly State _state;
     private readonly ILogger<ChinesePoker> _logger;
-
-    static ChinesePoker()
-    {
-        AvailableRanks = Enumerable
-            .Range(2, 9)
-            .Select(n => n.ToString())
-            .Concat(new[] { "a", "j", "q", "k" })
-            .ToArray();
-    }
-
+    
     public ChinesePoker(
         InteractionContext context,
         IDiscordRestUserAPI userApi,
@@ -58,14 +47,11 @@ public partial class ChinesePoker : Remora.Commands.Groups.CommandGroup
         [Description("The base bet. Each player's final reward will be units won/lost multiplied by this.")]
         float baseBet,
         [Description("(Optional) The 2nd player you want to invite.")] 
-        IUser? playerTwo = null,
+        IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]
-        IUser? playerThree = null,
+        IUser? player3 = null,
         [Description("(Optional) The 4th player you want to invite.")]
-        IUser? playerFour = null)
-    {
-        return await Join(baseBet, playerTwo, playerThree, playerFour);
-    }
+        IUser? player4 = null) => await Join(baseBet, player2, player3, player4);
 
     public override string ToString()
     {

@@ -106,8 +106,10 @@ public class Rewards
             PlayerRewardType.Weekly => tip.NextWeeklyReward ?? string.Empty,
             _ => string.Empty
         });
-        return new Tuple<string, Color>(
-            baseText.Append(BuildRemainingTimeMessage(rewardType, nextRewardTime)).ToString(), Color.Red);
+        baseText.Append(BuildRemainingTimeMessage(rewardType, nextRewardTime) + '\n');
+        var unixSeconds = ((DateTimeOffset)nextRewardTime).ToUnixTimeSeconds();
+        baseText.Append($"Next Reward Date: <t:{unixSeconds}>");
+        return new Tuple<string, Color>(baseText.ToString(), Color.Red);
     }
 
     private static string BuildRemainingTimeMessage(
@@ -134,7 +136,7 @@ public class Rewards
                 var minutes = leftoverSeconds / 60;
                 var seconds = leftoverSeconds - minutes * 60;
                 return
-                    $"{days} Days {hours.ToString().PadLeft(2)}:{minutes.ToString().PadLeft(2)}:{seconds.ToString().PadLeft(2)}";
+                    $"{days} Days {hours.ToString().PadLeft(2, '0')}:{minutes.ToString().PadLeft(2, '0')}:{seconds.ToString().PadLeft(2, '0')}";
             }
             default:
                 return string.Empty;

@@ -1,15 +1,12 @@
-using System.Collections.Immutable;
 using System.ComponentModel;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
-using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using Microsoft.Extensions.Logging;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
-using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
@@ -18,7 +15,7 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands;
 
-public class Start : CommandGroup, ISlashCommand
+public class Start : CommandGroup
 {
     private readonly InteractionContext _context;
     private readonly IDiscordRestUserAPI _userApi;
@@ -37,18 +34,6 @@ public class Start : CommandGroup, ISlashCommand
         _interactionApi = interactionApi;
         _state = state;
         _logger = logger;
-    }
-
-    public static string Name => "start";
-
-    public static string Description => "Opt-in and create an account to start joining games!";
-
-    public static ImmutableArray<IApplicationCommandOption> ApplicationCommandOptions => ImmutableArray<IApplicationCommandOption>.Empty;
-
-    public static Tuple<string, string, ImmutableArray<IApplicationCommandOption>> GetCommandTuple()
-    {
-        return new Tuple<string, string, ImmutableArray<IApplicationCommandOption>>(Name, Description,
-            ApplicationCommandOptions);
     }
 
     [Command("start")]
