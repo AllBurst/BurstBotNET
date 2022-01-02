@@ -2,8 +2,7 @@ using System.Collections.Immutable;
 using System.Text.Json;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
-using BurstBotShared.Shared.Models.Game.ChinesePoker;
-using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -20,23 +19,28 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
     private readonly State _state;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly ILogger<BlackJackButtonEntity> _logger;
 
     public BlackJackButtonEntity(
         InteractionContext context,
         State state,
         IDiscordRestChannelAPI channelApi,
-        IDiscordRestInteractionAPI interactionApi)
+        IDiscordRestInteractionAPI interactionApi,
+        ILogger<BlackJackButtonEntity> logger)
     {
         _context = context;
         _state = state;
         _channelApi = channelApi;
         _interactionApi = interactionApi;
+        _logger = logger;
     }
 
     public static async Task SendRaiseData(
         BlackJackGameState gameState,
         BlackJackPlayerState playerState,
-        int raiseBet)
+        int raiseBet,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger)
     {
         var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
             new BlackJackInGameRequest
@@ -47,11 +51,12 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 Bets = raiseBet
             }));
         await gameState.Channel!.Writer.WriteAsync(sendData);
+        await DeleteComponent(playerState.MessageReference!, channelApi, logger);
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
     {
-        var isValidButton = customId is "draw" or "stand" or "call" or "raise" or "fold" or "allin";
+        var isValidButton = customId is "draw" or "stand" or "call" or "raise" or "fold" or "allin" or "blackjack_help";
         return componentType is not ComponentType.Button
             ? Task.FromResult<Result<bool>>(false)
             : Task.FromResult<Result<bool>>(isValidButton);
@@ -73,6 +78,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         
         if (playerState?.TextChannel == null) return Result.FromSuccess();
 
+        playerState.MessageReference = message;
+
         switch (sanitizedCustomId)
         {
             case "draw":
@@ -92,15 +99,18 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
             case "allin":
             {
                 var remainingTips = playerState.OwnTips - playerState.BetTips - gameState.HighestBet;
-                await SendRaiseData(gameState, playerState, (int)remainingTips);
+                await SendRaiseData(gameState, playerState, (int)remainingTips, _channelApi, _logger);
                 break;
             }
+            case "blackjack_help":
+                await ShowHelpMenu();
+                break;
         }
 
         return Result.FromSuccess();
     }
     
-    private static async Task SendGenericData(BlackJackGameState gameState,
+    private async Task SendGenericData(BlackJackGameState gameState,
         BlackJackPlayerState playerState,
         BlackJackInGameRequestType requestType)
     {
@@ -112,6 +122,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 PlayerId = playerState.PlayerId
             }));
         await gameState.Channel!.Writer.WriteAsync(sendData);
+        await DeleteComponent(playerState.MessageReference!, _channelApi, _logger);
     }
 
     private async Task<Result> HandleRaise(BlackJackPlayerState playerState)
@@ -125,94 +136,41 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
-    private async Task<Result> ConfirmSelection(
-        ChinesePokerPlayerState playerState,
-        ChinesePokerGameState gameState,
-        IMessage message,
-        CancellationToken ct)
+    private static async Task DeleteComponent(IMessage message, IDiscordRestChannelAPI channelApi, ILogger logger)
     {
-        var dequeueResult = playerState.OutstandingMessages.TryDequeue(out var cardMessage);
-        if (!dequeueResult)
-            return Result.FromSuccess();
+        var originalEmbeds = message.Embeds.ToImmutableArray();
+        var originalAttachments = message.Attachments
+            .Select(OneOf<FileData, IPartialAttachment>.FromT1)
+            .ToImmutableArray();
 
-        var originalEmbeds = cardMessage!.Embeds;
-        var originalAttachments = cardMessage
-            .Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var editResult = await _channelApi
-            .EditMessageAsync(cardMessage.ChannelID, cardMessage.ID,
-                embeds: originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: Array.Empty<IMessageComponent>(),
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
-
-        originalEmbeds = message.Embeds;
-        originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        editResult = await _channelApi
+        var editResult = await channelApi
             .EditMessageAsync(message.ChannelID, message.ID,
-                Constants.CheckMark,
-                originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: Array.Empty<IMessageComponent>(),
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
-
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
-            {
-                RequestType = gameState.Progress switch
-                {
-                    ChinesePokerGameProgress.FrontHand => ChinesePokerInGameRequestType.FrontHand,
-                    ChinesePokerGameProgress.MiddleHand => ChinesePokerInGameRequestType.MiddleHand,
-                    ChinesePokerGameProgress.BackHand => ChinesePokerInGameRequestType.BackHand,
-                    _ => ChinesePokerInGameRequestType.Close
-                },
-                GameId = gameState.GameId,
-                PlayerId = playerState.PlayerId,
-                PlayCard = playerState.PlayedCards[gameState.Progress].Cards.ToImmutableArray(),
-                DeclaredNatural = playerState.Naturals
-            })), ct);
-        
-        return Result.FromSuccess();
-    }
-
-    private async Task<Result> CancelSelection(
-        ChinesePokerPlayerState playerState,
-        IMessage message,
-        CancellationToken ct)
-    {
-        var dequeueResult = playerState.OutstandingMessages.TryDequeue(out _);
-        if (!dequeueResult)
-            return Result.FromSuccess();
-                
-        var editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                Constants.CrossMark,
-                attachments: Array.Empty<OneOf<FileData, IPartialAttachment>>(),
-                components: Array.Empty<IMessageComponent>(),
-                embeds: Array.Empty<IEmbed>(),
-                ct: ct);
-        return !editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
+                embeds: originalEmbeds,
+                attachments: originalAttachments,
+                components: ImmutableArray<IMessageComponent>.Empty);
+        if (!editResult.IsSuccess)
+            logger.LogError("Failed to remove components from the original message: {Reason}, inner: {Inner}",
+                editResult.Error.Message, editResult.Inner);
     }
 
     private async Task<Result> ShowHelpMenu()
     {
-        var localization = _state.Localizations.GetLocalization().ChinesePoker;
+        var localization = _state.Localizations.GetLocalization().BlackJack;
 
         var components = new IMessageComponent[]
         {
             new ActionRowComponent(new[]
             {
-                new SelectMenuComponent("help_selections", new[]
+                new SelectMenuComponent("blackjack_help_selections", new[]
                 {
-                    new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
-                    new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),
-                    new SelectOption(localization.BackHand, "Back Hand", localization.BackHand, default, false)
+                    new SelectOption(localization.Rules, "helprule", localization.Rules, new PartialEmoji(Name: "🥷"), false),
+                    new SelectOption(localization.GameFlow, "helpflow", localization.GameFlow, new PartialEmoji(Name: "🌫️"), false),
+                    new SelectOption(localization.Draw, "helpdraw", localization.Draw, new PartialEmoji(Name: "🎴"), false),
+                    new SelectOption(localization.Stand, "helpstand", localization.Stand, new PartialEmoji(Name: "😑"), false),
+                    new SelectOption(localization.Call, "helpcall", localization.Call, new PartialEmoji(Name: "🤔"), false),
+                    new SelectOption(localization.Fold, "helpfold", localization.Fold, new PartialEmoji(Name: "😫"), false),
+                    new SelectOption(localization.Raise, "helpraise", localization.Raise, new PartialEmoji(Name: "🤑"), false),
+                    new SelectOption(localization.AllIn, "helpallin", localization.AllIn, new PartialEmoji(Name: "😈"), false)
                 }, localization.ShowHelp, 0, 1, false)
             })
         };

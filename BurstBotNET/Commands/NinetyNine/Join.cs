@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.NinetyNine;

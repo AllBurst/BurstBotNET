@@ -19,4 +19,5 @@ public class BlackJackPlayerState : IState<BlackJackPlayerState, RawBlackJackPla
     public string AvatarUrl { get; set; } = "";
     
     public bool IsRaising { get; set; }
+    public IMessage? MessageReference { get; set; }
 }

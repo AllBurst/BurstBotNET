@@ -459,7 +459,7 @@ public sealed class BurstApi
         var buffer = new byte[BufferSize];
         var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
         var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-        logger.LogDebug("Received match data from WS server: {Payload}", payloadText);
+        logger.LogError("Received match data from WS server: {Payload}", payloadText);
         var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
         return matchData;
     }

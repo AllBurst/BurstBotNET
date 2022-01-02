@@ -339,6 +339,10 @@ public partial class BlackJack : BlackJackGame
         if (!gatewayEvent.Author.ID.Value.Equals(playerState.PlayerId))
             return;
 
+        if (!playerState.IsRaising) return;
+
+        playerState.IsRaising = false;
+
         var sanitizedMessage = gatewayEvent.Content.Trim();
         var parseResult = int.TryParse(sanitizedMessage, out var raiseBet);
         var localization = localizations.GetLocalization().BlackJack;
@@ -364,7 +368,7 @@ public partial class BlackJack : BlackJackGame
             return;
         }
 
-        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet);
+        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger);
     }
 
     public static async Task<bool> HandleProgressChange(
@@ -684,15 +688,20 @@ public partial class BlackJack : BlackJackGame
                             Description =
                             localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString())
                         };
+                    
+                    await using var lastCardImageCopy = new MemoryStream((int)lastCardImage.Length);
+                    await lastCardImage.CopyToAsync(lastCardImageCopy);
+                    lastCardImage.Seek(0, SeekOrigin.Begin);
+                    lastCardImageCopy.Seek(0, SeekOrigin.Begin);
 
                     var result = await channelApi
                         .CreateMessageAsync(state.TextChannel.ID,
                             embeds: new[] { embed },
-                            attachments: new[]
+                            attachments: previousRequestType.Equals(BlackJackInGameRequestType.Draw) ? new[]
                             {
                                 OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName,
-                                    lastCardImage))
-                            });
+                                    lastCardImageCopy))
+                            } : Array.Empty<OneOf<FileData, IPartialAttachment>>());
 
                     if (!result.IsSuccess)
                         logger.LogError("Failed to show previous player's action: {Reason}, inner: {Inner}",
@@ -833,14 +842,16 @@ public partial class BlackJack : BlackJackGame
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Draw,
                             new PartialEmoji(Name: "🎴"), "draw"),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Stand,
-                            new PartialEmoji(Name: "😑"), "stand")
+                            new PartialEmoji(Name: "😑"), "stand"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
+                            new PartialEmoji(Name: "❓"), "blackjack_help")
                     })
                 }.ToImmutableArray();
                 
                 var result = await channelApi
                     .CreateMessageAsync(playerState.TextChannel!.ID,
                         embeds: new[] { embed },
-                        components: isCurrentPlayer ? components : default,
+                        components: isCurrentPlayer ? components : ImmutableArray<IMessageComponent>.Empty,
                         attachments: attachments);
 
                 return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
@@ -859,7 +870,7 @@ public partial class BlackJack : BlackJackGame
                     },
                     Description = additionalDescription
                 };
-                
+
                 var components = new IMessageComponent[]
                 {
                     new ActionRowComponent(new[]
@@ -871,14 +882,16 @@ public partial class BlackJack : BlackJackGame
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Raise,
                             new PartialEmoji(Name: "🤑"), "raise"),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.AllIn,
-                            new PartialEmoji(Name: "😈"), "allin")
+                            new PartialEmoji(Name: "😈"), "allin"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
+                            new PartialEmoji(Name: "❓"), "blackjack_help")
                     })
                 }.ToImmutableArray();
 
                 var result = await channelApi
                     .CreateMessageAsync(playerState.TextChannel!.ID,
                         embeds: new[] { embed },
-                        components: isCurrentPlayer ? components : default,
+                        components: isCurrentPlayer ? components : ImmutableArray<IMessageComponent>.Empty,
                         attachments: attachments);
 
                 return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();

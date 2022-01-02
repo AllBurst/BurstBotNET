@@ -7,6 +7,7 @@ using Remora.Commands.Groups;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
+using Remora.Rest.Core;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.NinetyNine;
@@ -48,7 +49,7 @@ public partial class NinetyNine : CommandGroup
         [Description("The difficulty. Players will only have 4 cards instead of 5 in the hard mode.")]
         NinetyNineDifficulty difficulty,
         [Description("Choose flavors of Ninety-Nine. Available variations: Taiwanese (default), Icelandic, Standard.")]
-        NinetyNineVariation? variation = null,
+        NinetyNineVariation variation = NinetyNineVariation.Taiwanese,
         [Description("(Optional) The 2nd player you want to invite.")]
         IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]

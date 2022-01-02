@@ -52,7 +52,7 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
     {
         return componentType is not ComponentType.SelectMenu
             ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(customId is "chinese_poker_cards" or "naturals" or "help_selections");
+            : Task.FromResult<Result<bool>>(customId is "chinese_poker_cards" or "naturals" or "chinese_poker_help_selections");
     }
 
     public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
@@ -67,7 +67,7 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
         {
             "chinese_poker_cards" => await HandleSelectCards(message!, user, values, ct),
             "naturals" => await HandleSelectNatural(message!, user, values, ct),
-            "help_selections" => await ShowHelpTexts(user, values, ct),
+            "chinese_poker_help_selections" => await ShowHelpTexts(user, values, ct),
             _ => Result.FromSuccess()
         };
     }

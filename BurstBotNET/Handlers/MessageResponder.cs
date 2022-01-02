@@ -25,7 +25,7 @@ public class MessageResponder : IResponder<IMessageCreate>
     public Task<Result> RespondAsync(IMessageCreate gatewayEvent, CancellationToken ct = new())
     {
         var isBotDefined = gatewayEvent.Author.IsBot.IsDefined(out var isBot);
-        if (!isBotDefined || isBot) return Task.FromResult(Result.FromSuccess());
+        if (isBotDefined && isBot) return Task.FromResult(Result.FromSuccess());
 
         var guildDefined = gatewayEvent.GuildID.IsDefined(out var guild);
         if (!guildDefined) return Task.FromResult(Result.FromSuccess());

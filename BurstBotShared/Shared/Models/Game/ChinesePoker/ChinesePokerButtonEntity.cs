@@ -146,7 +146,7 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         {
             new ActionRowComponent(new[]
             {
-                new SelectMenuComponent("help_selections", new[]
+                new SelectMenuComponent("chinese_poker_help_selections", new[]
                 {
                     new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
                     new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),

@@ -137,14 +137,3 @@ namespace BurstBotNET
         }
     }
 }
-
-/*static async Task MainAsync(string[] args)
-{
-    client.UseInteractivity(new InteractivityConfiguration
-    {
-        Timeout = TimeSpan.FromSeconds(config.Timeout * 2)
-    });
-    
-    client.MessageCreated += handlers.HandleMessage;
-    await Task.Delay(-1);
-}*/
