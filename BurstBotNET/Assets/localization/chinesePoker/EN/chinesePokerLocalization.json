@@ -5,7 +5,7 @@
     "backhand": "Assets/localization/chinesePoker/EN/otherHands.txt"
   },
   "initialMessagePrefix": "You currently own:\n",
-  "initialMessageDescription": "Chinese poker consists of 3 hands: **Front Hand**, **Middle Hand**, and **Back Hand**. While front hand consists of 3 cards, middle hand and back hand comprise 5 cards. In order to beat other players, you'll need to make the combination of each of your hands as big as possible.\n\n{cardNames}",
+  "initialMessageDescription": "**Base bet: {baseBet}.**\n\nChinese poker consists of 3 hands: **Front Hand**, **Middle Hand**, and **Back Hand**. While front hand consists of 3 cards, middle hand and back hand comprise 5 cards. In order to beat other players, you'll need to make the combination of each of your hands as big as possible.\n\n{cardNames}",
   "initialMessageTitle": "The Chinese Poker game is starting!",
   "initialMessageFooter": "Please wait until all players are ready.",
   "winTitle": "{playerName} is the biggest winner!",

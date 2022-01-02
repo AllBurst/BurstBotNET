@@ -1,30 +1,55 @@
-using BurstBotShared.Shared.Interfaces;
-using BurstBotShared.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using System.ComponentModel;
+using Microsoft.Extensions.Logging;
+using Remora.Commands.Attributes;
+using Remora.Commands.Groups;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.Commands.Contexts;
+using Remora.Results;
 
 namespace BurstBotNET.Commands;
 
-public class Ping : ISlashCommand
+public class Ping : CommandGroup
 {
-    public DiscordApplicationCommand Command { get; init; }
+    private readonly InteractionContext _context;
+    private readonly ILogger<Ping> _logger;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
 
-    public Ping()
+    public Ping(InteractionContext context,
+        ILogger<Ping> logger,
+        IDiscordRestInteractionAPI interactionApi)
     {
-        Command = new DiscordApplicationCommand("ping", "Returns the latency between the bot and Discord API.");
+        _context = context;
+        _logger = logger;
+        _interactionApi = interactionApi;
     }
 
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e,
-        State state)
+    [Command("ping")]
+    [Description("Returns the latency between the bot and Discord API.")]
+    public async Task<IResult> Handle()
     {
         var startTime = DateTime.Now;
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource,
-            new DiscordInteractionResponseBuilder()
-                .WithContent("Pinging..."));
+        var result = await _interactionApi.EditOriginalInteractionResponseAsync(_context.ApplicationID, _context.Token,
+            "Pinging...");
         var latency = DateTime.Now - startTime;
-        await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-            .WithContent($"Pong!!\nLatency is {latency.Milliseconds} ms"));
+        if (!result.IsSuccess)
+        {
+            _logger.LogError("Failed to respond to slash command: {Reason}, inner: {Detail}", 
+                result.Error.Message, result.Inner);
+            return Result.FromError(result.Error);
+        }
+        
+        var sentMessage = await _interactionApi
+            .GetOriginalInteractionResponseAsync(_context.ApplicationID, _context.Token);
+        if (!result.IsSuccess)
+        {
+            _logger.LogError("Failed to get the original response to slash command: {Reason}, inner: {Detail}", sentMessage.Error?.Message, result.Inner);
+            return Result.FromError(sentMessage);
+        }
+
+        var editResult = await _interactionApi
+            .EditOriginalInteractionResponseAsync(_context.ApplicationID, _context.Token,
+                $"Pong!!\nLatency is {latency.Milliseconds} ms");
+        return editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
     }
 
     public override string ToString() => "ping";

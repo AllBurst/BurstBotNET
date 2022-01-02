@@ -4,23 +4,50 @@ using System.Text;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Localization;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Interfaces;
 
-public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
-    where TState: IState<TState, TRaw, TProgress>
+public interface IGame<in TState, in TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>
+    where TState: IState<TState, TRaw, TProgress>, IGameState<TPlayerState, TProgress>
     where TRaw: IRawState<TState, TRaw, TProgress>
-    where TGame: IGame<TState, TRaw, TGame, TProgress, TInGameRequestType>
+    where TGame: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>
     where TProgress: Enum
     where TInGameRequestType: struct, Enum
+    where TPlayerState: IPlayerState
 {
 #pragma warning disable CA2252
+    static abstract Task AddPlayerState(string gameId,
+        Snowflake guild,
+        TPlayerState playerState,
+        GameStates gameStates,
+        float baseBet);
+    
+    static abstract Task StartListening(
+        string gameId,
+        State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger);
+    
     static abstract Task<bool> HandleProgress(
         string messageContent,
         TState gameState,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger);
+    
+    static abstract Task<bool> HandleProgressChange(
+        TRaw deserializedIncomingData,
+        TState gameState,
+        State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger);
 
     static abstract Task HandleEndingResult(
@@ -28,6 +55,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         TState state,
         Localizations localizations,
         DeckService deckService,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger);
 #pragma warning restore CA2252
     
@@ -39,7 +67,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
-        var channelMessage = await state.PayloadChannel!.Reader.ReadAsync();
+        var channelMessage = await state.Channel!.Reader.ReadAsync();
         var (playerId, payload) = channelMessage;
         var operation =
             await HandleChannelMessage(playerId, payload, socketSession, state, inGameRequestTypes, closeRequestType, closedProgress, logger, cancellationTokenSource.Token);
@@ -61,6 +89,8 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         TState gameState,
         ArrayPool<byte> buffer,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
@@ -82,9 +112,10 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         var content = new StringBuilder();
         while (contentStack.TryPop(out var str))
             content.Append(str);
-        
-        if (!await TGame.HandleProgress(content.ToString(), gameState, state, logger))
-            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService, logger);
+
+        if (!await TGame.HandleProgress(content.ToString(), gameState, state, channelApi, guildApi, logger))
+            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService,
+                channelApi, logger);
     }
 
     static async Task RunTimeoutTask(long timeout, TState state, TProgress closedProgress, ILogger logger,
@@ -94,7 +125,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         {
             await Task.Delay(TimeSpan.FromSeconds(timeout), cancellationTokenSource.Token);
             logger.LogDebug("Game timed out due to inactivity");
-            state.GameProgress = closedProgress;
+            state.Progress = closedProgress;
         }
         catch (TaskCanceledException ex)
         {
@@ -116,7 +147,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
         var payloadText = Encoding.UTF8.GetString(payload);
         if (playerId == 0 && payloadText.Equals(SocketOperation.Shutdown.ToString()))
         {
-            state.GameProgress = closedProgress;
+            state.Progress = closedProgress;
             logger.LogDebug("Closing the session due to timeout");
             return SocketOperation.Shutdown;
         }
@@ -138,7 +169,7 @@ public interface IGame<in TState, TRaw, TGame, TProgress, TInGameRequestType>
 
         if (!requestType.Equals(closeRequestType)) return SocketOperation.Continue;
 
-        state.GameProgress = closedProgress;
+        state.Progress = closedProgress;
         logger.LogDebug("Received close response. Closing the session...");
         return SocketOperation.Close;
     }

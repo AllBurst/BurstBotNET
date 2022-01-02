@@ -1,6 +1,5 @@
 using System.Buffers;
 using System.Collections.Immutable;
-using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
@@ -11,17 +10,22 @@ using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using OneOf;
+using Remora.Discord.API.Abstractions.Gateway.Events;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.API.Objects;
+using Remora.Rest.Core;
+using Remora.Results;
+using Channel = System.Threading.Channels.Channel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
 
 using BlackJackGame =
-    IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackGameProgress, BlackJackInGameRequestType>;
+    IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackPlayerState, BlackJackGameProgress, BlackJackInGameRequestType>;
 
 #pragma warning disable CA2252
 public partial class BlackJack : BlackJackGame
@@ -31,10 +35,8 @@ public partial class BlackJack : BlackJackGame
         .ToImmutableArray();
 
     public static async Task<bool> HandleProgress(
-        string messageContent,
-        BlackJackGameState gameState,
-        State state,
-        ILogger logger)
+        string messageContent, BlackJackGameState gameState, State state,
+        IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
         try
         {
@@ -50,15 +52,16 @@ public partial class BlackJack : BlackJackGame
             {
                 logger.LogDebug("Progress changed, handling progress change...");
                 var progressChangeResult =
-                    await HandleProgressChange(deserializedIncomingData, gameState, state.GameStates,
-                        state.DeckService, state.Localizations);
+                    await HandleProgressChange(
+                        deserializedIncomingData,
+                        gameState, state, channelApi, guildApi, logger);
                 gameState.Semaphore.Release();
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
 
             var previousHighestBet = gameState.HighestBet;
-            await UpdateGameState(gameState, deserializedIncomingData);
+            await UpdateGameState(gameState, deserializedIncomingData, guildApi);
             var playerId = deserializedIncomingData.PreviousPlayerId;
             var result = gameState.Players.TryGetValue(playerId, out var previousPlayerState);
             if (!result)
@@ -76,7 +79,7 @@ public partial class BlackJack : BlackJackGame
             }
 
             await SendProgressMessages(gameState, previousPlayerState, previousRequestType, previousHighestBet,
-                deserializedIncomingData, state.DeckService, state.Localizations, logger);
+                deserializedIncomingData, state.DeckService, state.Localizations, channelApi, logger);
 
             gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released after sending progress messages");
@@ -105,6 +108,7 @@ public partial class BlackJack : BlackJackGame
         BlackJackGameState state,
         Localizations localizations,
         DeckService deckService,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
         if (state.Progress.Equals(BlackJackGameProgress.Ending))
@@ -129,28 +133,35 @@ public partial class BlackJack : BlackJackGame
                 .Replace("{playerName}", winner!.PlayerName)
                 .Replace("{totalRewards}", deserializedEndingData.TotalRewards.ToString());
 
-            var embed = new DiscordEmbedBuilder()
-                .WithColor((int)BurstColor.Burst)
-                .WithTitle(localization.WinTitle.Replace("{playerName}", winner.PlayerName))
-                .WithDescription(description)
-                .WithImageUrl(winner.AvatarUrl);
+            var fields = new List<EmbedField>(state.Players.Count);
 
             foreach (var (_, playerState) in deserializedEndingData.Players)
             {
                 var cardNames = string.Join('\n', playerState.Cards.Select(c => c.ToString()));
                 var totalPoints = playerState.Cards.GetRealizedValues(100);
-                embed = embed.AddField(
-                    playerState.PlayerName,
-                    localization.TotalPointsMessage.Replace("{cardNames}", cardNames)
-                        .Replace("{totalPoints}", totalPoints.ToString()), true);
+                fields.Add(new EmbedField(playerState.PlayerName, localization.TotalPointsMessage
+                    .Replace("{cardNames}", cardNames)
+                    .Replace("{totalPoints}", totalPoints.ToString()), true));
             }
+
+            var embed = new Embed(
+                Colour: BurstColor.Burst.ToColor(),
+                Title: localization.WinTitle.Replace("{playerName}", winner.PlayerName),
+                Description: description,
+                Image: new EmbedImage(winner.AvatarUrl),
+                Fields: fields);
 
             foreach (var (_, playerState) in state.Players)
             {
                 if (playerState.TextChannel == null)
                     continue;
 
-                await playerState.TextChannel.SendMessageAsync(embed);
+                var sendEmbedResult = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: new[] { embed });
+                if (!sendEmbedResult.IsSuccess)
+                    logger.LogError("Failed to send ending result to player's channel: {Reason}, inner: {Inner}",
+                        sendEmbedResult.Error.Message, sendEmbedResult.Inner);
             }
 
             await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
@@ -173,9 +184,11 @@ public partial class BlackJack : BlackJackGame
         }
     }
 
-    private static async Task StartListening(
+    public static async Task StartListening(
         string gameId,
         State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
         if (string.IsNullOrWhiteSpace(gameId))
@@ -223,6 +236,8 @@ public partial class BlackJack : BlackJackGame
                 gameState,
                 buffer,
                 state,
+                channelApi,
+                guildApi,
                 logger,
                 cancellationTokenSource);
 
@@ -249,20 +264,28 @@ public partial class BlackJack : BlackJackGame
             if (value.TextChannel == null)
                 continue;
 
-            var channelId = value.TextChannel.Id;
-            await value.TextChannel.DeleteAsync();
-            state.GameStates.BlackJackGameStates.Item2.Remove(channelId);
+            var channelId = value.TextChannel.ID;
+            
+            var deleteResult = await channelApi
+                .DeleteChannelAsync(value.TextChannel.ID);
+            if (!deleteResult.IsSuccess)
+                logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
+                    deleteResult.Error.Message, deleteResult.Inner);
+            
+            state.GameStates.BlackJackGameStates.Item2.TryRemove(channelId);
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
+        gameState.Dispose();
         state.GameStates.BlackJackGameStates.Item1.Remove(gameState.GameId, out _);
         socketSession.Dispose();
     }
 
-    private static async Task AddBlackJackPlayerState(string gameId,
-        DiscordGuild guild,
+    public static async Task AddPlayerState(string gameId,
+        Snowflake guild,
         BlackJackPlayerState playerState,
-        GameStates gameStates)
+        GameStates gameStates,
+        float baseBet = 1.0f)
     {
         var state = gameStates.BlackJackGameStates.Item1.GetOrAdd(gameId, new BlackJackGameState());
         state.Players.GetOrAdd(playerState.PlayerId, playerState);
@@ -272,7 +295,7 @@ public partial class BlackJack : BlackJackGame
         if (playerState.TextChannel == null)
             return;
 
-        gameStates.BlackJackGameStates.Item2.Add(playerState.TextChannel.Id);
+        gameStates.BlackJackGameStates.Item2.Add(playerState.TextChannel.ID);
         await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new BlackJackInGameRequest
@@ -280,7 +303,7 @@ public partial class BlackJack : BlackJackGame
                 GameId = gameId,
                 AvatarUrl = playerState.AvatarUrl,
                 PlayerId = playerState.PlayerId,
-                ChannelId = playerState.TextChannel.Id,
+                ChannelId = playerState.TextChannel.ID.Value,
                 PlayerName = playerState.PlayerName,
                 OwnTips = playerState.OwnTips,
                 ClientType = ClientType.Discord,
@@ -290,125 +313,71 @@ public partial class BlackJack : BlackJackGame
     }
 
     public static async Task HandleBlackJackMessage(
-        DiscordClient client,
-        MessageCreateEventArgs e,
+        IMessageCreate gatewayEvent,
         GameStates gameStates,
-        ulong channelId,
-        Localizations localizations)
+        Snowflake channelId,
+        Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger)
     {
         var state = gameStates
             .BlackJackGameStates
             .Item1
             .Where(pair => !pair.Value.Players
-                .Where(p => p.Value.TextChannel?.Id == channelId)
+                .Where(p => p.Value.TextChannel?.ID.Value == channelId.Value)
                 .ToImmutableArray().IsEmpty)
             .Select(p => p.Value)
             .First();
 
         var playerState = state
             .Players
-            .Where(p => p.Value.TextChannel?.Id == channelId)
+            .Where(p => p.Value.TextChannel?.ID.Value == channelId.Value)
             .Select(p => p.Value)
             .First();
 
         // Do not respond if the one who's typing is not the owner of the channel.
-        if (e.Message.Author.Id != playerState.PlayerId)
+        if (!gatewayEvent.Author.ID.Value.Equals(playerState.PlayerId))
             return;
 
-        var channel = e.Message.Channel;
-        var splitContent = e.Message.Content
-            .ToLowerInvariant()
-            .Trim()
-            .Split(' ')
-            .Select(s => s.Trim())
-            .Where(s => !string.IsNullOrEmpty(s))
-            .ToImmutableArray();
-        var helpExecuted =
-            await Help.Help.GenericCommandHelp(channel, splitContent, localizations.GetLocalization().BlackJack);
+        if (!playerState.IsRaising) return;
 
-        if (helpExecuted)
-            return;
+        playerState.IsRaising = false;
 
-        if (state.CurrentPlayerOrder != playerState.Order)
-            return;
-
-        switch (state.Progress)
+        var sanitizedMessage = gatewayEvent.Content.Trim();
+        var parseResult = int.TryParse(sanitizedMessage, out var raiseBet);
+        var localization = localizations.GetLocalization().BlackJack;
+        if (!parseResult)
         {
-            case BlackJackGameProgress.Progressing:
-            {
-                switch (splitContent[0])
-                {
-                    case "draw":
-                        await SendGenericData(state, playerState,
-                            BlackJackInGameRequestType.Draw);
-                        break;
-                    case "stand":
-                        await SendGenericData(state, playerState,
-                            BlackJackInGameRequestType.Stand);
-                        break;
-                }
-
-                break;
-            }
-            case BlackJackGameProgress.Gambling:
-            {
-                switch (splitContent[0])
-                {
-                    case "fold":
-                        await SendGenericData(state, playerState, BlackJackInGameRequestType.Fold);
-                        break;
-                    case "call":
-                        await SendGenericData(state, playerState, BlackJackInGameRequestType.Call);
-                        break;
-                    case "allin":
-                    {
-                        var remainingTips = playerState.OwnTips - playerState.BetTips - state.HighestBet;
-                        await SendRaiseData(state, playerState, (int)remainingTips);
-                        break;
-                    }
-                    case "raise":
-                    {
-                        try
-                        {
-                            var raiseBet = int.Parse(splitContent[1]);
-                            if (playerState.BetTips + raiseBet > playerState.OwnTips)
-                            {
-                                await e.Message.Channel.SendMessageAsync(
-                                    localizations.GetLocalization().BlackJack.RaiseExcessNumber);
-                                return;
-                            }
-
-                            await SendRaiseData(state, playerState, raiseBet);
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            client.Logger.LogError("An exception occurred when handling message: {Exception}",
-                                ex.Message);
-                            await e.Message.Channel.SendMessageAsync(
-                                localizations.GetLocalization().BlackJack.RaiseInvalidNumber);
-                            return;
-                        }
-                    }
-                }
-
-                break;
-            }
-            case BlackJackGameProgress.NotAvailable:
-            case BlackJackGameProgress.Starting:
-            case BlackJackGameProgress.Ending:
-            case BlackJackGameProgress.Closed:
-            default:
-                break;
+            var result = await channelApi
+                .CreateMessageAsync(playerState.TextChannel!.ID,
+                    localization.RaiseInvalidNumber);
+            if (!result.IsSuccess)
+                logger.LogError("Failed to send invalid raise message to the channel: {Reason}, inner: {Inner}",
+                    result.Error.Message, result.Inner);
+            return;
         }
+        
+        if (playerState.BetTips + raiseBet > playerState.OwnTips)
+        {
+            var result = await channelApi
+                .CreateMessageAsync(playerState.TextChannel!.ID,
+                    localization.RaiseExcessiveNumber);
+            if (!result.IsSuccess)
+                logger.LogError("Failed to send invalid raise message to the channel: {Reason}, inner: {Inner}",
+                    result.Error.Message, result.Inner);
+            return;
+        }
+
+        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger);
     }
 
-    private static async Task<bool> HandleProgressChange(
+    public static async Task<bool> HandleProgressChange(
         RawBlackJackGameState deserializedIncomingData,
-        BlackJackGameState state,
-        GameStates gameStates,
-        DeckService deckService,
-        Localizations localizations)
+        BlackJackGameState gameState,
+        State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger)
     {
         {
             var playerId = deserializedIncomingData.PreviousPlayerId;
@@ -418,17 +387,19 @@ public partial class BlackJack : BlackJackGame
                 result = Enum.TryParse<BlackJackInGameRequestType>(deserializedIncomingData.PreviousRequestType,
                     out var previousRequestType);
                 if (result)
-                    await SendPreviousPlayerActionMessage(state, previousPlayerState!,
-                        previousRequestType, deckService, localizations, state.HighestBet);
+                    await SendPreviousPlayerActionMessage(gameState, previousPlayerState!,
+                        previousRequestType, state.DeckService, state.Localizations,
+                        channelApi, logger,
+                        gameState.HighestBet);
             }
         }
 
         if (deserializedIncomingData.Progress.Equals(BlackJackGameProgress.Ending))
             return true;
 
-        state.Progress = deserializedIncomingData.Progress;
-        await UpdateGameState(state, deserializedIncomingData);
-        var firstPlayer = state.Players
+        gameState.Progress = deserializedIncomingData.Progress;
+        await UpdateGameState(gameState, deserializedIncomingData, guildApi);
+        var firstPlayer = gameState.Players
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
 
@@ -436,44 +407,58 @@ public partial class BlackJack : BlackJackGame
         {
             case BlackJackGameProgress.Progressing:
             {
-                foreach (var playerState in state.Players)
+                foreach (var playerState in gameState.Players)
                 {
                     if (playerState.Value.TextChannel == null)
                         continue;
 
-                    gameStates.BlackJackGameStates.Item2.Add(playerState.Value.TextChannel.Id);
-                    var embed = BuildTurnMessage(
+                    state.GameStates.BlackJackGameStates.Item2.Add(playerState.Value.TextChannel.ID);
+                    var turnResult = await BuildTurnMessage(
                         playerState,
                         deserializedIncomingData.CurrentPlayerOrder,
                         firstPlayer,
-                        state,
-                        deckService,
-                        localizations
+                        gameState,
+                        state.DeckService,
+                        state.Localizations,
+                        channelApi
                     );
-                    await playerState.Value.TextChannel.SendMessageAsync(embed);
+
+                    if (!turnResult.IsSuccess)
+                        logger.LogError("Failed to send turn message: {Reason}, inner: {Inner}",
+                            turnResult.Error.Message, turnResult.Inner);
                 }
 
                 break;
             }
             case BlackJackGameProgress.Gambling:
             {
-                foreach (var playerState in state.Players)
+                foreach (var playerState in gameState.Players)
                 {
                     if (playerState.Value.TextChannel == null)
                         continue;
 
-                    await playerState.Value.TextChannel
-                        .SendMessageAsync(localizations.GetLocalization().BlackJack
-                            .GamblingInitialMessage);
-                    var embed = BuildTurnMessage(
+                    var gamblingStartMessageResult = await channelApi
+                        .CreateMessageAsync(playerState.Value.TextChannel.ID,
+                            state.Localizations.GetLocalization().BlackJack
+                                .GamblingInitialMessage);
+
+                    if (!gamblingStartMessageResult.IsSuccess)
+                        logger.LogError("Failed to send gambling start message: {Reason}, inner: {Inner}",
+                            gamblingStartMessageResult.Error.Message, gamblingStartMessageResult.Inner);
+
+                    var turnResult = await BuildTurnMessage(
                         playerState,
                         deserializedIncomingData.CurrentPlayerOrder,
                         firstPlayer,
-                        state,
-                        deckService,
-                        localizations
+                        gameState,
+                        state.DeckService,
+                        state.Localizations,
+                        channelApi
                     );
-                    await playerState.Value.TextChannel.SendMessageAsync(embed);
+
+                    if (!turnResult.IsSuccess)
+                        logger.LogError("Failed to send turn message: {Reason}, inner: {Inner}",
+                            turnResult.Error.Message, turnResult.Inner);
                 }
 
                 break;
@@ -481,36 +466,6 @@ public partial class BlackJack : BlackJackGame
         }
 
         return true;
-    }
-
-    private static async Task SendGenericData(BlackJackGameState gameState,
-        BlackJackPlayerState playerState,
-        BlackJackInGameRequestType requestType)
-    {
-        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
-            new BlackJackInGameRequest
-            {
-                RequestType = requestType,
-                GameId = gameState.GameId,
-                PlayerId = playerState.PlayerId
-            }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
-    }
-
-    private static async Task SendRaiseData(
-        BlackJackGameState gameState,
-        BlackJackPlayerState playerState,
-        int raiseBet)
-    {
-        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
-            new BlackJackInGameRequest
-            {
-                RequestType = BlackJackInGameRequestType.Raise,
-                GameId = gameState.GameId,
-                PlayerId = playerState.PlayerId,
-                Bets = raiseBet
-            }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
     }
 
     private static async Task SendProgressMessages(
@@ -521,6 +476,7 @@ public partial class BlackJack : BlackJackGame
         RawBlackJackGameState? deserializedStateData,
         DeckService deckService,
         Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger
     )
     {
@@ -532,7 +488,7 @@ public partial class BlackJack : BlackJackGame
         switch (state.Progress)
         {
             case BlackJackGameProgress.Starting:
-                await SendInitialMessage(previousPlayerState, deckService, localizations, logger);
+                await SendInitialMessage(previousPlayerState, deckService, localizations, channelApi, logger);
                 break;
             case BlackJackGameProgress.Progressing:
                 await SendDrawingMessage(
@@ -542,13 +498,15 @@ public partial class BlackJack : BlackJackGame
                     previousRequestType,
                     deserializedStateData.Progress,
                     deckService,
-                    localizations
+                    localizations,
+                    channelApi,
+                    logger
                 );
                 break;
             case BlackJackGameProgress.Gambling:
                 await SendGamblingMessage(
                     state, previousPlayerState, state.CurrentPlayerOrder, previousRequestType, previousHighestBet,
-                    deserializedStateData.Progress, deckService, localizations);
+                    deserializedStateData.Progress, deckService, localizations, channelApi, logger);
                 break;
         }
     }
@@ -557,6 +515,7 @@ public partial class BlackJack : BlackJackGame
         BlackJackPlayerState? playerState,
         DeckService deckService,
         Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
         if (playerState == null || playerState.TextChannel == null)
@@ -574,17 +533,29 @@ public partial class BlackJack : BlackJackGame
         var description = localization.InitialMessageDescription
             .Replace("{cardsNames}", cardNames);
 
-        await playerState.TextChannel.SendMessageAsync(new DiscordMessageBuilder()
-            .WithEmbed(new DiscordEmbedBuilder()
-                .WithAuthor(playerState.PlayerName, iconUrl: playerState.AvatarUrl)
-                .WithColor((int)BurstColor.Burst)
-                .WithTitle(localization.InitialMessageTitle)
-                .WithDescription(description)
-                .WithFooter(localization.InitialMessageFooter)
-                .WithThumbnail(Constants.BurstLogo)
-                .WithImageUrl(Constants.AttachmentUri))
-            .WithFile(Constants.OutputFileName, SkiaService.RenderDeck(deckService,
-                playerState.Cards.Select(c => c with { IsFront = true }))));
+        var attachments = new[]
+        {
+            OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, SkiaService.RenderDeck(
+                deckService,
+                playerState.Cards.Select(c => c with { IsFront = true }))))
+        };
+
+        var embed = new Embed(
+            Author: new EmbedAuthor(playerState.PlayerName, IconUrl: playerState.AvatarUrl),
+            Colour: BurstColor.Burst.ToColor(),
+            Title: localization.InitialMessageTitle,
+            Description: description,
+            Footer: new EmbedFooter(localization.InitialMessageFooter),
+            Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+            Image: new EmbedImage(Constants.AttachmentUri));
+
+        var initialMessageResult = await channelApi
+            .CreateMessageAsync(playerState.TextChannel.ID,
+                embeds: new[] { embed },
+                attachments: attachments);
+        if (!initialMessageResult.IsSuccess)
+            logger.LogError("Failed to send initial message: {Reason}, inner: {Inner}",
+                initialMessageResult.Error.Message, initialMessageResult.Inner);
     }
 
     private static async Task SendDrawingMessage(
@@ -594,7 +565,9 @@ public partial class BlackJack : BlackJackGame
         BlackJackInGameRequestType previousRequestType,
         BlackJackGameProgress nextProgress,
         DeckService deckService,
-        Localizations localizations
+        Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger
     )
     {
         if (previousPlayerState == null)
@@ -603,7 +576,10 @@ public partial class BlackJack : BlackJackGame
         await SendPreviousPlayerActionMessage(gameState,
             ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(),
             previousRequestType,
-            deckService, localizations);
+            deckService,
+            localizations,
+            channelApi,
+            logger);
 
         if (!gameState.Progress.Equals(nextProgress))
             return;
@@ -618,9 +594,11 @@ public partial class BlackJack : BlackJackGame
             if (state.Value.TextChannel == null)
                 continue;
 
-            var embed = BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState,
-                deckService, localizations);
-            await state.Value.TextChannel.SendMessageAsync(embed);
+            var turnResult = await BuildTurnMessage(state, currentPlayerOrder, nextPlayer, gameState,
+                deckService, localizations, channelApi);
+            if (!turnResult.IsSuccess)
+                logger.LogError("Failed to send turn message: {Reason}, inner: {Inner}",
+                    turnResult.Error.Message, turnResult.Inner);
         }
     }
 
@@ -632,7 +610,9 @@ public partial class BlackJack : BlackJackGame
         int previousHighestBet,
         BlackJackGameProgress nextProgress,
         DeckService deckService,
-        Localizations localizations
+        Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger
     )
     {
         if (previousPlayerState == null)
@@ -641,7 +621,9 @@ public partial class BlackJack : BlackJackGame
         await SendPreviousPlayerActionMessage(gameState,
             ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)previousPlayerState).ToRaw(),
             previousRequestType,
-            deckService, localizations, previousHighestBet);
+            deckService, localizations,
+            channelApi, logger,
+            previousHighestBet);
 
         if (gameState.Progress != nextProgress)
             return;
@@ -655,9 +637,11 @@ public partial class BlackJack : BlackJackGame
             if (state.Value.TextChannel == null)
                 continue;
 
-            var embed = BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState,
-                deckService, localizations);
-            await state.Value.TextChannel.SendMessageAsync(embed);
+            var turnResult = await BuildTurnMessage(state, currentPlayerOrder, currentPlayer, gameState,
+                deckService, localizations, channelApi);
+            if (!turnResult.IsSuccess)
+                logger.LogError("Failed to send turn message: {Reason}, inner: {Inner}",
+                    turnResult.Error.Message, turnResult.Inner);
         }
     }
 
@@ -667,6 +651,8 @@ public partial class BlackJack : BlackJackGame
         BlackJackInGameRequestType previousRequestType,
         DeckService deck,
         Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger,
         int? previousHighestBet = null)
     {
         var previousPlayerOrder = previousPlayerState.Order;
@@ -689,24 +675,38 @@ public partial class BlackJack : BlackJackGame
                 {
                     var authorText = BuildPlayerActionMessage(localizations, previousRequestType, pronoun, lastCard);
 
-                    var embed = new DiscordEmbedBuilder()
-                        .WithAuthor(authorText, iconUrl: previousPlayerState.AvatarUrl)
-                        .WithColor((int)BurstColor.Burst);
-
-                    var message = new DiscordMessageBuilder();
+                    var embed = new Embed(
+                        Author: new EmbedAuthor(authorText, IconUrl: previousPlayerState.AvatarUrl),
+                        Colour: BurstColor.Burst.ToColor());
 
                     if (previousRequestType.Equals(BlackJackInGameRequestType.Draw))
-                    {
-                        embed = embed.WithImageUrl(Constants.AttachmentUri);
-                        message = message.WithFile(Constants.OutputFileName, lastCardImage, true);
-                    }
+                        embed = embed with { Image = new EmbedImage(Constants.AttachmentUri) };
 
                     if (isPreviousPlayer)
-                        embed = embed
-                            .WithDescription(
-                                localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString()));
+                        embed = embed with
+                        {
+                            Description =
+                            localization.BlackJack.CardPoints.Replace("{cardPoints}", currentPoints.ToString())
+                        };
+                    
+                    await using var lastCardImageCopy = new MemoryStream((int)lastCardImage.Length);
+                    await lastCardImage.CopyToAsync(lastCardImageCopy);
+                    lastCardImage.Seek(0, SeekOrigin.Begin);
+                    lastCardImageCopy.Seek(0, SeekOrigin.Begin);
 
-                    await state.TextChannel.SendMessageAsync(message.WithEmbed(embed));
+                    var result = await channelApi
+                        .CreateMessageAsync(state.TextChannel.ID,
+                            embeds: new[] { embed },
+                            attachments: previousRequestType.Equals(BlackJackInGameRequestType.Draw) ? new[]
+                            {
+                                OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName,
+                                    lastCardImageCopy))
+                            } : Array.Empty<OneOf<FileData, IPartialAttachment>>());
+
+                    if (!result.IsSuccess)
+                        logger.LogError("Failed to show previous player's action: {Reason}, inner: {Inner}",
+                            result.Error.Message, result.Inner);
+                    
                     break;
                 }
                 case BlackJackGameProgress.Gambling:
@@ -721,19 +721,27 @@ public partial class BlackJack : BlackJackGame
                         verb: verb,
                         diff: gameState.HighestBet - previousHighestBet!.Value);
 
-                    var embed = new DiscordEmbedBuilder()
-                        .WithAuthor(authorText, null, previousPlayerState.AvatarUrl)
-                        .WithColor((int)BurstColor.Burst);
+                    var embed = new Embed(
+                        Author: new EmbedAuthor(authorText, IconUrl: previousPlayerState.AvatarUrl),
+                        Colour: BurstColor.Burst.ToColor());
 
                     if (isPreviousPlayer)
-                        embed = embed.WithDescription(
-                            localization.BlackJack.CardPoints.Replace(
+                        embed = embed with
+                        {
+                            Description = localization.BlackJack.CardPoints.Replace(
                                 "{cardPoints}",
                                 currentPoints.ToString()
                             )
-                        );
+                        };
 
-                    await state.TextChannel.SendMessageAsync(embed);
+                    var result = await channelApi
+                        .CreateMessageAsync(state.TextChannel.ID,
+                            embeds: new[] { embed });
+
+                    if (!result.IsSuccess)
+                        logger.LogError("Failed to show previous player's action: {Reason}, inner: {Inner}",
+                            result.Error.Message, result.Inner);
+                    
                     break;
                 }
             }
@@ -753,40 +761,41 @@ public partial class BlackJack : BlackJackGame
         var localization = localizations.GetLocalization().BlackJack;
         return requestType switch
         {
-            BlackJackInGameRequestType.Draw => localization.Draw
+            BlackJackInGameRequestType.Draw => localization.DrawMessage
                 .Replace("{playerName}", playerName)
                 .Replace("{lastCard}", lastCard!.ToStringSimple()),
-            BlackJackInGameRequestType.Stand => localization.Stand
+            BlackJackInGameRequestType.Stand => localization.StandMessage
                 .Replace("{playerName}", playerName),
-            BlackJackInGameRequestType.Call => localization.Call
+            BlackJackInGameRequestType.Call => localization.CallMessage
                 .Replace("{playerName}", playerName)
                 .Replace("{highestBet}", highestBet.ToString()),
-            BlackJackInGameRequestType.Fold => localization.Fold
+            BlackJackInGameRequestType.Fold => localization.FoldMessage
                 .Replace("{playerName}", playerName)
                 .Replace("{verb}", verb),
-            BlackJackInGameRequestType.Raise => localization.Raise
+            BlackJackInGameRequestType.Raise => localization.RaiseMessage
                 .Replace("{playerName}", playerName)
                 .Replace("{diff}", diff.ToString())
                 .Replace("{highestBet}", highestBet.ToString()),
-            BlackJackInGameRequestType.AllIn => localization.Allin
+            BlackJackInGameRequestType.AllIn => localization.AllinMessage
                 .Replace("{playerName}", playerName)
                 .Replace("{highestBet}", highestBet.ToString()),
-            _ => localization.Unknown
+            _ => localization.UnknownMessage
                 .Replace("{playerName}", playerName)
         };
     }
 
-    private static DiscordMessageBuilder BuildTurnMessage(
+    private static async Task<Result> BuildTurnMessage(
         KeyValuePair<ulong, BlackJackPlayerState> entry,
         int currentPlayerOrder,
         BlackJackPlayerState currentPlayer,
         BlackJackGameState gameState,
         DeckService deckService,
-        Localizations localizations)
+        Localizations localizations,
+        IDiscordRestChannelAPI channelApi)
     {
         var localization = localizations.GetLocalization();
-        var state = entry.Value;
-        var isCurrentPlayer = state.Order == currentPlayerOrder;
+        var playerState = entry.Value;
+        var isCurrentPlayer = playerState.Order == currentPlayerOrder;
 
         var possessive = isCurrentPlayer
             ? localization.GenericWords.PossessiveSecond
@@ -802,45 +811,100 @@ public partial class BlackJack : BlackJackGame
 
         var description = cardNames + (isCurrentPlayer
             ? "\n\n" + localization.BlackJack.CardPoints
-                .Replace("{cardPoints}", state.Cards.GetRealizedValues(100).ToString())
+                .Replace("{cardPoints}", playerState.Cards.GetRealizedValues(100).ToString())
             : "");
 
-        var embed = new DiscordEmbedBuilder()
-            .WithAuthor(currentPlayer.PlayerName, iconUrl: currentPlayer.AvatarUrl)
-            .WithColor((int)BurstColor.Burst)
-            .WithTitle(title)
-            .WithImageUrl(Constants.AttachmentUri);
+        var embed = new Embed(
+            Author: new EmbedAuthor(currentPlayer.PlayerName, IconUrl: currentPlayer.AvatarUrl),
+            Colour: BurstColor.Burst.ToColor(),
+            Title: title,
+            Image: new EmbedImage(Constants.AttachmentUri));
 
-        var messageBuilder = new DiscordMessageBuilder()
-            .WithFile(Constants.OutputFileName, SkiaService.RenderDeck(deckService,
-                currentPlayer.Cards.Select(c => isCurrentPlayer ? c with { IsFront = true } : c)));
+        var attachments = new[]
+        {
+            OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, SkiaService.RenderDeck(
+                deckService,
+                currentPlayer.Cards.Select(c => isCurrentPlayer ? c with { IsFront = true } : c))))
+        };
 
         switch (gameState.Progress)
         {
             case BlackJackGameProgress.Progressing:
             {
-                if (isCurrentPlayer) embed = embed.WithFooter(localization.BlackJack.ProgressingFooter);
+                if (isCurrentPlayer)
+                    embed = embed with { Footer = new EmbedFooter(localization.BlackJack.ProgressingFooter) };
+                embed = embed with { Description = description };
 
-                embed = embed.WithDescription(description);
-                break;
+                var components = new IMessageComponent[]
+                {
+                    new ActionRowComponent(new[]
+                    {
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Draw,
+                            new PartialEmoji(Name: "🎴"), "draw"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Stand,
+                            new PartialEmoji(Name: "😑"), "stand"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
+                            new PartialEmoji(Name: "❓"), "blackjack_help")
+                    })
+                }.ToImmutableArray();
+                
+                var result = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel!.ID,
+                        embeds: new[] { embed },
+                        components: isCurrentPlayer ? components : ImmutableArray<IMessageComponent>.Empty,
+                        attachments: attachments);
+
+                return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
             }
             case BlackJackGameProgress.Gambling:
             {
                 var additionalDescription =
                     description + (isCurrentPlayer ? localization.BlackJack.TurnMessageDescription : "");
-                embed = embed
-                    .AddField(localization.BlackJack.HighestBets, gameState.HighestBet.ToString(), true)
-                    .AddField(localization.BlackJack.YourBets, state.BetTips.ToString(), true)
-                    .AddField(localization.BlackJack.TipsBeforeGame, state.OwnTips.ToString())
-                    .WithDescription(additionalDescription);
-                break;
+                embed = embed with
+                {
+                    Fields = new[]
+                    {
+                        new EmbedField(localization.BlackJack.HighestBets, gameState.HighestBet.ToString(), true),
+                        new EmbedField(localization.BlackJack.YourBets, playerState.BetTips.ToString(), true),
+                        new EmbedField(localization.BlackJack.TipsBeforeGame, playerState.OwnTips.ToString())
+                    },
+                    Description = additionalDescription
+                };
+
+                var components = new IMessageComponent[]
+                {
+                    new ActionRowComponent(new[]
+                    {
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Call,
+                            new PartialEmoji(Name: "🤔"), "call"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Fold,
+                            new PartialEmoji(Name: "😫"), "fold"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Raise,
+                            new PartialEmoji(Name: "🤑"), "raise"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.AllIn,
+                            new PartialEmoji(Name: "😈"), "allin"),
+                        new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
+                            new PartialEmoji(Name: "❓"), "blackjack_help")
+                    })
+                }.ToImmutableArray();
+
+                var result = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel!.ID,
+                        embeds: new[] { embed },
+                        components: isCurrentPlayer ? components : ImmutableArray<IMessageComponent>.Empty,
+                        attachments: attachments);
+
+                return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
             }
         }
-
-        return messageBuilder.WithEmbed(embed);
+        
+        return Result.FromSuccess();
     }
 
-    private static async Task UpdateGameState(BlackJackGameState state, RawBlackJackGameState? data)
+    private static async Task UpdateGameState(
+        BlackJackGameState state,
+        RawBlackJackGameState? data,
+        IDiscordRestGuildAPI guildApi)
     {
         if (data == null)
             return;
@@ -864,13 +928,15 @@ public partial class BlackJack : BlackJackGame
                 player.AvatarUrl = playerState.AvatarUrl;
 
                 if (playerState.ChannelId == 0 || player.TextChannel != null) continue;
+                
                 foreach (var guild in state.Guilds)
                 {
-                    var channels = await guild
-                        .GetChannelsAsync();
-                    if (channels == null || !channels.Any())
-                        continue;
-                    var textChannel = channels.FirstOrDefault(c => c.Id == playerState.ChannelId);
+                    var getChannelsResult = await guildApi
+                        .GetGuildChannelsAsync(guild);
+                    if (!getChannelsResult.IsSuccess) continue;
+                    var channels = getChannelsResult.Entity;
+                    if (!channels.Any()) continue;
+                    var textChannel = channels.FirstOrDefault(c => c.ID.Value == playerState.ChannelId);
                     if (textChannel == null)
                         continue;
                     player.TextChannel = textChannel;

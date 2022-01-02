@@ -1,12 +1,14 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Text.Json.Serialization;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 
@@ -58,7 +60,7 @@ public record
             GameId = playerState!.GameId,
             PlayerId = playerState.PlayerId,
             PlayerName = playerState.PlayerName,
-            ChannelId = playerState.TextChannel!.Id,
+            ChannelId = playerState.TextChannel!.ID.Value,
             Cards = playerState.Cards.ToList(),
             PlayedCards = playerState.PlayedCards,
             Naturals = playerState.Naturals,
@@ -66,13 +68,18 @@ public record
         };
     }
 
-    public async Task<ChinesePokerPlayerState> ToState(DiscordGuild guild)
+    public async Task<ChinesePokerPlayerState> ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)
     {
-        var channel = guild.GetChannel(ChannelId);
-        var member = await guild.GetMemberAsync(PlayerId);
+        var getChannelResult = await guildApi.GetGuildChannelsAsync(guild);
+        var channel = !getChannelResult.IsSuccess ? null : getChannelResult.Entity
+            .FirstOrDefault(c => c.ID.Value.Equals(ChannelId));
+        
+        var getMemberResult = await guildApi.GetGuildMemberAsync(guild, DiscordSnowflake.New(PlayerId));
+        var member = !getMemberResult.IsSuccess ? null : getMemberResult.Entity;
+        
         return new ChinesePokerPlayerState
         {
-            AvatarUrl = member.GetAvatarUrl(ImageFormat.Auto),
+            AvatarUrl = member?.GetAvatarUrl() ?? "",
             GameId = GameId,
             PlayerId = PlayerId,
             PlayerName = PlayerName,

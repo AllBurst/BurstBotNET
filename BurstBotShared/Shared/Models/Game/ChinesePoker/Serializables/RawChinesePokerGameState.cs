@@ -3,9 +3,10 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 
@@ -68,12 +69,12 @@ public record
         };
     }
 
-    public async Task<ChinesePokerGameState> ToState(DiscordGuild guild)
+    public async Task<ChinesePokerGameState> ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)
     {
         var playersTask = Players.Values
             .Select(async p =>
             {
-                var playerState = await p.ToState(guild);
+                var playerState = await p.ToState(guildApi, guild);
                 return KeyValuePair.Create(playerState.PlayerId, playerState);
             });
         var players = await Task.WhenAll(playersTask);

@@ -5,9 +5,10 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 
@@ -88,13 +89,13 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
         };
     }
 
-    public async Task<NinetyNineGameState> ToState(DiscordGuild guild)
+    public async Task<NinetyNineGameState> ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)
     {
         var playersTask = Players
             .Values
             .Select(async p =>
             {
-                var playerState = await p.ToState(guild);
+                var playerState = await p.ToState(guildApi, guild);
                 return KeyValuePair.Create(playerState.PlayerId, playerState);
             });
         var players = await Task.WhenAll(playersTask);

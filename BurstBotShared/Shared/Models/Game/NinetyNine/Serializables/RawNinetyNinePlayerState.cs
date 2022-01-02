@@ -2,11 +2,12 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Text.Json.Serialization;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
 using Newtonsoft.Json;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 
@@ -48,7 +49,7 @@ public record RawNinetyNinePlayerState : IRawState<NinetyNinePlayerState, RawNin
         {
             AvatarUrl = playerState!.AvatarUrl,
             Cards = playerState.Cards.ToList(),
-            ChannelId = playerState.TextChannel?.Id ?? 0,
+            ChannelId = playerState.TextChannel?.ID.Value ?? 0,
             GameId = playerState.GameId,
             Order = playerState.Order,
             PlayerId = playerState.PlayerId,
@@ -56,13 +57,18 @@ public record RawNinetyNinePlayerState : IRawState<NinetyNinePlayerState, RawNin
         };
     }
 
-    public async Task<NinetyNinePlayerState> ToState(DiscordGuild guild)
+    public async Task<NinetyNinePlayerState> ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)
     {
-        var channel = guild.GetChannel(ChannelId);
-        var member = await guild.GetMemberAsync(PlayerId);
+        var getChannelResult = await guildApi.GetGuildChannelsAsync(guild);
+        var channel = !getChannelResult.IsSuccess ? null : getChannelResult.Entity
+            .FirstOrDefault(c => c.ID.Value.Equals(ChannelId));
+        
+        var getMemberResult = await guildApi.GetGuildMemberAsync(guild, DiscordSnowflake.New(PlayerId));
+        var member = !getMemberResult.IsSuccess ? null : getMemberResult.Entity;
+        
         return new NinetyNinePlayerState
         {
-            AvatarUrl = member.GetAvatarUrl(ImageFormat.Auto),
+            AvatarUrl = member?.GetAvatarUrl() ?? "",
             Cards = Cards.ToImmutableArray(),
             GameId = GameId,
             Order = Order,

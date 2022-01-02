@@ -1,63 +1,57 @@
-using System.Globalization;
-using BurstBotShared.Shared.Interfaces;
+using System.ComponentModel;
 using BurstBotShared.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using Microsoft.Extensions.Logging;
+using Remora.Commands.Attributes;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.Commands.Contexts;
+using Remora.Results;
 
 namespace BurstBotNET.Commands.ChinesePoker;
 
-using CommandGroup = Dictionary<string, Func<DiscordClient, InteractionCreateEventArgs, State, Task>>;
-
 #pragma warning disable CA2252
-public partial class ChinesePoker : ISlashCommand
+[Group("chinese_poker")]
+public partial class ChinesePoker : Remora.Commands.Groups.CommandGroup
 {
     public const string GameName = "Chinese Poker";
-    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
-    private readonly CommandGroup _dispatchables;
 
-    static ChinesePoker()
+    private readonly InteractionContext _context;
+    private readonly IDiscordRestUserAPI _userApi;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly IDiscordRestGuildAPI _guildApi;
+    private readonly IDiscordRestChannelAPI _channelApi;
+    private readonly State _state;
+    private readonly ILogger<ChinesePoker> _logger;
+    
+    public ChinesePoker(
+        InteractionContext context,
+        IDiscordRestUserAPI userApi,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestGuildAPI guildApi,
+        IDiscordRestChannelAPI channelApi,
+        State state,
+        ILogger<ChinesePoker> logger)
     {
-        AvailableRanks = Enumerable
-            .Range(2, 9)
-            .Select(n => n.ToString())
-            .Concat(new[] { "a", "j", "q", "k" })
-            .ToArray();
+        _context = context;
+        _userApi = userApi;
+        _interactionApi = interactionApi;
+        _guildApi = guildApi;
+        _channelApi = channelApi;
+        _state = state;
+        _logger = logger;
     }
 
-    public ChinesePoker()
-    {
-        Command = new DiscordApplicationCommand("chinese_poker", "Play a Chinese poker-like game with other 3 people.",
-            new[]
-            {
-                new DiscordApplicationCommandOption("join",
-                    "Request to be enqueued to the waiting list to match with other players.",
-                    ApplicationCommandOptionType.SubCommand, options: new[]
-                    {
-                        new DiscordApplicationCommandOption("base_bet",
-                            "The base bet. Each player's final reward will be units won/lost multiplied by this.",
-                            ApplicationCommandOptionType.Number, true),
-                        new DiscordApplicationCommandOption("player2", "(Optional) The 2nd player you want to invite.",
-                            ApplicationCommandOptionType.User, false),
-                        new DiscordApplicationCommandOption("player3", "(Optional) The 3rd player you want to invite.",
-                            ApplicationCommandOptionType.User, false),
-                        new DiscordApplicationCommandOption("player4", "(Optional) The 4th player you want to invite.",
-                            ApplicationCommandOptionType.User, false)
-                    })
-            });
-
-        _dispatchables = new CommandGroup
-        {
-            { "join", Join }
-        };
-    }
-
-    public DiscordApplicationCommand Command { get; init; }
-
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
-    {
-        await _dispatchables[e.Interaction.Data.Options.ElementAt(0).Name].Invoke(client, e, state);
-    }
+    [Command("join")]
+    [Description("Request to be enqueued to the waiting list to match with other players.")]
+    public async Task<IResult> Handle(
+        [Description("The requested base bet. Each player's final reward will be units won/lost multiplied by this.")]
+        float baseBet = 1.0f,
+        [Description("(Optional) The 2nd player you want to invite.")] 
+        IUser? player2 = null,
+        [Description("(Optional) The 3rd player you want to invite.")]
+        IUser? player3 = null,
+        [Description("(Optional) The 4th player you want to invite.")]
+        IUser? player4 = null) => await Join(baseBet, player2, player3, player4);
 
     public override string ToString()
     {

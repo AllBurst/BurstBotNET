@@ -1,13 +1,11 @@
-using BurstBotShared.Api;
+using System.Collections.Immutable;
 using BurstBotShared.Shared;
-using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Data.Serializables;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Results;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.ChinesePoker;
@@ -15,145 +13,173 @@ namespace BurstBotNET.Commands.ChinesePoker;
 #pragma warning disable CA2252
 public partial class ChinesePoker
 {
-    private async Task Join(DiscordClient client, InteractionCreateEventArgs e, State state)
+    private async Task<IResult> Join(
+        float baseBet,
+        IUser? player2 = null,
+        IUser? player3 = null,
+        IUser? player4 = null)
     {
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
-        var mentionedPlayers = new List<ulong> { e.Interaction.User.Id };
-        var options = e.Interaction.Data.Options.ElementAt(0).Options.ToArray();
-        var baseBet = (float)(double)options[0].Value;
-
-        if (options.Length > 1)
-        {
-            var remainingOptions = options[1..]
-                .Select(opt => (ulong)opt.Value);
-            mentionedPlayers.AddRange(remainingOptions);
-        }
-        
-        var invoker = e.Interaction.User;
-
-        var getTipTasks = mentionedPlayers
-            .Select(async p =>
+        var mentionedPlayers = new List<ulong> { _context.User.ID.Value };
+        var additionalPlayers = new List<IUser?>
             {
-                var response = await state.BurstApi.SendRawRequest<object>($"/tip/{p}", ApiRequestType.Get, null);
-                if (!response.ResponseMessage.IsSuccessStatusCode)
-                    return null;
+                player2, player3, player4
+            }
+            .Where(u => u != null)
+            .Select(u => u!.ID.Value)
+            .ToImmutableArray();
+        mentionedPlayers.AddRange(additionalPlayers);
 
-                var playerTip = await response.GetJsonAsync<RawTip>();
-                
-                return playerTip.Amount < baseBet ? null : playerTip;
-            });
+        var (validationResult, _) = await Game.ValidatePlayers(_context.User.ID.Value, mentionedPlayers,
+            _state.BurstApi,
+            _context, baseBet, _interactionApi);
 
-        var playerTips = await Task.WhenAll(getTipTasks);
-        var hasInvalidPlayer = playerTips.Any(tip => tip == null);
+        if (!validationResult) return Result.FromSuccess();
 
-        if (hasInvalidPlayer)
-        {
-            await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                .WithContent(ErrorMessages.InvalidPlayer));
-            return;
-        }
+        var joinResult = await Game.GenericJoinGame(
+            mentionedPlayers, GameType.ChinesePoker, "/chinese_poker/join", _state.BurstApi,
+            _context, _interactionApi);
+        
+        if (joinResult == null) return Result.FromSuccess();
 
-        var joinRequest = new GenericJoinRequest
-        {
-            ClientType = ClientType.Discord,
-            GameType = GameType.ChinesePoker,
-            PlayerIds = mentionedPlayers
-        };
-        var joinResponse = await state.BurstApi.SendRawRequest("/chinese_poker/join", ApiRequestType.Post, joinRequest);
-        var playerCount = mentionedPlayers.Count;
-        var unit = playerCount > 1 ? "players" : "player";
+        var (joinStatus, reply) = joinResult.Value;
+        
+        var invokingMember = await Utilities.GetUserMember(_context, _interactionApi,
+            ErrorMessages.JoinNotInGuild, _logger);
+        var botUser = await Utilities.GetBotUser(_userApi, _logger);
 
-        var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinResponse, unit, GameType.ChinesePoker);
-        if (joinStatus == null)
-        {
-            await e.Interaction.EditOriginalResponseAsync(reply);
-            return;
-        }
-
-        var invokingMember = await e.Interaction.Guild.GetMemberAsync(invoker.Id);
-        var botUser = client.CurrentUser;
+        if (invokingMember == null || botUser == null) return Result.FromSuccess();
 
         switch (joinStatus.StatusType)
         {
             case GenericJoinStatusType.Start:
             {
-                reply = reply.AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName,
-                    "", null));
-                var message = await e.Interaction.EditOriginalResponseAsync(reply);
-                var reactionResult = await BurstApi.HandleStartGameReactions(GameName, e, message,
-                    invokingMember, botUser, joinStatus, mentionedPlayers, "/chinese_poker/join/confirm", state,
-                    client.Logger, 4);
+                var result = await Game.GenericStartGame(
+                    _context, reply, invokingMember, botUser,
+                    joinStatus, GameName, "/chinese_poker/join/confirm", mentionedPlayers,
+                    _state, 4, _interactionApi, _channelApi,
+                    _guildApi, _logger);
 
-                if (!reactionResult.HasValue)
+                if (!result.HasValue)
                 {
-                    await e.Interaction.EditOriginalResponseAsync(new DiscordWebhookBuilder()
-                        .WithContent(ErrorMessages.HandleReactionFailed));
-                    return;
+                    var failureResult = await _interactionApi
+                        .EditOriginalInteractionResponseAsync(
+                            _context.ApplicationID,
+                            _context.Token,
+                            ErrorMessages.HandleReactionFailed);
+                    return !failureResult.IsSuccess ? Result.FromError(failureResult) : Result.FromSuccess();
                 }
-
-                var (members, matchData) = reactionResult.Value;
-                var guild = e.Interaction.Guild;
+                
+                var (members, matchData) = result.Value;
+                var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                if (!guild.HasValue) return Result.FromSuccess();
+                
                 foreach (var member in members)
                 {
-                    var textChannel = await state.BurstApi.CreatePlayerChannel(guild, member);
-                    await AddChinesePokerPlayerState(matchData.GameId ?? "", guild, new ChinesePokerPlayerState
+                    var textChannel =
+                        await _state.BurstApi.CreatePlayerChannel(guild.Value, botUser, invokingMember, _guildApi, _logger);
+
+                    await AddPlayerState(matchData.GameId ?? "", guild.Value, new ChinesePokerPlayerState
                     {
-                        AvatarUrl = member.GetAvatarUrl(ImageFormat.Auto),
+                        AvatarUrl = member.GetAvatarUrl(),
                         GameId = matchData.GameId ?? "",
-                        PlayerId = member.Id,
-                        PlayerName = member.DisplayName,
+                        PlayerId = member.User.Value.ID.Value,
+                        PlayerName = member.GetDisplayName(),
                         TextChannel = textChannel,
                         Member = member
-                    }, state.GameStates, baseBet);
-                    _ = Task.Run(() => StartListening(matchData.GameId ?? "", state, client.Logger));
+                    }, _state.GameStates, baseBet);
+                    _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+                        _channelApi,
+                        _guildApi,
+                        _logger));
                 }
                 
                 break;
             }
             case GenericJoinStatusType.Matched:
             {
-                await e.Interaction.EditOriginalResponseAsync(reply);
-                await e.Interaction.CreateFollowupMessageAsync(new DiscordFollowupMessageBuilder()
-                    .AddEmbed(Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "",
-                        null)));
-                var guild = e.Interaction.Guild;
-                var textChannel = await state.BurstApi.CreatePlayerChannel(guild, invokingMember);
-                await AddChinesePokerPlayerState(joinStatus.GameId ?? "", guild, new ChinesePokerPlayerState
+                var matchedMessageResult = await _interactionApi
+                    .EditOriginalInteractionResponseAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        reply);
+                if (!matchedMessageResult.IsSuccess) return Result.FromError(matchedMessageResult);
+
+                var followUpResult = await _interactionApi
+                    .CreateFollowupMessageAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        embeds: new[]
+                        {
+                            Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, GameName, "",
+                                null)
+                        });
+
+                if (!followUpResult.IsSuccess) return Result.FromError(followUpResult);
+                
+                var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                if (!guild.HasValue) return Result.FromSuccess();
+
+                var textChannel = await _state.BurstApi.CreatePlayerChannel(
+                    guild.Value,
+                    botUser,
+                    invokingMember,
+                    _guildApi,
+                    _logger);
+                
+                await AddPlayerState(joinStatus.GameId ?? "", guild.Value, new ChinesePokerPlayerState
                 {
-                    AvatarUrl = invokingMember.GetAvatarUrl(ImageFormat.Auto),
+                    AvatarUrl = invokingMember.GetAvatarUrl(),
                     GameId = joinStatus.GameId ?? "",
-                    PlayerId = invokingMember.Id,
-                    PlayerName = invokingMember.DisplayName,
+                    PlayerId = invokingMember.User.Value.ID.Value,
+                    PlayerName = invokingMember.GetDisplayName(),
                     TextChannel = textChannel,
                     Member = invokingMember
-                }, state.GameStates, baseBet);
-                _ = Task.Run(() => StartListening(joinStatus.GameId ?? "", state, client.Logger));
+                }, _state.GameStates, baseBet);
+                _ = Task.Run(() => StartListening(joinStatus.GameId ?? "", _state,
+                    _channelApi,
+                    _guildApi,
+                    _logger));
                 break;
             }
             case GenericJoinStatusType.Waiting:
             {
-                await e.Interaction.EditOriginalResponseAsync(reply);
+                var waitingMessageResult = await _interactionApi
+                    .EditOriginalInteractionResponseAsync(
+                        _context.ApplicationID,
+                        _context.Token,
+                        reply);
+                if (!waitingMessageResult.IsSuccess) return Result.FromError(waitingMessageResult);
+                
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        var waitingResult = await state.BurstApi.WaitForChinesePokerGame(joinStatus, e, invokingMember,
-                            botUser, "", client.Logger);
+                        var waitingResult = await _state.BurstApi.WaitForChinesePokerGame(
+                            joinStatus, _context, invokingMember,
+                            botUser, "", _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue)
                             throw new Exception($"Failed to get waiting result for {GameName}.");
 
+                        var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                        if (!guild.HasValue) return;
+
                         var (matchData, playerState) = waitingResult.Value;
-                        await AddChinesePokerPlayerState(matchData.GameId ?? "", e.Interaction.Guild, playerState,
-                            state.GameStates, baseBet);
-                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", state, client.Logger));
+                        await AddPlayerState(matchData.GameId ?? "", guild.Value, playerState,
+                            _state.GameStates, baseBet);
+                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+                            _channelApi,
+                            _guildApi,
+                            _logger));
                     }
                     catch (Exception ex)
                     {
-                        client.Logger.LogError("WebSocket failed: {Exception}", ex);
+                        _logger.LogError("WebSocket failed: {Exception}", ex);
                     }
                 });
                 break;
             }
         }
+        
+        return Result.FromSuccess();
     }
 }

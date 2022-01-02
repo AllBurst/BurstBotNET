@@ -9,4 +9,6 @@ public static class ErrorMessages
         "Failed to handle reaction from invited players";
 
     public const string PlayerStateNoGameProgress = "Player state doesn't have game progress.";
+
+    public const string JoinNotInGuild = "Sorry, but you can only join games in a guild!";
 }

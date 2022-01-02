@@ -22,21 +22,21 @@ public record BlackJackLocalization : ILocalization<BlackJackLocalization>
     [JsonPropertyName("initialMessageFooter")]
     public string InitialMessageFooter { get; init; } = "";
 
-    [JsonPropertyName("draw")] public string Draw { get; init; } = "";
+    [JsonPropertyName("drawMessage")] public string DrawMessage { get; init; } = "";
     [JsonPropertyName("cardPoints")] public string CardPoints { get; init; } = "";
-    [JsonPropertyName("stand")] public string Stand { get; init; } = "";
-    [JsonPropertyName("raise")] public string Raise { get; init; } = "";
-    [JsonPropertyName("unknown")] public string Unknown { get; init; } = "";
+    [JsonPropertyName("standMessage")] public string StandMessage { get; init; } = "";
+    [JsonPropertyName("raiseMessage")] public string RaiseMessage { get; init; } = "";
+    [JsonPropertyName("unknownMessage")] public string UnknownMessage { get; init; } = "";
 
-    [JsonPropertyName("raiseExcessNumber")]
-    public string RaiseExcessNumber { get; init; } = "";
+    [JsonPropertyName("raiseExcessiveNumber")]
+    public string RaiseExcessiveNumber { get; init; } = "";
 
     [JsonPropertyName("raiseInvalidNumber")]
     public string RaiseInvalidNumber { get; init; } = "";
 
-    [JsonPropertyName("call")] public string Call { get; init; } = "";
-    [JsonPropertyName("fold")] public string Fold { get; init; } = "";
-    [JsonPropertyName("allin")] public string Allin { get; init; } = "";
+    [JsonPropertyName("callMessage")] public string CallMessage { get; init; } = "";
+    [JsonPropertyName("foldMessage")] public string FoldMessage { get; init; } = "";
+    [JsonPropertyName("allinMessage")] public string AllinMessage { get; init; } = "";
     [JsonPropertyName("timeout")] public string Timeout { get; init; } = "";
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
 
@@ -58,6 +58,17 @@ public record BlackJackLocalization : ILocalization<BlackJackLocalization>
 
     [JsonPropertyName("totalPointsMessage")]
     public string TotalPointsMessage { get; init; } = "";
+
+    [JsonPropertyName("draw")] public string Draw { get; init; } = "";
+    [JsonPropertyName("stand")] public string Stand { get; init; } = "";
+    [JsonPropertyName("call")] public string Call { get; init; } = "";
+    [JsonPropertyName("fold")] public string Fold { get; init; } = "";
+    [JsonPropertyName("raise")] public string Raise { get; init; } = "";
+    [JsonPropertyName("allin")] public string AllIn { get; init; } = "";
+    [JsonPropertyName("raisePrompt")] public string RaisePrompt { get; init; } = "";
+    [JsonPropertyName("rules")] public string Rules { get; init; } = "";
+    [JsonPropertyName("gameFlow")] public string GameFlow { get; init; } = "";
+    [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
 
     [JsonIgnore] public Dictionary<string, string> AvailableCommands => CommandList;
 }
