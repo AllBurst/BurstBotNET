@@ -156,7 +156,10 @@ public static class SkiaService
         var winnerAvatar = await winner.AvatarUrl.GetStreamAsync();
         var avatarBitmap = SKBitmap.Decode(winnerAvatar);
         var handBitmaps = hands
-            .SelectMany(hand => winnerPlayedCards[hand].Cards.Select(deck.GetBitmap))
+            .SelectMany(hand => winnerPlayedCards[hand].Cards
+                .ToImmutableArray()
+                .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()))
+                .Select(deck.GetBitmap))
             .ToImmutableList();
 
         var totalCardWidth = handBitmaps.Sum(b => b.Width);

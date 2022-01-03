@@ -16,6 +16,7 @@ using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneOf;
+using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -23,6 +24,7 @@ using Remora.Discord.Extensions.Embeds;
 using Remora.Rest.Core;
 using Remora.Rest.Results;
 using Channel = System.Threading.Channels.Channel;
+using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
@@ -190,7 +192,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     foreach (var (playerName, combination) in hs)
                     {
                         var desc =
-                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards)}";
+                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
                         descriptionBuilder.Append(desc + '\n');
                     }
 
@@ -458,7 +460,7 @@ public partial class ChinesePoker : ChinesePokerGame
             {
                 var fieldName = pState.PlayerName;
                 var fieldValue =
-                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards)}";
+                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
                 embed.AddField(fieldName, fieldValue, true);
             }
 
@@ -543,7 +545,9 @@ public partial class ChinesePoker : ChinesePokerGame
             .Replace("{cardNames}", cardNames)
             .Replace("{baseBet}", gameState.BaseBet.ToString(CultureInfo.InvariantCulture));
 
-        var deck = SkiaService.RenderChinesePokerDeck(deckService, playerState.Cards);
+        var deck = SkiaService.RenderChinesePokerDeck(deckService,
+            playerState.Cards
+                .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())));
 
         var embed = new Embed(
             Author: new EmbedAuthor(playerState.PlayerName, IconUrl: playerState.AvatarUrl),
@@ -644,7 +648,8 @@ public partial class ChinesePoker : ChinesePokerGame
                 break;
             case ChinesePokerGameProgress.MiddleHand:
             case ChinesePokerGameProgress.BackHand:
-                deck = SkiaService.RenderChinesePokerDeck(deckService, playerState.Cards);
+                deck = SkiaService.RenderChinesePokerDeck(deckService,
+                    playerState.Cards.Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())));
                 break;
         }
 
@@ -666,6 +671,7 @@ public partial class ChinesePoker : ChinesePokerGame
             });
 
         var activeCards = playerState.Cards
+            .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()))
             .Where(c => c.IsFront)
             .Select(c => new SelectOption(c.ToStringSimple(),
                 c.ToSpecifier(),

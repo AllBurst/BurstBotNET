@@ -3,6 +3,7 @@ using System.Drawing;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
+using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Rest.Core;
 
@@ -22,7 +23,7 @@ public static class BurstExtensions
             : throw new ArgumentOutOfRangeException(nameof(size));
         if (num < 4.0 || num > 11.0 || num % 1.0 != 0.0)
             throw new ArgumentOutOfRangeException(nameof(size));
-        
+
         var avatarHash = user.Avatar?.Value ?? "";
         var str1 = !string.IsNullOrWhiteSpace(avatarHash) ? avatarHash.StartsWith("a_") ? "gif" : "png" : "png";
         return !string.IsNullOrWhiteSpace(avatarHash)
@@ -46,10 +47,10 @@ public static class BurstExtensions
         var _ = member.Nickname.IsDefined(out var nickname);
         return nickname ?? member.User.Value.Username;
     }
-    
-    public static int GetValue(this IEnumerable<Card> cards)
+
+    private static int GetBlackJackValue(this IEnumerable<Card> cards)
     {
-        return cards.Sum(card => card.GetValue().Max());
+        return cards.Sum(card => card.GetBlackJackValue().Max());
     }
 
     public static int GetRealizedValues(this IEnumerable<Card> cards, int? rem = null)
@@ -58,7 +59,7 @@ public static class BurstExtensions
         var hasAce = cardList.Any(card => card.Number == 1);
         if (hasAce)
         {
-            var nonAceValues = cardList.Where(card => card.Number != 1).GetValue();
+            var nonAceValues = cardList.Where(card => card.Number != 1).GetBlackJackValue();
             if (rem.HasValue)
             {
                 nonAceValues %= rem.Value;
@@ -66,7 +67,7 @@ public static class BurstExtensions
 
             cardList
                 .Where(card => card.Number == 1)
-                .Select(card => card.GetValue())
+                .Select(card => card.GetBlackJackValue())
                 .Select(values => values.Select(v =>
                 {
                     if (rem.HasValue)
@@ -86,7 +87,7 @@ public static class BurstExtensions
             return nonAceValues;
         }
 
-        var value = cardList.GetValue();
+        var value = cardList.GetBlackJackValue();
         return rem.HasValue ? value % rem.Value : value;
     }
 

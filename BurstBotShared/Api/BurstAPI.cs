@@ -20,6 +20,7 @@ using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
 using Remora.Rest.Core;
 using ChannelType = Remora.Discord.API.Abstractions.Objects.ChannelType;
+using Constants = BurstBotShared.Shared.Constants;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotShared.Api;
@@ -97,9 +98,31 @@ public sealed class BurstApi
         }
     }
 
+    public static async Task<IEnumerable<IGuildMember>> GetMembers(
+        Snowflake guild,
+        IEnumerable<Snowflake> mentionedPlayers,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger)
+    {
+        var getMembersTasks = mentionedPlayers
+            .Select(async pId =>
+            {
+                var getMemberResult = await guildApi.GetGuildMemberAsync(guild, pId);
+                if (getMemberResult.IsSuccess) return getMemberResult.Entity;
+                
+                logger.LogError("Failed to get guild member {MemberId}: {Reason}, inner: {Inner}",
+                    pId, getMemberResult.Error.Message, getMemberResult.Inner);
+                return null;
+            });
+
+        return (await Task.WhenAll(getMembersTasks))
+            .Where(m => m != null)
+            .Select(m => m!);
+    }
+
     private async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
         InteractionContext context,
-        IGuildMember invokingMember,
+        IEnumerable<IGuildMember> mentionedPlayers,
         IUser botUser,
         string gameName,
         string description,
@@ -177,22 +200,26 @@ public sealed class BurstApi
                 cancellationTokenSource.Token);
             cancellationTokenSource.Dispose();
 
-            var followUpResult = await interactionApi
-                .CreateFollowupMessageAsync(
-                    context.ApplicationID,
-                    context.Token,
-                    embeds: new[]
-                    {
-                        Utilities.BuildGameEmbed(invokingMember, botUser, matchData, gameName, description,
-                            null)
-                    });
-
-            if (!followUpResult.IsSuccess)
+            var participatingPlayers = mentionedPlayers.ToImmutableArray();
+            foreach (var player in participatingPlayers)
             {
-                logger.LogError("Failed to create follow-up message: {Reason}, inner: {Inner}",
-                    followUpResult.Error.Message, followUpResult.Inner);
-            } 
+                var followUpResult = await interactionApi
+                    .CreateFollowupMessageAsync(
+                        context.ApplicationID,
+                        context.Token,
+                        embeds: new[]
+                        {
+                            Utilities.BuildGameEmbed(player, botUser, matchData, gameName, description,
+                                null)
+                        });
 
+                if (!followUpResult.IsSuccess)
+                {
+                    logger.LogError("Failed to create follow-up message: {Reason}, inner: {Inner}",
+                        followUpResult.Error.Message, followUpResult.Inner);
+                } 
+            }
+            
             return matchData;
         }
 
@@ -383,74 +410,92 @@ public sealed class BurstApi
         return (members, matchData);
     }
 
-    public async Task<(GenericJoinStatus, BlackJackPlayerState)?> WaitForBlackJackGame(
+    public async Task<(GenericJoinStatus, ImmutableArray<BlackJackPlayerState>)?> WaitForBlackJackGame(
         GenericJoinStatus waitingData,
         InteractionContext context,
-        IGuildMember invokingMember,
+        IEnumerable<Snowflake> mentionedPlayers,
         IUser botUser,
         string description,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
+        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
+        if (!guild.HasValue)
+            return null;
+
+        var participatingPlayers =
+            (await GetMembers(guild.Value, mentionedPlayers, guildApi, logger)).ToImmutableArray();
+        
         var matchData =
-            await GenericWaitForGame(waitingData, context, invokingMember, botUser, "Black Jack", description,
+            await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, "Black Jack", description,
                 interactionApi, logger);
 
         if (matchData == null)
             return null;
 
-        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
-        if (!guild.HasValue)
-            return null;
-
-        var textChannel = await CreatePlayerChannel(guild.Value, botUser, invokingMember, guildApi, logger);
-        var invokerTip =
-            await SendRawRequest<object>($"/tip/{invokingMember.User.Value.ID.Value}", ApiRequestType.Get, null)
-                .ReceiveJson<RawTip>();
-        return (matchData, new BlackJackPlayerState
+        var playerStates = new List<BlackJackPlayerState>(participatingPlayers.Length);
+        foreach (var member in participatingPlayers)
         {
-            GameId = matchData.GameId ?? "",
-            PlayerId = invokingMember.User.Value.ID.Value,
-            PlayerName = invokingMember.GetDisplayName(),
-            TextChannel = textChannel,
-            OwnTips = invokerTip?.Amount ?? 0,
-            BetTips = Constants.StartingBet,
-            Order = 0,
-            AvatarUrl = invokingMember.GetAvatarUrl()
-        });
+            var textChannel = await CreatePlayerChannel(guild.Value, botUser, member, guildApi, logger);
+            var invokerTip =
+                await SendRawRequest<object>($"/tip/{member.User.Value.ID.Value}", ApiRequestType.Get, null)
+                    .ReceiveJson<RawTip>();
+            playerStates.Add(new BlackJackPlayerState
+            {
+                GameId = matchData.GameId ?? "",
+                PlayerId = member.User.Value.ID.Value,
+                PlayerName = member.GetDisplayName(),
+                TextChannel = textChannel,
+                OwnTips = invokerTip?.Amount ?? 0,
+                BetTips = Constants.StartingBet,
+                Order = 0,
+                AvatarUrl = member.GetAvatarUrl()
+            });
+        }
+
+        return (matchData, playerStates.ToImmutableArray());
     }
 
-    public async Task<(GenericJoinStatus, ChinesePokerPlayerState)?> WaitForChinesePokerGame(
+    public async Task<(GenericJoinStatus, ImmutableArray<ChinesePokerPlayerState>)?> WaitForChinesePokerGame(
         GenericJoinStatus waitingData,
         InteractionContext context,
-        IGuildMember invokingMember,
+        IEnumerable<Snowflake> mentionedPlayers,
         IUser botUser,
         string description,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
-        var matchData = await GenericWaitForGame(waitingData, context, invokingMember, botUser, "Chinese Poker",
+        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
+        if (!guild.HasValue)
+            return null;
+
+        var participatingPlayers =
+            (await GetMembers(guild.Value, mentionedPlayers, guildApi, logger)).ToImmutableArray();
+        
+        var matchData = await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, "Chinese Poker",
             description,
             interactionApi, logger);
         if (matchData == null)
             return null;
 
-        var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
-        if (!guild.HasValue)
-            return null;
-        
-        var textChannel = await CreatePlayerChannel(guild.Value, botUser, invokingMember, guildApi, logger);
-        return (matchData, new ChinesePokerPlayerState
+        var playerStates = new List<ChinesePokerPlayerState>(participatingPlayers.Length);
+        foreach (var member in participatingPlayers)
         {
-            AvatarUrl = invokingMember.GetAvatarUrl(),
-            GameId = matchData.GameId ?? "",
-            PlayerId = invokingMember.User.Value.ID.Value,
-            PlayerName = invokingMember.GetDisplayName(),
-            TextChannel = textChannel,
-            Member = invokingMember
-        });
+            var textChannel = await CreatePlayerChannel(guild.Value, botUser, member, guildApi, logger);
+            playerStates.Add(new ChinesePokerPlayerState
+            {
+                AvatarUrl = member.GetAvatarUrl(),
+                GameId = matchData.GameId ?? "",
+                PlayerId = member.User.Value.ID.Value,
+                PlayerName = member.GetDisplayName(),
+                TextChannel = textChannel,
+                Member = member
+            });
+        }
+        
+        return (matchData, playerStates.ToImmutableArray());
     }
 
     private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger,
@@ -459,7 +504,6 @@ public sealed class BurstApi
         var buffer = new byte[BufferSize];
         var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
         var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-        logger.LogError("Received match data from WS server: {Payload}", payloadText);
         var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
         return matchData;
     }

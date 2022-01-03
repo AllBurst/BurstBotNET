@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
-using Remora.Results;
 
 namespace BurstBotNET.Commands;
 
@@ -42,7 +41,7 @@ public static class Game
     }
 
     public static async Task<(GenericJoinStatus, string)?> GenericJoinGame(
-        List<ulong> playerIds,
+        ImmutableArray<ulong> playerIds,
         GameType gameType,
         string requestEndpoint,
         BurstApi burstApi,
@@ -54,10 +53,10 @@ public static class Game
         {
             ClientType = ClientType.Discord,
             GameType = gameType,
-            PlayerIds = playerIds
+            PlayerIds = playerIds.ToList()
         };
         var joinResponse = await burstApi.SendRawRequest(requestEndpoint, ApiRequestType.Post, joinRequest);
-        var playerCount = playerIds.Count;
+        var playerCount = playerIds.Length;
         var unit = playerCount > 1 ? "players" : "player";
 
         var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinResponse, unit, gameType);

@@ -9,6 +9,7 @@ using BurstBotShared.Shared.Models.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Gateway.Commands;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Gateway.Commands;
@@ -19,7 +20,6 @@ using Remora.Discord.Gateway;
 using Remora.Discord.Gateway.Extensions;
 using Remora.Discord.Hosting.Extensions;
 using Remora.Discord.Interactivity.Extensions;
-using Remora.Rest.Core;
 using ActivityType = Remora.Discord.API.Abstractions.Objects.ActivityType;
 
 #pragma warning disable CA2252

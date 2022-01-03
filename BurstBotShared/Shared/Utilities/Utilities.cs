@@ -92,21 +92,18 @@ public static class Utilities
         ILogger logger)
     {
         var guildResult = context.GuildID.IsDefined(out var guild);
-        if (!guildResult)
-        {
-            var errorMessageResult = await interactionApi
-                .EditOriginalInteractionResponseAsync(
-                    context.ApplicationID,
-                    context.Token,
-                    ErrorMessages.JoinNotInGuild);
-            if (!errorMessageResult.IsSuccess)
-                logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
-                    errorMessageResult.Error.Message, errorMessageResult.Inner);
+        if (guildResult) return guild;
+        
+        var errorMessageResult = await interactionApi
+            .EditOriginalInteractionResponseAsync(
+                context.ApplicationID,
+                context.Token,
+                ErrorMessages.JoinNotInGuild);
+        if (!errorMessageResult.IsSuccess)
+            logger.LogError("Failed to edit original response: {Reason}, inner: {Inner}",
+                errorMessageResult.Error.Message, errorMessageResult.Inner);
 
-            return null;
-        }
-
-        return guild;
+        return null;
     }
 
     public static TGameState GetGameState<TGameState, TPlayerState, TProgress>(

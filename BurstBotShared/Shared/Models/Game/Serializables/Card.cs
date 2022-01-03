@@ -23,7 +23,7 @@ public record Card : IValueRealizable<ImmutableArray<int>>
     [JsonProperty("is_front")]
     public bool IsFront { get; init; }
 
-    public ImmutableArray<int> GetValue()
+    public ImmutableArray<int> GetBlackJackValue()
     {
         var cardValue = (int)Suit + (Number >= 10 ? 10 : Number);
         var values = new List<int> { cardValue };
@@ -34,6 +34,9 @@ public record Card : IValueRealizable<ImmutableArray<int>>
 
         return values.ToImmutableArray();
     }
+
+    public int GetChinesePokerValue()
+        => Number == 1 ? 14 : Number;
 
     public string ToStringSimple()
     {

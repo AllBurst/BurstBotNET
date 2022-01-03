@@ -5,6 +5,7 @@ using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 using Remora.Results;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
@@ -19,24 +20,26 @@ public partial class ChinesePoker
         IUser? player3 = null,
         IUser? player4 = null)
     {
-        var mentionedPlayers = new List<ulong> { _context.User.ID.Value };
+        var mentionedPlayers = new List<Snowflake> { _context.User.ID };
         var additionalPlayers = new List<IUser?>
             {
                 player2, player3, player4
             }
             .Where(u => u != null)
-            .Select(u => u!.ID.Value)
+            .Select(u => u!.ID)
             .ToImmutableArray();
         mentionedPlayers.AddRange(additionalPlayers);
 
-        var (validationResult, _) = await Game.ValidatePlayers(_context.User.ID.Value, mentionedPlayers,
+        var playerIds = mentionedPlayers.Select(s => s.Value).ToImmutableArray();
+
+        var (validationResult, _) = await Game.ValidatePlayers(_context.User.ID.Value, playerIds,
             _state.BurstApi,
             _context, baseBet, _interactionApi);
 
         if (!validationResult) return Result.FromSuccess();
 
         var joinResult = await Game.GenericJoinGame(
-            mentionedPlayers, GameType.ChinesePoker, "/chinese_poker/join", _state.BurstApi,
+            playerIds, GameType.ChinesePoker, "/chinese_poker/join", _state.BurstApi,
             _context, _interactionApi);
         
         if (joinResult == null) return Result.FromSuccess();
@@ -55,7 +58,7 @@ public partial class ChinesePoker
             {
                 var result = await Game.GenericStartGame(
                     _context, reply, invokingMember, botUser,
-                    joinStatus, GameName, "/chinese_poker/join/confirm", mentionedPlayers,
+                    joinStatus, GameName, "/chinese_poker/join/confirm", playerIds,
                     _state, 4, _interactionApi, _channelApi,
                     _guildApi, _logger);
 
@@ -155,7 +158,7 @@ public partial class ChinesePoker
                     try
                     {
                         var waitingResult = await _state.BurstApi.WaitForChinesePokerGame(
-                            joinStatus, _context, invokingMember,
+                            joinStatus, _context, mentionedPlayers,
                             botUser, "", _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue)
                             throw new Exception($"Failed to get waiting result for {GameName}.");
@@ -163,13 +166,16 @@ public partial class ChinesePoker
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
                         if (!guild.HasValue) return;
 
-                        var (matchData, playerState) = waitingResult.Value;
-                        await AddPlayerState(matchData.GameId ?? "", guild.Value, playerState,
-                            _state.GameStates, baseBet);
-                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
-                            _channelApi,
-                            _guildApi,
-                            _logger));
+                        var (matchData, playerStates) = waitingResult.Value;
+                        foreach (var player in playerStates)
+                        {
+                            await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
+                                _state.GameStates, baseBet);
+                            _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+                                _channelApi,
+                                _guildApi,
+                                _logger));
+                        }
                     }
                     catch (Exception ex)
                     {

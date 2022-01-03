@@ -6,7 +6,7 @@ using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Rest.Core;
 
