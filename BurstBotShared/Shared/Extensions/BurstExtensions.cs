@@ -48,11 +48,6 @@ public static class BurstExtensions
         return nickname ?? member.User.Value.Username;
     }
 
-    private static int GetBlackJackValue(this IEnumerable<Card> cards)
-    {
-        return cards.Sum(card => card.GetBlackJackValue().Max());
-    }
-
     public static int GetRealizedValues(this IEnumerable<Card> cards, int? rem = null)
     {
         var cardList = cards.ToList();
@@ -160,4 +155,21 @@ public static class BurstExtensions
             ChinesePokerInGameResponseRewardType.Natural => localization.Natural,
             _ => throw new ArgumentOutOfRangeException(nameof(rewardType), rewardType, "Invalid reward type.")
         };
+
+    public static IEnumerable<T> Intersperse<T>(this IEnumerable<T> array, T padding)
+    {
+        var newList = new List<T> { padding };
+        foreach (var item in array)
+        {
+            newList.Add(item);
+            newList.Add(padding);
+        }
+
+        return newList;
+    }
+
+    private static int GetBlackJackValue(this IEnumerable<Card> cards)
+    {
+        return cards.Sum(card => card.GetBlackJackValue().Max());
+    }
 }

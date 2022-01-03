@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -11,14 +12,20 @@ public static class SkiaService
 {
     private const int MaxWidth = 2048;
     private const int Quality = 95;
+    private const int Padding = 50;
     
     public static Stream RenderDeck(DeckService deck, IEnumerable<Card> cards)
     {
         var bitmaps = cards
             .Select(deck.GetBitmap)
             .ToImmutableArray();
-        var totalWidth = bitmaps.Sum(bitmap => bitmap.Width);
-        var height = bitmaps.Max(bitmap => bitmap.Height);
+        
+        var totalWidth = bitmaps
+            .Select(bitmap => bitmap.Width)
+            .Intersperse(Padding)
+            .Sum();
+
+        var height = bitmaps.Max(bitmap => bitmap.Height) + 2 * Padding;
         var scaleRatio = (float) totalWidth / MaxWidth;
         var ratio = 1.0f / scaleRatio;
         var actualWidth = (int)MathF.Floor(totalWidth * ratio);
@@ -26,7 +33,8 @@ public static class SkiaService
         var surface = SKSurface.Create(new SKImageInfo(actualWidth, actualHeight));
         var canvas = surface.Canvas;
 
-        var currentX = 0.0f;
+        var incrementalPadding = Padding * ratio;
+        var currentX = incrementalPadding;
         var singleCardWidth = (int)MathF.Floor(bitmaps[0].Width * ratio);
         var singleCardHeight = (int)MathF.Floor(bitmaps[0].Height * ratio);
         var imageInfo = new SKImageInfo(singleCardWidth, singleCardHeight);
@@ -34,8 +42,8 @@ public static class SkiaService
         {
             var scaledBitmap = new SKBitmap(imageInfo);
             bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
-            canvas.DrawBitmap(scaledBitmap, currentX, 0.0f);
-            currentX += singleCardWidth;
+            canvas.DrawBitmap(scaledBitmap, currentX, incrementalPadding);
+            currentX += singleCardWidth + incrementalPadding;
         }
         
         var stream = new MemoryStream();
@@ -57,8 +65,9 @@ public static class SkiaService
         var bitmaps = cards
             .Select(deck.GetBitmap)
             .ToImmutableList();
-        var width = bitmaps[0].Width * 5;
-        var height = bitmaps[0].Height * 3;
+
+        var width = bitmaps[0].Width * 5 + 6 * Padding;
+        var height = bitmaps[0].Height * 3 + 4 * Padding;
         var scaleRatio = (float) width / MaxWidth;
         var ratio = 1.0f / scaleRatio;
         var actualWidth = (int)MathF.Floor(width * ratio);
@@ -66,8 +75,9 @@ public static class SkiaService
         var surface = SKSurface.Create(new SKImageInfo(actualWidth, actualHeight));
         var canvas = surface.Canvas;
 
-        var currentX = 0.0f;
-        var currentY = 0.0f;
+        var incrementPadding = Padding * ratio;
+        var currentX = incrementPadding;
+        var currentY = incrementPadding;
         var singleCardWidth = (int)MathF.Floor(bitmaps[0].Width * ratio);
         var singleCardHeight = (int)MathF.Floor(bitmaps[0].Height * ratio);
         var imageInfo = new SKImageInfo(singleCardWidth, singleCardHeight);
@@ -78,10 +88,10 @@ public static class SkiaService
             var scaledBitmap = new SKBitmap(imageInfo);
             bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(scaledBitmap, currentX, currentY);
-            currentX += singleCardWidth;
+            currentX += singleCardWidth + incrementPadding;
             if (index is not (3 or 8)) continue;
-            currentX = 0.0f;
-            currentY += singleCardHeight;
+            currentX = incrementPadding;
+            currentY += singleCardHeight + incrementPadding;
         }
 
         var stream = new MemoryStream();
@@ -110,7 +120,7 @@ public static class SkiaService
         var avatarRatio = (float)bitmaps[0].avatarBitmap.Height / cardHeight;
         var avatarWidth = bitmaps[0].avatarBitmap.Width / avatarRatio;
         var avatarHeight = bitmaps[0].avatarBitmap.Height / avatarRatio;
-        var width = totalCardWidth + avatarWidth;
+        var width = Padding + avatarWidth + totalCardWidth;
         var height = cardHeight * 4.0f;
 
         var scaleRatio = width / MaxWidth;
@@ -120,7 +130,8 @@ public static class SkiaService
         var surface = SKSurface.Create(new SKImageInfo(actualWidth, actualHeight));
         var canvas = surface.Canvas;
 
-        var currentX = 0.0f;
+        var incrementalPadding = Padding * ratio;
+        var currentX = incrementalPadding;
         var currentY = 0.0f;
         var cardsWidth = (int)MathF.Floor(totalCardWidth * ratio);
         var singleCardHeight = (int)MathF.Floor(cardHeight * ratio);
@@ -131,13 +142,13 @@ public static class SkiaService
             var avatarBitmap = new SKBitmap(avatarImageInfo);
             avatar.ScalePixels(avatarBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(avatarBitmap, currentX, currentY);
-            currentX += avatarWidth * ratio;
+            currentX += avatarWidth * ratio + incrementalPadding;
 
             var scaledBitmap = new SKBitmap(cardImageInfo);
             cards.ScalePixels(scaledBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(scaledBitmap, currentX, currentY);
 
-            currentX = 0.0f;
+            currentX = incrementalPadding;
             currentY += singleCardHeight;
         }
 
@@ -162,8 +173,12 @@ public static class SkiaService
                 .Select(deck.GetBitmap))
             .ToImmutableList();
 
-        var totalCardWidth = handBitmaps.Sum(b => b.Width);
-        var cardHeight = handBitmaps[0].Height;
+        var totalCardWidth = handBitmaps
+            .Select(b => b.Width)
+            .Intersperse(Padding)
+            .Sum();
+        
+        var cardHeight = handBitmaps[0].Height + 2 * Padding;
         var avatarRatio = (float)avatarBitmap.Height / cardHeight;
         var avatarWidth = avatarBitmap.Width / avatarRatio;
         var avatarHeight = avatarBitmap.Height / avatarRatio;
@@ -176,22 +191,23 @@ public static class SkiaService
         var surface = SKSurface.Create(new SKImageInfo(actualWidth, actualHeight));
         var canvas = surface.Canvas;
 
+        var incrementalPadding = Padding * ratio;
         var singleCardWidth = (int)MathF.Floor(handBitmaps[0].Width * ratio);
         var singleCardHeight = (int)MathF.Floor(cardHeight * ratio);
         var cardImageInfo = new SKImageInfo(singleCardWidth, singleCardHeight);
-        var currentX = 0.0f;
+        var currentX = incrementalPadding;
         var avatarImageInfo = new SKImageInfo((int)MathF.Floor(avatarWidth * ratio), (int)MathF.Floor(avatarHeight * ratio));
         var avatarScaledBitmap = new SKBitmap(avatarImageInfo);
         avatarBitmap.ScalePixels(avatarScaledBitmap, SKFilterQuality.High);
         canvas.DrawBitmap(avatarScaledBitmap, currentX, 0.0f);
-        currentX += avatarWidth * ratio;
+        currentX += avatarWidth * ratio + incrementalPadding;
 
         foreach (var bitmap in handBitmaps)
         {
             var scaledBitmap = new SKBitmap(cardImageInfo);
             bitmap.ScalePixels(scaledBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(scaledBitmap, currentX, 0.0f);
-            currentX += handBitmaps[0].Width * ratio;
+            currentX += handBitmaps[0].Width * ratio + incrementalPadding;
         }
 
         var stream = new MemoryStream();
