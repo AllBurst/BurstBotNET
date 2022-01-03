@@ -192,7 +192,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     foreach (var (playerName, combination) in hs)
                     {
                         var desc =
-                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
+                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards)}";
                         descriptionBuilder.Append(desc + '\n');
                     }
 
@@ -460,7 +460,7 @@ public partial class ChinesePoker : ChinesePokerGame
             {
                 var fieldName = pState.PlayerName;
                 var fieldValue =
-                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
+                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards)}";
                 embed.AddField(fieldName, fieldValue, true);
             }
 
@@ -546,8 +546,7 @@ public partial class ChinesePoker : ChinesePokerGame
             .Replace("{baseBet}", gameState.BaseBet.ToString(CultureInfo.InvariantCulture));
 
         var deck = SkiaService.RenderChinesePokerDeck(deckService,
-            playerState.Cards
-                .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())));
+            playerState.Cards);
 
         var embed = new Embed(
             Author: new EmbedAuthor(playerState.PlayerName, IconUrl: playerState.AvatarUrl),
@@ -649,7 +648,7 @@ public partial class ChinesePoker : ChinesePokerGame
             case ChinesePokerGameProgress.MiddleHand:
             case ChinesePokerGameProgress.BackHand:
                 deck = SkiaService.RenderChinesePokerDeck(deckService,
-                    playerState.Cards.Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())));
+                    playerState.Cards);
                 break;
         }
 
@@ -671,7 +670,6 @@ public partial class ChinesePoker : ChinesePokerGame
             });
 
         var activeCards = playerState.Cards
-            .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()))
             .Where(c => c.IsFront)
             .Select(c => new SelectOption(c.ToStringSimple(),
                 c.ToSpecifier(),
@@ -760,10 +758,17 @@ public partial class ChinesePoker : ChinesePokerGame
             if (state.Players.ContainsKey(playerId))
             {
                 var player = state.Players.GetOrAdd(playerId, new ChinesePokerPlayerState());
-                player.Cards = playerState.Cards.ToImmutableArray();
+                player.Cards = playerState.Cards.ToImmutableArray()
+                    .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
                 player.Naturals = playerState.Naturals;
                 player.AvatarUrl = playerState.AvatarUrl;
-                player.PlayedCards = playerState.PlayedCards;
+                player.PlayedCards = playerState.PlayedCards
+                    .ToDictionary(pair => pair.Key, pair =>
+                    {
+                        var (_, value) = pair;
+                        value.Cards.Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
+                        return value;
+                    });
                 player.PlayerName = playerState.PlayerName;
 
                 if (player.Member == null)
