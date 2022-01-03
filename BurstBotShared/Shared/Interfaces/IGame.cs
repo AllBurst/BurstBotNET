@@ -24,8 +24,7 @@ public interface IGame<in TState, in TRaw, TGame, TPlayerState, TProgress, TInGa
     static abstract Task AddPlayerState(string gameId,
         Snowflake guild,
         TPlayerState playerState,
-        GameStates gameStates,
-        float baseBet);
+        GameStates gameStates);
     
     static abstract Task StartListening(
         string gameId,

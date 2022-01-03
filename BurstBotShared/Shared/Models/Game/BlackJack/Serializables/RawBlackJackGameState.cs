@@ -49,6 +49,10 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
     [JsonPropertyName("previous_request_type")]
     [JsonProperty("previous_request_type")]
     public string PreviousRequestType { get; init; } = "";
+    
+    [JsonPropertyName("base_bet")]
+    [JsonProperty("base_bet")]
+    public float BaseBet { get; init; }
 
     [Pure]
     public static RawBlackJackGameState FromState(IState<BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress> state)
@@ -64,7 +68,8 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
             Players = gameState.Players.ToDictionary(pair => pair.Key, pair => ((IState<BlackJackPlayerState, RawBlackJackPlayerState, BlackJackGameProgress>)pair.Value).ToRaw()),
             PreviousPlayerId = gameState.PreviousPlayerId,
             PreviousRequestType = gameState.PreviousRequestType,
-            Progress = gameState.Progress
+            Progress = gameState.Progress,
+            BaseBet = gameState.BaseBet
         };
     }
 
@@ -90,7 +95,8 @@ public record RawBlackJackGameState : IRawState<BlackJackGameState, RawBlackJack
             Players = new ConcurrentDictionary<ulong, BlackJackPlayerState>(players),
             PreviousPlayerId = PreviousPlayerId,
             PreviousRequestType = PreviousRequestType,
-            Progress = Progress
+            Progress = Progress,
+            BaseBet = BaseBet
         };
     }
 };

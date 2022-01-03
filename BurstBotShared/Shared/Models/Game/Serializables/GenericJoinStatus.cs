@@ -29,4 +29,8 @@ public record GenericJoinStatus
     [JsonPropertyName("player_ids")] 
     [JsonProperty("player_ids")] 
     public List<ulong> PlayerIds { get; init; } = new();
+    
+    [JsonPropertyName("base_bet")]
+    [JsonProperty("base_bet")]
+    public float? BaseBet { get; init; }
 };

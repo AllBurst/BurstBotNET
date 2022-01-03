@@ -46,6 +46,8 @@ public partial class BlackJack : CommandGroup
     [Command("join")]
     [Description("Request to be enqueued to the waiting list to match with other players.")]
     public async Task<IResult> Handle(
+        [Description("The requested base bet. Each player's final reward will be units won/lost multiplied by this.")]
+        float baseBet = 1.0f,
         [Description("(Optional) The 2nd player you want to invite.")] 
         IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]
@@ -55,7 +57,7 @@ public partial class BlackJack : CommandGroup
         [Description("(Optional) The 5th player you want to invite.")]
         IUser? player5 = null,
         [Description("(Optional) The 6th player you want to invite.")]
-        IUser? player6 = null) => await Join(player2, player3, player4, player5, player6);
+        IUser? player6 = null) => await Join(baseBet, player2, player3, player4, player5, player6);
 
     public override string ToString()
     {

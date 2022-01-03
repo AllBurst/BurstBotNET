@@ -361,7 +361,7 @@ public partial class ChinesePoker : ChinesePokerGame
     }
 
     public static async Task AddPlayerState(string gameId, Snowflake guild,
-        ChinesePokerPlayerState playerState, GameStates gameStates, float baseBet)
+        ChinesePokerPlayerState playerState, GameStates gameStates)
     {
         var state = gameStates
             .ChinesePokerGameStates
@@ -380,7 +380,6 @@ public partial class ChinesePoker : ChinesePokerGame
             JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
             {
                 AvatarUrl = playerState.AvatarUrl,
-                BaseBet = baseBet,
                 ChannelId = playerState.TextChannel.ID.Value,
                 ClientType = ClientType.Discord,
                 GameId = gameId,

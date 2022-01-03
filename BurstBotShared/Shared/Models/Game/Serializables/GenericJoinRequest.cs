@@ -14,4 +14,5 @@ public record GenericJoinRequest
     public GameType GameType { get; init; }
     
     [JsonProperty("player_ids")] public List<ulong> PlayerIds { get; init; } = new();
+    [JsonProperty("base_bet")] public float BaseBet { get; init; }
 };

@@ -47,6 +47,8 @@ public partial class NinetyNine : CommandGroup
     public async Task<IResult> Handle(
         [Description("The difficulty. Players will only have 4 cards instead of 5 in the hard mode.")]
         NinetyNineDifficulty difficulty,
+        [Description("The requested base bet. Each player's final reward will be units won/lost multiplied by this.")]
+        float baseBet = 1.0f,
         [Description("Choose flavors of Ninety-Nine. Available variations: Taiwanese (default), Icelandic, Standard.")]
         NinetyNineVariation variation = NinetyNineVariation.Taiwanese,
         [Description("(Optional) The 2nd player you want to invite.")]
@@ -63,7 +65,7 @@ public partial class NinetyNine : CommandGroup
         IUser? player7 = null,
         [Description("(Optional) The 8th player you want to invite.")]
         IUser? player8 = null
-    ) => await Join(difficulty, variation, player2, player3, player4, player5, player6, player7, player8);
+    ) => await Join(baseBet, difficulty, variation, player2, player3, player4, player5, player6, player7, player8);
 
     public override string ToString()
         => "ninety_nine";

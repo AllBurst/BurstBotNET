@@ -27,8 +27,7 @@ public partial class NinetyNine : NinetyNineGame
         throw new NotImplementedException();
     }
 
-    public static Task AddPlayerState(string gameId, Snowflake guild, NinetyNinePlayerState playerState, GameStates gameStates,
-        float baseBet)
+    public static Task AddPlayerState(string gameId, Snowflake guild, NinetyNinePlayerState playerState, GameStates gameStates)
     {
         throw new NotImplementedException();
     }

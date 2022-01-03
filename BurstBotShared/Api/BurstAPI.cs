@@ -403,7 +403,8 @@ public sealed class BurstApi
             .SendRawRequest(confirmationEndpoint, ApiRequestType.Post, new GenericJoinStatus
             {
                 StatusType = GenericJoinStatusType.Start,
-                PlayerIds = members.Select(m => m.User.Value.ID.Value).ToList()
+                PlayerIds = members.Select(m => m.User.Value.ID.Value).ToList(),
+                BaseBet = joinStatus.BaseBet
             })
             .ReceiveJson<GenericJoinStatus>();
 

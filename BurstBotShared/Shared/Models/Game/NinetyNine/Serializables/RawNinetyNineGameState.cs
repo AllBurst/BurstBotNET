@@ -32,6 +32,10 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
     [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public NinetyNineGameProgress Progress { get; init; }
     
+    [JsonPropertyName("base_bet")]
+    [JsonProperty("base_bet")]
+    public float BaseBet { get; init; }
+    
     [JsonPropertyName("current_player_order")]
     [JsonProperty("current_player_order")]
     public int CurrentPlayerOrder { get; init; }
@@ -85,7 +89,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             PreviousPlayerId = gameState.PreviousPlayerId,
             Progress = gameState.Progress,
             TotalBet = gameState.TotalBet,
-            Variation = gameState.Variation
+            Variation = gameState.Variation,
+            BaseBet = gameState.BaseBet
         };
     }
 
@@ -112,7 +117,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             PreviousCard = PreviousCard,
             Variation = Variation,
             TotalBet = TotalBet,
-            PreviousPlayerId = PreviousPlayerId
+            PreviousPlayerId = PreviousPlayerId,
+            BaseBet = BaseBet
         };
     }
 };

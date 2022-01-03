@@ -284,8 +284,7 @@ public partial class BlackJack : BlackJackGame
     public static async Task AddPlayerState(string gameId,
         Snowflake guild,
         BlackJackPlayerState playerState,
-        GameStates gameStates,
-        float baseBet = 1.0f)
+        GameStates gameStates)
     {
         var state = gameStates.BlackJackGameStates.Item1.GetOrAdd(gameId, new BlackJackGameState());
         state.Players.GetOrAdd(playerState.PlayerId, playerState);
@@ -307,7 +306,7 @@ public partial class BlackJack : BlackJackGame
                 PlayerName = playerState.PlayerName,
                 OwnTips = playerState.OwnTips,
                 ClientType = ClientType.Discord,
-                RequestType = BlackJackInGameRequestType.Deal
+                RequestType = BlackJackInGameRequestType.Deal,
             })
         ));
     }
@@ -915,6 +914,7 @@ public partial class BlackJack : BlackJackGame
         state.HighestBet = data.HighestBet;
         state.PreviousPlayerId = data.PreviousPlayerId;
         state.PreviousRequestType = data.PreviousRequestType;
+        state.BaseBet = data.BaseBet;
 
         foreach (var (playerId, playerState) in data.Players)
             if (state.Players.ContainsKey(playerId))

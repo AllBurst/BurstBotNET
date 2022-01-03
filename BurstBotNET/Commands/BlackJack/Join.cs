@@ -17,7 +17,7 @@ namespace BurstBotNET.Commands.BlackJack;
 #pragma warning disable CA2252
 public partial class BlackJack
 {
-    private async Task<IResult> Join(params IUser?[] users)
+    private async Task<IResult> Join(float baseBet, params IUser?[] users)
     {
         var mentionedPlayers = new List<Snowflake> { _context.User.ID };
         var additionalPlayers = users
@@ -37,6 +37,7 @@ public partial class BlackJack
         if (!validationResult) return Result.FromSuccess();
 
         var joinResult = await Game.GenericJoinGame(
+            baseBet,
             playerIds, GameType.BlackJack, "/black_jack/join", _state.BurstApi,
             _context, _interactionApi);
         

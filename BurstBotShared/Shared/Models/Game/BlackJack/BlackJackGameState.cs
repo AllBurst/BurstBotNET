@@ -19,6 +19,7 @@ public class BlackJackGameState :
     public int CurrentPlayerOrder { get; set; }
     public ulong PreviousPlayerId { get; set; }
     public string PreviousRequestType { get; set; } = "";
+    public float BaseBet { get; set; }
     public int HighestBet { get; set; }
     public int CurrentTurn { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }

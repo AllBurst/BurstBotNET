@@ -38,7 +38,7 @@ public partial class ChinesePoker
 
         if (!validationResult) return Result.FromSuccess();
 
-        var joinResult = await Game.GenericJoinGame(
+        var joinResult = await Game.GenericJoinGame(baseBet,
             playerIds, GameType.ChinesePoker, "/chinese_poker/join", _state.BurstApi,
             _context, _interactionApi);
         
@@ -89,7 +89,7 @@ public partial class ChinesePoker
                         PlayerName = member.GetDisplayName(),
                         TextChannel = textChannel,
                         Member = member
-                    }, _state.GameStates, baseBet);
+                    }, _state.GameStates);
                     _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
                         _channelApi,
                         _guildApi,
@@ -137,7 +137,7 @@ public partial class ChinesePoker
                     PlayerName = invokingMember.GetDisplayName(),
                     TextChannel = textChannel,
                     Member = invokingMember
-                }, _state.GameStates, baseBet);
+                }, _state.GameStates);
                 _ = Task.Run(() => StartListening(joinStatus.GameId ?? "", _state,
                     _channelApi,
                     _guildApi,
@@ -170,7 +170,7 @@ public partial class ChinesePoker
                         foreach (var player in playerStates)
                         {
                             await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
-                                _state.GameStates, baseBet);
+                                _state.GameStates);
                             _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
                                 _channelApi,
                                 _guildApi,

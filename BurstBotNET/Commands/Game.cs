@@ -41,6 +41,7 @@ public static class Game
     }
 
     public static async Task<(GenericJoinStatus, string)?> GenericJoinGame(
+        float baseBet,
         ImmutableArray<ulong> playerIds,
         GameType gameType,
         string requestEndpoint,
@@ -53,7 +54,8 @@ public static class Game
         {
             ClientType = ClientType.Discord,
             GameType = gameType,
-            PlayerIds = playerIds.ToList()
+            PlayerIds = playerIds.ToList(),
+            BaseBet = baseBet
         };
         var joinResponse = await burstApi.SendRawRequest(requestEndpoint, ApiRequestType.Post, joinRequest);
         var playerCount = playerIds.Length;

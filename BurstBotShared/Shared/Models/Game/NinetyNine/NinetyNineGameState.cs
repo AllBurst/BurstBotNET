@@ -18,6 +18,7 @@ public class NinetyNineGameState :
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
     public ConcurrentDictionary<ulong, NinetyNinePlayerState> Players { get; init; } = new(10, 8);
     public NinetyNineGameProgress Progress { get; set; }
+    public float BaseBet { get; set; }
     public int CurrentPlayerOrder { get; set; }
     public ulong PreviousPlayerId { get; init; }
     public ushort CurrentTotal { get; set; }
