@@ -5,6 +5,7 @@ using BurstBotShared.Shared;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
+using Remora.Rest.Core;
 
 namespace BurstBotNET.Commands;
 
@@ -24,7 +26,17 @@ public static class Game
     {
         JsonSerializerSettings.MissingMemberHandling = MissingMemberHandling.Error;
     }
-    
+
+    public static IEnumerable<Snowflake> BuildPlayerList(InteractionContext context, IEnumerable<IUser?> users)
+    {
+        var mentionedPlayers = new List<Snowflake> { context.User.ID };
+        var additionalPlayers = users
+            .Where(u => u != null)
+            .Select(u => u!.ID);
+        mentionedPlayers.AddRange(additionalPlayers);
+        return mentionedPlayers;
+    }
+
     public static async Task GenericCloseGame(WebSocket socketSession, ILogger logger, CancellationTokenSource cancellationTokenSource)
     {
         logger.LogDebug("Cleaning up resource...");
@@ -40,16 +52,34 @@ public static class Game
         await Task.Delay(TimeSpan.FromSeconds(60));
     }
 
-    public static async Task<(GenericJoinStatus, string)?> GenericJoinGame(
+    public static async Task<GenericJoinResult?> GenericJoinGame(
         float baseBet,
-        ImmutableArray<ulong> playerIds,
+        IEnumerable<IUser?> users,
         GameType gameType,
-        string requestEndpoint,
-        BurstApi burstApi,
+        string joinRequestEndpoint,
+        State state,
         InteractionContext context,
-        IDiscordRestInteractionAPI interactionApi
-    )
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestUserAPI userApi,
+        ILogger logger)
     {
+        var mentionedPlayers = BuildPlayerList(context, users)
+            .ToImmutableArray();
+
+        var playerIds = mentionedPlayers
+            .Select(s => s.Value)
+            .ToImmutableArray();
+        
+        var (isValid, invokerTip) = await ValidatePlayers(
+            context.User.ID.Value,
+            playerIds,
+            state.BurstApi,
+            context,
+            baseBet,
+            interactionApi);
+        
+        if (!isValid) return null;
+        
         var joinRequest = new GenericJoinRequest
         {
             ClientType = ClientType.Discord,
@@ -57,18 +87,37 @@ public static class Game
             PlayerIds = playerIds.ToList(),
             BaseBet = baseBet
         };
-        var joinResponse = await burstApi.SendRawRequest(requestEndpoint, ApiRequestType.Post, joinRequest);
+        var joinResponse = await state.BurstApi.SendRawRequest(joinRequestEndpoint, ApiRequestType.Post, joinRequest);
         var playerCount = playerIds.Length;
         var unit = playerCount > 1 ? "players" : "player";
 
         var (joinStatus, reply) = BurstApi.HandleMatchGameHttpStatuses(joinResponse, unit, gameType);
-        if (joinStatus != null) return (joinStatus, reply);
-        var _ = await interactionApi
-            .EditOriginalInteractionResponseAsync(
-                context.ApplicationID,
-                context.Token,
-                reply);
-        return null;
+
+        if (joinStatus == null)
+        {
+            var _ = await interactionApi
+                .EditOriginalInteractionResponseAsync(
+                    context.ApplicationID,
+                    context.Token,
+                    reply);
+            return null;
+        }
+        
+        var invokingMember = await Utilities.GetUserMember(context, interactionApi,
+            ErrorMessages.JoinNotInGuild, logger);
+        var botUser = await Utilities.GetBotUser(userApi, logger);
+
+        if (invokingMember == null || botUser == null) return null;
+
+        return new GenericJoinResult
+        {
+            BotUser = botUser,
+            InvokerTip = invokerTip,
+            InvokingMember = invokingMember,
+            JoinStatus = joinStatus,
+            MentionedPlayers = mentionedPlayers,
+            Reply = reply
+        };
     }
 
     public static async Task<WebSocket> GenericOpenWebSocketSession(string gameName, Config config, ILogger logger, CancellationTokenSource cancellationTokenSource)
@@ -130,7 +179,20 @@ public static class Game
                 playerIds, confirmationEndpoint, state,
                 channelApi, interactionApi, guildApi, logger, minPlayerCount);
 
-        return reactionResult;
+        if (reactionResult.HasValue) return reactionResult;
+        
+        var failureResult = await interactionApi
+            .EditOriginalInteractionResponseAsync(
+                context.ApplicationID,
+                context.Token,
+                ErrorMessages.HandleReactionFailed);
+
+        if (!failureResult.IsSuccess)
+            logger.LogError(
+                "Failed to edit original response for failing to handle reactions: {Reason}, inner: {Inner}",
+                failureResult.Error.Message, failureResult.Inner);
+        
+        return null;
     }
 
     public static async Task<(bool, RawTip?)> ValidatePlayers(

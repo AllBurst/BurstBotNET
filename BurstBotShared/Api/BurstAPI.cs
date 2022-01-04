@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
@@ -439,7 +440,7 @@ public sealed class BurstApi
         foreach (var member in participatingPlayers)
         {
             var textChannel = await CreatePlayerChannel(guild.Value, botUser, member, guildApi, logger);
-            var invokerTip =
+            var memberTip =
                 await SendRawRequest<object>($"/tip/{member.User.Value.ID.Value}", ApiRequestType.Get, null)
                     .ReceiveJson<RawTip>();
             playerStates.Add(new BlackJackPlayerState
@@ -448,8 +449,8 @@ public sealed class BurstApi
                 PlayerId = member.User.Value.ID.Value,
                 PlayerName = member.GetDisplayName(),
                 TextChannel = textChannel,
-                OwnTips = invokerTip?.Amount ?? 0,
-                BetTips = Constants.StartingBet,
+                OwnTips = memberTip?.Amount ?? 0,
+                BetTips = (int) MathF.Floor(matchData.BaseBet ?? 0.0f),
                 Order = 0,
                 AvatarUrl = member.GetAvatarUrl()
             });
@@ -458,7 +459,7 @@ public sealed class BurstApi
         return (matchData, playerStates.ToImmutableArray());
     }
 
-    public async Task<(GenericJoinStatus, ImmutableArray<ChinesePokerPlayerState>)?> WaitForChinesePokerGame(
+    public async Task<(GenericJoinStatus, ImmutableArray<T>)?> WaitForGame<T>(
         GenericJoinStatus waitingData,
         InteractionContext context,
         IEnumerable<Snowflake> mentionedPlayers,
@@ -466,7 +467,7 @@ public sealed class BurstApi
         string description,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
-        ILogger logger)
+        ILogger logger) where T: IPlayerState, new()
     {
         var guild = await Utilities.GetGuildFromContext(context, interactionApi, logger);
         if (!guild.HasValue)
@@ -481,18 +482,17 @@ public sealed class BurstApi
         if (matchData == null)
             return null;
 
-        var playerStates = new List<ChinesePokerPlayerState>(participatingPlayers.Length);
+        var playerStates = new List<T>(participatingPlayers.Length);
         foreach (var member in participatingPlayers)
         {
             var textChannel = await CreatePlayerChannel(guild.Value, botUser, member, guildApi, logger);
-            playerStates.Add(new ChinesePokerPlayerState
+            playerStates.Add(new T
             {
                 AvatarUrl = member.GetAvatarUrl(),
                 GameId = matchData.GameId ?? "",
                 PlayerId = member.User.Value.ID.Value,
                 PlayerName = member.GetDisplayName(),
                 TextChannel = textChannel,
-                Member = member
             });
         }
         
@@ -512,7 +512,7 @@ public sealed class BurstApi
     public async Task<IChannel?> CreatePlayerChannel(
         Snowflake guild,
         IUser botUser,
-        IGuildMember invokingMember,
+        IGuildMember member,
         IDiscordRestGuildAPI guildApi,
         ILogger logger)
     {
@@ -528,14 +528,14 @@ public sealed class BurstApi
             
             var channelCreateResult = await guildApi
                 .CreateGuildChannelAsync(guild,
-                    $"{invokingMember.GetDisplayName()}-All-Burst",
+                    $"{member.GetDisplayName()}-All-Burst",
                     ChannelType.GuildText,
                     permissionOverwrites: new[]
                     {
                         new PermissionOverwrite(guild, PermissionOverwriteType.Role,
                             DiscordPermissionSet.Empty,
                             new DiscordPermissionSet(DiscordPermission.ViewChannel)),
-                        new PermissionOverwrite(invokingMember.User.Value.ID, PermissionOverwriteType.Member,
+                        new PermissionOverwrite(member.User.Value.ID, PermissionOverwriteType.Member,
                             PlayerPermissions,
                             DiscordPermissionSet.Empty),
                         new PermissionOverwrite(botUser.ID, PermissionOverwriteType.Member,

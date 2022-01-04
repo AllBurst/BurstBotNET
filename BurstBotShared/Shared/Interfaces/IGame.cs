@@ -12,7 +12,7 @@ using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Interfaces;
 
-public interface IGame<in TState, in TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>
+public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TInGameRequestType>
     where TState: IState<TState, TRaw, TProgress>, IGameState<TPlayerState, TProgress>
     where TRaw: IRawState<TState, TRaw, TProgress>
     where TGame: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>

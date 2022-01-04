@@ -12,7 +12,7 @@ public class
         IPlayerState,
         IDisposable
 {
-    public string GameId { get; init; } = "";
+    public string GameId { get; set; } = "";
     public ulong PlayerId { get; init; }
     public string PlayerName { get; set; } = "";
     public IChannel? TextChannel { get; set; }
@@ -22,7 +22,6 @@ public class
     public string AvatarUrl { get; set; } = "";
 
     public Dictionary<ChinesePokerGameProgress, Stream> DeckImages { get; } = new();
-    public IGuildMember? Member { get; set; }
     public ConcurrentQueue<IMessage?> OutstandingMessages { get; set; } = new();
 
     private bool _disposed;

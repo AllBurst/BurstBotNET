@@ -770,22 +770,6 @@ public partial class ChinesePoker : ChinesePokerGame
                     });
                 player.PlayerName = playerState.PlayerName;
 
-                if (player.Member == null)
-                    foreach (var guild in state.Guilds)
-                        try
-                        {
-                            var getMemberResult = await guildApi
-                                .GetGuildMemberAsync(guild, DiscordSnowflake.New(player.PlayerId));
-                            if (!getMemberResult.IsSuccess) continue;
-                            var member = getMemberResult.Entity;
-                            player.Member = member;
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogWarning("Exception caught when getting member: {Exception}", ex);
-                        }
-
                 if (playerState.ChannelId == 0 || player.TextChannel != null) continue;
                 foreach (var guild in state.Guilds)
                 {
@@ -813,21 +797,6 @@ public partial class ChinesePoker : ChinesePokerGame
                     PlayerName = playerState.PlayerName,
                     TextChannel = null
                 };
-
-                foreach (var guild in state.Guilds)
-                    try
-                    {
-                        var getMemberResult = await guildApi
-                            .GetGuildMemberAsync(guild, DiscordSnowflake.New(playerState.PlayerId));
-                        if (!getMemberResult.IsSuccess) continue;
-                        var member = getMemberResult.Entity;
-                        newPlayerState.Member = member;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogWarning("Exception caught when getting member: {Exception}", ex);
-                    }
 
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
             }

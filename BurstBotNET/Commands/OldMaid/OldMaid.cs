@@ -8,59 +8,50 @@ using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
 using Remora.Results;
 
-namespace BurstBotNET.Commands.BlackJack;
+namespace BurstBotNET.Commands.OldMaid;
 
-#pragma warning disable CA2252
-[Group("blackjack")]
-[Description("Play a black jack-like game with other people.")]
-public partial class BlackJack : CommandGroup
+[Group("old_maid")]
+public partial class OldMaid : CommandGroup
 {
-    public const string GameName = "Black Jack";
+    public const string GameName = "Old Maid";
     
     private readonly InteractionContext _context;
-    private readonly IDiscordRestUserAPI _userApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly IDiscordRestGuildAPI _guildApi;
     private readonly IDiscordRestChannelAPI _channelApi;
+    private readonly IDiscordRestUserAPI _userApi;
     private readonly State _state;
-    private readonly ILogger<BlackJack> _logger;
+    private readonly ILogger<OldMaid> _logger;
 
-    public BlackJack(
-        InteractionContext context,
-        IDiscordRestUserAPI userApi,
-        IDiscordRestInteractionAPI interactionApi,
-        IDiscordRestGuildAPI guildApi,
+    public OldMaid(InteractionContext context, State state,
         IDiscordRestChannelAPI channelApi,
-        State state,
-        ILogger<BlackJack> logger)
+        IDiscordRestGuildAPI guildApi,
+        IDiscordRestInteractionAPI interactionApi,
+        IDiscordRestUserAPI userApi,
+        ILogger<OldMaid> logger)
     {
         _context = context;
-        _userApi = userApi;
         _interactionApi = interactionApi;
         _guildApi = guildApi;
         _channelApi = channelApi;
         _state = state;
         _logger = logger;
+        _userApi = userApi;
     }
 
     [Command("join")]
     [Description("Request to be enqueued to the waiting list to match with other players.")]
     public async Task<IResult> Handle(
-        [Description("The base bet. Players have to at least own this amount of tips before they can play.")]
+        [Description("The base bet. The reward will be the number of players multiplied by this.")]
         float baseBet = 1.0f,
-        [Description("(Optional) The 2nd player you want to invite.")] 
+        [Description("(Optional) The 2nd player you want to invite.")]
         IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]
         IUser? player3 = null,
         [Description("(Optional) The 4th player you want to invite.")]
-        IUser? player4 = null,
-        [Description("(Optional) The 5th player you want to invite.")]
-        IUser? player5 = null,
-        [Description("(Optional) The 6th player you want to invite.")]
-        IUser? player6 = null) => await Join(baseBet, player2, player3, player4, player5, player6);
+        IUser? player4 = null
+    ) => await Join(baseBet, player2, player3, player4);
 
     public override string ToString()
-    {
-        return "blackjack";
-    }
+        => "old_maid";
 }

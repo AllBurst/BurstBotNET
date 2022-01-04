@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using System.Globalization;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using Remora.Discord.API.Abstractions.Objects;
-using Remora.Rest.Core;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.NinetyNine;
@@ -13,12 +12,9 @@ public partial class NinetyNine
     
     private async Task<IResult> Join(float baseBet, NinetyNineDifficulty difficulty, NinetyNineVariation variation, params IUser?[] users)
     {
-        var mentionedPlayers = new List<ulong> { _context.User.ID.Value };
-        var additionalPlayers = users
-            .Where(u => u != null)
-            .Select(u => u!.ID.Value)
+        var mentionedPlayers = Game
+            .BuildPlayerList(_context, users)
             .ToImmutableArray();
-        mentionedPlayers.AddRange(additionalPlayers);
 
         var result = await _interactionApi
             .EditOriginalInteractionResponseAsync(_context.ApplicationID, _context.Token,
