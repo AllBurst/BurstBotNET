@@ -1,10 +1,11 @@
 using System.Collections.Immutable;
 using System.Text.Json.Serialization;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 
-public record BlackJackInGameRequest
+public record BlackJackInGameRequest : IGenericDealData
 {
     [JsonPropertyName("request_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -1,13 +1,12 @@
 using System.Collections.Immutable;
-using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
-using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
+using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Remora.Discord.API.Abstractions.Objects;
 
-namespace BurstBotShared.Shared.Models.Game.NinetyNine;
+namespace BurstBotShared.Shared.Models.Game.OldMaid;
 
-public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress>, IPlayerState
+public class OldMaidPlayerState : IState<OldMaidPlayerState, RawOldMaidPlayerState, OldMaidGameProgress>, IPlayerState
 {
     public string GameId { get; set; } = null!;
     public ulong PlayerId { get; init; }
