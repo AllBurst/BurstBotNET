@@ -16,7 +16,6 @@ using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneOf;
-using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -31,7 +30,8 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 namespace BurstBotNET.Commands.ChinesePoker;
 
 using ChinesePokerGame =
-    IGame<ChinesePokerGameState, RawChinesePokerGameState, ChinesePoker, ChinesePokerPlayerState, ChinesePokerGameProgress,
+    IGame<ChinesePokerGameState, RawChinesePokerGameState, ChinesePoker, ChinesePokerPlayerState,
+        ChinesePokerGameProgress,
         ChinesePokerInGameRequestType>;
 
 #pragma warning disable CA2252
@@ -227,10 +227,10 @@ public partial class ChinesePoker : ChinesePokerGame
                     .Where(p => p.Value.PlayerId == pId)
                     .Select(p => p.Value.PlayerName)
                     .FirstOrDefault();
-                
+
                 fields.Add(new EmbedField(playerName!, builder.ToString(), true));
             }
-            
+
             var embed = new Embed(
                 Colour: BurstColor.Burst.ToColor(),
                 Description: descriptionBuilder.ToString(),
@@ -346,7 +346,7 @@ public partial class ChinesePoker : ChinesePokerGame
             var channelId = value.TextChannel.ID;
 
             var deleteResult = await channelApi
-                .DeleteChannelAsync(value.TextChannel.ID);
+                .DeleteChannelAsync(channelId);
             if (!deleteResult.IsSuccess)
                 logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
                     deleteResult.Error.Message, deleteResult.Inner);
@@ -459,7 +459,7 @@ public partial class ChinesePoker : ChinesePokerGame
             {
                 var fieldName = pState.PlayerName;
                 var fieldValue =
-                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards)}";
+                    $"**{pState.PlayedCards[progress].CombinationType.ToLocalizedString(localization)}**\n{string.Join('\n', pState.PlayedCards[progress].Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
                 embed.AddField(fieldName, fieldValue, true);
             }
 
@@ -470,8 +470,9 @@ public partial class ChinesePoker : ChinesePokerGame
 
             var sendEmbedResult = await channelApi
                 .CreateMessageAsync(playerState.TextChannel.ID,
-                    embeds: new[] { embed.Build().Entity with { Image = new EmbedImage(randomAttachmentUri) }  },
-                    attachments: new[] { OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)) });
+                    embeds: new[] { embed.Build().Entity with { Image = new EmbedImage(randomAttachmentUri) } },
+                    attachments: new[]
+                        { OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)) });
             if (!sendEmbedResult.IsSuccess)
                 logger.LogError("Failed to send embed to player's channel: {Reason}, inner: {Inner}",
                     sendEmbedResult.Error.Message, sendEmbedResult.Inner);
@@ -501,21 +502,25 @@ public partial class ChinesePoker : ChinesePokerGame
             var randomAttachmentUri = $"attachment://{randomFileName}";
 
             var embed = new EmbedBuilder()
-                .WithColour(BurstColor.Burst.ToColor())
-                .WithTitle(title.ToUpperInvariant())
-                .WithThumbnailUrl(Constants.BurstLogo)
-                .Build()
-                .Entity with { Image = new EmbedImage(randomAttachmentUri) };
+                    .WithColour(BurstColor.Burst.ToColor())
+                    .WithTitle(title.ToUpperInvariant())
+                    .WithThumbnailUrl(Constants.BurstLogo)
+                    .Build()
+                    .Entity with
+                {
+                    Image = new EmbedImage(randomAttachmentUri)
+                };
 
             await using var imageCopy = new MemoryStream((int)renderedImage.Length);
             await renderedImage.CopyToAsync(imageCopy);
             renderedImage.Seek(0, SeekOrigin.Begin);
             imageCopy.Seek(0, SeekOrigin.Begin);
-            
+
             var sendEmbedResult = await channelApi
                 .CreateMessageAsync(playerState.TextChannel.ID,
                     embeds: new[] { embed },
-                    attachments: new[] { OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)) });
+                    attachments: new[]
+                        { OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)) });
             renderedImage.Seek(0, SeekOrigin.Begin);
             if (!sendEmbedResult.IsSuccess)
                 logger.LogError("Failed to send embed to player's channel: {Reason}, inner: {Inner}",
@@ -572,7 +577,7 @@ public partial class ChinesePoker : ChinesePokerGame
             logger.LogError("Failed to send initial message to player's channel: {Reason}, inner: {Inner}",
                 restError.Message, restError.Error);
         }
-        
+
         playerState.DeckImages.Add(ChinesePokerGameProgress.Starting, deck);
     }
 
@@ -691,7 +696,7 @@ public partial class ChinesePoker : ChinesePokerGame
 
         await using var deckCopy = new MemoryStream((int)deck!.Length);
         await deck.CopyToAsync(deckCopy);
-        
+
         deck.Seek(0, SeekOrigin.Begin);
         deckCopy.Seek(0, SeekOrigin.Begin);
 
@@ -712,7 +717,7 @@ public partial class ChinesePoker : ChinesePokerGame
         Localizations localizations,
         IDiscordRestChannelAPI channelApi,
         ILogger logger
-        )
+    )
     {
         var chinesePokerLocalization = localizations.GetLocalization().ChinesePoker;
         var allNaturals = Enum.GetValues<ChinesePokerNatural>()
@@ -756,21 +761,21 @@ public partial class ChinesePoker : ChinesePokerGame
             playerState.Cards.Sort((a, b) => a.Number.CompareTo(b.Number));
             if (state.Players.ContainsKey(playerId))
             {
-                var player = state.Players.GetOrAdd(playerId, new ChinesePokerPlayerState());
-                player.Cards = playerState.Cards.ToImmutableArray()
+                var oldPlayerState = state.Players.GetOrAdd(playerId, new ChinesePokerPlayerState());
+                oldPlayerState.Cards = playerState.Cards.ToImmutableArray()
                     .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
-                player.Naturals = playerState.Naturals;
-                player.AvatarUrl = playerState.AvatarUrl;
-                player.PlayedCards = playerState.PlayedCards
+                oldPlayerState.Naturals = playerState.Naturals;
+                oldPlayerState.AvatarUrl = playerState.AvatarUrl;
+                oldPlayerState.PlayedCards = playerState.PlayedCards
                     .ToDictionary(pair => pair.Key, pair =>
                     {
                         var (_, value) = pair;
                         value.Cards.Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
                         return value;
                     });
-                player.PlayerName = playerState.PlayerName;
+                oldPlayerState.PlayerName = playerState.PlayerName;
 
-                if (playerState.ChannelId == 0 || player.TextChannel != null) continue;
+                if (playerState.ChannelId == 0 || oldPlayerState.TextChannel != null) continue;
                 foreach (var guild in state.Guilds)
                 {
                     var getChannelsResult = await guildApi
@@ -781,7 +786,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     var textChannel = channels
                         .FirstOrDefault(c => c.ID.Value == playerState.ChannelId);
                     if (textChannel == null) continue;
-                    player.TextChannel = textChannel;
+                    oldPlayerState.TextChannel = textChannel;
                 }
             }
             else

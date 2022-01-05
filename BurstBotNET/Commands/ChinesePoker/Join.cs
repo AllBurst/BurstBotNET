@@ -15,7 +15,7 @@ public partial class ChinesePoker
         float baseBet, params IUser?[] users)
     {
         var joinResult = await Game.GenericJoinGame(
-            baseBet, users, GameType.OldMaid, "/chinese_poker/join",
+            baseBet, users, GameType.ChinesePoker, "/chinese_poker/join",
             _state, _context, _interactionApi, _userApi, _logger);
 
         if (joinResult == null) return Result.FromSuccess();
@@ -132,6 +132,9 @@ public partial class ChinesePoker
                         {
                             await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
                                 _state.GameStates);
+
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            
                             _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
                                 _channelApi,
                                 _guildApi,

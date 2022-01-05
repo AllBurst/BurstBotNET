@@ -5,7 +5,7 @@ namespace BurstBotShared.Shared.Interfaces;
 public interface IGenericDealData
 {
     ClientType? ClientType { get; init; }
-    GameType GameType { get; init; }
+    GameType GameType { get; }
     string GameId { get; init; }
     ulong PlayerId { get; init; }
     ulong ChannelId { get; init; }

@@ -25,16 +25,10 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     [JsonPropertyName("lost")] public string Lost { get; init; } = "";
     [JsonPropertyName("allUnits")] public string AllUnits { get; init; } = "";
 
-    [JsonPropertyName("insufficientCards")]
-    public string InsufficientCards { get; init; } = "";
-
     [JsonPropertyName("frontHand")] public string FrontHand { get; init; } = "";
     [JsonPropertyName("middleHand")] public string MiddleHand { get; init; } = "";
     [JsonPropertyName("backHand")] public string BackHand { get; init; } = "";
-
     [JsonPropertyName("cards")] public string Cards { get; init; } = "";
-    [JsonPropertyName("setHandFooter")] public string SetHandFooter { get; init; } = "";
-
     [JsonPropertyName("invalidCard")] public string InvalidCard { get; init; } = "";
     [JsonPropertyName("confirmCards")] public string ConfirmCards { get; init; } = "";
 

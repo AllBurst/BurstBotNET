@@ -16,7 +16,7 @@ public record OldMaidInGameRequest : IGenericDealData
 
     [JsonPropertyName("game_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public GameType GameType { get; init; } = GameType.OldMaid;
+    public GameType GameType => GameType.OldMaid;
 
     [JsonPropertyName("game_id")] public string GameId { get; init; } = null!;
     [JsonPropertyName("player_id")] public ulong PlayerId { get; init; }

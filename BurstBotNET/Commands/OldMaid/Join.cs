@@ -1,5 +1,7 @@
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.OldMaid;
+using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
@@ -7,6 +9,8 @@ using Remora.Discord.API.Abstractions.Objects;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.OldMaid;
+
+using OldMaidGame = IGame<OldMaidGameState, RawOldMaidGameState, OldMaid, OldMaidPlayerState, OldMaidGameProgress, OldMaidInGameRequestType>;
 
 public partial class OldMaid
 {
@@ -49,7 +53,18 @@ public partial class OldMaid
                         PlayerName = member.GetDisplayName(),
                         TextChannel = textChannel
                     }, _state.GameStates);
-                    _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+
+                    _ = Task.Run(() => OldMaidGame.StartListening(matchData.GameId ?? "",
+                        _state.GameStates.OldMaidGameStates,
+                        GameName,
+                        OldMaidGameProgress.NotAvailable,
+                        OldMaidGameProgress.Starting,
+                        OldMaidGameProgress.Closed,
+                        InGameRequestTypes,
+                        OldMaidInGameRequestType.Close,
+                        Game.GenericOpenWebSocketSession,
+                        Game.GenericCloseGame,
+                        _state,
                         _channelApi,
                         _guildApi,
                         _logger));
@@ -97,10 +112,22 @@ public partial class OldMaid
                     PlayerName = joinResult.InvokingMember.GetDisplayName(),
                     TextChannel = textChannel
                 }, _state.GameStates);
-                _ = Task.Run(() => StartListening(joinResult.JoinStatus.GameId ?? "", _state,
+                
+                _ = Task.Run(() => OldMaidGame.StartListening(joinResult.JoinStatus.GameId ?? "",
+                    _state.GameStates.OldMaidGameStates,
+                    GameName,
+                    OldMaidGameProgress.NotAvailable,
+                    OldMaidGameProgress.Starting,
+                    OldMaidGameProgress.Closed,
+                    InGameRequestTypes,
+                    OldMaidInGameRequestType.Close,
+                    Game.GenericOpenWebSocketSession,
+                    Game.GenericCloseGame,
+                    _state,
                     _channelApi,
                     _guildApi,
                     _logger));
+                
                 break;
             }
             case GenericJoinStatusType.Waiting:
@@ -130,7 +157,20 @@ public partial class OldMaid
                         {
                             await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
                                 _state.GameStates);
-                            _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+                            
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            
+                            _ = Task.Run(() => OldMaidGame.StartListening(matchData.GameId ?? "",
+                                _state.GameStates.OldMaidGameStates,
+                                GameName,
+                                OldMaidGameProgress.NotAvailable,
+                                OldMaidGameProgress.Starting,
+                                OldMaidGameProgress.Closed,
+                                InGameRequestTypes,
+                                OldMaidInGameRequestType.Close,
+                                Game.GenericOpenWebSocketSession,
+                                Game.GenericCloseGame,
+                                _state,
                                 _channelApi,
                                 _guildApi,
                                 _logger));

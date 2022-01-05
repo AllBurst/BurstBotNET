@@ -17,7 +17,7 @@ public record ChinesePokerInGameRequest : IGenericDealData
 
     [JsonPropertyName("game_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public GameType GameType { get; init; } = GameType.ChinesePoker;
+    public GameType GameType => GameType.ChinesePoker;
 
     [JsonPropertyName("game_id")] public string GameId { get; init; } = null!;
     [JsonPropertyName("player_id")] public ulong PlayerId { get; init; }

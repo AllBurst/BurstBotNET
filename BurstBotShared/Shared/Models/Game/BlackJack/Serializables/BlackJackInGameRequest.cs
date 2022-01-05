@@ -15,7 +15,7 @@ public record BlackJackInGameRequest : IGenericDealData
 
     [JsonPropertyName("game_type")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public GameType GameType { get; init; } = GameType.BlackJack;
+    public GameType GameType => GameType.BlackJack;
 
     [JsonPropertyName("player_id")] public ulong PlayerId { get; init; }
     [JsonPropertyName("channel_id")] public ulong ChannelId { get; init; }

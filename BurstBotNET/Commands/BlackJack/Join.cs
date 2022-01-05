@@ -152,6 +152,9 @@ public partial class BlackJack
                         {
                             await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
                                 _state.GameStates);
+                            
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            
                             _ = Task.Run(() =>
                                 StartListening(matchData.GameId ?? "",
                                     _state, _channelApi, _guildApi, _logger));

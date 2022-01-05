@@ -517,7 +517,7 @@ public partial class BlackJack : BlackJackGame
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
-        if (playerState == null || playerState.TextChannel == null)
+        if (playerState?.TextChannel == null)
             return;
         logger.LogDebug("Sending initial message...");
 

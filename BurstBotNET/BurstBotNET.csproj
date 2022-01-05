@@ -30,6 +30,9 @@
         <None Update="Assets\localization\chinesePoker\EN\otherHands.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\oldMaid\EN\oldMaidLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -120,7 +120,7 @@ public static class SkiaService
         var avatarRatio = (float)bitmaps[0].avatarBitmap.Height / cardHeight;
         var avatarWidth = bitmaps[0].avatarBitmap.Width / avatarRatio;
         var avatarHeight = bitmaps[0].avatarBitmap.Height / avatarRatio;
-        var width = Padding + avatarWidth + totalCardWidth;
+        var width = Padding + avatarWidth + totalCardWidth + Padding;
         var height = cardHeight * 4.0f;
 
         var scaleRatio = width / MaxWidth;

@@ -1,11 +1,15 @@
 using System.Buffers;
+using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Net.WebSockets;
 using System.Text;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
+using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Localization;
+using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Rest.Core;
@@ -13,7 +17,7 @@ using Remora.Rest.Core;
 namespace BurstBotShared.Shared.Interfaces;
 
 public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TInGameRequestType>
-    where TState: IState<TState, TRaw, TProgress>, IGameState<TPlayerState, TProgress>
+    where TState: IState<TState, TRaw, TProgress>, IGameState<TPlayerState, TProgress>, IDisposable, new()
     where TRaw: IRawState<TState, TRaw, TProgress>
     where TGame: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>
     where TProgress: Enum
@@ -25,14 +29,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         Snowflake guild,
         TPlayerState playerState,
         GameStates gameStates);
-    
-    static abstract Task StartListening(
-        string gameId,
-        State state,
-        IDiscordRestChannelAPI channelApi,
-        IDiscordRestGuildAPI guildApi,
-        ILogger logger);
-    
+
     static abstract Task<bool> HandleProgress(
         string messageContent,
         TState gameState,
@@ -57,6 +54,100 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         IDiscordRestChannelAPI channelApi,
         ILogger logger);
 #pragma warning restore CA2252
+
+    static async Task StartListening(
+        string gameId,
+        Tuple<ConcurrentDictionary<string, TState>, ConcurrentHashSet<Snowflake>> gameStateTuple,
+        string gameName,
+        TProgress notAvailableProgress,
+        TProgress startingProgress,
+        TProgress closedProgress,
+        ImmutableArray<string> inGameRequestTypes,
+        TInGameRequestType closeRequestType,
+        Func<string, Config, ILogger, CancellationTokenSource, Task<WebSocket>> socketOpener,
+        Func<WebSocket, ILogger, CancellationTokenSource, Task> closeHandler,
+        State state,
+        IDiscordRestChannelAPI channelApi,
+        IDiscordRestGuildAPI guildApi,
+        ILogger logger)
+    {
+        if (string.IsNullOrWhiteSpace(gameId))
+            return;
+
+        var gameState = gameStateTuple.Item1
+            .GetOrAdd(gameId, new TState());
+        logger.LogDebug("{GameName} game progress: {Progress}", gameName, gameState.Progress);
+        
+        await gameState.Semaphore.WaitAsync();
+        logger.LogDebug("Semaphore acquired in StartListening");
+        
+        if (!gameState.Progress.Equals(notAvailableProgress))
+        {
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released in StartListening (game state existed)");
+            return;
+        }
+
+        gameState.Progress = startingProgress;
+        gameState.GameId = gameId;
+        logger.LogDebug("Initial game state successfully set");
+        
+        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var socketSession = await socketOpener.Invoke(gameName, state.Config, logger, cancellationTokenSource);
+        gameState.Semaphore.Release();
+        logger.LogDebug("Semaphore released in StartListening (game state created)");
+        
+        var timeout = state.Config.Timeout;
+        while (!gameState.Progress.Equals(closedProgress))
+        {
+            var timeoutCancellationTokenSource = new CancellationTokenSource();
+            var channelTask = RunChannelTask(socketSession, gameState, inGameRequestTypes,
+                closeRequestType, closedProgress, logger, cancellationTokenSource);
+
+            var broadcastTask = RunBroadcastTask(socketSession, gameState, buffer, state,
+                channelApi,
+                guildApi,
+                logger, cancellationTokenSource);
+
+            var timeoutTask = RunTimeoutTask(timeout, gameState, closedProgress,
+                logger,
+                timeoutCancellationTokenSource);
+
+            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
+            _ = Task.Run(() =>
+            {
+                timeoutCancellationTokenSource.Cancel();
+                logger.LogDebug("Timeout task cancelled");
+                timeoutCancellationTokenSource.Dispose();
+            });
+        }
+
+        await closeHandler.Invoke(socketSession, logger, cancellationTokenSource);
+        var retrieveResult = gameStateTuple.Item1
+            .TryGetValue(gameState.GameId, out var retrievedState);
+        if (!retrieveResult) return;
+
+        foreach (var (_, value) in retrievedState!.Players)
+        {
+            if (value.TextChannel == null) continue;
+
+            var channelId = value.TextChannel.ID;
+
+            var deleteResult = await channelApi
+                .DeleteChannelAsync(channelId);
+            if (!deleteResult.IsSuccess)
+                logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
+                    deleteResult.Error.Message, deleteResult.Inner);
+
+            gameStateTuple.Item2.TryRemove(channelId);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+        
+        gameState.Dispose();
+        gameStateTuple.Item1.Remove(gameState.GameId, out _);
+        socketSession.Dispose();
+    }
     
     static async Task RunChannelTask(WebSocket socketSession,
         TState state,

@@ -50,6 +50,10 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
     [JsonPropertyName("dumped_cards")]
     [JsonProperty("dumped_cards")]
     public List<Card> DumpedCards { get; init; } = new();
+    
+    [JsonPropertyName("previously_drawn_card")]
+    [JsonProperty("previously_drawn_card")]
+    public Card? PreviouslyDrawnCard { get; init; }
 
     public static RawOldMaidGameState FromState(IState<OldMaidGameState, RawOldMaidGameState, OldMaidGameProgress> state)
     {
@@ -68,6 +72,7 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
             PreviousPlayerId = gameState.PreviousPlayerId,
             Progress = gameState.Progress,
             TotalBet = gameState.TotalBet,
+            PreviouslyDrawnCard = gameState.PreviouslyDrawnCard
         };
     }
 
@@ -92,7 +97,8 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
             Players = new ConcurrentDictionary<ulong, OldMaidPlayerState>(players),
             PreviousPlayerId = PreviousPlayerId,
             Progress = Progress,
-            TotalBet = TotalBet
+            TotalBet = TotalBet,
+            PreviouslyDrawnCard = PreviouslyDrawnCard
         };
     }
 };
