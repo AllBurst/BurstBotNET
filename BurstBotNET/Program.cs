@@ -133,7 +133,9 @@ namespace BurstBotNET
                 .ConfigureLogging(builder => builder
                     .AddConsole()
                     .AddFilter("System.Net.Http.HttpClient.*.LogicalHandler", LogLevel.Warning)
-                    .AddFilter("System.Net.Http.HttpClient.*.ClientHandler", LogLevel.Warning));
+                    .AddFilter("System.Net.Http.HttpClient.*.ClientHandler", LogLevel.Warning)
+                    .AddFilter("BurstBotNET.*", LogLevel.Debug)
+                    .AddFilter("BurstBotShared.*", LogLevel.Debug));
         }
     }
 }
