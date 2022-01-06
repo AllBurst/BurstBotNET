@@ -53,6 +53,8 @@ public record Card : IValueRealizable<ImmutableArray<int>>
 
     public override string ToString()
     {
+        if (Number == 0) return "🃏 Joker";
+        
         var n = Number switch
         {
             1 => "A",

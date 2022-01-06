@@ -5,6 +5,7 @@ using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Objects;
 using Remora.Rest.Core;
 
 namespace BurstBotShared.Shared.Extensions;
@@ -166,6 +167,36 @@ public static class BurstExtensions
         }
 
         return newList;
+    }
+
+    public static List<IMessageComponent> Disable(this Optional<IReadOnlyList<IMessageComponent>> components)
+    {
+        if (!components.HasValue) return new List<IMessageComponent>();
+
+        var newComponents = new List<IMessageComponent>(components.Value.Count);
+        foreach (var component in components.Value)
+        {
+            if (component is not ActionRowComponent actionRow) continue;
+
+            var newActionRow = new List<IMessageComponent>(actionRow.Components.Count);
+
+            foreach (var inner in actionRow.Components)
+            {
+                switch (inner)
+                {
+                    case ButtonComponent button:
+                        newActionRow.Add(button with { IsDisabled = true });
+                        break;
+                    case SelectMenuComponent menu:
+                        newActionRow.Add(menu with { IsDisabled = true });
+                        break;
+                }
+            }
+
+            newComponents.Add(actionRow with { Components = newActionRow });
+        }
+
+        return newComponents;
     }
 
     private static int GetBlackJackValue(this IEnumerable<Card> cards)

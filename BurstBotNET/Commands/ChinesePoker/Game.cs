@@ -76,7 +76,7 @@ public partial class ChinesePoker : ChinesePokerGame
                 return progressChangeResult;
             }
 
-            await UpdateGameState(gameState, deserializedIncomingData, guildApi, logger);
+            await UpdateGameState(gameState, deserializedIncomingData, guildApi);
             if (gameState.Progress.Equals(ChinesePokerGameProgress.Starting))
             {
                 var result = gameState.Players.TryGetValue(deserializedIncomingData.PreviousPlayerId,
@@ -192,7 +192,7 @@ public partial class ChinesePoker : ChinesePokerGame
                     foreach (var (playerName, combination) in hs)
                     {
                         var desc =
-                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards)}";
+                            $"{playerName} - *{combination.CombinationType.ToLocalizedString(localization)}*\n{string.Join('\n', combination.Cards.ToImmutableArray().Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue())))}";
                         descriptionBuilder.Append(desc + '\n');
                     }
 
@@ -400,7 +400,7 @@ public partial class ChinesePoker : ChinesePokerGame
             return true;
 
         gameState.Progress = deserializedIncomingData.Progress;
-        await UpdateGameState(gameState, deserializedIncomingData, guildApi, logger);
+        await UpdateGameState(gameState, deserializedIncomingData, guildApi);
 
         switch (deserializedIncomingData.Progress)
         {
@@ -746,8 +746,7 @@ public partial class ChinesePoker : ChinesePokerGame
     private static async Task UpdateGameState(
         ChinesePokerGameState state,
         RawChinesePokerGameState? data,
-        IDiscordRestGuildAPI guildApi,
-        ILogger logger)
+        IDiscordRestGuildAPI guildApi)
     {
         if (data == null)
             return;

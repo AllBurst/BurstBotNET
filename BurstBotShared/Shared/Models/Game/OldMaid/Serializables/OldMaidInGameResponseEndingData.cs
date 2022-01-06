@@ -9,7 +9,7 @@ public record OldMaidInGameResponseEndingData
     public OldMaidGameProgress Progress { get; init; }
 
     [JsonPropertyName("game_id")] public string GameId { get; init; } = null!;
-    [JsonPropertyName("players")] public Dictionary<ulong, OldMaidPlayerState> Players { get; init; } = new();
-    [JsonPropertyName("loser")] public OldMaidPlayerState? Loser { get; init; }
+    [JsonPropertyName("players")] public Dictionary<ulong, RawOldMaidPlayerState> Players { get; init; } = new();
+    [JsonPropertyName("rewards")] public Dictionary<ulong, int> Rewards { get; init; } = new();
     [JsonPropertyName("total_rewards")] public int TotalRewards { get; init; }
 };
