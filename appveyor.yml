@@ -1,0 +1,7 @@
+image:
+  - Visual Studio 2022
+  - Ubuntu
+install:
+  - sh: sudo apt-get update && apt-get install -y libfontconfig1
+build:
+  verbosity: minimal

@@ -346,13 +346,16 @@ public partial class OldMaid : OldMaidGame
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
                 };
 
-                var previousPlayerCards = deserializedIncomingData
+                var previousPlayer = deserializedIncomingData
                     .Players
                     .First(p => p.Value.PlayerId == deserializedIncomingData.PreviousPlayerId)
-                    .Value
+                    .Value;
+
+                var previousPlayerCards = previousPlayer
                     .Cards
                     .Select((_, i) => new SelectOption($"Card {i + 1}", i.ToString(CultureInfo.InvariantCulture),
-                        $"Card {i + 1}", new PartialEmoji(Name: "🎴")))
+                        localizations.GetLocalization().GenericWords.From
+                            .Replace("{player}", previousPlayer.PlayerName), new PartialEmoji(Name: "🎴")))
                     .ToImmutableArray();
 
                 var components = new IMessageComponent[]
@@ -409,7 +412,7 @@ public partial class OldMaid : OldMaidGame
         var localization = localizations.GetLocalization();
 
         var possessive = isCurrentPlayer
-            ? localization.GenericWords.PossessiveSecond
+            ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
             : localization.GenericWords.PossessiveThird.Replace("{playerName}", nextPlayer.PlayerName);
 
         var title = localization.OldMaid.TurnMessageTitle

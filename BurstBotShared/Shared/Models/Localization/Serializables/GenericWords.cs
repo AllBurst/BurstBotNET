@@ -16,4 +16,5 @@ public record GenericWords
     [JsonPropertyName("possessiveThird")] public string PossessiveThird { get; init; } = "";
 
     [JsonPropertyName("card")] public string Card { get; init; } = "";
+    [JsonPropertyName("from")] public string From { get; init; } = "";
 };
