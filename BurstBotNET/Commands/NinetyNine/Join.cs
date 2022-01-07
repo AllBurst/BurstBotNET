@@ -6,6 +6,7 @@ using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Results;
+using Microsoft.Extensions.Logging;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.NinetyNine;
@@ -121,11 +122,42 @@ public partial class NinetyNine
                         joinResult.Reply);
                     if (!waitingMessageResult.IsSuccess) return Result.FromError(waitingMessageResult);
 
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var waitingResult = await _state.BurstApi.WaitForGame<NinetyNinePlayerState>(
+                                joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
+                                joinResult.BotUser, "", _interactionApi, _guildApi, _logger);
 
+                            if (!waitingResult.HasValue)
+                                throw new Exception($"Failed to get waiting result for {GameName}.");
+                            var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
+                            if (!guild.HasValue) return;
+
+                            var (matchData, playerStates) = waitingResult.Value;
+                            foreach (var player in playerStates)
+                            {
+                                await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
+                                    _state.GameStates);
+
+                                await Task.Delay(TimeSpan.FromSeconds(1));
+
+                                _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
+                                    _channelApi,
+                                    _guildApi,
+                                    _logger));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("WebSocket failed: {Exception}", ex);
+                        }
+                });
                     break;
                 }
         }
-
+        return Result.FromSuccess();
         //var mentionedPlayers = Game
         //    .BuildPlayerList(_context, users)
         //    .ToImmutableArray();

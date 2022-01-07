@@ -20,7 +20,7 @@ public class NinetyNineGameState :
     public NinetyNineGameProgress Progress { get; set; }
     public float BaseBet { get; set; }
     public int CurrentPlayerOrder { get; set; }
-    public ulong PreviousPlayerId { get; init; }
+    public ulong PreviousPlayerId { get; set; }
     public ushort CurrentTotal { get; set; }
     public Card? PreviousCard { get; set; }
     public NinetyNineVariation Variation { get; set; }
