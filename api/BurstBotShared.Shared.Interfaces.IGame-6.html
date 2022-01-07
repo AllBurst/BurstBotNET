@@ -1,0 +1,878 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IGame&lt;TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType&gt;
+   | Jack of All Trades </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IGame&lt;TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType&gt;
+   | Jack of All Trades ">
+    <meta name="generator" content="docfx 2.58.9.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="BurstBotShared.Shared.Interfaces.IGame`6">
+  
+  
+  <h1 id="BurstBotShared_Shared_Interfaces_IGame_6" data-uid="BurstBotShared.Shared.Interfaces.IGame`6" class="text-break">Interface IGame&lt;TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType&gt;
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Shared.Interfaces.html">BurstBotShared.Shared.Interfaces</a></h6>
+  <h6><strong>Assembly</strong>: BurstBotShared.dll</h6>
+  <h5 id="BurstBotShared_Shared_Interfaces_IGame_6_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IGame&lt;in TState, in TRaw, TGame, in TPlayerState, TProgress, TInGameRequestType&gt;
+    where TState : IState&lt;TState, TRaw, TProgress&gt;, IGameState&lt;TPlayerState, TProgress&gt;, IDisposable, new()
+    where TRaw : IRawState&lt;TState, TRaw, TProgress&gt; where TGame : IGame&lt;TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType&gt; where TPlayerState : IPlayerState where TProgress : Enum where TInGameRequestType : struct, Enum</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TRaw</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TGame</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TPlayerState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TInGameRequestType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerState_System_String_Remora_Rest_Core_Snowflake__3_BurstBotShared_Shared_Models_Game_GameStates_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.AddPlayerState(System.String%2CRemora.Rest.Core.Snowflake%2C%603%2CBurstBotShared.Shared.Models.Game.GameStates)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L28">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerState_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerState_System_String_Remora_Rest_Core_Snowflake__3_BurstBotShared_Shared_Models_Game_GameStates_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState(System.String,Remora.Rest.Core.Snowflake,`3,BurstBotShared.Shared.Models.Game.GameStates)">AddPlayerState(String, Snowflake, TPlayerState, GameStates)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Task AddPlayerState(string gameId, Snowflake guild, TPlayerState playerState, GameStates gameStates)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">gameId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Rest.Core.Snowflake</span></td>
+        <td><span class="parametername">guild</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TPlayerState</span></td>
+        <td><span class="parametername">playerState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Game.GameStates.html">GameStates</a></td>
+        <td><span class="parametername">gameStates</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_System_UInt64_System_Byte___System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationToken_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.HandleChannelMessage(System.UInt64%2CSystem.Byte%5B%5D%2CSystem.Net.WebSockets.WebSocket%2C%600%2CIEnumerable%7BSystem.String%7D%2C%605%2C%604%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L230">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_System_UInt64_System_Byte___System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationToken_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage(System.UInt64,System.Byte[],System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationToken)">HandleChannelMessage(UInt64, Byte[], WebSocket, TState, IEnumerable&lt;String&gt;, TInGameRequestType, TProgress, ILogger, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static async Task&lt;SocketOperation&gt; HandleChannelMessage(ulong playerId, byte[] payload, WebSocket socketSession, TState state, IEnumerable&lt;string&gt; inGameRequestTypes, TInGameRequestType closeRequestType, TProgress closedProgress, ILogger logger, CancellationToken token)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td><span class="parametername">playerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
+        <td><span class="parametername">payload</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.websockets.websocket">WebSocket</a></td>
+        <td><span class="parametername">socketSession</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="parametername">inGameRequestTypes</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TInGameRequestType</span></td>
+        <td><span class="parametername">closeRequestType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">closedProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">token</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="BurstBotShared.Shared.Enums.SocketOperation.html">SocketOperation</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_HandleEndingResult_System_String__0_BurstBotShared_Shared_Models_Localization_Localizations_BurstBotShared_Services_DeckService_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.HandleEndingResult(System.String%2C%600%2CBurstBotShared.Shared.Models.Localization.Localizations%2CBurstBotShared.Services.DeckService%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L49">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_HandleEndingResult_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleEndingResult*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_HandleEndingResult_System_String__0_BurstBotShared_Shared_Models_Localization_Localizations_BurstBotShared_Services_DeckService_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleEndingResult(System.String,`0,BurstBotShared.Shared.Models.Localization.Localizations,BurstBotShared.Services.DeckService,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)">HandleEndingResult(String, TState, Localizations, DeckService, IDiscordRestChannelAPI, ILogger)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Task HandleEndingResult(string messageContent, TState state, Localizations localizations, DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">messageContent</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Localization.Localizations.html">Localizations</a></td>
+        <td><span class="parametername">localizations</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
+        <td><span class="parametername">deckService</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
+        <td><span class="parametername">channelApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_HandleProgress_System_String__0_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.HandleProgress(System.String%2C%600%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L33">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_HandleProgress_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleProgress*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_HandleProgress_System_String__0_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleProgress(System.String,`0,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)">HandleProgress(String, TState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Task&lt;bool&gt; HandleProgress(string messageContent, TState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">messageContent</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">gameState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Data.State.html">State</a></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
+        <td><span class="parametername">channelApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI</span></td>
+        <td><span class="parametername">guildApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_HandleProgressChange__1__0_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.HandleProgressChange(%601%2C%600%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L41">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_HandleProgressChange_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleProgressChange*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_HandleProgressChange__1__0_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.HandleProgressChange(`1,`0,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)">HandleProgressChange(TRaw, TState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Task&lt;bool&gt; HandleProgressChange(TRaw deserializedIncomingData, TState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TRaw</span></td>
+        <td><span class="parametername">deserializedIncomingData</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">gameState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Data.State.html">State</a></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
+        <td><span class="parametername">channelApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI</span></td>
+        <td><span class="parametername">guildApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask_System_Net_WebSockets_WebSocket__0_System_Buffers_ArrayPool_System_Byte__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.RunBroadcastTask(System.Net.WebSockets.WebSocket%2C%600%2CSystem.Buffers.ArrayPool%7BSystem.Byte%7D%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationTokenSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L177">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask_System_Net_WebSockets_WebSocket__0_System_Buffers_ArrayPool_System_Byte__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask(System.Net.WebSockets.WebSocket,`0,System.Buffers.ArrayPool{System.Byte},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)">RunBroadcastTask(WebSocket, TState, ArrayPool&lt;Byte&gt;, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static async Task RunBroadcastTask(WebSocket socketSession, TState gameState, ArrayPool&lt;byte&gt; buffer, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger, CancellationTokenSource cancellationTokenSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.websockets.websocket">WebSocket</a></td>
+        <td><span class="parametername">socketSession</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">gameState</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.buffers.arraypool-1">ArrayPool</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>&gt;</td>
+        <td><span class="parametername">buffer</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Data.State.html">State</a></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
+        <td><span class="parametername">channelApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI</span></td>
+        <td><span class="parametername">guildApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationTokenSource</span></td>
+        <td><span class="parametername">cancellationTokenSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask_System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.RunChannelTask(System.Net.WebSockets.WebSocket%2C%600%2CIEnumerable%7BSystem.String%7D%2C%605%2C%604%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationTokenSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L152">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask_System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask(System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)">RunChannelTask(WebSocket, TState, IEnumerable&lt;String&gt;, TInGameRequestType, TProgress, ILogger, CancellationTokenSource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static async Task RunChannelTask(WebSocket socketSession, TState state, IEnumerable&lt;string&gt; inGameRequestTypes, TInGameRequestType closeRequestType, TProgress closedProgress, ILogger logger, CancellationTokenSource cancellationTokenSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.websockets.websocket">WebSocket</a></td>
+        <td><span class="parametername">socketSession</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="parametername">inGameRequestTypes</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TInGameRequestType</span></td>
+        <td><span class="parametername">closeRequestType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">closedProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationTokenSource</span></td>
+        <td><span class="parametername">cancellationTokenSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_RunTimeoutTask_System_Int64__0__4_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.RunTimeoutTask(System.Int64%2C%600%2C%604%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationTokenSource)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L211">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_RunTimeoutTask_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunTimeoutTask*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_RunTimeoutTask_System_Int64__0__4_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.RunTimeoutTask(System.Int64,`0,`4,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)">RunTimeoutTask(Int64, TState, TProgress, ILogger, CancellationTokenSource)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static async Task RunTimeoutTask(long timeout, TState state, TProgress closedProgress, ILogger logger, CancellationTokenSource cancellationTokenSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">timeout</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TState</span></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">closedProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationTokenSource</span></td>
+        <td><span class="parametername">cancellationTokenSource</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6_StartListening_System_String_Tuple_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake___System_String__4__4__4_System_Collections_Immutable_ImmutableArray_System_String___5_Func_System_String_BurstBotShared_Shared_Models_Config_Config_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task_System_Net_WebSockets_WebSocket___Func_System_Net_WebSockets_WebSocket_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606.StartListening(System.String%2CTuple%7BSystem.Collections.Concurrent.ConcurrentDictionary%7BSystem.String%2C%600%7D%2CConcurrentCollections.ConcurrentHashSet%7BRemora.Rest.Core.Snowflake%7D%7D%2CSystem.String%2C%604%2C%604%2C%604%2CSystem.Collections.Immutable.ImmutableArray%7BSystem.String%7D%2C%605%2CFunc%7BSystem.String%2CBurstBotShared.Shared.Models.Config.Config%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationTokenSource%2CTask%7BSystem.Net.WebSockets.WebSocket%7D%7D%2CFunc%7BSystem.Net.WebSockets.WebSocket%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationTokenSource%2CTask%7D%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L58">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IGame_6_StartListening_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.StartListening*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IGame_6_StartListening_System_String_Tuple_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake___System_String__4__4__4_System_Collections_Immutable_ImmutableArray_System_String___5_Func_System_String_BurstBotShared_Shared_Models_Config_Config_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task_System_Net_WebSockets_WebSocket___Func_System_Net_WebSockets_WebSocket_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotShared.Shared.Interfaces.IGame`6.StartListening(System.String,Tuple{System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake}},System.String,`4,`4,`4,System.Collections.Immutable.ImmutableArray{System.String},`5,Func{System.String,BurstBotShared.Shared.Models.Config.Config,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task{System.Net.WebSockets.WebSocket}},Func{System.Net.WebSockets.WebSocket,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)">StartListening(String, Tuple&lt;ConcurrentDictionary&lt;String, TState&gt;, ConcurrentHashSet&lt;Snowflake&gt;&gt;, String, TProgress, TProgress, TProgress, ImmutableArray&lt;String&gt;, TInGameRequestType, Func&lt;String, Config, ILogger, CancellationTokenSource, Task&lt;WebSocket&gt;&gt;, Func&lt;WebSocket, ILogger, CancellationTokenSource, Task&gt;, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static async Task StartListening(string gameId, Tuple&lt;ConcurrentDictionary&lt;string, TState&gt;, ConcurrentHashSet&lt;Snowflake&gt;&gt; gameStateTuple, string gameName, TProgress notAvailableProgress, TProgress startingProgress, TProgress closedProgress, ImmutableArray&lt;string&gt; inGameRequestTypes, TInGameRequestType closeRequestType, Func&lt;string, Config, ILogger, CancellationTokenSource, Task&lt;WebSocket&gt;&gt; socketOpener, Func&lt;WebSocket, ILogger, CancellationTokenSource, Task&gt; closeHandler, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">gameId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Tuple</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.concurrent.concurrentdictionary-2">ConcurrentDictionary</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>, TState&gt;, <span class="xref">ConcurrentCollections.ConcurrentHashSet</span>&lt;<span class="xref">Remora.Rest.Core.Snowflake</span>&gt;&gt;</td>
+        <td><span class="parametername">gameStateTuple</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">gameName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">notAvailableProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">startingProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TProgress</span></td>
+        <td><span class="parametername">closedProgress</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="parametername">inGameRequestTypes</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TInGameRequestType</span></td>
+        <td><span class="parametername">closeRequestType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>, <a class="xref" href="BurstBotShared.Shared.Models.Config.Config.html">Config</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a>, <span class="xref">CancellationTokenSource</span>, <span class="xref">Task</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.websockets.websocket">WebSocket</a>&gt;&gt;</td>
+        <td><span class="parametername">socketOpener</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Func</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.websockets.websocket">WebSocket</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a>, <span class="xref">CancellationTokenSource</span>, <span class="xref">Task</span>&gt;</td>
+        <td><span class="parametername">closeHandler</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Data.State.html">State</a></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
+        <td><span class="parametername">channelApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI</span></td>
+        <td><span class="parametername">guildApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.logging.ilogger">ILogger</a></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IGame_6.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IGame%606%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Interfaces/IGame.cs/#L19" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,9 +1,0 @@
-{
-  "pronoun": "You",
-  "participateSecond": "participate",
-  "participateThird": "participates",
-  "possessiveSecond": "Your",
-  "possessiveThird": "{playerName}'s",
-  "card": " card(s)",
-  "from": "From {player}"
-}

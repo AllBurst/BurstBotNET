@@ -1,0 +1,603 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class RawBlackJackGameState
+   | Jack of All Trades </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class RawBlackJackGameState
+   | Jack of All Trades ">
+    <meta name="generator" content="docfx 2.58.9.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState">
+  
+  
+  <h1 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState" class="text-break">Class RawBlackJackGameState
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">RawBlackJackGameState</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="BurstBotShared.Shared.Interfaces.IRawState-3.html">IRawState</a>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html">BlackJackGameState</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.html">RawBlackJackGameState</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress.html">BlackJackGameProgress</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.html">RawBlackJackGameState</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#system-object-tostring">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.html">BurstBotShared.Shared.Models.Game.BlackJack.Serializables</a></h6>
+  <h6><strong>Assembly</strong>: BurstBotShared.dll</h6>
+  <h5 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class RawBlackJackGameState : IRawState&lt;BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress&gt;, IEquatable&lt;RawBlackJackGameState&gt;</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_BaseBet.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.BaseBet%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L53">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_BaseBet_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.BaseBet*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_BaseBet" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.BaseBet">BaseBet</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;base_bet&quot;)]
+[JsonProperty(&quot;base_bet&quot;)]
+public float BaseBet { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentPlayerOrder.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentPlayerOrder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L33">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentPlayerOrder_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentPlayerOrder*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentPlayerOrder" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentPlayerOrder">CurrentPlayerOrder</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;current_player_order&quot;)]
+[JsonProperty(&quot;current_player_order&quot;)]
+public int CurrentPlayerOrder { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentTurn.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentTurn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L41">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentTurn_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentTurn*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_CurrentTurn" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.CurrentTurn">CurrentTurn</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;current_turn&quot;)]
+[JsonProperty(&quot;current_turn&quot;)]
+public int CurrentTurn { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_GameId.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.GameId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L15">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_GameId_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.GameId*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_GameId" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.GameId">GameId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;game_id&quot;)]
+[JsonProperty(&quot;game_id&quot;)]
+public string GameId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_HighestBet.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.HighestBet%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L37">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_HighestBet_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.HighestBet*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_HighestBet" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.HighestBet">HighestBet</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;highest_bet&quot;)]
+[JsonProperty(&quot;highest_bet&quot;)]
+public int HighestBet { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_LastActiveTime.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.LastActiveTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L19">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_LastActiveTime_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.LastActiveTime*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_LastActiveTime" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.LastActiveTime">LastActiveTime</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;last_active_time&quot;)]
+[JsonProperty(&quot;last_active_time&quot;)]
+public string LastActiveTime { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Players.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Players%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L23">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Players_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Players*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Players" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Players">Players</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;players&quot;)]
+[JsonProperty(&quot;players&quot;)]
+public Dictionary&lt;ulong, RawBlackJackPlayerState&gt; Players { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint64">UInt64</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackPlayerState.html">RawBlackJackPlayerState</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousPlayerId.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousPlayerId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L45">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousPlayerId_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousPlayerId*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousPlayerId" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousPlayerId">PreviousPlayerId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;previous_player_id&quot;)]
+[JsonProperty(&quot;previous_player_id&quot;)]
+public ulong PreviousPlayerId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint64">UInt64</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousRequestType.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousRequestType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L49">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousRequestType_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousRequestType*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_PreviousRequestType" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.PreviousRequestType">PreviousRequestType</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;previous_request_type&quot;)]
+[JsonProperty(&quot;previous_request_type&quot;)]
+public string PreviousRequestType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Progress.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Progress%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L27">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Progress_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Progress*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_Progress" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.Progress">Progress</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;progress&quot;)]
+[JsonProperty(&quot;progress&quot;)]
+[JsonConverter(typeof(StringEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public BlackJackGameProgress Progress { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress.html">BlackJackGameProgress</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_FromState_BurstBotShared_Shared_Interfaces_IState_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_Serializables_BlackJackGameProgress__.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.FromState(BurstBotShared.Shared.Interfaces.IState%7BBurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState%2CBurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState%2CBurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L57">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_FromState_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.FromState*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_FromState_BurstBotShared_Shared_Interfaces_IState_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_Serializables_BlackJackGameProgress__" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.FromState(BurstBotShared.Shared.Interfaces.IState{BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress})">FromState(IState&lt;BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Pure]
+public static RawBlackJackGameState FromState(IState&lt;BlackJackGameState, RawBlackJackGameState, BlackJackGameProgress&gt; state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Interfaces.IState-3.html">IState</a>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html">BlackJackGameState</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.html">RawBlackJackGameState</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress.html">BlackJackGameProgress</a>&gt;</td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.html">RawBlackJackGameState</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_ToState_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Remora_Rest_Core_Snowflake_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.ToState(Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CRemora.Rest.Core.Snowflake)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L76">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_ToState_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.ToState*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState_ToState_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Remora_Rest_Core_Snowflake_" data-uid="BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.ToState(Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Remora.Rest.Core.Snowflake)">ToState(IDiscordRestGuildAPI, Snowflake)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;BlackJackGameState&gt; ToState(IDiscordRestGuildAPI guildApi, Snowflake guild)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI</span></td>
+        <td><span class="parametername">guildApi</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Rest.Core.Snowflake</span></td>
+        <td><span class="parametername">guild</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html">BlackJackGameState</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="BurstBotShared.Shared.Interfaces.IRawState-3.html">IRawState&lt;TState, TRaw, TProgress&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">System.IEquatable&lt;T&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/new_games/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_BlackJack_Serializables_RawBlackJackGameState.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/new_games/BurstBotShared/Shared/Models/Game/BlackJack/Serializables/RawBlackJackGameState.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

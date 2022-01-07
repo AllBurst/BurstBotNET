@@ -1,0 +1,1799 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/projects/burstbotnet",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      },
+      "is_incremental": false
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.About.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.About.html",
+          "hash": "4KwjG8ScXdgUcH50G1vbYMk3GBjjbg6lVyQp9rZ9/fg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Balance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Balance.html",
+          "hash": "hAMPS/w9zbyjfVIj/nEgFsqJ2R5Q6S+QluPQPbPdfeo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.BlackJack.BlackJack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.BlackJack.BlackJack.html",
+          "hash": "1FFSGnYjdEP4sX7gJndm6gDu2qNnEC5R/P3NeBr9wCg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.BlackJack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.BlackJack.html",
+          "hash": "kLiOFehB3nd5BPRTAlZc8AVbg7dw37QSknMikVMl+Qs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.html",
+          "hash": "5Tu5k6myifdlbnPGaY/o8KQDOT/OIac2BJSFyOoinUE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.ChinesePoker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.ChinesePoker.html",
+          "hash": "DOawV7P2mUivYo/bSfeUvHim6ViVWFz4igleZwPR210="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Game.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Game.html",
+          "hash": "qMMvqpD5jFvzBYDR0jUjf1ivBafHcoVF+00T7RjYJOc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Help.Help.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Help.Help.html",
+          "hash": "QArTLKqqmU9b+jiHihIiTb7Bi8pBf54BscjWGi7jzT8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Help.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Help.html",
+          "hash": "BIV9X7tcX3k0T76174THuptNrErBA4k0cVEwMUMpes0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.NinetyNine.NinetyNine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.NinetyNine.NinetyNine.html",
+          "hash": "OKVrCaH1g+AFBAx7uLYnmiElaAjmSlmIwAIqrR8I6+w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.NinetyNine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.NinetyNine.html",
+          "hash": "V0WoulsM1Mo/rouP+6t28b7/3Lk1/1IDnQhWbT4Rv5U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.OldMaid.OldMaid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.OldMaid.OldMaid.html",
+          "hash": "l3hH189dAAt4H9wiM3KrlaqhGTsDUYaBFMvkKnZUSfw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.OldMaid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.OldMaid.html",
+          "hash": "vyNalfnZaPUAXl9RlIKwtPBPMdCyXVlQpArGFwpUaZc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Ping.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Ping.html",
+          "hash": "+z5VRfyZNhF2Mft+hBTWEzCqN95qzsjyzNPplxCrqQI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Rewards.Daily.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Rewards.Daily.html",
+          "hash": "gdEHu1LctOV5RyuH6O/VO5WxPkZh7JbLdxnsgGNFmJk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Rewards.Rewards.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Rewards.Rewards.html",
+          "hash": "LCGd7ahAErKv6U3EOryD1TxIj3J3HzMzc6HrZXChyws="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Rewards.Weekly.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Rewards.Weekly.html",
+          "hash": "G0tEoko6lLsfuNMWFko3sQpHbgIS4a0exv3aKASRLXU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Rewards.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Rewards.html",
+          "hash": "9Cex/tDhhIng/3gOKIw1/bijLfMJm1HjiudyEkaFUhg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Start.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Start.html",
+          "hash": "shsVY/aO27ZqlbcWMNUp52twZA6zAWbrBvdMUYhT5mA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.html",
+          "hash": "/hsIlRADeuMPF0W+meXzs4c0Hdz8sZ8tb3F9IlSPh4E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Handlers.MessageResponder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Handlers.MessageResponder.html",
+          "hash": "AXRp8VymdL7Go45T7cXc46u5MXdb1DER6AyI6upgbOc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Handlers.ReadyResponder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Handlers.ReadyResponder.html",
+          "hash": "YiwcJhuU4Tc+z8OuzflG2k/gp86xy4KkFdNTEQhdNP8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Handlers.SlashCommandExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
+          "hash": "qM/QWstwGNO9C//FJK+rT2EWzBbDOr8COosxU0rFACY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Handlers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Handlers.html",
+          "hash": "raz5Ca2mSU+bKldwAoqWDLb7TqI+lPbeQBYMie0EgnQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Program.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Program.html",
+          "hash": "UU5QmGMI8XIYU3za87JpPy7HsZ00CsSxwYttMA+DzDw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.html",
+          "hash": "oPW3Wp0uLTu3AU4t6VfgGuIhBMgxgzEN7CkzVXZ7CMA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Api.ApiRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Api.ApiRequestType.html",
+          "hash": "0n3prOedgiU+qbc8uCVXASDQDYG1l/mMzytl094I760="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Api.BurstApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Api.BurstApi.html",
+          "hash": "N+BW4MsPvuebvsu59liTDMUFZnGfISIdXAtBjOnzlfE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Api.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Api.html",
+          "hash": "7eISu0XyuUYLGZ7N1kp4UrJwKLEIbXrYWnd/NM+44V4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Class1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Class1.html",
+          "hash": "xvANgX4zW77thYgp3zjQvBoEp3No/QLE1FUJCNFlB9w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Services.DeckService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Services.DeckService.html",
+          "hash": "ckDy0K47jFAq//wnrVUIW/JHGOww6Qj+ykYrkNAtDUk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Services.SkiaService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Services.SkiaService.html",
+          "hash": "pc5kxxp+nFo6QCgrGUcz0jLsgn9HcbKMRJtEFIaRfyk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Services.html",
+          "hash": "A3j4nIcmgBoS9U8GUtNutY8YzNCzC44e12Xea3K+nX0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.BurstColor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.BurstColor.html",
+          "hash": "de4mMF3YXsVUWmoJyiZAs0FjK5l4WB8DhI6uAF+g9VU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Constants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Constants.html",
+          "hash": "cSn9dEuyVOmZjTo0Z3raPmzAyM1hMA982uSdr6Oul+4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Enums.SocketOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Enums.SocketOperation.html",
+          "hash": "tL9fzN/J7pI5JWEDfrFdkNbX+lQlvPqiqeeE47kxJfI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Enums.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Enums.html",
+          "hash": "ZzarhzPRA4sg9fVsS4LrsBYUm3BSPidBQbc1xXelZ/o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.ErrorMessages.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.ErrorMessages.html",
+          "hash": "UUnDLJXfHMq1w5Qrpmr8tl4ZQkBVO2CTpdPmSnveyRs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Extensions.BurstExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Extensions.BurstExtensions.html",
+          "hash": "Nkpr4ai+4HQh/V+jHeFyorwyjOjhhTJJaFytnmwxyjQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Extensions.html",
+          "hash": "vWzKvwRPMxV8bH4+uU4H1B4di63x/jahUFDu2bF/vtY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IGame-6.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IGame-6.html",
+          "hash": "i5Kd1Me0/JBaWOlHYhql5pDorAXQpz9MBZY5/ByIrmw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IGameState-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IGameState-2.html",
+          "hash": "jqls62c5NA6Y+1OpHLX5OmKyHrMHPHoSYkAZnPg6ZLQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IGenericDealData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IGenericDealData.html",
+          "hash": "Ke9jajeH/q4N2hJkkZBYe9tfGrQtN1hq3ynpKozL/Us="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.ILocalization-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.ILocalization-1.html",
+          "hash": "GnpM7qgKvtAXeo4Dk+xKkAQMsKY0kbta14Cq2Idv2vA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IPlayerState.html",
+          "hash": "zXQVxtMJBTKGQR9jGkxjdgYeTZdxl6PxsAAcCjl0rMw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IRawState-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IRawState-3.html",
+          "hash": "+ZqeYr1vVLNCWYFopugpoBsUq3CJ2vhTNR0No1toEZI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IState-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IState-3.html",
+          "hash": "vAlfsJAwgzOLnxsBjUVsFZ0Wfdl917jpk8FVM2opxQE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IValueRealizable-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IValueRealizable-1.html",
+          "hash": "7EmahKuJ00Ik848DRXfSWXF20PfaTdFSOqWUeqxSwQY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.html",
+          "hash": "IVdaO7IAjVsrx4nqZgGCiyQhK2+jDXIxin4TBC2MFdk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Config.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Config.Config.html",
+          "hash": "GLJ2PU8pqw6XeotmJbhu0V5fTecVYVUyhQDEezKC+lc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Config.html",
+          "hash": "ALDMsKlYiDDSnvWbjKOzzSnVvX4bJtvi4Manpl7Jl+o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Player.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Player.html",
+          "hash": "930k7MF2+Jzhy9nM2OTarVTPfwhz0SRlkY+YIN4zj8U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.PlayerRewardType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.PlayerRewardType.html",
+          "hash": "4B4GfJkx7Br52VKU/kTHoKBkoqhuXmAjUSronZaQmso="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.NewPlayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.NewPlayer.html",
+          "hash": "7KkFcns3Iju3sH63xSPP8T3xavdB3u9W30MdX530tHo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.RawPlayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.RawPlayer.html",
+          "hash": "Xw5O5HeGC4WbeAQTcLFwF1AYIwBeKRunKLFfPJZL9gY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.RawTip.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.RawTip.html",
+          "hash": "fw+3bIKcrIPZtYGJIoquCuQSkscdneaSIa+/EGN6TWc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.RewardResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.RewardResponse.html",
+          "hash": "U+gGkK+bEf+F4c+T2DgCYNURc7qq+y+mQfPFREz789w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.TipAdjustment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.TipAdjustment.html",
+          "hash": "lhTAtDLs+ze+pl62bu4whFNE7CXYHqlHSuWHlePNwh4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.UpdateTip.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.UpdateTip.html",
+          "hash": "X4rDM0+LJkEp2nQVkmOmzjE8HpCVwrABL/USHlSivJ4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Serializables.html",
+          "hash": "FR7xx7W6cp3x1FF1rh3TwO7jiuANFdQwmMhmPwTXeBc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.State.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.State.html",
+          "hash": "WkSP0JBrR9HL2JlkFxnfct5zHHPyIMMJhwiMZUxOePI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.Tip.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.Tip.html",
+          "hash": "K2kQYHIWz60+qr0s6BEn9BzxtN059uDQQwk01KPEESE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Data.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Data.html",
+          "hash": "nlHC6ufJbaMGITzVUj9yPdDi+VaBuQte0/PuacCXKsY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.html",
+          "hash": "B6FHP5OK4lhy2Z221OdWFC2IJVBnbM8SiR7jCoR50nw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackDropDownEntity.html",
+          "hash": "y/ZS+HB0MI6uC4RI8D8RJYc2JAgLD3CSgdGGkmjy8VI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html",
+          "hash": "MWBkuUQZ5n7f5l6sOcFGlAh/gym2ty9ZTPzXfPHjegQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState.html",
+          "hash": "wM3b16nRhzyT3GF0QwlMynVs4cGrNvKgGRBbzoSrRUA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackGameProgress.html",
+          "hash": "tTJ5HiqVXHEDjFL5YU6DiC5J4NHwvvyEqi7O0OMi6II="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameRequest.html",
+          "hash": "Fu/IhxjoEv+rCsmz6tkkOeVUi818rieVMpOzfgU5bW8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameRequestType.html",
+          "hash": "T+wFttLYGeb/S752daPkqvDK1Vkn18t/9TGoM8az61k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameResponseEndingData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.BlackJackInGameResponseEndingData.html",
+          "hash": "Hd8pbu2r0ZVbrPJdhFyWGPo6SLEQ4RxYNzJc3zD9d+Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackGameState.html",
+          "hash": "9B+BeZi+lv+1DyANRd4tHv1waI1V/si8yoyB31bsvuM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackPlayerState.html",
+          "hash": "6kRawkqIrrykL6b2NdHWe48Qb6zLcKJuolJ7lmUf19Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.Serializables.html",
+          "hash": "o/yYft4KWcdlGAJhzvb3LYmz1rCjMepmIJSlIEuhbyk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.BlackJack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.html",
+          "hash": "l35zrAeeHIJATpCuU2f07WM+c6Sgwe3NU0/4OfRMwwQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerButtonEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerButtonEntity.html",
+          "hash": "KOKvOYzpVhcmj+ePpJJLsR3EYAhDYGr0p2xScBlcBmM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerDropDownEntity.html",
+          "hash": "UtJuLQGJiX2rGtrvY3MN09DTz8MmvO7zlMl8QTrbgIs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html",
+          "hash": "CUIe6LasTJj61CNokprRt0GyTlgUGqXMxgBC5HiNTaU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState.html",
+          "hash": "FHfVtHAxPlcWrto+yJFKAFuGuEwykZy0yOTNjcQrSdg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombination.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombination.html",
+          "hash": "VD4sNdIW322nUgKwJoOKDAQ1sXOi2rAjQBWKMpjgtAw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombinationType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombinationType.html",
+          "hash": "ErzyYufyzUsQT3OtAD1YDwLRNsXd15nOC4Wo+3Ddgak="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress.html",
+          "hash": "LLOX8C1zhGo1MX+cnRyILDB2Yvh1Ard6Sn6evQHYpLE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameRequest.html",
+          "hash": "6uKOrwOED1gD/iEaQi5tsj7u/bvNnGZBTbS533ubR4k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameRequestType.html",
+          "hash": "Ub1/X9nZr9CaHJpYmqjiksCKWvKZaaKi3KKGH6SkdBg="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseEndingData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseEndingData.html",
+          "hash": "8SYLg03MIbMwmukcOSjm32Q+TUCktz9T0IzGqiVSP/g="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardData.html",
+          "hash": "m4FKFMltbgdyhYQQctt8/tYeGP/twklbxSj4WbxCHYk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardType.html",
+          "hash": "GDBlX0b9XvJhBJWACDLfbCsyI5GwBKRvTR2GShQqBZc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardWrapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerInGameResponseRewardWrapper.html",
+          "hash": "u2dtGsxVkRRgWpUasag4Q4L59bM1PbDxit+0donFoAo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerNatural.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerNatural.html",
+          "hash": "X2Iw/1DU+CBH/jqQrI2Hkie95c+SJBo9zmLWc16lpuw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.RawChinesePokerGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.RawChinesePokerGameState.html",
+          "hash": "pe3UAyBZQZKeoV5JLUYG/LqtxCbbB6p3RCBCUqjmiCE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.RawChinesePokerPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.RawChinesePokerPlayerState.html",
+          "hash": "9IBsBOMxyqouCTCxwzG2mlHLUvouKuZm+VA8/bICtw4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.html",
+          "hash": "a1axGYdbLnCVrRpepcJc4B4PPfGhQLhF3dKPs4tkBbE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChinesePoker.html",
+          "hash": "Cj0K34g5X7VRJCW4oNXIVJCXwZ8HbDeetBBcO4GKtw4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.GameStates.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.GameStates.html",
+          "hash": "Sv1/cydEcYHs9gFA0Vxd+Q/MPodlfxMcg9M4uqINFUQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.GenericJoinResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.GenericJoinResult.html",
+          "hash": "1EDYUyOyGJrrrFoozjbC04zYTjKyQbU8t6WSWE40GU4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html",
+          "hash": "MlwhXxadUlo1g8x16bVD1AW9mRsNgQw/xBlUhTZKFNM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html",
+          "hash": "s5Z9Dqa4d+aS8fDQE8fyO8j45YHu65Q+zKBJQb2wk9s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDifficulty.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDifficulty.html",
+          "hash": "33VJO0J4LAk9ZxOBLdNT11v0M2BvrWYVqDKdFyA2bOk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineGameProgress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineGameProgress.html",
+          "hash": "HBCVp8Byj7exm5UAPeWx1dP7snVXDjMTXf+J089Lu2c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequestType.html",
+          "hash": "qAfsBLzSvl/fs3VHyK6ReLf846aUCS+zMLGdV04EoG4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.html",
+          "hash": "rFvMb23po9JcwOTILXUSIV8Zb2caSbPAUz6L986GoWw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html",
+          "hash": "ZE6Vq8Dx3u+Q5R7utMzbM83guhjwhfTJyGPanYd6Yws="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html",
+          "hash": "PYFzGUht3xDp9OJZEc9jha4aa6VnOclBZykBXOyPmVA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.html",
+          "hash": "lfi1IfeSJie9I+F5fn1R573/PehjGkp+g3C4rit5jro="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.html",
+          "hash": "crqRmOM2VBjN2wrua3QIux+4TNO6eJDPs3242KXMs9s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidButtonEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidButtonEntity.html",
+          "hash": "8EIevqvjVRcH1ClRfEHAbTkm0A3DXEU4f+CwGYmsASk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.html",
+          "hash": "zkJQ+abO9RksI2HugYhLm+QN++k+cB4poyNDjvyXT80="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html",
+          "hash": "up9cqEfNz35usvFkRPnGJEfJuk22xuparAR5jRThSt0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidPlayerState.html",
+          "hash": "TX/erZf+ms7hoPM+Xx54ckPsRq2Y1K0y6WkeYj2mcsk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidGameProgress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidGameProgress.html",
+          "hash": "Gml8ieqzamNl5UbEgSPXWUR4IQ7Cq8erxcAksAVAU/w="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameRequest.html",
+          "hash": "vgSsYrNQ48axa1LGBJOI/ivb0mMFBGnGdeHW4bWDGyk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameRequestType.html",
+          "hash": "j+089QLzaPSgp7ite9IrQf3CN1MD0i3hnyte5pPXNbU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameResponseEndingData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.OldMaidInGameResponseEndingData.html",
+          "hash": "mLJrq3OxFiB51BVWkyj6f8NjEcf12tFs0MyXrg9oZ+o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.RawOldMaidGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.RawOldMaidGameState.html",
+          "hash": "xtc7rOcE3UXH6kWmGJQQgW+QbiDSKPMrN56eG+Evnh8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.RawOldMaidPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.RawOldMaidPlayerState.html",
+          "hash": "coVcqZogouVqMyI9SgCmI4KRE32o81XRURpC9Lrxn8o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.Serializables.html",
+          "hash": "CUE7uB7APiyjQmcTCXBDf2flEzpIOa3H7FOjFmB8ptY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.OldMaid.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.html",
+          "hash": "gWb7K5+BT2/tM01Y+trPObWn54G9BtsjofAnL4PqOc8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.Card.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.Card.html",
+          "hash": "Xskgt7OZ1wuWwKaSqNNxRYFtR9zO4qDre4gJC5HifPQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.ClientType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.ClientType.html",
+          "hash": "xudYKBvLQoMClOFQTVktRjVMuBTv6AE9wkQLW6CDJrI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.GameType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.GameType.html",
+          "hash": "PR0AIC5ji1ashgjkbTPlfCTQ6MMAaH7dYpXR9sI+8Ks="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinRequest.html",
+          "hash": "ZFwPO2V9rSTVa9q0MRLP40PCDWT+TnNzvrR8K2Oa/+A="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus.html",
+          "hash": "YNA4xj7m748TXe7vi31OhKurr9RU7d2VwrI8KidUzjc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatusType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatusType.html",
+          "hash": "eZ04bmnytzTrfqhYXZUdCSJW3zfZnmwHmoAbruhV05o="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.Suit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.Suit.html",
+          "hash": "lZ55O4GO1hK9e9rNBabuI2yKVQdRAw3zzmHQd+7f8b4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.html",
+          "hash": "Lf89Dy147yJHLIRgEYz8ay50yPOchs3g4skcPU5z+rs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.html",
+          "hash": "dTitnzTz3VtPb43cvJbKxAi7LfzCrT9C590Bnie/n6U="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.BlackJackLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.BlackJackLocalization.html",
+          "hash": "Q8pKUTo7I+U8xTT+CLTQtmUiPndShHTWAqB26BDpkYA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.html",
+          "hash": "bRGmb6BTNZSa09CGu+MFxbgvr5mcVVWvCrcouhOTW2c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables.ChinesePokerLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables.ChinesePokerLocalization.html",
+          "hash": "c78+r851Mrf6OU9kcJG1PEzSXYMuxfURUDWaJ/Tmnw4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables.html",
+          "hash": "fHG8yWX0c7kU9syt/rjw3ApMa1mRzamt9Ch5WIHcwNE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Language.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Language.html",
+          "hash": "to1EpiFIJjlYGLDQJK/JvygGwB8ueHjhgeDqon7PeSY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Localization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Localization.html",
+          "hash": "Au8enbA8MvVtX/zckPZxKtRFC3rEtD97DXH9fqD9EPs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Localizations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Localizations.html",
+          "hash": "t2dNlO5GMlteQhun0QrT/2BnCAbdEFEqDYDSpST2tAk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.OldMaid.Serializables.OldMaidLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.OldMaid.Serializables.OldMaidLocalization.html",
+          "hash": "H2SYeIO+FVHdBg2xqA0QdVfUSNWkI8HTMk//gDr3xbQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.OldMaid.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.OldMaid.Serializables.html",
+          "hash": "M0FIpigKqthicgkFjZJjW9osLb2z9ir+WxFsPLiQOYA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.html",
+          "hash": "ya2lmC1SMfuHcqyFCXGV8hA/muaNGx283JbOURqYe+c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalization.html",
+          "hash": "z+9p7x2dvxTHXHmK8L4v9Oz0IbIjDkDdfY1rdaDT0u0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalizations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalizations.html",
+          "hash": "H6I4f/rc1AuS6eDDzLskFr0QYFnyst+/bpWAuTZ8zes="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.html",
+          "hash": "bXrqfTYUYs4wKX6fi8+wX9nUIebtI1WMspcBLHtQBKU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.html",
+          "hash": "DR07dHEjdgDRXSK/Yqmsh8NOpwfe5B/5JgHKibDhueU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Utilities.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
+          "hash": "Ju5GcUmjl2+7t22hcLuClOM0M2ViEMCVs82ropzHc4A="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Utilities.html",
+          "hash": "R9lF7U6LWfe0mq24NM11nJe5IQywF8r1t8QLkDH8uEI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.html",
+          "hash": "3i+JtAZdUBfW75U7GWur+r6b5QWU/9MuOCH23IfyuBo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.html",
+          "hash": "dti1febWnk9mct2ypvuehYMDJr6sGHD94xfvlYtTM6I="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "8JZSSpKYBg2Zi5DncMt3Ugivo6lRPVCglKRzzcy4UwE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
+      },
+      "processors": {
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": false,
+          "incrementalPhase": "build",
+          "total_file_count": 144,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": false,
+        "details": "Cannot support incremental post processing, the reason is: should not trace intermediate info.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
