@@ -1,0 +1,9 @@
+Old Maid is very simple. Whenever you draw a card from another player and get 2 same cards in your hand, you can play (throw away) the pair of cards.
+Regardless of you get a new pair of cards or not, you will have to allow the next player to draw a card from you as well.
+
+Since there's only one Joker in the deck, you can't throw away the Joker if you have it in your hand. Therefore, the last player who still has any cards (presumably Joker) in hand will lose and has to pay tips to all other players.
+
+Rewards (4 players):
+👑 First winner - Base bet * 3
+👑 Second winner - Base bet * 2
+👑 Third winner - Base bet * 1

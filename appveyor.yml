@@ -1,0 +1,47 @@
+environment:
+  op_build_user: "deadshot465"
+  op_build_user_email: "tetsuki.syu1315@gmail.com"
+
+image:
+  - Visual Studio 2022
+install:
+  - cmd: dotnet restore
+  - sh: sudo apt-get update && sudo apt-get install -y libfontconfig1
+before_build:
+  - ps: |
+      if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+      {
+          git checkout $env:APPVEYOR_REPO_BRANCH -q
+          choco install docfx -y
+          # choco install nuget.commandline -y
+      }
+build:
+  verbosity: minimal
+after_build:
+  - ps: |
+      if(-Not $env:APPVEYOR_PULL_REQUEST_TITLE)
+      {
+          # & nuget install docfx.console -Version 2.58.9 -Source https://www.myget.org/F/docfx/api/v3/index.json
+          # & docfx.console.2.58.9\tools\docfx docfx.json
+          & docfx docfx.json
+          if ($lastexitcode -ne 0){
+            throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+          }
+          
+          git config --global credential.helper store
+          Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GITHUB_ACCESS_TOKEN):x-oauth-basic@github.com`n"
+          git config --global user.email $env:op_build_user_email
+          git config --global user.name $env:op_build_user
+          git clone https://github.com/AllBurst/BurstBotNET.git -b gh-pages origin_site -q
+          Copy-Item origin_site/.git _site -recurse
+          CD _site
+          git add -A 2>&1
+          git commit -m "CI Updates" -q
+          git push origin gh-pages -q
+      }
+on_success:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/deadshot465/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 success $env:WEBHOOK_URL1 $env:WEBHOOK_URL2
+on_failure:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/deadshot465/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 failure $env:WEBHOOK_URL1 $env:WEBHOOK_URL2

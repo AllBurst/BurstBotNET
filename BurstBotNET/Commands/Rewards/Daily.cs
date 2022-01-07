@@ -1,25 +1,42 @@
-using BurstBotNET.Shared.Interfaces;
-using BurstBotNET.Shared.Models.Data;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+using System.ComponentModel;
+using BurstBotShared.Shared.Models.Data;
+using Microsoft.Extensions.Logging;
+using Remora.Commands.Attributes;
+using Remora.Commands.Groups;
+using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.Commands.Contexts;
+using Remora.Results;
 
 namespace BurstBotNET.Commands.Rewards;
 
-public class Daily : ISlashCommand
+public class Daily : CommandGroup
 {
-    public DiscordApplicationCommand Command { get; init; }
+    private readonly InteractionContext _context;
+    private readonly IDiscordRestUserAPI _userApi;
+    private readonly ILogger<Daily> _logger;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly State _state;
 
-    public Daily()
+    public Daily(InteractionContext context,
+        IDiscordRestUserAPI userApi,
+        IDiscordRestInteractionAPI interactionApi,
+        State state,
+        ILogger<Daily> logger)
     {
-        Command = new DiscordApplicationCommand("daily", "Get your daily reward of 10 tips here.");
+        _context = context;
+        _userApi = userApi;
+        _logger = logger;
+        _interactionApi = interactionApi;
+        _state = state;
     }
-    
-    public async Task Handle(DiscordClient client, InteractionCreateEventArgs e, State state)
+
+    [Command("daily")]
+    [Description("Get your daily reward of 10 tips here.")]
+    public async Task<IResult> Handle()
     {
-        await e.Interaction.CreateResponseAsync(InteractionResponseType.DeferredChannelMessageWithSource);
-        await e.Interaction.EditOriginalResponseAsync(await Rewards.GetReward(client, e, PlayerRewardType.Daily,
-            state));
+        var rewardResult =
+            await Rewards.GetReward(_context, _userApi, _interactionApi, PlayerRewardType.Daily, _state, _logger);
+        return rewardResult.IsSuccess ? Result.FromSuccess() : Result.FromError(rewardResult.Error);
     }
 
     public override string ToString() => "daily";

@@ -1,0 +1,19 @@
+{
+  "commandList": {
+    "draw": "Assets/localization/oldMaid/EN/draw.txt"
+  },
+  "initialMessagePrefix": "You currently own:\n",
+  "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "The Old Maid game is starting!",
+  "initialMessageFooter": "Please wait until all players are ready.",
+  "winTitle": "{playerName} is the biggest winner!",
+  "won": "won",
+  "lost": "lost",
+  "winDescription": "{playerName} {verb} {totalRewards} tips!",
+  "cards": "Your cards:",
+  "draw": "Draw",
+  "drawMessage": "{previousPlayerName} drew a {card} from {ppPlayerName}.",
+  "throwMessage": "{previousPlayerName} threw away a pair of {rank}!",
+  "turnMessageTitle": "It's {possessive} turn!",
+  "showHelp": "Show help texts"
+}

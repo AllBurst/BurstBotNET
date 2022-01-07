@@ -4,5 +4,6 @@
   "participateThird": "participates",
   "possessiveSecond": "Your",
   "possessiveThird": "{playerName}'s",
-  "card": " card(s)"
+  "card": " card(s)",
+  "from": "From {player}"
 }
