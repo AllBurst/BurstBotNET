@@ -28,7 +28,7 @@ public class Localizations
         _chinese = Localization.FromRaw(cnRaw);
     }
 
-    public Localization GetLocalization(Language language = Language.Japanese)
+    public Localization GetLocalization(Language language = Language.English)
         => language switch
         {
             Language.Japanese => _japanese,

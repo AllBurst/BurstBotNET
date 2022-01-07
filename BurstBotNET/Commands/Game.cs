@@ -112,7 +112,7 @@ public static class Game
         return new GenericJoinResult
         {
             BotUser = botUser,
-            InvokerTip = invokerTip,
+            InvokerTip = invokerTip!,
             InvokingMember = invokingMember,
             JoinStatus = joinStatus,
             MentionedPlayers = mentionedPlayers,

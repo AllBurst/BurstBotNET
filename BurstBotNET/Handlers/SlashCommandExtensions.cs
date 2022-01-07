@@ -2,9 +2,11 @@ using BurstBotNET.Commands;
 using BurstBotNET.Commands.BlackJack;
 using BurstBotNET.Commands.ChinesePoker;
 using BurstBotNET.Commands.NinetyNine;
+using BurstBotNET.Commands.OldMaid;
 using BurstBotNET.Commands.Rewards;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
+using BurstBotShared.Shared.Models.Game.OldMaid;
 using Microsoft.Extensions.DependencyInjection;
 using Remora.Commands.Extensions;
 using Remora.Discord.Interactivity.Extensions;
@@ -27,10 +29,13 @@ public static class SlashCommandExtensions
             .AddCommandGroup<BlackJack>()
             .AddCommandGroup<ChinesePoker>()
             .AddCommandGroup<NinetyNine>()
+            .AddCommandGroup<OldMaid>()
             .AddPagination()
             .AddInteractiveEntity<BlackJackDropDownEntity>()
             .AddInteractiveEntity<BlackJackButtonEntity>()
             .AddInteractiveEntity<ChinesePokerDropDownEntity>()
-            .AddInteractiveEntity<ChinesePokerButtonEntity>();
+            .AddInteractiveEntity<ChinesePokerButtonEntity>()
+            .AddInteractiveEntity<OldMaidButtonEntity>()
+            .AddInteractiveEntity<OldMaidDropDownEntity>();
     }
 }

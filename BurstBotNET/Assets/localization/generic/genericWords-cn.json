@@ -4,5 +4,6 @@
   "participateThird": "参加",
   "possessiveSecond": "你的",
   "possessiveThird": "他的",
-  "card": "卡牌"
+  "card": "卡牌",
+  "from": "來自 {player}"
 }

@@ -11,6 +11,7 @@ public class DeckService
     private const string UserInterfaceLogoPath = "/UI_logo";
     private readonly Dictionary<Card, Lazy<SKBitmap>> _cardSprites = new(54);
     private readonly Lazy<SKBitmap> _cardBack;
+    private readonly Lazy<SKBitmap> _cardJoker;
 
     public DeckService()
     {
@@ -49,11 +50,15 @@ public class DeckService
         }
 
         _cardBack = new Lazy<SKBitmap>(() => SKBitmap.Decode($"{SpritePath}/back.png"));
+        _cardJoker = new Lazy<SKBitmap>(() => SKBitmap.Decode($"{SpritePath}/joker.png"));
     }
 
     [Pure]
     public SKBitmap GetBitmap(Card card)
-        => card.IsFront ? _cardSprites[card].Value : _cardBack.Value;
+    {
+        if (!card.IsFront) return _cardBack.Value;
+        return card.Number == 0 ? _cardJoker.Value : _cardSprites[card].Value;
+    }
 
     private static SKBitmap LoadBitmap(Suit suit, string character)
         => SKBitmap.Decode($"{SpritePath}/{suit.ToString().ToLowerInvariant()}{character}.png");

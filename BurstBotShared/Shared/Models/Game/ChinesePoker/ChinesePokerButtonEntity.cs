@@ -1,7 +1,9 @@
 using System.Collections.Immutable;
 using System.Text.Json;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -18,17 +20,20 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
     private readonly State _state;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
+    private readonly ILogger<ChinesePokerButtonEntity> _logger;
 
     public ChinesePokerButtonEntity(
         InteractionContext context,
         State state,
         IDiscordRestChannelAPI channelApi,
-        IDiscordRestInteractionAPI interactionApi)
+        IDiscordRestInteractionAPI interactionApi,
+        ILogger<ChinesePokerButtonEntity> logger)
     {
         _context = context;
         _state = state;
         _channelApi = channelApi;
         _interactionApi = interactionApi;
+        _logger = logger;
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -77,11 +82,12 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         var originalAttachments = cardMessage
             .Attachments
             .Select(OneOf<FileData, IPartialAttachment>.FromT1);
+        var originalComponents = cardMessage.Components.Disable();
         var editResult = await _channelApi
             .EditMessageAsync(cardMessage.ChannelID, cardMessage.ID,
                 embeds: originalEmbeds.ToImmutableArray(),
                 attachments: originalAttachments.ToImmutableArray(),
-                components: Array.Empty<IMessageComponent>(),
+                components: originalComponents,
                 ct: ct);
                 
         if (!editResult.IsSuccess) return Result.FromError(editResult);
@@ -89,12 +95,13 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         originalEmbeds = message.Embeds;
         originalAttachments = message.Attachments
             .Select(OneOf<FileData, IPartialAttachment>.FromT1);
+        originalComponents = message.Components.Disable();
         editResult = await _channelApi
             .EditMessageAsync(message.ChannelID, message.ID,
                 Constants.CheckMark,
                 originalEmbeds.ToImmutableArray(),
                 attachments: originalAttachments.ToImmutableArray(),
-                components: Array.Empty<IMessageComponent>(),
+                components: originalComponents,
                 ct: ct);
                 
         if (!editResult.IsSuccess) return Result.FromError(editResult);
@@ -124,11 +131,28 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         IMessage message,
         CancellationToken ct)
     {
-        var dequeueResult = playerState.OutstandingMessages.TryDequeue(out _);
+        var dequeueResult = playerState.OutstandingMessages.TryDequeue(out var cardMessage);
         if (!dequeueResult)
             return Result.FromSuccess();
-                
+
+        var originalEmbeds = cardMessage!.Embeds;
+        var originalAttachments = cardMessage
+            .Attachments
+            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
+        var originalComponents = cardMessage.Components;
+
         var editResult = await _channelApi
+            .EditMessageAsync(cardMessage.ChannelID, cardMessage.ID,
+                embeds: originalEmbeds.ToImmutableArray(),
+                components: originalComponents,
+                attachments: originalAttachments.ToImmutableArray(),
+                ct: ct);
+
+        if (!editResult.IsSuccess)
+            _logger.LogError("Failed to edit original message: {Reason}, inner: {Inner}",
+                editResult.Error.Message, editResult.Inner);
+                
+        editResult = await _channelApi
             .EditMessageAsync(message.ChannelID, message.ID,
                 Constants.CrossMark,
                 attachments: Array.Empty<OneOf<FileData, IPartialAttachment>>(),

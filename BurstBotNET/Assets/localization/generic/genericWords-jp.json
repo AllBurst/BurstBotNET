@@ -4,5 +4,6 @@
   "participateThird": "参加",
   "possessiveSecond": "あなたの",
   "possessiveThird": "彼の",
-  "card": "カード"
+  "card": "カード",
+  "from": "{player}から"
 }

@@ -24,6 +24,7 @@ public class OldMaidGameState :
     public float BaseBet { get; set; }
     public ImmutableArray<Card> DumpedCards { get; set; } = ImmutableArray<Card>.Empty;
     public Card? PreviouslyDrawnCard { get; set; }
+    public ImmutableArray<ulong> FinishedPlayers { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();

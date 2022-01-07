@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using Microsoft.Extensions.Logging;
@@ -103,8 +104,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 break;
             }
             case "blackjack_help":
-                await ShowHelpMenu();
-                break;
+                return await ShowHelpMenu();
         }
 
         return Result.FromSuccess();
@@ -142,12 +142,13 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         var originalAttachments = message.Attachments
             .Select(OneOf<FileData, IPartialAttachment>.FromT1)
             .ToImmutableArray();
+        var originalComponents = message.Components.Disable();
 
         var editResult = await channelApi
             .EditMessageAsync(message.ChannelID, message.ID,
                 embeds: originalEmbeds,
                 attachments: originalAttachments,
-                components: ImmutableArray<IMessageComponent>.Empty);
+                components: originalComponents);
         if (!editResult.IsSuccess)
             logger.LogError("Failed to remove components from the original message: {Reason}, inner: {Inner}",
                 editResult.Error.Message, editResult.Inner);

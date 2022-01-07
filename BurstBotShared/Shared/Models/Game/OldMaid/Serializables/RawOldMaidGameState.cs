@@ -55,6 +55,10 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
     [JsonProperty("previously_drawn_card")]
     public Card? PreviouslyDrawnCard { get; init; }
 
+    [JsonPropertyName("finished_players")]
+    [JsonProperty("finished_players")]
+    public List<ulong> FinishedPlayers { get; init; } = new();
+
     public static RawOldMaidGameState FromState(IState<OldMaidGameState, RawOldMaidGameState, OldMaidGameProgress> state)
     {
         var gameState = (state as OldMaidGameState)!;
@@ -72,7 +76,8 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
             PreviousPlayerId = gameState.PreviousPlayerId,
             Progress = gameState.Progress,
             TotalBet = gameState.TotalBet,
-            PreviouslyDrawnCard = gameState.PreviouslyDrawnCard
+            PreviouslyDrawnCard = gameState.PreviouslyDrawnCard,
+            FinishedPlayers = gameState.FinishedPlayers.ToList()
         };
     }
 
@@ -98,7 +103,8 @@ public record RawOldMaidGameState : IRawState<OldMaidGameState, RawOldMaidGameSt
             PreviousPlayerId = PreviousPlayerId,
             Progress = Progress,
             TotalBet = TotalBet,
-            PreviouslyDrawnCard = PreviouslyDrawnCard
+            PreviouslyDrawnCard = PreviouslyDrawnCard,
+            FinishedPlayers = FinishedPlayers.ToImmutableArray()
         };
     }
 };
