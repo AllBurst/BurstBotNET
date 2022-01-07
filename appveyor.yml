@@ -4,7 +4,6 @@ environment:
 
 image:
   - Visual Studio 2022
-  - Ubuntu
 install:
   - cmd: dotnet restore
   - sh: sudo apt-get update && sudo apt-get install -y libfontconfig1
