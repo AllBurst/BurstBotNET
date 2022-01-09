@@ -1,4 +1,3 @@
-using System.Buffers;
 using System.Collections.Immutable;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
@@ -31,10 +30,6 @@ using BlackJackGame =
 #pragma warning disable CA2252
 public partial class BlackJack : BlackJackGame
 {
-    private static readonly ImmutableArray<string> InGameRequestTypes = Enum
-        .GetNames<BlackJackInGameRequestType>()
-        .ToImmutableArray();
-
     public static async Task<bool> HandleProgress(
         string messageContent, BlackJackGameState gameState, State state,
         IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
@@ -183,103 +178,6 @@ public partial class BlackJack : BlackJackGame
             logger.LogError("Stack trace: {Trace}", ex.StackTrace);
             logger.LogError("Message content: {Content}", messageContent);
         }
-    }
-
-    public static async Task StartListening(
-        string gameId,
-        State state,
-        IDiscordRestChannelAPI channelApi,
-        IDiscordRestGuildAPI guildApi,
-        ILogger logger)
-    {
-        if (string.IsNullOrWhiteSpace(gameId))
-            return;
-
-        var gameState = state.GameStates.BlackJackGameStates.Item1
-            .GetOrAdd(gameId, new BlackJackGameState());
-        logger.LogDebug("Game progress: {Progress}", gameState.Progress);
-
-        await gameState.Semaphore.WaitAsync();
-        logger.LogDebug("Semaphore acquired in StartListening");
-        if (gameState.Progress != BlackJackGameProgress.NotAvailable)
-        {
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in StartListening (game state existed)");
-            return;
-        }
-
-        gameState.Progress = BlackJackGameProgress.Starting;
-        gameState.GameId = gameId;
-        logger.LogDebug("Initial game state successfully set");
-
-        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
-
-        var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession =
-            await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
-        gameState.Semaphore.Release();
-        logger.LogDebug("Semaphore released in StartListening (game state created)");
-
-        var timeout = state.Config.Timeout;
-
-        while (!gameState.Progress.Equals(BlackJackGameProgress.Closed))
-        {
-            var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var channelTask = BlackJackGame.RunChannelTask(socketSession,
-                gameState,
-                InGameRequestTypes,
-                BlackJackInGameRequestType.Close,
-                BlackJackGameProgress.Closed,
-                logger,
-                cancellationTokenSource);
-
-            var broadcastTask = BlackJackGame.RunBroadcastTask(socketSession,
-                gameState,
-                buffer,
-                state,
-                channelApi,
-                guildApi,
-                logger,
-                cancellationTokenSource);
-
-            var timeoutTask = BlackJackGame.RunTimeoutTask(timeout, gameState, BlackJackGameProgress.Closed, logger,
-                timeoutCancellationTokenSource);
-
-            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
-            _ = Task.Run(() =>
-            {
-                timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task cancelled");
-                timeoutCancellationTokenSource.Dispose();
-            });
-        }
-
-        await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
-        var retrieveResult =
-            state.GameStates.BlackJackGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
-        if (!retrieveResult)
-            return;
-
-        foreach (var (_, value) in retrievedState!.Players)
-        {
-            if (value.TextChannel == null)
-                continue;
-
-            var channelId = value.TextChannel.ID;
-
-            var deleteResult = await channelApi
-                .DeleteChannelAsync(value.TextChannel.ID);
-            if (!deleteResult.IsSuccess)
-                logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
-                    deleteResult.Error.Message, deleteResult.Inner);
-
-            state.GameStates.BlackJackGameStates.Item2.TryRemove(channelId);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-        }
-
-        gameState.Dispose();
-        state.GameStates.BlackJackGameStates.Item1.Remove(gameState.GameId, out _);
-        socketSession.Dispose();
     }
 
     public static async Task AddPlayerState(string gameId,
@@ -765,7 +663,7 @@ public partial class BlackJack : BlackJackGame
         {
             BlackJackInGameRequestType.Draw => localization.DrawMessage
                 .Replace("{playerName}", playerName)
-                .Replace("{lastCard}", lastCard!.ToStringSimple()),
+                .Replace("{lastCard}", lastCard!.Value.ToStringSimple()),
             BlackJackInGameRequestType.Stand => localization.StandMessage
                 .Replace("{playerName}", playerName),
             BlackJackInGameRequestType.Call => localization.CallMessage

@@ -3,11 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Localization;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
@@ -25,11 +26,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
     where TPlayerState: IPlayerState
 {
 #pragma warning disable CA2252
-    static abstract Task AddPlayerState(string gameId,
-        Snowflake guild,
-        TPlayerState playerState,
-        GameStates gameStates);
-
     static abstract Task<bool> HandleProgress(
         string messageContent,
         TState gameState,
@@ -54,6 +50,29 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         IDiscordRestChannelAPI channelApi,
         ILogger logger);
 #pragma warning restore CA2252
+
+    static ImmutableArray<string> InGameRequestTypes => Enum.GetNames<TInGameRequestType>().ToImmutableArray();
+
+    static async Task AddPlayerState<TRequest>(string gameId,
+        Snowflake guild,
+        TPlayerState playerState,
+        TRequest dealRequest,
+        ConcurrentDictionary<string, TState> gameStates,
+        ConcurrentHashSet<Snowflake> textChannels) where TRequest: IGenericDealData
+    {
+        var state = gameStates
+            .GetOrAdd(gameId, new TState());
+        state.Players.GetOrAdd(playerState.PlayerId, playerState);
+        state.Guilds.Add(guild);
+        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
+
+        if (playerState.TextChannel == null) return;
+
+        textChannels.Add(playerState.TextChannel.ID);
+        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
+    }
 
     static async Task StartListening(
         string gameId,

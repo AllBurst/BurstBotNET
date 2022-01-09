@@ -1,8 +1,10 @@
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
@@ -11,6 +13,10 @@ using Remora.Results;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.BlackJack;
+
+using BlackJackGame =
+    IGame<BlackJackGameState, RawBlackJackGameState, BlackJack, BlackJackPlayerState, BlackJackGameProgress,
+        BlackJackInGameRequestType>;
 
 #pragma warning disable CA2252
 public partial class BlackJack
@@ -35,15 +41,7 @@ public partial class BlackJack
                     _state, 2, _interactionApi, _channelApi,
                     _guildApi, _logger);
 
-                if (!result.HasValue)
-                {
-                    var failureResult = await _interactionApi
-                        .EditOriginalInteractionResponseAsync(
-                            _context.ApplicationID,
-                            _context.Token,
-                            ErrorMessages.HandleReactionFailed);
-                    return !failureResult.IsSuccess ? Result.FromError(failureResult) : Result.FromSuccess();
-                }
+                if (!result.HasValue) return Result.FromSuccess();
 
                 var (members, matchData) = result.Value;
                 var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
@@ -68,11 +66,21 @@ public partial class BlackJack
                         OwnTips = playerTip.Amount,
                         Order = 0
                     }, _state.GameStates);
-                    _ = Task.Run(() =>
-                        StartListening(matchData.GameId ?? "", _state,
-                            _channelApi,
-                            _guildApi,
-                            _logger));
+                    _ = Task.Run(() => BlackJackGame.StartListening(
+                        matchData.GameId ?? "",
+                        _state.GameStates.BlackJackGameStates,
+                        GameName,
+                        BlackJackGameProgress.NotAvailable,
+                        BlackJackGameProgress.Starting,
+                        BlackJackGameProgress.Closed,
+                        BlackJackGame.InGameRequestTypes,
+                        BlackJackInGameRequestType.Close,
+                        Game.GenericOpenWebSocketSession,
+                        Game.GenericCloseGame,
+                        _state,
+                        _channelApi,
+                        _guildApi,
+                        _logger));
                 }
 
                 break;
@@ -118,8 +126,21 @@ public partial class BlackJack
                         AvatarUrl = joinResult.InvokingMember.GetAvatarUrl()
                     }, _state.GameStates
                 );
-                _ = Task.Run(() =>
-                    StartListening(joinResult.JoinStatus.GameId ?? "", _state, _channelApi, _guildApi, _logger));
+                _ = Task.Run(() => BlackJackGame.StartListening(
+                    joinResult.JoinStatus.GameId ?? "",
+                    _state.GameStates.BlackJackGameStates,
+                    GameName,
+                    BlackJackGameProgress.NotAvailable,
+                    BlackJackGameProgress.Starting,
+                    BlackJackGameProgress.Closed,
+                    BlackJackGame.InGameRequestTypes,
+                    BlackJackInGameRequestType.Close,
+                    Game.GenericOpenWebSocketSession,
+                    Game.GenericCloseGame,
+                    _state,
+                    _channelApi,
+                    _guildApi,
+                    _logger));
                 break;
             }
             case GenericJoinStatusType.Waiting:
@@ -155,9 +176,21 @@ public partial class BlackJack
                             
                             await Task.Delay(TimeSpan.FromSeconds(1));
                             
-                            _ = Task.Run(() =>
-                                StartListening(matchData.GameId ?? "",
-                                    _state, _channelApi, _guildApi, _logger));
+                            _ = Task.Run(() => BlackJackGame.StartListening(
+                                matchData.GameId ?? "",
+                                _state.GameStates.BlackJackGameStates,
+                                GameName,
+                                BlackJackGameProgress.NotAvailable,
+                                BlackJackGameProgress.Starting,
+                                BlackJackGameProgress.Closed,
+                                BlackJackGame.InGameRequestTypes,
+                                BlackJackInGameRequestType.Close,
+                                Game.GenericOpenWebSocketSession,
+                                Game.GenericCloseGame,
+                                _state,
+                                _channelApi,
+                                _guildApi,
+                                _logger));
                         }
                     }
                     catch (Exception ex)

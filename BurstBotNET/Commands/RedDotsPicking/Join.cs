@@ -1,28 +1,23 @@
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
-using BurstBotShared.Shared.Models.Game.ChinesePoker;
-using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
+using BurstBotShared.Shared.Models.Game.RedDotsPicking;
+using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Results;
-using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
-namespace BurstBotNET.Commands.ChinesePoker;
+namespace BurstBotNET.Commands.RedDotsPicking;
 
-using ChinesePokerGame =
-    IGame<ChinesePokerGameState, RawChinesePokerGameState, ChinesePoker, ChinesePokerPlayerState,
-        ChinesePokerGameProgress,
-        ChinesePokerInGameRequestType>;
+using RedDotsGame = IGame<RedDotsGameState, RawRedDotsGameState, RedDotsPicking, RedDotsPlayerState, RedDotsGameProgress, RedDotsInGameRequestType>;
 
-#pragma warning disable CA2252
-public partial class ChinesePoker
+public partial class RedDotsPicking
 {
-    private async Task<IResult> Join(
-        float baseBet, params IUser?[] users)
+    private async Task<IResult> Join(float baseBet, params IUser?[] users)
     {
         var joinResult = await Game.GenericJoinGame(
-            baseBet, users, GameType.ChinesePoker, "/chinese_poker/join",
+            baseBet, users, GameType.RedDotsPicking, "/red_dots_picking/join",
             _state, _context, _interactionApi, _userApi, _logger);
 
         if (joinResult == null) return Result.FromSuccess();
@@ -33,9 +28,9 @@ public partial class ChinesePoker
             {
                 var result = await Game.GenericStartGame(
                     _context, joinResult.Reply, joinResult.InvokingMember, joinResult.BotUser,
-                    joinResult.JoinStatus, GameName, "/chinese_poker/join/confirm",
+                    joinResult.JoinStatus, GameName, "/red_dots_picking/join/confirm",
                     joinResult.MentionedPlayers.Select(s => s.Value),
-                    _state, 4, _interactionApi, _channelApi,
+                    _state, 2, _interactionApi, _channelApi,
                     _guildApi, _logger);
                 
                 if (!result.HasValue) return Result.FromSuccess();
@@ -50,23 +45,34 @@ public partial class ChinesePoker
                         await _state.BurstApi.CreatePlayerChannel(guild.Value, joinResult.BotUser,
                             member, _guildApi, _logger);
 
-                    await AddPlayerState(matchData.GameId ?? "", guild.Value, new ChinesePokerPlayerState
+                    var playerState = new RedDotsPlayerState
                     {
                         AvatarUrl = member.GetAvatarUrl(),
                         GameId = matchData.GameId ?? "",
                         PlayerId = member.User.Value.ID.Value,
                         PlayerName = member.GetDisplayName(),
-                        TextChannel = textChannel
-                    }, _state.GameStates);
-                    _ = Task.Run(() => ChinesePokerGame.StartListening(
-                        matchData.GameId ?? "",
-                        _state.GameStates.ChinesePokerGameStates,
+                        TextChannel = textChannel,
+                    };
+
+                    await RedDotsGame.AddPlayerState(matchData.GameId ?? "", guild.Value, playerState, new RedDotsInGameRequest
+                    {
+                        AvatarUrl = playerState.AvatarUrl,
+                        ChannelId = playerState.TextChannel!.ID.Value,
+                        ClientType = ClientType.Discord,
+                        GameId = playerState.GameId,
+                        PlayerId = playerState.PlayerId,
+                        PlayerName = playerState.PlayerName,
+                        RequestType = RedDotsInGameRequestType.Deal
+                    }, _state.GameStates.RedDotsGameStates.Item1, _state.GameStates.RedDotsGameStates.Item2);
+
+                    _ = Task.Run(() => RedDotsGame.StartListening(matchData.GameId ?? "",
+                        _state.GameStates.RedDotsGameStates,
                         GameName,
-                        ChinesePokerGameProgress.NotAvailable,
-                        ChinesePokerGameProgress.Starting,
-                        ChinesePokerGameProgress.Closed,
-                        ChinesePokerGame.InGameRequestTypes,
-                        ChinesePokerInGameRequestType.Close,
+                        RedDotsGameProgress.NotAvailable,
+                        RedDotsGameProgress.Starting,
+                        RedDotsGameProgress.Closed,
+                        RedDotsGame.InGameRequestTypes,
+                        RedDotsInGameRequestType.Close,
                         Game.GenericOpenWebSocketSession,
                         Game.GenericCloseGame,
                         _state,
@@ -108,30 +114,43 @@ public partial class ChinesePoker
                     joinResult.InvokingMember,
                     _guildApi,
                     _logger);
-                
-                await AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, new ChinesePokerPlayerState
+
+                var playerState = new RedDotsPlayerState
                 {
                     AvatarUrl = joinResult.InvokingMember.GetAvatarUrl(),
                     GameId = joinResult.JoinStatus.GameId ?? "",
                     PlayerId = joinResult.InvokingMember.User.Value.ID.Value,
                     PlayerName = joinResult.InvokingMember.GetDisplayName(),
                     TextChannel = textChannel
-                }, _state.GameStates);
-                _ = Task.Run(() => ChinesePokerGame.StartListening(
-                    joinResult.JoinStatus.GameId ?? "",
-                    _state.GameStates.ChinesePokerGameStates,
+                };
+
+                await RedDotsGame.AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, playerState,
+                    new RedDotsInGameRequest
+                    {
+                        AvatarUrl = playerState.AvatarUrl,
+                        ChannelId = playerState.TextChannel!.ID.Value,
+                        ClientType = ClientType.Discord,
+                        GameId = playerState.GameId,
+                        PlayerId = playerState.PlayerId,
+                        PlayerName = playerState.PlayerName,
+                        RequestType = RedDotsInGameRequestType.Deal
+                    }, _state.GameStates.RedDotsGameStates.Item1, _state.GameStates.RedDotsGameStates.Item2);
+                
+                _ = Task.Run(() => RedDotsGame.StartListening(joinResult.JoinStatus.GameId ?? "",
+                    _state.GameStates.RedDotsGameStates,
                     GameName,
-                    ChinesePokerGameProgress.NotAvailable,
-                    ChinesePokerGameProgress.Starting,
-                    ChinesePokerGameProgress.Closed,
-                    ChinesePokerGame.InGameRequestTypes,
-                    ChinesePokerInGameRequestType.Close,
+                    RedDotsGameProgress.NotAvailable,
+                    RedDotsGameProgress.Starting,
+                    RedDotsGameProgress.Closed,
+                    RedDotsGame.InGameRequestTypes,
+                    RedDotsInGameRequestType.Close,
                     Game.GenericOpenWebSocketSession,
                     Game.GenericCloseGame,
                     _state,
                     _channelApi,
                     _guildApi,
                     _logger));
+                
                 break;
             }
             case GenericJoinStatusType.Waiting:
@@ -147,7 +166,7 @@ public partial class ChinesePoker
                 {
                     try
                     {
-                        var waitingResult = await _state.BurstApi.WaitForGame<ChinesePokerPlayerState>(
+                        var waitingResult = await _state.BurstApi.WaitForGame<RedDotsPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
                             joinResult.BotUser, "", _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue)
@@ -159,20 +178,30 @@ public partial class ChinesePoker
                         var (matchData, playerStates) = waitingResult.Value;
                         foreach (var player in playerStates)
                         {
-                            await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
-                                _state.GameStates);
 
+                            await RedDotsGame.AddPlayerState(matchData.GameId ?? "", guild.Value, player,
+                                new RedDotsInGameRequest
+                                {
+                                    AvatarUrl = player.AvatarUrl,
+                                    ChannelId = player.TextChannel!.ID.Value,
+                                    ClientType = ClientType.Discord,
+                                    GameId = player.GameId,
+                                    PlayerId = player.PlayerId,
+                                    PlayerName = player.PlayerName,
+                                    RequestType = RedDotsInGameRequestType.Deal
+                                }, _state.GameStates.RedDotsGameStates.Item1,
+                                _state.GameStates.RedDotsGameStates.Item2);
+                            
                             await Task.Delay(TimeSpan.FromSeconds(1));
                             
-                            _ = Task.Run(() => ChinesePokerGame.StartListening(
-                                matchData.GameId ?? "",
-                                _state.GameStates.ChinesePokerGameStates,
+                            _ = Task.Run(() => RedDotsGame.StartListening(matchData.GameId ?? "",
+                                _state.GameStates.RedDotsGameStates,
                                 GameName,
-                                ChinesePokerGameProgress.NotAvailable,
-                                ChinesePokerGameProgress.Starting,
-                                ChinesePokerGameProgress.Closed,
-                                ChinesePokerGame.InGameRequestTypes,
-                                ChinesePokerInGameRequestType.Close,
+                                RedDotsGameProgress.NotAvailable,
+                                RedDotsGameProgress.Starting,
+                                RedDotsGameProgress.Closed,
+                                RedDotsGame.InGameRequestTypes,
+                                RedDotsInGameRequestType.Close,
                                 Game.GenericOpenWebSocketSession,
                                 Game.GenericCloseGame,
                                 _state,
@@ -189,7 +218,7 @@ public partial class ChinesePoker
                 break;
             }
         }
-        
+
         return Result.FromSuccess();
     }
 }

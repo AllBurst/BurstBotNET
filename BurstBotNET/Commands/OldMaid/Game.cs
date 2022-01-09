@@ -27,10 +27,6 @@ using OldMaidGame = IGame<OldMaidGameState, RawOldMaidGameState, OldMaid, OldMai
 
 public partial class OldMaid : OldMaidGame
 {
-    private static readonly ImmutableArray<string> InGameRequestTypes =
-        Enum.GetNames<OldMaidInGameRequestType>()
-            .ToImmutableArray();
-    
     public static async Task AddPlayerState(string gameId, Snowflake guild, OldMaidPlayerState playerState, GameStates gameStates)
     {
         var state = gameStates.OldMaidGameStates.Item1
@@ -458,9 +454,9 @@ public partial class OldMaid : OldMaidGame
 
         await using var renderedImage = diff.IsEmpty ? null : SkiaService.RenderDeck(state.DeckService, diff);
         await using var drawnCardBack = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard! with { IsFront = false });
+            newGameState.PreviouslyDrawnCard!.Value with { IsFront = false });
         await using var drawnCardFront = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard!);
+            newGameState.PreviouslyDrawnCard!.Value);
 
         foreach (var (_, player) in oldGameState.Players)
         {
@@ -487,7 +483,7 @@ public partial class OldMaid : OldMaidGame
                     Image: new EmbedImage(Constants.AttachmentUri),
                     Description: oldMaidLocalization.ThrowMessage
                         .Replace("{previousPlayerName}", pronoun)
-                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Number.ToString())
+                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Value.Number.ToString())
                 );
                 
                 await using var streamCopy = new MemoryStream((int)renderedImage!.Length);
