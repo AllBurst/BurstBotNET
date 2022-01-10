@@ -134,4 +134,37 @@ public static class Utilities
         playerState = pState;
         return gameState;
     }
+
+    public static bool HandleException(Exception exception, string messageContent, SemaphoreSlim semaphore, ILogger logger)
+    {
+        logger.LogError("An exception occurred when handling progress/ending result: {Exception}", exception);
+        logger.LogError("Exception message: {Message}", exception.Message);
+        logger.LogError("Source: {Source}", exception.Source);
+        logger.LogError("Stack trace: {Trace}", exception.StackTrace);
+        logger.LogError("Message content: {Content}", messageContent);
+        semaphore.Release();
+        logger.LogDebug("Semaphore released in an exception");
+        return false;
+    }
+
+    public static async Task<IChannel?> TryGetTextChannel(
+        IEnumerable<Snowflake> guilds,
+        ulong channelId,
+        IDiscordRestGuildAPI guildApi)
+    {
+        foreach (var guild in guilds)
+        {
+            var getChannelsResult = await guildApi
+                .GetGuildChannelsAsync(guild);
+            if (!getChannelsResult.IsSuccess) continue;
+            var channels = getChannelsResult.Entity;
+            if (!channels.Any()) continue;
+            var textChannel = channels
+                .FirstOrDefault(c => c.ID.Value == channelId);
+            if (textChannel == null) continue;
+            return textChannel;
+        }
+
+        return null;
+    }
 }

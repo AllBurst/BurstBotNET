@@ -20,7 +20,7 @@ public class RedDotsGameState :
     public RedDotsGameProgress Progress { get; set; }
     public float BaseBet { get; set; }
     public int CurrentPlayerOrder { get; set; }
-    public int PreviousPlayerId { get; set; }
+    public ulong PreviousPlayerId { get; set; }
     public ImmutableArray<Card> CardsOnTable { get; set; }
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);

@@ -9,6 +9,7 @@ using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
+using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneOf;
@@ -86,14 +87,7 @@ public partial class BlackJack : BlackJackGame
         }
         catch (Exception ex)
         {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in an exception");
-            return false;
+            return Utilities.HandleException(ex, messageContent, gameState.Semaphore, logger);
         }
 
         return true;

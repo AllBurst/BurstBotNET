@@ -33,6 +33,9 @@
         <None Update="Assets\localization\oldMaid\EN\oldMaidLocalization.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\redDotsPicking\EN\redDotsLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

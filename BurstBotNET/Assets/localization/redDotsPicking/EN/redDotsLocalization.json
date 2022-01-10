@@ -1,0 +1,24 @@
+{
+  "commandList": {
+    "general": "Assets/localization/redDotsPicking/EN/general.txt",
+    "scoring": "Assets/localization/redDotsPicking/EN/scoring.txt",
+    "flows": "Assets/localization/redDotsPicking/EN/flows.txt"
+  },
+  "initialMessagePrefix": "You currently own:\n",
+  "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "The Red Dots Picking game is starting!",
+  "initialMessageFooter": "Please wait until all players are ready.",
+  "cardsOnTable": "Current cards on the table:\n{cardNames}",
+  "winTitle": "{playerName} is the biggest winner!",
+  "won": "won",
+  "lost": "lost",
+  "winDescription": "{playerName} {verb} {totalRewards} tips!",
+  "cards": "Your cards:",
+  "use": "Use a card to earn points",
+  "giveUp": "Give up a card",
+  "useMessage": "{playerName} used a {card} and collected {card} and {card2}.",
+  "giveUpMessage": "{playerName} gave up a {card} and it's now a part of the table.",
+  "drawMessage": "{playerName} drew a {card} from the deck.",
+  "turnMessageTitle": "It's {possessive} turn!",
+  "showHelp": "Show help texts"
+}

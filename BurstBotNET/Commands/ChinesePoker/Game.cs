@@ -98,14 +98,7 @@ public partial class ChinesePoker : ChinesePokerGame
         }
         catch (Exception ex)
         {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in an exception");
-            return false;
+            return Utilities.HandleException(ex, messageContent, gameState.Semaphore, logger);
         }
 
         return true;

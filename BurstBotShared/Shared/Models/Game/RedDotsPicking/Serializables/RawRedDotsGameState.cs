@@ -41,7 +41,7 @@ public record RawRedDotsGameState : IRawState<RedDotsGameState, RawRedDotsGameSt
     
     [JsonPropertyName("previous_player_id")]
     [JsonProperty("previous_player_id")]
-    public int PreviousPlayerId { get; init; }
+    public ulong PreviousPlayerId { get; init; }
     
     [JsonPropertyName("cards_on_table")]
     [JsonProperty("cards_on_table")]

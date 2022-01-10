@@ -26,7 +26,7 @@
         <PackageReference Include="Remora.Discord.Extensions" Version="1.0.6" />
         <PackageReference Include="Remora.Discord.Hosting" Version="4.0.8" />
         <PackageReference Include="Remora.Discord.Interactivity" Version="1.0.2" />
-        <PackageReference Include="Remora.Discord.Pagination" Version="1.0.2" />
+        <PackageReference Include="Remora.Discord.Pagination" Version="1.0.3" />
         <PackageReference Include="Remora.Discord.Rest" Version="27.0.3" />
         <PackageReference Include="Remora.Rest" Version="1.1.2" />
         <PackageReference Include="Remora.Rest.Core" Version="2.0.0" />
