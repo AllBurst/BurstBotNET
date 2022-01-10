@@ -54,7 +54,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.BlackJack.BlackJack.html",
-          "hash": "Rs6Yg0H4asWcph5uk5riAyP5AwNNdaMFUS/hVdu2NEc="
+          "hash": "i3RlW6a1nBnSdhz2KgwNEhjzCUEt4q6IzotVe6cckFU="
         }
       },
       "is_incremental": false,
@@ -78,7 +78,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.html",
-          "hash": "ZdXx7fGX9JA/Cbbo/iYjbNBN3OOdaZzxF3WXuqbfzmQ="
+          "hash": "M4KSSm7HoSveu+nvnxHUmo2Xhvz3V8vglA2HqHxAVKE="
         }
       },
       "is_incremental": false,
@@ -162,7 +162,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.OldMaid.OldMaid.html",
-          "hash": "G1ToyqKcMtdj6kfEAWCbmJEQhvJj+VlcQ8j5P8Jx5lY="
+          "hash": "ss20hiJ7BjgYqWXnqiJkFkJ2oi4IvG7XDsP/F/DLPPc="
         }
       },
       "is_incremental": false,
@@ -198,7 +198,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.RedDotsPicking.RedDotsPicking.html",
-          "hash": "BcqNwYBDJM0+FduktVXUcH9K9ek9FuxGdv1vif4R9pE="
+          "hash": "WwkTDCpr44nsRGV2/wBSvZ9i0R8n6sKwiG9ypcd/63Y="
         }
       },
       "is_incremental": false,
@@ -1458,7 +1458,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html",
-          "hash": "nssX7bF3PKcDKcGZwNqpZ9tI47SPxYabDqqhPNGIl9o="
+          "hash": "KEO2qiFErUEl2Ty5kqD4oQCOnWntK7SWRpb971OMTLA="
         }
       },
       "is_incremental": false,
@@ -1482,7 +1482,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables.RawRedDotsGameState.html",
-          "hash": "CnXfr03Zezote1OzLldg58p5Ljo2mwFyVoPr+gue8E0="
+          "hash": "EXA5U+ZYsQrob6y+FQr3zn01J9gRunJCd1OVITA6aBo="
         }
       },
       "is_incremental": false,
@@ -1746,7 +1746,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.Localization.html",
-          "hash": "uM0PPFIcZ+ecBpu2/j4ctMusUZZTTaLvQLpNMwTtcHM="
+          "hash": "ZQR4gBRA5kbE2JznlbRl++EG3wPNiPSEzQmpeH4WXmI="
         }
       },
       "is_incremental": false,
@@ -1790,6 +1790,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html",
+          "hash": "i0ElP6G5n3PquZBxX2SLQQHZfTUbOQ9RKpQ0e2B4y5Q="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.html",
+          "hash": "/OIOI1P/HC6ZI4z4ob4E5NDzwl2m/gjTyyRWqVGCatU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.yml",
       "output": {
         ".html": {
@@ -1806,7 +1830,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalization.html",
-          "hash": "ccWSmreuiE0K/07CuIr+nhTnBg9TMEyQW5cNBqgGx8k="
+          "hash": "X2nNsRH7GU1ZqV2WDxPs++bI4FvygbOyHIE8OZSG/sE="
         }
       },
       "is_incremental": false,
@@ -1854,7 +1878,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
-          "hash": "W7nOAE2NynTXdzoj2wxtgl76EHj9DB7ea2p9kB+sDjE="
+          "hash": "4WvEka7ICOF8s3LPCRocc39XTaXf8XXdWkzsnAw5mek="
         }
       },
       "is_incremental": false,
@@ -1902,7 +1926,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "mdzTZaapXHeUhYQgsXREAw+Uh34/FFl7AXZER13lvN8="
+          "hash": "umn+KW9DQu8srGLhNvtQid6F6paLXFA/Y3xdx4VmIPM="
         }
       },
       "is_incremental": false,
@@ -1941,7 +1965,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 156,
+          "total_file_count": 158,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
