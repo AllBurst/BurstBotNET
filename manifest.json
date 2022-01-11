@@ -198,7 +198,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.RedDotsPicking.RedDotsPicking.html",
-          "hash": "WwkTDCpr44nsRGV2/wBSvZ9i0R8n6sKwiG9ypcd/63Y="
+          "hash": "ol+rXPxHymLCM0Av9Pt/xooFzODhr0vGWV3KXmNfp7c="
         }
       },
       "is_incremental": false,
@@ -318,7 +318,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
-          "hash": "ayap0B6MEECdMyV/T+5z7dtl0vE5fBf7Qz8IWTs6FKc="
+          "hash": "fkABCHY6031Kl/+k5duEK2zvpa9EKt8roKY73ynzliU="
         }
       },
       "is_incremental": false,
@@ -510,7 +510,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Extensions.BurstExtensions.html",
-          "hash": "fQb08vWv0KQiBh57YS4a6KzL0TiyHdPi9sxVQqAAgfg="
+          "hash": "Wptnz6+Eo/XrquRFGswNxrbmLxHGSwIqyj3hojrB4og="
         }
       },
       "is_incremental": false,
@@ -534,7 +534,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Interfaces.IGame-6.html",
-          "hash": "lm3OrHue96hvZiA0TUS1l3+3Ra0FSMBhvPJN+P+N3s4="
+          "hash": "Md3kxyEjZjizeoG92qoXKZm2lwRqHRokbxa9VipWlwQ="
         }
       },
       "is_incremental": false,
@@ -1454,6 +1454,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html",
+          "hash": "cnPtx1uWh4xSv6FPnVvATgKE1yMX8o6Z5dpo4ywWUs8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.yml",
       "output": {
         ".html": {
@@ -1470,7 +1482,19 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.html",
-          "hash": "3FVTuw4GVYU379ewHf5rGyCmmjSznWkZgGrTUmcsvZo="
+          "hash": "+wEJcLvqfqYb6ZUVMirbQLF19yuGN4MnRF6JD+Ln4lU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.html",
+          "hash": "EXlt7MjABNgnc8jLeUk1UMnHLHKCR8j+eFTzvpP8mcs="
         }
       },
       "is_incremental": false,
@@ -1566,7 +1590,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.html",
-          "hash": "Tf2qHVdID34VuQtYso2yKTm+hKKz2AMVcIuijSaxZro="
+          "hash": "qABbJcayqe6U8b3UdDE0Ph8ZFFQ809BjasupqYMCWIs="
         }
       },
       "is_incremental": false,
@@ -1794,7 +1818,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html",
-          "hash": "i0ElP6G5n3PquZBxX2SLQQHZfTUbOQ9RKpQ0e2B4y5Q="
+          "hash": "Byh/gkgmj91MP3ErmLRAs6FMgBYnKoafk6HmnvjwYPA="
         }
       },
       "is_incremental": false,
@@ -1878,7 +1902,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
-          "hash": "4WvEka7ICOF8s3LPCRocc39XTaXf8XXdWkzsnAw5mek="
+          "hash": "TNaMslRSQ18Fe5wTbu1JtXM4OmN2E6Cv7pXqH69+1wk="
         }
       },
       "is_incremental": false,
@@ -1926,7 +1950,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "umn+KW9DQu8srGLhNvtQid6F6paLXFA/Y3xdx4VmIPM="
+          "hash": "KtbfgFBfA9v5+mpl10VyfyxlZSX8mxT1yxaOy7qSUKY="
         }
       },
       "is_incremental": false,
@@ -1965,7 +1989,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 158,
+          "total_file_count": 160,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

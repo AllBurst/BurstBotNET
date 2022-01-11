@@ -1620,15 +1620,15 @@ references:
   commentId: T:BurstBotShared.Shared.Extensions.BurstExtensions
   fullName: BurstBotShared.Shared.Extensions.BurstExtensions
   nameWithType: BurstExtensions
-- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}})
-  name: Disable(Optional<IReadOnlyList<IMessageComponent>>)
-  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_Remora_Rest_Core_Optional_IReadOnlyList_Remora_Discord_API_Abstractions_Objects_IMessageComponent___
-  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}})
-  name.vb: Disable(Optional(Of IReadOnlyList(Of IMessageComponent)))
-  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional<IReadOnlyList<Remora.Discord.API.Abstractions.Objects.IMessageComponent>>)
-  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional(Of IReadOnlyList(Of Remora.Discord.API.Abstractions.Objects.IMessageComponent)))
-  nameWithType: BurstExtensions.Disable(Optional<IReadOnlyList<IMessageComponent>>)
-  nameWithType.vb: BurstExtensions.Disable(Optional(Of IReadOnlyList(Of IMessageComponent)))
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Nullable{IEnumerable{System.String}})
+  name: Disable(Optional<IReadOnlyList<IMessageComponent>>, Nullable<IEnumerable<String>>)
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_Remora_Rest_Core_Optional_IReadOnlyList_Remora_Discord_API_Abstractions_Objects_IMessageComponent___System_Nullable_IEnumerable_System_String___
+  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Nullable{IEnumerable{System.String}})
+  name.vb: Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Nullable(Of IEnumerable(Of String)))
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional<IReadOnlyList<Remora.Discord.API.Abstractions.Objects.IMessageComponent>>, System.Nullable<IEnumerable<System.String>>)
+  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional(Of IReadOnlyList(Of Remora.Discord.API.Abstractions.Objects.IMessageComponent)), System.Nullable(Of IEnumerable(Of System.String)))
+  nameWithType: BurstExtensions.Disable(Optional<IReadOnlyList<IMessageComponent>>, Nullable<IEnumerable<String>>)
+  nameWithType.vb: BurstExtensions.Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Nullable(Of IEnumerable(Of String)))
 - uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable*
   name: Disable
   href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_
@@ -7405,6 +7405,54 @@ references:
   commentId: N:BurstBotShared.Shared.Models.Game.RedDotsPicking
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking
   nameWithType: BurstBotShared.Shared.Models.Game.RedDotsPicking
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity
+  name: RedDotsDropDownEntity
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html
+  commentId: T:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity
+  nameWithType: RedDotsDropDownEntity
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State)
+  name: RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State)
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_BurstBotShared_Shared_Models_Data_State_
+  commentId: M:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State)
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.RedDotsDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, BurstBotShared.Shared.Models.Data.State)
+  nameWithType: RedDotsDropDownEntity.RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State)
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor*
+  name: RedDotsDropDownEntity
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__ctor_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.RedDotsDropDownEntity
+  nameWithType: RedDotsDropDownEntity.RedDotsDropDownEntity
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name: HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity_HandleInteractionAsync_Remora_Discord_API_Abstractions_Objects_IUser_System_String_IReadOnlyList_System_String__CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name.vb: HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList<System.String>, CancellationToken)
+  fullName.vb: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList(Of System.String), CancellationToken)
+  nameWithType: RedDotsDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  nameWithType.vb: RedDotsDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync*
+  name: HandleInteractionAsync
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity_HandleInteractionAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.HandleInteractionAsync
+  nameWithType: RedDotsDropDownEntity.HandleInteractionAsync
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  name: IsInterestedAsync(ComponentType, String, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity_IsInterestedAsync_Remora_Discord_API_Abstractions_Objects_ComponentType_System_String_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType, System.String, CancellationToken)
+  nameWithType: RedDotsDropDownEntity.IsInterestedAsync(ComponentType, String, CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync*
+  name: IsInterestedAsync
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity_IsInterestedAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.IsInterestedAsync
+  nameWithType: RedDotsDropDownEntity.IsInterestedAsync
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState
   name: RedDotsGameState
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html
@@ -7644,6 +7692,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.Order
   nameWithType: RedDotsPlayerState.Order
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards
+  name: PlayedCards
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsPlayerState_PlayedCards
+  commentId: P:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards
+  nameWithType: RedDotsPlayerState.PlayedCards
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards*
+  name: PlayedCards
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsPlayerState_PlayedCards_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayedCards
+  nameWithType: RedDotsPlayerState.PlayedCards
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.PlayerId
   name: PlayerId
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsPlayerState_PlayerId
@@ -7735,6 +7796,30 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsPlayerState.TextChannel
   nameWithType: RedDotsPlayerState.TextChannel
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType
+  name: RedDotsSelectMenuType
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.html
+  commentId: T:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType
+  nameWithType: RedDotsSelectMenuType
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.Collect
+  name: Collect
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsSelectMenuType_Collect
+  commentId: F:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.Collect
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.Collect
+  nameWithType: RedDotsSelectMenuType.Collect
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.ForcePlayFive
+  name: ForcePlayFive
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsSelectMenuType_ForcePlayFive
+  commentId: F:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.ForcePlayFive
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.ForcePlayFive
+  nameWithType: RedDotsSelectMenuType.ForcePlayFive
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.GiveUp
+  name: GiveUp
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsSelectMenuType_GiveUp
+  commentId: F:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.GiveUp
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsSelectMenuType.GiveUp
+  nameWithType: RedDotsSelectMenuType.GiveUp
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables
   name: BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables.html
@@ -10318,6 +10403,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.DrawMessage
   nameWithType: RedDotsLocalization.DrawMessage
+- uid: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive
+  name: ForceFive
+  href: api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html#BurstBotShared_Shared_Models_Localization_RedDotsPicking_Serializables_RedDotsLocalization_ForceFive
+  commentId: P:BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive
+  fullName: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive
+  nameWithType: RedDotsLocalization.ForceFive
+- uid: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive*
+  name: ForceFive
+  href: api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html#BurstBotShared_Shared_Models_Localization_RedDotsPicking_Serializables_RedDotsLocalization_ForceFive_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceFive
+  nameWithType: RedDotsLocalization.ForceFive
+- uid: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp
+  name: ForceGiveUp
+  href: api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html#BurstBotShared_Shared_Models_Localization_RedDotsPicking_Serializables_RedDotsLocalization_ForceGiveUp
+  commentId: P:BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp
+  fullName: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp
+  nameWithType: RedDotsLocalization.ForceGiveUp
+- uid: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp*
+  name: ForceGiveUp
+  href: api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html#BurstBotShared_Shared_Models_Localization_RedDotsPicking_Serializables_RedDotsLocalization_ForceGiveUp_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.ForceGiveUp
+  nameWithType: RedDotsLocalization.ForceGiveUp
 - uid: BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.GiveUp
   name: GiveUp
   href: api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html#BurstBotShared_Shared_Models_Localization_RedDotsPicking_Serializables_RedDotsLocalization_GiveUp
