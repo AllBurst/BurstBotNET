@@ -17,6 +17,8 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Rest.Results;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.RedDotsPicking;
 
@@ -47,6 +49,12 @@ public partial class RedDotsPicking : RedDotsGame
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
+
+            await SendProgressMessages(gameState, deserializedIncomingData, state,
+                channelApi, logger);
+            await UpdateGameState(gameState, deserializedIncomingData, guildApi);
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released after sending progress messages");
         }
         catch (JsonSerializationException)
         {
@@ -81,6 +89,7 @@ public partial class RedDotsPicking : RedDotsGame
             case RedDotsGameProgress.Ending:
                 return true;
             case RedDotsGameProgress.Progressing:
+                await SendPlayingMessage(gameState, deserializedIncomingData, state, channelApi, logger);
                 break;
         }
 
@@ -90,10 +99,77 @@ public partial class RedDotsPicking : RedDotsGame
         return true;
     }
 
-    public static Task HandleEndingResult(string messageContent, RedDotsGameState state, Localizations localizations,
+    public static async Task HandleEndingResult(string messageContent, RedDotsGameState state, Localizations localizations,
         DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var endingData = JsonSerializer.Deserialize<RedDotsInGameResponseEndingData>(messageContent);
+            if (endingData == null) return;
+
+            state.Progress = RedDotsGameProgress.Ending;
+            var winnerId = endingData
+                .Rewards
+                .MaxBy(pair => pair.Value)
+                .Key;
+            var winner = endingData
+                .Players
+                .FirstOrDefault(p => p.Value.PlayerId == winnerId)
+                .Value;
+
+            var localization = localizations.GetLocalization().RedDotsPicking;
+
+            var title = localization.WinTitle.Replace("{playerName}", winner.PlayerName);
+            
+            var rewardsDescription = endingData.Rewards
+                .Select(pair => localization.WinDescription
+                    .Replace("{playerName}", endingData.Players[pair.Key].PlayerName)
+                    .Replace("{verb}", pair.Value > 0 ? localization.Won : localization.Lost)
+                    .Replace("{totalRewards}", Math.Abs(pair.Value).ToString(CultureInfo.InvariantCulture)));
+
+            var description = string.Join('\n', rewardsDescription);
+            
+            var embed = new Embed(
+                title,
+                Description: description,
+                Colour: BurstColor.Burst.ToColor(),
+                Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+                Image: new EmbedImage(winner.AvatarUrl));
+
+            var fields = new List<EmbedField>(endingData.Players.Count);
+
+            foreach (var (pId, player) in endingData.Players)
+            {
+                fields.Add(new EmbedField(player.PlayerName,
+                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture), true));
+            }
+
+            embed = embed with { Fields = fields };
+
+            foreach (var (pId, player) in state.Players)
+            {
+                var sendResult = await channelApi
+                    .CreateMessageAsync(player.TextChannel!.ID,
+                        embeds: new[] { embed });
+                if (!sendResult.IsSuccess)
+                    logger.LogError(
+                        "Failed to broadcast ending result in player {PlayerId}'s channel: {Reason}, inner: {Inner}",
+                        pId, sendResult.Error.Message, sendResult.Inner);
+            }
+
+            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                0,
+                JsonSerializer.SerializeToUtf8Bytes(new RedDotsInGameRequest
+                {
+                    GameId = state.GameId,
+                    RequestType = RedDotsInGameRequestType.Close,
+                    PlayerId = 0
+                })));
+        }
+        catch (Exception ex)
+        {
+            Utilities.HandleException(ex, messageContent, state.Semaphore, logger);
+        }
     }
 
     private static async Task SendProgressMessages(
@@ -136,7 +212,9 @@ public partial class RedDotsPicking : RedDotsGame
                     gameState, deserializedIncomingData, state, channelApi, logger);
 
                 if (deserializedIncomingData.Progress.Equals(RedDotsGameProgress.Ending)) return;
-                
+
+                await SendPlayingMessage(gameState, deserializedIncomingData, state,
+                    channelApi, logger);
                 
                 break;
             }
@@ -244,8 +322,46 @@ public partial class RedDotsPicking : RedDotsGame
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData("playerDeck.jpg", nextPlayerDeck)),
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
                 };
+
+                var components = BuildPlayingComponents(nextPlayer, deserializedIncomingData, redDotsLocalization,
+                    out _);
+
+                var sendResult = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: embeds,
+                        components: components,
+                        attachments: attachments);
+
+                if (sendResult.IsSuccess) continue;
+
+                var restError = sendResult.Error as RestResultError<RestError>;
+
+                logger.LogError("Failed to send playing message to the player {PlayerId}: {Reason}, inner: {Inner}",
+                    playerId, sendResult.Error.Message, restError?.Error);
+            }
+            else
+            {
+                await using var imageCopy = new MemoryStream((int)cardsOnTable.Length);
+                await cardsOnTable.CopyToAsync(imageCopy);
+                cardsOnTable.Seek(0, SeekOrigin.Begin);
+                imageCopy.Seek(0, SeekOrigin.Begin);
+
+                var attachment = new[]
+                {
+                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
+                };
+
+                var sendResult = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: embeds,
+                        attachments: attachment);
                 
-                // TODO: Components
+                if (sendResult.IsSuccess) continue;
+                
+                var restError = sendResult.Error as RestResultError<RestError>;
+                
+                logger.LogError("Failed to send playing message to the player {PlayerId}: {Reason}, inner: {Inner}",
+                    playerId, sendResult.Error.Message, restError?.Error);
             }
         }
     }
@@ -253,7 +369,8 @@ public partial class RedDotsPicking : RedDotsGame
     private static IMessageComponent[] BuildPlayingComponents(
         RawRedDotsPlayerState nextPlayer,
         RawRedDotsGameState deserializedIncomingData,
-        RedDotsLocalization localization)
+        RedDotsLocalization localization,
+        out RedDotsSelectMenuType selectMenuType)
     {
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
             new PartialEmoji(Name: "❓"), "red_dots_help");
@@ -261,10 +378,10 @@ public partial class RedDotsPicking : RedDotsGame
         // Force player to eliminate red fives
         var hasRedFives = deserializedIncomingData
             .CardsOnTable
-            .Any(c => (c.Suit.Equals(Suit.Heart) || c.Suit.Equals(Suit.Diamond)) && c.Number == 5);
+            .Any(c => c.Suit is Suit.Heart or Suit.Diamond && c.Number == 5);
         var playerHasFive = nextPlayer
             .Cards
-            .Any(c => (c.Suit.Equals(Suit.Spade) || c.Suit.Equals(Suit.Club)) && c.Number == 5);
+            .Any(c => c.Suit is Suit.Spade or Suit.Club && c.Number == 5);
         var hasFourPlayers = deserializedIncomingData.Players.Count == 4;
         if (hasRedFives && playerHasFive && hasFourPlayers)
         {
@@ -272,9 +389,11 @@ public partial class RedDotsPicking : RedDotsGame
                 .Cards
                 .Where(c => c.Number == 5)
                 .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(), new PartialEmoji(c.Suit.ToSnowflake())));
-            var selectMenu = new SelectMenuComponent("red_dots_selection",
+            var selectMenu = new SelectMenuComponent("red_dots_force_five_selection",
                 selectOptions.ToImmutableArray(),
                 localization.Use, 1, 1);
+
+            selectMenuType = RedDotsSelectMenuType.ForcePlayFive;
 
             return new IMessageComponent[]
             {
@@ -289,7 +408,75 @@ public partial class RedDotsPicking : RedDotsGame
             };
         }
 
-        return Array.Empty<IMessageComponent>();
+        var availableCards = new List<Card>();
+        var availableTableCards = new List<Card>();
+        foreach (var card in nextPlayer.Cards)
+        {
+            foreach (var tableCard in deserializedIncomingData.CardsOnTable.Where(tableCard => Card.CanCombine(card, tableCard)))
+            {
+                availableCards.Add(card);
+                availableTableCards.Add(tableCard);
+            }
+        }
+
+        if (availableCards.Count > 0)
+        {
+            var userSelectOptions = availableCards
+                .Distinct()
+                .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                    new PartialEmoji(c.Suit.ToSnowflake())));
+            var userSelectMenu = new SelectMenuComponent("red_dots_user_selection",
+                userSelectOptions.ToImmutableArray(),
+                localization.Use, 1, 1);
+            
+            var tableSelectOptions = availableTableCards
+                .Distinct()
+                .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                    new PartialEmoji(c.Suit.ToSnowflake())));
+            var tableSelectMenu = new SelectMenuComponent("red_dots_table_selection",
+                tableSelectOptions.ToImmutableArray(),
+                localization.Use, 1, 1);
+            
+            selectMenuType = RedDotsSelectMenuType.Collect;
+
+            return new IMessageComponent[]
+            {
+                new ActionRowComponent(new[]
+                {
+                    userSelectMenu
+                }),
+                new ActionRowComponent(new[]
+                {
+                    tableSelectMenu
+                }),
+                new ActionRowComponent(new[]
+                {
+                    helpButton
+                })
+            };
+        }
+
+        var remainingOptions = nextPlayer
+            .Cards
+            .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                new PartialEmoji(c.Suit.ToSnowflake())));
+        var menu = new SelectMenuComponent("red_dots_give_up_selection",
+            remainingOptions.ToImmutableArray(),
+            localization.Use, 1, 1);
+
+        selectMenuType = RedDotsSelectMenuType.GiveUp;
+        
+        return new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                menu
+            }),
+            new ActionRowComponent(new[]
+            {
+                helpButton
+            })
+        };
     }
     
     private static Embed[] BuildPlayingMessage(
@@ -344,6 +531,8 @@ public partial class RedDotsPicking : RedDotsGame
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
+        if (oldGameState.Progress.Equals(RedDotsGameProgress.Starting)) return;
+        
         var localization = state.Localizations.GetLocalization().RedDotsPicking;
 
         var collectedCardsDiff =

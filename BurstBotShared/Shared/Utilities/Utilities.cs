@@ -142,6 +142,9 @@ public static class Utilities
         logger.LogError("Source: {Source}", exception.Source);
         logger.LogError("Stack trace: {Trace}", exception.StackTrace);
         logger.LogError("Message content: {Content}", messageContent);
+        
+        if (semaphore.CurrentCount <= 0) return false;
+        
         semaphore.Release();
         logger.LogDebug("Semaphore released in an exception");
         return false;

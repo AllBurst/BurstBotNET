@@ -20,4 +20,6 @@ public class RedDotsPlayerState : IState<RedDotsPlayerState, RawRedDotsPlayerSta
     public int ScoreAdjustment { get; set; }
     public bool SecondMove { get; set; }
     public int Points { get; set; }
+
+    public List<Card> PlayedCards { get; } = new();
 }

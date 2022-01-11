@@ -20,5 +20,7 @@
   "giveUpMessage": "{playerName} gave up a {card} and it's now a part of the table.",
   "drawMessage": "{playerName} drew a {card} from the deck.",
   "turnMessageTitle": "It's {possessive} turn!",
-  "showHelp": "Show help texts"
+  "showHelp": "Show help texts",
+  "forceFive": "Because you have a Spade 5 or a Club 5, you have to eliminate the red 5 on the table.",
+  "forceGiveUp": "Because you don't have any card that matches at least a card on the table, you have to give up one of your cards to the table."
 }
