@@ -246,8 +246,8 @@ public partial class NinetyNine : NinetyNineGame
 
                     var previousCards = deserializedIncomingData.PreviousCard;
 
-                    await ShowPreviousPlayerAction(gameState,previousPlayerNewState!,
-                        previousCards!,state, channelApi, logger);
+                    await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
+                        previousCards!, state, channelApi, logger);
 
                     if (deserializedIncomingData.Progress.Equals(NinetyNineGameProgress.Ending)) return;
 
@@ -451,9 +451,10 @@ public partial class NinetyNine : NinetyNineGame
             var isPreviousPlayer = player.Order == gameState.CurrentPlayerOrder;
             var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : previousPlayerNewState.PlayerName;
 
-            
+
         }
     }
+
     private static async Task UpdateGameState(
     NinetyNineGameState state,
     RawNinetyNineGameState? data,
