@@ -137,13 +137,13 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
                             {
                                 var availableTableCards = menu.CustomID switch
                                 {
-                                    "red_dots_user_selection" => gameState
-                                        .CardsOnTable
+                                    "red_dots_user_selection" => playerState
+                                        .Cards
                                         .Where(c => Card.CanCombine(selectedCard, c))
                                         .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                                             new PartialEmoji(c.Suit.ToSnowflake()))),
-                                    "red_dots_table_selection" => playerState
-                                        .Cards
+                                    "red_dots_table_selection" => gameState
+                                        .CardsOnTable
                                         .Where(c => Card.CanCombine(selectedCard, c))
                                         .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                                             new PartialEmoji(c.Suit.ToSnowflake()))),
@@ -202,7 +202,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
             .EditMessageAsync(message.ChannelID, message.ID,
                 embeds: originalEmbeds.ToImmutableArray(),
                 components: originalComponents,
-                attachments: originalAttachments.ToImmutableArray(),
+                //attachments: originalAttachments.ToImmutableArray(),
                 ct: ct);
         if (!editResult.IsSuccess) return Result.FromError(editResult);
 

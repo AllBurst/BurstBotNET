@@ -137,7 +137,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             _ = Task.Run(() =>
             {
                 timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task cancelled");
                 timeoutCancellationTokenSource.Dispose();
             });
         }

@@ -538,12 +538,6 @@ public partial class RedDotsPicking : RedDotsGame
         var collectedCardsDiff =
             previousPlayerNewState.CollectedCards.Count - previousPlayerOldState.CollectedCards.Length;
 
-        var (lastDrawnCard, lastDrawnCardImage) = GetLastDrawnCard(previousPlayerOldState,
-            previousPlayerNewState,
-            oldGameState,
-            newGameState,
-            state);
-
         // Player collected new cards
         if (collectedCardsDiff == 2)
         {
@@ -554,9 +548,17 @@ public partial class RedDotsPicking : RedDotsGame
             var collectedCard = oldGameState.CardsOnTable
                 .Intersect(previousPlayerNewState.CollectedCards)
                 .FirstOrDefault();
+            
+            var (lastDrawnCardAfterCollection, lastDrawnCardImageAfterCollection) = GetLastDrawnCard(previousPlayerOldState,
+                previousPlayerNewState,
+                oldGameState,
+                newGameState,
+                usedCard,
+                collectedCard,
+                state);
 
             var title = localization.UseMessage
-                .Replace("{playerName}", previousPlayerNewState.AvatarUrl)
+                .Replace("{playerName}", previousPlayerNewState.PlayerName)
                 .Replace("{card}", usedCard.ToString())
                 .Replace("{card2}", collectedCard.ToString());
 
@@ -566,10 +568,11 @@ public partial class RedDotsPicking : RedDotsGame
             foreach (var (_, player) in oldGameState.Players)
             {
                 await SendPreviousPlayerActionMessage(player, previousPlayerNewState, renderedCards,
-                    lastDrawnCardImage, title, lastDrawnCard, localization,
+                    lastDrawnCardImageAfterCollection, title, lastDrawnCardAfterCollection, localization,
                     channelApi, logger);
             }
-
+            
+            await lastDrawnCardImageAfterCollection.DisposeAsync();
             return;
         }
 
@@ -577,6 +580,14 @@ public partial class RedDotsPicking : RedDotsGame
         var givenUpCard = newGameState.CardsOnTable
             .Intersect(previousPlayerOldState.Cards)
             .FirstOrDefault();
+        
+        var (lastDrawnCardAfterGivingUp, lastDrawnCardImageAfterGivingUp) = GetLastDrawnCard(previousPlayerOldState,
+            previousPlayerNewState,
+            oldGameState,
+            newGameState,
+            givenUpCard,
+            null,
+            state);
 
         await using var renderedGivenUpCard = SkiaService.RenderCard(state.DeckService, givenUpCard);
 
@@ -587,15 +598,15 @@ public partial class RedDotsPicking : RedDotsGame
         foreach (var (_, player) in oldGameState.Players)
         {
             await SendPreviousPlayerActionMessage(player, previousPlayerNewState, renderedGivenUpCard,
-                lastDrawnCardImage, resultTitle, lastDrawnCard, localization,
+                lastDrawnCardImageAfterGivingUp, resultTitle, lastDrawnCardAfterGivingUp, localization,
                 channelApi, logger);
         }
         
-        await lastDrawnCardImage.DisposeAsync();
+        await lastDrawnCardImageAfterGivingUp.DisposeAsync();
     }
 
     private static async Task SendPreviousPlayerActionMessage(
-        RedDotsPlayerState player,
+        IPlayerState player,
         RawRedDotsPlayerState previousPlayerNewState,
         Stream renderedCard,
         Stream lastDrawnCardImage,
@@ -658,10 +669,13 @@ public partial class RedDotsPicking : RedDotsGame
             sendResult.Error.Message, sendResult.Inner);
     }
 
-    private static (Card, Stream) GetLastDrawnCard(RedDotsPlayerState previousPlayerOldState,
+    private static (Card, Stream) GetLastDrawnCard(
+        RedDotsPlayerState previousPlayerOldState,
         RawRedDotsPlayerState previousPlayerNewState,
         RedDotsGameState oldGameState,
         RawRedDotsGameState newGameState,
+        Card usedCard,
+        Card? collectedCard,
         State state)
     {
         // Player drew a card that matches a card on the table.
@@ -669,7 +683,7 @@ public partial class RedDotsPicking : RedDotsGame
         {
             var drawnCard = previousPlayerOldState.Cards
                 .Except(previousPlayerNewState.Cards)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number);
 
             return (drawnCard, SkiaService.RenderCard(state.DeckService, drawnCard));
         }
@@ -677,7 +691,13 @@ public partial class RedDotsPicking : RedDotsGame
         // Player drew a card and that card is on the table.
         var card = oldGameState.CardsOnTable
             .Except(newGameState.CardsOnTable)
-            .FirstOrDefault();
+            .FirstOrDefault(c =>
+            {
+                if (collectedCard.HasValue)
+                    return c.Suit != collectedCard.Value.Suit && c.Number != collectedCard.Value.Number;
+
+                return true;
+            });
 
         return (card, SkiaService.RenderCard(state.DeckService, card));
     }
