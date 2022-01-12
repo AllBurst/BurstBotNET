@@ -1,5 +1,5 @@
-Generally, only <:burst_heart:910826529511051284> Hearts and <:burst_diamond:910826609576140821> Diamonds are counted into the final score.
-However, **in a 4-player game, <:burst_spade:910826637657010226> Spade A is 30 points, and <:burst_club:910826578336948234> Club A is 40 points.**
+Generally, only <:burst_heart2:930749955914727474> Hearts and <:burst_diamond2:930749987044851712> Diamonds are counted into the final score.
+However, **in a 4-player game, <:burst_spade2:930749903158792192> Spade A is 30 points, and <:burst_club2:930750022167957504> Club A is 40 points.**
 
 When the game ends, a player that gets 250 points satisfies a "win-all" (全贏) situation, and automatically gets 420 points as his final score, while all other players' final scores will be -140 points.
 A player that gets 0 points in total (excluding the minus points from a player earning Heart 5 and Diamond 5) when the game ends satisfies a "zero-attempt" (拼零分) situation, and will be rewarded the same way as win-all (while all other players' final scores will also be -140 points.)

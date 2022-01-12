@@ -657,7 +657,7 @@ public partial class BlackJack : BlackJackGame
         {
             BlackJackInGameRequestType.Draw => localization.DrawMessage
                 .Replace("{playerName}", playerName)
-                .Replace("{lastCard}", lastCard!.Value.ToStringSimple()),
+                .Replace("{lastCard}", lastCard!.ToStringSimple()),
             BlackJackInGameRequestType.Stand => localization.StandMessage
                 .Replace("{playerName}", playerName),
             BlackJackInGameRequestType.Call => localization.CallMessage

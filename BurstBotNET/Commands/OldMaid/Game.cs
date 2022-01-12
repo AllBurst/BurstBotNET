@@ -460,9 +460,9 @@ public partial class OldMaid : OldMaidGame
 
         await using var renderedImage = diff.IsEmpty ? null : SkiaService.RenderDeck(state.DeckService, diff);
         await using var drawnCardBack = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard!.Value with { IsFront = false });
+            newGameState.PreviouslyDrawnCard! with { IsFront = false });
         await using var drawnCardFront = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard!.Value);
+            newGameState.PreviouslyDrawnCard);
 
         foreach (var (_, player) in oldGameState.Players)
         {
@@ -489,7 +489,7 @@ public partial class OldMaid : OldMaidGame
                     Image: new EmbedImage(Constants.AttachmentUri),
                     Description: oldMaidLocalization.ThrowMessage
                         .Replace("{previousPlayerName}", pronoun)
-                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Value.Number.ToString())
+                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Number.ToString())
                 );
                 
                 await using var streamCopy = new MemoryStream((int)renderedImage!.Length);

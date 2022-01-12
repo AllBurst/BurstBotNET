@@ -5,6 +5,7 @@ using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -297,9 +298,10 @@ public partial class RedDotsPicking : RedDotsGame
             .Players
             .FirstOrDefault(p => p.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
-        
-        await using var cardsOnTable = SkiaService.RenderDeck(state.DeckService, deserializedIncomingData
-            .CardsOnTable);
+
+        await using var cardsOnTable = deserializedIncomingData.CardsOnTable.Count > 0
+            ? SkiaService.RenderDeck(state.DeckService, deserializedIncomingData.CardsOnTable)
+            : null;
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
@@ -309,23 +311,37 @@ public partial class RedDotsPicking : RedDotsGame
 
             if (nextPlayer.PlayerId == playerId)
             {
+                var attachments = new List<OneOf<FileData, IPartialAttachment>>();
+                
                 await using var nextPlayerDeck = SkiaService
                     .RenderDeck(state.DeckService, nextPlayer.Cards);
-
-                await using var imageCopy = new MemoryStream((int)cardsOnTable.Length);
-                await cardsOnTable.CopyToAsync(imageCopy);
-                cardsOnTable.Seek(0, SeekOrigin.Begin);
-                imageCopy.Seek(0, SeekOrigin.Begin);
-
-                var attachments = new[]
-                {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData("playerDeck.jpg", nextPlayerDeck)),
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
-                };
-
+                attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData("playerDeck.jpg", nextPlayerDeck)));
+                
                 var components = BuildPlayingComponents(nextPlayer, deserializedIncomingData, redDotsLocalization,
                     out _);
 
+                if (cardsOnTable != null)
+                {
+                    await using var imageCopy = new MemoryStream((int)cardsOnTable.Length);
+                    await cardsOnTable.CopyToAsync(imageCopy);
+                    cardsOnTable.Seek(0, SeekOrigin.Begin);
+                    imageCopy.Seek(0, SeekOrigin.Begin);
+                    attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy)));
+                    
+                    var result = await channelApi
+                        .CreateMessageAsync(playerState.TextChannel.ID,
+                            embeds: embeds,
+                            components: components,
+                            attachments: attachments);
+
+                    if (result.IsSuccess) continue;
+
+                    var error = result.Error as RestResultError<RestError>;
+
+                    logger.LogError("Failed to send playing message to the player {PlayerId}: {Reason}, inner: {Inner}",
+                        playerId, result.Error.Message, error?.Error);
+                }
+                
                 var sendResult = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: embeds,
@@ -341,20 +357,33 @@ public partial class RedDotsPicking : RedDotsGame
             }
             else
             {
-                await using var imageCopy = new MemoryStream((int)cardsOnTable.Length);
-                await cardsOnTable.CopyToAsync(imageCopy);
-                cardsOnTable.Seek(0, SeekOrigin.Begin);
-                imageCopy.Seek(0, SeekOrigin.Begin);
+                var attachments = new List<OneOf<FileData, IPartialAttachment>>();
 
-                var attachment = new[]
+                if (cardsOnTable != null)
                 {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
-                };
+                    await using var imageCopy = new MemoryStream((int)cardsOnTable.Length);
+                    await cardsOnTable.CopyToAsync(imageCopy);
+                    cardsOnTable.Seek(0, SeekOrigin.Begin);
+                    imageCopy.Seek(0, SeekOrigin.Begin);
+                    attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy)));
+                    
+                    var result = await channelApi
+                        .CreateMessageAsync(playerState.TextChannel.ID,
+                            embeds: embeds,
+                            attachments: attachments);
+                
+                    if (result.IsSuccess) continue;
+                
+                    var error = result.Error as RestResultError<RestError>;
+                
+                    logger.LogError("Failed to send playing message to the player {PlayerId}: {Reason}, inner: {Inner}",
+                        playerId, result.Error.Message, error?.Error);
+                }
 
                 var sendResult = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: embeds,
-                        attachments: attachment);
+                        attachments: attachments);
                 
                 if (sendResult.IsSuccess) continue;
                 
@@ -515,9 +544,16 @@ public partial class RedDotsPicking : RedDotsGame
         var tableEmbed = new Embed(
             Description: localization.RedDotsPicking.CardsOnTable.Replace("{cardNames}", string.Join('\n', tableCards)),
             Colour: BurstColor.Burst.ToColor(),
-            Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
-            Image: new EmbedImage(Constants.AttachmentUri)
+            Thumbnail: new EmbedThumbnail(Constants.BurstLogo)
         );
+
+        if (tableCards.Count > 0)
+        {
+            tableEmbed = tableEmbed with
+            {
+                Image = new EmbedImage(Constants.AttachmentUri)
+            };
+        }
 
         return new[] { playerEmbed, tableEmbed };
     }
@@ -549,7 +585,15 @@ public partial class RedDotsPicking : RedDotsGame
                 .Intersect(previousPlayerNewState.CollectedCards)
                 .FirstOrDefault();
             
-            var (lastDrawnCardAfterCollection, lastDrawnCardImageAfterCollection) = GetLastDrawnCard(previousPlayerOldState,
+            var title = localization.UseMessage
+                .Replace("{playerName}", previousPlayerNewState.PlayerName)
+                .Replace("{card}", usedCard!.ToString())
+                .Replace("{card2}", collectedCard!.ToString());
+            
+            await using var renderedCards =
+                SkiaService.RenderDeck(state.DeckService, new[] { usedCard, collectedCard });
+
+            var lastDrawnCardResultAfterCollection = GetLastDrawnCard(previousPlayerOldState,
                 previousPlayerNewState,
                 oldGameState,
                 newGameState,
@@ -557,22 +601,29 @@ public partial class RedDotsPicking : RedDotsGame
                 collectedCard,
                 state);
 
-            var title = localization.UseMessage
-                .Replace("{playerName}", previousPlayerNewState.PlayerName)
-                .Replace("{card}", usedCard.ToString())
-                .Replace("{card2}", collectedCard.ToString());
-
-            await using var renderedCards =
-                SkiaService.RenderDeck(state.DeckService, new[] { usedCard, collectedCard });
-
-            foreach (var (_, player) in oldGameState.Players)
+            if (!lastDrawnCardResultAfterCollection.HasValue)
             {
-                await SendPreviousPlayerActionMessage(player, previousPlayerNewState, renderedCards,
-                    lastDrawnCardImageAfterCollection, title, lastDrawnCardAfterCollection, localization,
-                    channelApi, logger);
+                foreach (var (_, player) in oldGameState.Players)
+                {
+                    await SendPreviousPlayerActionMessage(player, previousPlayerNewState, renderedCards,
+                        null, title, null, localization,
+                        channelApi, logger);
+                }
+            }
+            else
+            {
+                var (lastDrawnCardAfterCollection, lastDrawnCardImageAfterCollection) = lastDrawnCardResultAfterCollection.Value;
+
+                foreach (var (_, player) in oldGameState.Players)
+                {
+                    await SendPreviousPlayerActionMessage(player, previousPlayerNewState, renderedCards,
+                        lastDrawnCardImageAfterCollection, title, lastDrawnCardAfterCollection, localization,
+                        channelApi, logger);
+                }
+            
+                await lastDrawnCardImageAfterCollection.DisposeAsync();
             }
             
-            await lastDrawnCardImageAfterCollection.DisposeAsync();
             return;
         }
 
@@ -585,15 +636,15 @@ public partial class RedDotsPicking : RedDotsGame
             previousPlayerNewState,
             oldGameState,
             newGameState,
-            givenUpCard,
+            givenUpCard!,
             null,
-            state);
+            state)!.Value;
 
-        await using var renderedGivenUpCard = SkiaService.RenderCard(state.DeckService, givenUpCard);
+        await using var renderedGivenUpCard = SkiaService.RenderCard(state.DeckService, givenUpCard!);
 
         var resultTitle = localization.GiveUpMessage
             .Replace("{playerName}", previousPlayerNewState.PlayerName)
-            .Replace("{card}", givenUpCard.ToString());
+            .Replace("{card}", givenUpCard!.ToString());
 
         foreach (var (_, player) in oldGameState.Players)
         {
@@ -609,9 +660,9 @@ public partial class RedDotsPicking : RedDotsGame
         IPlayerState player,
         RawRedDotsPlayerState previousPlayerNewState,
         Stream renderedCard,
-        Stream lastDrawnCardImage,
+        Stream? lastDrawnCardImage,
         string title,
-        Card lastDrawnCard,
+        Card? lastDrawnCard,
         RedDotsLocalization localization,
         IDiscordRestChannelAPI channelApi,
         ILogger logger
@@ -624,6 +675,9 @@ public partial class RedDotsPicking : RedDotsGame
         renderedCard.Seek(0, SeekOrigin.Begin);
         imageCopy.Seek(0, SeekOrigin.Begin);
 
+        var embeds = new List<IEmbed>();
+        var attachments = new List<OneOf<FileData, IPartialAttachment>>();
+
         var randomFileName = Utilities.GenerateRandomString() + ".jpg";
         var randomUri = $"attachment://{randomFileName}";
 
@@ -633,34 +687,49 @@ public partial class RedDotsPicking : RedDotsGame
             Colour: BurstColor.Burst.ToColor(),
             Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
             Image: new EmbedImage(randomUri));
+        
+        embeds.Add(resultEmbed);
+        attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)));
 
-        var randomFileName2 = Utilities.GenerateRandomString() + ".jpg";
-        var randomUri2 = $"attachment://{randomFileName2}";
-
-        var drawEmbed = new Embed(
-            Author: new EmbedAuthor(previousPlayerNewState.PlayerName,
-                IconUrl: previousPlayerNewState.AvatarUrl),
-            Title: localization.DrawMessage
-                .Replace("{playerName}", previousPlayerNewState.PlayerName)
-                .Replace("{card}", lastDrawnCard.ToString()),
-            Colour: BurstColor.Burst.ToColor(),
-            Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
-            Image: new EmbedImage(randomUri2));
-
-        await using var drawCardImageCopy = new MemoryStream((int)lastDrawnCardImage.Length);
-        await lastDrawnCardImage.CopyToAsync(drawCardImageCopy);
-        lastDrawnCardImage.Seek(0, SeekOrigin.Begin);
-        drawCardImageCopy.Seek(0, SeekOrigin.Begin);
-
-        var attachments = new[]
+        if (lastDrawnCard != null && lastDrawnCardImage != null)
         {
-            OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName, imageCopy)),
-            OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName2, drawCardImageCopy))
-        };
+            var randomFileName2 = Utilities.GenerateRandomString() + ".jpg";
+            var randomUri2 = $"attachment://{randomFileName2}";
+            
+            var drawEmbed = new Embed(
+                Author: new EmbedAuthor(previousPlayerNewState.PlayerName,
+                    IconUrl: previousPlayerNewState.AvatarUrl),
+                Title: localization.DrawMessage
+                    .Replace("{playerName}", previousPlayerNewState.PlayerName)
+                    .Replace("{card}", lastDrawnCard.ToString()),
+                Colour: BurstColor.Burst.ToColor(),
+                Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+                Image: new EmbedImage(randomUri2));
+            embeds.Add(drawEmbed);
+            
+            await using var drawCardImageCopy = new MemoryStream((int)lastDrawnCardImage.Length);
+            await lastDrawnCardImage.CopyToAsync(drawCardImageCopy);
+            lastDrawnCardImage.Seek(0, SeekOrigin.Begin);
+            drawCardImageCopy.Seek(0, SeekOrigin.Begin);
+            
+            attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData(randomFileName2, drawCardImageCopy)));
+            
+            var result = await channelApi
+                .CreateMessageAsync(player.TextChannel.ID,
+                    embeds: embeds,
+                    attachments: attachments);
+            
+            if (result.IsSuccess) return;
+            
+            logger.LogError("Failed to show previous player's action: {Reason}, inner: {Inner}",
+                result.Error.Message, result.Inner);
+
+            return;
+        }
 
         var sendResult = await channelApi
             .CreateMessageAsync(player.TextChannel.ID,
-                embeds: new[] { resultEmbed, drawEmbed },
+                embeds: embeds,
                 attachments: attachments);
 
         if (sendResult.IsSuccess) return;
@@ -669,7 +738,7 @@ public partial class RedDotsPicking : RedDotsGame
             sendResult.Error.Message, sendResult.Inner);
     }
 
-    private static (Card, Stream) GetLastDrawnCard(
+    private static (Card, Stream)? GetLastDrawnCard(
         RedDotsPlayerState previousPlayerOldState,
         RawRedDotsPlayerState previousPlayerNewState,
         RedDotsGameState oldGameState,
@@ -678,28 +747,35 @@ public partial class RedDotsPicking : RedDotsGame
         Card? collectedCard,
         State state)
     {
+        if (previousPlayerOldState.SecondMove) return null;
+        
         // Player drew a card that matches a card on the table.
         if (oldGameState.CurrentPlayerOrder == newGameState.CurrentPlayerOrder)
         {
-            var drawnCard = previousPlayerOldState.Cards
-                .Except(previousPlayerNewState.Cards)
-                .FirstOrDefault(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number);
+            var drawDiff = previousPlayerNewState
+                .Cards
+                .Where(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number)
+                .Except(previousPlayerOldState
+                    .Cards
+                    .Where(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number), new CardEqualityComparer());
+            var drawnCard = drawDiff.LastOrDefault();
 
-            return (drawnCard, SkiaService.RenderCard(state.DeckService, drawnCard));
+            return (drawnCard!, SkiaService.RenderCard(state.DeckService, drawnCard!));
         }
 
         // Player drew a card and that card is on the table.
-        var card = oldGameState.CardsOnTable
-            .Except(newGameState.CardsOnTable)
-            .FirstOrDefault(c =>
-            {
-                if (collectedCard.HasValue)
-                    return c.Suit != collectedCard.Value.Suit && c.Number != collectedCard.Value.Number;
+        var tableDiff = newGameState
+            .CardsOnTable
+            .Where(c => collectedCard != null ||
+                        c.Suit != collectedCard!.Suit && c.Number != collectedCard.Number)
+            .Except(oldGameState
+                    .CardsOnTable
+                    .Where(c => collectedCard != null ||
+                                c.Suit != collectedCard!.Suit && c.Number != collectedCard.Number),
+                new CardEqualityComparer());
+        var card = tableDiff.LastOrDefault();
 
-                return true;
-            });
-
-        return (card, SkiaService.RenderCard(state.DeckService, card));
+        return (card!, SkiaService.RenderCard(state.DeckService, card!));
     }
     
     private static async Task UpdateGameState(RedDotsGameState state, RawRedDotsGameState? data,

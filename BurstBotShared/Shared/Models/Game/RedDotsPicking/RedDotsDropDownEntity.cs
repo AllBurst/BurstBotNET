@@ -224,7 +224,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         var redFive = gameState
             .CardsOnTable
             .FirstOrDefault(c => c.Suit is Suit.Heart or Suit.Diamond && c.Number == 5);
-        playerState.PlayedCards.Add(redFive);
+        playerState.PlayedCards.Add(redFive!);
 
         var validateResult = Validate(playerState, 2);
         if (!validateResult) return Result.FromSuccess();

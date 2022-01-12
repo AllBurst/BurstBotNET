@@ -12,10 +12,10 @@ namespace BurstBotShared.Shared.Extensions;
 
 public static class BurstExtensions
 {
-    private const string SpadeIcon = "<:burst_spade:910826637657010226>";
-    private const string HeartIcon = "<:burst_heart:910826529511051284>";
-    private const string DiamondIcon = "<:burst_diamond:910826609576140821>";
-    private const string ClubIcon = "<:burst_club:910826578336948234>";
+    private const string SpadeIcon = "<:burst_spade2:930749903158792192>";
+    private const string HeartIcon = "<:burst_heart2:930749955914727474>";
+    private const string DiamondIcon = "<:burst_diamond2:930749987044851712>";
+    private const string ClubIcon = "<:burst_club2:930750022167957504>";
 
     public static string GetAvatarUrl(this IUser user, ushort size = 1024)
     {
@@ -100,10 +100,10 @@ public static class BurstExtensions
     public static Snowflake ToSnowflake(this Suit suit)
         => suit switch
         {
-            Suit.Spade => DiscordSnowflake.New(910826637657010226),
-            Suit.Heart => DiscordSnowflake.New(910826529511051284),
-            Suit.Diamond => DiscordSnowflake.New(910826609576140821),
-            Suit.Club => DiscordSnowflake.New(910826578336948234),
+            Suit.Spade => DiscordSnowflake.New(930749903158792192),
+            Suit.Heart => DiscordSnowflake.New(930749955914727474),
+            Suit.Diamond => DiscordSnowflake.New(930749987044851712),
+            Suit.Club => DiscordSnowflake.New(930750022167957504),
             _ => throw new ArgumentOutOfRangeException(nameof(suit), suit, "Invalid suit.")
         };
 
