@@ -9,7 +9,7 @@ on:
   schedule:
     - cron: '15 18 * * *'
   push:
-    branches: [ main, dev/new_games ]
+    branches: [ main, dev/red_dots_chase_pig ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:

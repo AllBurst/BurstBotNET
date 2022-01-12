@@ -11,6 +11,6 @@ public class CardEqualityComparer : IEqualityComparer<Card>
 
     public int GetHashCode(Card obj)
     {
-        return HashCode.Combine((int)obj.Suit, obj.Number, obj.IsFront);
+        return HashCode.Combine(obj.Suit.ToString(), obj.Number, obj.IsFront);
     }
 }

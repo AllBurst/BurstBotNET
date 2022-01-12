@@ -439,12 +439,23 @@ public partial class RedDotsPicking : RedDotsGame
 
         var availableCards = new List<Card>();
         var availableTableCards = new List<Card>();
-        foreach (var card in nextPlayer.Cards)
+        if (nextPlayer.SecondMove)
         {
-            foreach (var tableCard in deserializedIncomingData.CardsOnTable.Where(tableCard => Card.CanCombine(card, tableCard)))
+            var playerLastCard = nextPlayer.Cards.Last();
+            availableCards.Add(playerLastCard);
+            availableTableCards.AddRange(from card in deserializedIncomingData.CardsOnTable
+                where Card.CanCombine(playerLastCard, card)
+                select card);
+        }
+        else
+        {
+            foreach (var card in nextPlayer.Cards)
             {
-                availableCards.Add(card);
-                availableTableCards.Add(tableCard);
+                foreach (var tableCard in deserializedIncomingData.CardsOnTable.Where(tableCard => Card.CanCombine(card, tableCard)))
+                {
+                    availableCards.Add(card);
+                    availableTableCards.Add(tableCard);
+                }
             }
         }
 
@@ -752,13 +763,13 @@ public partial class RedDotsPicking : RedDotsGame
         // Player drew a card that matches a card on the table.
         if (oldGameState.CurrentPlayerOrder == newGameState.CurrentPlayerOrder)
         {
-            var drawDiff = previousPlayerNewState
+            var drawnDiff = previousPlayerNewState
                 .Cards
-                .Where(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number)
+                .Where(c => c.Suit != usedCard.Suit || c.Number != usedCard.Number)
                 .Except(previousPlayerOldState
                     .Cards
-                    .Where(c => c.Suit != usedCard.Suit && c.Number != usedCard.Number), new CardEqualityComparer());
-            var drawnCard = drawDiff.LastOrDefault();
+                    .Where(c => c.Suit != usedCard.Suit || c.Number != usedCard.Number));
+            var drawnCard = drawnDiff.LastOrDefault();
 
             return (drawnCard!, SkiaService.RenderCard(state.DeckService, drawnCard!));
         }
@@ -766,13 +777,23 @@ public partial class RedDotsPicking : RedDotsGame
         // Player drew a card and that card is on the table.
         var tableDiff = newGameState
             .CardsOnTable
-            .Where(c => collectedCard != null ||
-                        c.Suit != collectedCard!.Suit && c.Number != collectedCard.Number)
+            .Where(c =>
+            {
+                if (collectedCard != null)
+                    return c.Suit != collectedCard.Suit || c.Number != collectedCard.Number;
+
+                return true;
+            })
             .Except(oldGameState
-                    .CardsOnTable
-                    .Where(c => collectedCard != null ||
-                                c.Suit != collectedCard!.Suit && c.Number != collectedCard.Number),
-                new CardEqualityComparer());
+                .CardsOnTable
+                .Where(c =>
+                {
+                    if (collectedCard != null)
+                        return c.Suit != collectedCard.Suit || c.Number != collectedCard.Number;
+
+                    return true;
+                }));
+        
         var card = tableDiff.LastOrDefault();
 
         return (card!, SkiaService.RenderCard(state.DeckService, card!));
