@@ -244,10 +244,10 @@ public partial class NinetyNine : NinetyNineGame
                         return;
                     }
 
-                    var newDumpedCards = deserializedIncomingData.PreviousCard;
+                    var previousCards = deserializedIncomingData.PreviousCard;
 
-                    await ShowPreviousPlayerAction(previousPlayerNewState!, ppPlayerState!,
-                        newDumpedCards, gameState, deserializedIncomingData, state, channelApi, logger);
+                    await ShowPreviousPlayerAction(gameState,previousPlayerNewState!,
+                        previousCards!,state, channelApi, logger);
 
                     if (deserializedIncomingData.Progress.Equals(NinetyNineGameProgress.Ending)) return;
 
@@ -272,7 +272,7 @@ public partial class NinetyNine : NinetyNineGame
         if (playerState?.TextChannel == null) return;
         logger.LogDebug("Sending initial message...");
 
-        var localization = localizations.GetLocalization().OldMaid;
+        var localization = localizations.GetLocalization().NinetyNine;
         var prefix = localization.InitialMessagePrefix;
 
         var cardNames = prefix + string.Join('\n', newPlayerState.Cards);
@@ -314,7 +314,7 @@ public partial class NinetyNine : NinetyNineGame
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
     {
-        var localization = localizations.GetLocalization().OldMaid;
+        var localization = localizations.GetLocalization().NinetyNine;
 
         var nextPlayer = deserializedIncomingData
             .Players
@@ -427,123 +427,31 @@ public partial class NinetyNine : NinetyNineGame
         return embed;
     }
     private static async Task ShowPreviousPlayerAction(
-    RawNinetyNinePlayerState previousPlayerNewState,
-    RawNinetyNinePlayerState previousPreviousPlayer,
-    IEnumerable<Card> newDumpedCards,
-    NinetyNineGameState oldGameState,
-    NinetyNineGameState newGameState,
-    State state,
-    IDiscordRestChannelAPI channelApi,
-    ILogger logger)
+        NinetyNineGameState gameState,
+        RawNinetyNinePlayerState previousPlayerNewState,
+        Card perviousCard,
+        State state,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger)
     {
-        if (oldGameState.Progress.Equals(NinetyNineGameProgress.Starting)) return;
+        if (gameState.Progress.Equals(NinetyNineGameProgress.Starting)) return;
 
         var localization = state.Localizations.GetLocalization();
-        var oldMaidLocalization = state.Localizations.GetLocalization().OldMaid;
 
-        var dumpedCards = newDumpedCards.ToImmutableArray();
+        var ninetyNineLocalization = localization.NinetyNine;
 
-        var diff = dumpedCards
-            .Except(oldGameState.PreviousCard)
-            .ToImmutableArray();
+        var drawCard = perviousCard;
 
-        await using var renderedImage = diff.IsEmpty ? null : SkiaService.RenderDeck(state.DeckService, diff);
-        await using var drawnCardBack = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviousCard! with { IsFront = false });
-        await using var drawnCardFront = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviousCard!);
+        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, drawCard);
 
-        foreach (var (_, player) in oldGameState.Players)
+        foreach (var (_, player) in gameState.Players)
         {
             if (player.TextChannel == null) continue;
 
-            var isPreviousPlayer = player.Order == oldGameState.CurrentPlayerOrder;
-            var isPpPlayer = player.PlayerId == previousPreviousPlayer.PlayerId;
+            var isPreviousPlayer = player.Order == gameState.CurrentPlayerOrder;
             var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : previousPlayerNewState.PlayerName;
 
-            var title = oldMaidLocalization
-                .DrawMessage
-                .Replace("{previousPlayerName}", pronoun)
-                .Replace("{ppPlayerName}",
-                    isPpPlayer ? localization.GenericWords.Pronoun : previousPreviousPlayer.PlayerName)
-                .Replace("{card}",
-                    !isPreviousPlayer && !isPpPlayer ? "card" : newGameState.PreviouslyDrawnCard!.ToString());
-
-            if (!diff.IsEmpty)
-            {
-                var embed = new Embed(
-                    Author: new EmbedAuthor(previousPlayerNewState.PlayerName, IconUrl: previousPlayerNewState.AvatarUrl),
-                    Title: title,
-                    Colour: BurstColor.Burst.ToColor(),
-                    Image: new EmbedImage(Constants.AttachmentUri),
-                    Description: oldMaidLocalization.ThrowMessage
-                        .Replace("{previousPlayerName}", pronoun)
-                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Number.ToString())
-                );
-
-                await using var streamCopy = new MemoryStream((int)renderedImage!.Length);
-                await renderedImage.CopyToAsync(streamCopy);
-                streamCopy.Seek(0, SeekOrigin.Begin);
-                renderedImage.Seek(0, SeekOrigin.Begin);
-
-                var attachment = new[]
-                {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, streamCopy))
-                };
-
-                var sentResult = await channelApi
-                    .CreateMessageAsync(player.TextChannel.ID,
-                        embeds: new[] { embed },
-                        attachments: attachment);
-
-                if (sentResult.IsSuccess) continue;
-
-                var innerError = sentResult.Error as RestResultError<RestError>;
-                logger.LogError("Failed to show previous player's action with picture: {Reason}, inner: {Inner}",
-                    sentResult.Error.Message, sentResult.Inner);
-                logger.LogError("Rest error: {Error}, message: {Message}", innerError?.Error, innerError?.Message);
-            }
-            else
-            {
-                var embed = new Embed(
-                    Author: new EmbedAuthor(previousPlayerNewState.PlayerName, IconUrl: previousPlayerNewState.AvatarUrl),
-                    Title: title,
-                    Colour: BurstColor.Burst.ToColor(),
-                    Image: new EmbedImage(Constants.AttachmentUri)
-                );
-
-                await using var imageCopy =
-                    new MemoryStream(isPreviousPlayer ? (int)drawnCardFront.Length : (int)drawnCardBack.Length);
-                if (isPreviousPlayer || isPpPlayer)
-                {
-                    await drawnCardFront.CopyToAsync(imageCopy);
-                    drawnCardFront.Seek(0, SeekOrigin.Begin);
-                }
-                else
-                {
-                    await drawnCardBack.CopyToAsync(imageCopy);
-                    drawnCardBack.Seek(0, SeekOrigin.Begin);
-                }
-
-                imageCopy.Seek(0, SeekOrigin.Begin);
-
-                var attachment = new[]
-                {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
-                };
-
-                var sentResult = await channelApi
-                    .CreateMessageAsync(player.TextChannel!.ID,
-                        embeds: new[] { embed },
-                        attachments: attachment);
-
-                if (sentResult.IsSuccess) continue;
-
-                var innerError = sentResult.Error as RestResultError<RestError>;
-                logger.LogError("Failed to show previous player's action: {Reason}, inner: {Inner}",
-                    sentResult.Error.Message, sentResult.Inner);
-                logger.LogError("Rest error: {Error}, message: {Message}", innerError?.Error, innerError?.Message);
-            }
+            
         }
     }
     private static async Task UpdateGameState(
