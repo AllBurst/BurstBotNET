@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace BurstBotShared.Shared.Models.Game.Serializables;
 
-public record Card : IValueRealizable<ImmutableArray<int>>
+public readonly record struct Card : IValueRealizable<ImmutableArray<int>>
 {
     [JsonPropertyName("suit")]
     [JsonProperty("suit")]
@@ -40,6 +40,8 @@ public record Card : IValueRealizable<ImmutableArray<int>>
 
     public string ToStringSimple()
     {
+        if (Number == 0) return "Joker";
+        
         var n = Number switch
         {
             1 => "A",
@@ -114,6 +116,23 @@ public record Card : IValueRealizable<ImmutableArray<int>>
             Suit = s,
             IsFront = true,
             Number = r
+        };
+    }
+
+    public static bool CanCombine(Card card1, Card card2)
+    {
+        return (card1.Number, card2.Number) switch
+        {
+            (1, 9) or (9, 1) => true,
+            (2, 8) or (8, 2) => true, 
+            (3, 7) or (7, 3) => true, 
+            (4, 6) or (6, 4) => true, 
+            (5, 5) => true, 
+            (10, 10) => true, 
+            (11, 11) => true, 
+            (12, 12) => true, 
+            (13, 13) => true, 
+            _ => false,
         };
     }
 }

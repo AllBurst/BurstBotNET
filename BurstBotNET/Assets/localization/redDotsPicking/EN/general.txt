@@ -1,0 +1,12 @@
+The Red Dots Picking (撿紅點, jian-hong-dian) is a somewhat popular card game that might looks complex at first sight, but is actually quite simple.
+Players' goal is to gain as many "scores" as possible **by summing up the ranks to 10 or a multiple of 10**. However, only red cards *in the traditional sense* (**Hearts** and **Diamonds**) are counted into the final score, with some exceptions.
+
+**Please refer to the Scoring in the help menu.**
+
+As a general rule:
+1. Only <:burst_heart:910826529511051284> Hearts and <:burst_diamond:910826609576140821> Diamonds are counted into the final score in 2 and 3 players settings.
+2. Scoring by summing up the ranks to 10. That means you can only earn an 8 with a 2, 6 with a 4 and so forth. **10, J, Q, K match the same ranks as themselves (10 to 10, K to K, etc.) and are all 10 points.**
+3. <:burst_heart:910826529511051284> Heart A and <:burst_diamond:910826609576140821> Diamond A are 20 points, respectively.
+4. <:burst_heart:910826529511051284> Heart 9 and <:burst_diamond:910826609576140821> Diamond 9 are 10 points, respectively.
+5. In a 4-player setting, **a player that wins both <:burst_heart:910826529511051284> Heart 5 and <:burst_diamond:910826609576140821> Diamond 5** will not only get 10 points, but also all other players have to pay 20 points each to the winner, resulting in a total of 70 points earned.
+6. As a result, in a 4-player setting, when you have a <:burst_spade:910826637657010226> Spade 5 or a <:burst_club:910826578336948234> Club 5, and there's a red 5 on the table, **you're forced to use your Spade/Club 5 to remove the red 5 from the table.**

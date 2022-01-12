@@ -33,10 +33,17 @@
         <None Update="Assets\localization\oldMaid\EN\oldMaidLocalization.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\redDotsPicking\EN\redDotsLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commands\ChaseThePig" />
     </ItemGroup>
 
 </Project>

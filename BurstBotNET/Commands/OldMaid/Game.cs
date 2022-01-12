@@ -10,6 +10,7 @@ using BurstBotShared.Shared.Models.Game.OldMaid;
 using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
+using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using OneOf;
@@ -27,10 +28,6 @@ using OldMaidGame = IGame<OldMaidGameState, RawOldMaidGameState, OldMaid, OldMai
 
 public partial class OldMaid : OldMaidGame
 {
-    private static readonly ImmutableArray<string> InGameRequestTypes =
-        Enum.GetNames<OldMaidInGameRequestType>()
-            .ToImmutableArray();
-    
     public static async Task AddPlayerState(string gameId, Snowflake guild, OldMaidPlayerState playerState, GameStates gameStates)
     {
         var state = gameStates.OldMaidGameStates.Item1
@@ -89,14 +86,7 @@ public partial class OldMaid : OldMaidGame
         }
         catch (Exception ex)
         {
-            logger.LogError("An exception occurred when handling progress: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in an exception");
-            return false;
+            return Utilities.HandleException(ex, messageContent, gameState.Semaphore, logger);
         }
 
         return true;
@@ -105,6 +95,19 @@ public partial class OldMaid : OldMaidGame
     public static async Task<bool> HandleProgressChange(RawOldMaidGameState deserializedIncomingData, OldMaidGameState gameState, State state,
         IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
+        {
+            var playerId = deserializedIncomingData.PreviousPlayerId;
+            var result1 = deserializedIncomingData.Players.TryGetValue(playerId, out var previousPlayerNewState);
+            var result2 =
+                deserializedIncomingData.Players.TryGetValue(gameState.PreviousPlayerId, out var previousPreviousPlayer);
+            if (result1 && result2)
+            {
+                await ShowPreviousPlayerAction(previousPlayerNewState!, previousPreviousPlayer!,
+                    deserializedIncomingData.DumpedCards, gameState, deserializedIncomingData, state,
+                    channelApi, logger);
+            }
+        }
+        
         switch (deserializedIncomingData.Progress)
         {
             case OldMaidGameProgress.Ending:
@@ -228,7 +231,6 @@ public partial class OldMaid : OldMaidGame
         }
 
         logger.LogDebug("Sending progress messages...");
-        logger.LogDebug("Game progress: {Progress}", gameState.Progress);
 
         switch (gameState.Progress)
         {
@@ -408,10 +410,10 @@ public partial class OldMaid : OldMaidGame
         RawOldMaidPlayerState nextPlayer,
         Localizations localizations)
     {
-        var isCurrentPlayer = nextPlayer.PlayerId == playerState.PlayerId;
+        var isNextPlayer = nextPlayer.PlayerId == playerState.PlayerId;
         var localization = localizations.GetLocalization();
 
-        var possessive = isCurrentPlayer
+        var possessive = isNextPlayer
             ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
             : localization.GenericWords.PossessiveThird.Replace("{playerName}", nextPlayer.PlayerName);
 
@@ -425,7 +427,7 @@ public partial class OldMaid : OldMaidGame
             Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
             Image: new EmbedImage(Constants.AttachmentUri));
 
-        if (!isCurrentPlayer) return embed;
+        if (!isNextPlayer) return embed;
 
         embed = embed with
         {
@@ -458,9 +460,9 @@ public partial class OldMaid : OldMaidGame
 
         await using var renderedImage = diff.IsEmpty ? null : SkiaService.RenderDeck(state.DeckService, diff);
         await using var drawnCardBack = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard! with { IsFront = false });
+            newGameState.PreviouslyDrawnCard!.Value with { IsFront = false });
         await using var drawnCardFront = SkiaService.RenderCard(state.DeckService,
-            newGameState.PreviouslyDrawnCard!);
+            newGameState.PreviouslyDrawnCard!.Value);
 
         foreach (var (_, player) in oldGameState.Players)
         {
@@ -487,7 +489,7 @@ public partial class OldMaid : OldMaidGame
                     Image: new EmbedImage(Constants.AttachmentUri),
                     Description: oldMaidLocalization.ThrowMessage
                         .Replace("{previousPlayerName}", pronoun)
-                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Number.ToString())
+                        .Replace("{rank}", newGameState.PreviouslyDrawnCard!.Value.Number.ToString())
                 );
                 
                 await using var streamCopy = new MemoryStream((int)renderedImage!.Length);

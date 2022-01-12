@@ -26,13 +26,18 @@
         <PackageReference Include="Remora.Discord.Extensions" Version="1.0.6" />
         <PackageReference Include="Remora.Discord.Hosting" Version="4.0.8" />
         <PackageReference Include="Remora.Discord.Interactivity" Version="1.0.2" />
-        <PackageReference Include="Remora.Discord.Pagination" Version="1.0.2" />
+        <PackageReference Include="Remora.Discord.Pagination" Version="1.0.3" />
         <PackageReference Include="Remora.Discord.Rest" Version="27.0.3" />
         <PackageReference Include="Remora.Rest" Version="1.1.2" />
         <PackageReference Include="Remora.Rest.Core" Version="2.0.0" />
         <PackageReference Include="SkiaSharp" Version="2.88.0-preview.179" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.0-preview.179" />
         <PackageReference Include="YamlDotNet" Version="11.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Shared\Models" />
+        <Folder Include="Shared\Models\Game\ChaseThePig" />
     </ItemGroup>
 
 </Project>

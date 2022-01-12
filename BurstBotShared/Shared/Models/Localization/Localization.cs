@@ -4,6 +4,7 @@ using BurstBotShared.Shared.Models.Localization.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Localization.OldMaid.Serializables;
 using BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables;
+using BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Localization.Serializables;
 
 namespace BurstBotShared.Shared.Models.Localization;
@@ -15,6 +16,7 @@ public record Localization
     public ChinesePokerLocalization ChinesePoker { get; private init; } = null!;
     public OldMaidLocalization OldMaid { get; private init; } = null!;
     public NinetyNineLocalization NinetyNine { get; private init; } = null!;
+    public RedDotsLocalization RedDotsPicking { get; private init; } = null!;
     public GenericWords GenericWords { get; private init; } = null!;
 
     public static Localization FromRaw(RawLocalization rawLocalization)
@@ -30,6 +32,8 @@ public record Localization
                     .ReadAllText(rawLocalization.ChinesePoker))!).LoadCommandHelps(),
             OldMaid = ((ILocalization<OldMaidLocalization>)JsonSerializer.Deserialize<OldMaidLocalization>(File
                 .ReadAllText(rawLocalization.OldMaid))!).LoadCommandHelps(),
+            RedDotsPicking = ((ILocalization<RedDotsLocalization>)JsonSerializer.Deserialize<RedDotsLocalization>(File
+                .ReadAllText(rawLocalization.RedDotsPicking))!).LoadCommandHelps(),
             GenericWords = JsonSerializer.Deserialize<GenericWords>(File.ReadAllText(rawLocalization.Generic))!
         };
     }

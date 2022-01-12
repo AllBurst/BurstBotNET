@@ -26,7 +26,7 @@ public class BlackJackDropDownEntity : ISelectMenuInteractiveEntity
         _state = state;
     }
     
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new CancellationToken())
+    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
     {
         return componentType is not ComponentType.SelectMenu
             ? Task.FromResult<Result<bool>>(false)
