@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class DeckService
+    <title>Class CardEqualityComparer
    | Jack of All Trades </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class DeckService
+    <meta name="title" content="Class CardEqualityComparer
    | Jack of All Trades ">
     <meta name="generator" content="docfx 2.58.9.0">
     
@@ -78,82 +78,40 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="BurstBotShared.Services.DeckService">
+            <article class="content wrap" id="_content" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer">
   
   
-  <h1 id="BurstBotShared_Services_DeckService" data-uid="BurstBotShared.Services.DeckService" class="text-break">Class DeckService
+  <h1 id="BurstBotShared_Shared_Models_Game_CardEqualityComparer" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer" class="text-break">Class CardEqualityComparer
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
-    <div class="level1"><span class="xref">DeckService</span></div>
+    <div class="level1"><span class="xref">CardEqualityComparer</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#system-object-tostring">Object.ToString()</a>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Services.html">BurstBotShared.Services</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Shared.Models.Game.html">BurstBotShared.Shared.Models.Game</a></h6>
   <h6><strong>Assembly</strong>: BurstBotShared.dll</h6>
-  <h5 id="BurstBotShared_Services_DeckService_syntax">Syntax</h5>
+  <h5 id="BurstBotShared_Shared_Models_Game_CardEqualityComparer_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DeckService</code></pre>
-  </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_DeckService__ctor.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.DeckService.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/DeckService.cs/#L16">View Source</a>
-  </span>
-  <a id="BurstBotShared_Services_DeckService__ctor_" data-uid="BurstBotShared.Services.DeckService.#ctor*"></a>
-  <h4 id="BurstBotShared_Services_DeckService__ctor" data-uid="BurstBotShared.Services.DeckService.#ctor">DeckService()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DeckService()</code></pre>
+    <pre><code class="lang-csharp hljs">public class CardEqualityComparer : IEqualityComparer&lt;Card&gt;</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_DeckService_GetBitmap_BurstBotShared_Shared_Models_Game_Serializables_Card_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.DeckService.GetBitmap(BurstBotShared.Shared.Models.Game.Serializables.Card)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_CardEqualityComparer_Equals_BurstBotShared_Shared_Models_Game_Serializables_Card_BurstBotShared_Shared_Models_Game_Serializables_Card_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals(BurstBotShared.Shared.Models.Game.Serializables.Card%2CBurstBotShared.Shared.Models.Game.Serializables.Card)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/DeckService.cs/#L56">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Models/Game/CardEqualityComparer.cs/#L7">View Source</a>
   </span>
-  <a id="BurstBotShared_Services_DeckService_GetBitmap_" data-uid="BurstBotShared.Services.DeckService.GetBitmap*"></a>
-  <h4 id="BurstBotShared_Services_DeckService_GetBitmap_BurstBotShared_Shared_Models_Game_Serializables_Card_" data-uid="BurstBotShared.Services.DeckService.GetBitmap(BurstBotShared.Shared.Models.Game.Serializables.Card)">GetBitmap(Card)</h4>
+  <a id="BurstBotShared_Shared_Models_Game_CardEqualityComparer_Equals_" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_CardEqualityComparer_Equals_BurstBotShared_Shared_Models_Game_Serializables_Card_BurstBotShared_Shared_Models_Game_Serializables_Card_" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals(BurstBotShared.Shared.Models.Game.Serializables.Card,BurstBotShared.Shared.Models.Game.Serializables.Card)">Equals(Card, Card)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Pure]
-public SKBitmap GetBitmap(Card card)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Equals(Card x, Card y)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -167,7 +125,12 @@ public SKBitmap GetBitmap(Card card)</code></pre>
     <tbody>
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a></td>
-        <td><span class="parametername">card</span></td>
+        <td><span class="parametername">x</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a></td>
+        <td><span class="parametername">y</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -182,7 +145,54 @@ public SKBitmap GetBitmap(Card card)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/skiasharp.skbitmap">SKBitmap</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_CardEqualityComparer_GetHashCode_BurstBotShared_Shared_Models_Game_Serializables_Card_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode(BurstBotShared.Shared.Models.Game.Serializables.Card)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Models/Game/CardEqualityComparer.cs/#L12">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Models_Game_CardEqualityComparer_GetHashCode_" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode*"></a>
+  <h4 id="BurstBotShared_Shared_Models_Game_CardEqualityComparer_GetHashCode_BurstBotShared_Shared_Models_Game_Serializables_Card_" data-uid="BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode(BurstBotShared.Shared.Models.Game.Serializables.Card)">GetHashCode(Card)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int GetHashCode(Card obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -195,10 +205,10 @@ public SKBitmap GetBitmap(Card card)</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_DeckService.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.DeckService%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_CardEqualityComparer.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.CardEqualityComparer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/DeckService.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Models/Game/CardEqualityComparer.cs/#L5" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

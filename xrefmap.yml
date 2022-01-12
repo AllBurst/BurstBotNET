@@ -1328,15 +1328,15 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Api.BurstApi.WaitForGame
   nameWithType: BurstApi.WaitForGame
-- uid: BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name: WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForGame__1_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name.vb: WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  fullName: BurstBotShared.Api.BurstApi.WaitForGame<T>(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  fullName.vb: BurstBotShared.Api.BurstApi.WaitForGame(Of T)(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: BurstApi.WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  nameWithType.vb: BurstApi.WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+- uid: BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name: WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForGame__1_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_System_String_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
+  commentId: M:BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name.vb: WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  fullName: BurstBotShared.Api.BurstApi.WaitForGame<T>(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  fullName.vb: BurstBotShared.Api.BurstApi.WaitForGame(Of T)(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  nameWithType: BurstApi.WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  nameWithType.vb: BurstApi.WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
 - uid: BurstBotShared.Class1
   name: Class1
   href: api/BurstBotShared.Class1.html
@@ -4203,6 +4203,38 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.BlackJack.Serializables.RawBlackJackPlayerState.ToState
   nameWithType: RawBlackJackPlayerState.ToState
+- uid: BurstBotShared.Shared.Models.Game.CardEqualityComparer
+  name: CardEqualityComparer
+  href: api/BurstBotShared.Shared.Models.Game.CardEqualityComparer.html
+  commentId: T:BurstBotShared.Shared.Models.Game.CardEqualityComparer
+  fullName: BurstBotShared.Shared.Models.Game.CardEqualityComparer
+  nameWithType: CardEqualityComparer
+- uid: BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals(BurstBotShared.Shared.Models.Game.Serializables.Card,BurstBotShared.Shared.Models.Game.Serializables.Card)
+  name: Equals(Card, Card)
+  href: api/BurstBotShared.Shared.Models.Game.CardEqualityComparer.html#BurstBotShared_Shared_Models_Game_CardEqualityComparer_Equals_BurstBotShared_Shared_Models_Game_Serializables_Card_BurstBotShared_Shared_Models_Game_Serializables_Card_
+  commentId: M:BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals(BurstBotShared.Shared.Models.Game.Serializables.Card,BurstBotShared.Shared.Models.Game.Serializables.Card)
+  fullName: BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals(BurstBotShared.Shared.Models.Game.Serializables.Card, BurstBotShared.Shared.Models.Game.Serializables.Card)
+  nameWithType: CardEqualityComparer.Equals(Card, Card)
+- uid: BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals*
+  name: Equals
+  href: api/BurstBotShared.Shared.Models.Game.CardEqualityComparer.html#BurstBotShared_Shared_Models_Game_CardEqualityComparer_Equals_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.CardEqualityComparer.Equals
+  nameWithType: CardEqualityComparer.Equals
+- uid: BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode(BurstBotShared.Shared.Models.Game.Serializables.Card)
+  name: GetHashCode(Card)
+  href: api/BurstBotShared.Shared.Models.Game.CardEqualityComparer.html#BurstBotShared_Shared_Models_Game_CardEqualityComparer_GetHashCode_BurstBotShared_Shared_Models_Game_Serializables_Card_
+  commentId: M:BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode(BurstBotShared.Shared.Models.Game.Serializables.Card)
+  fullName: BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode(BurstBotShared.Shared.Models.Game.Serializables.Card)
+  nameWithType: CardEqualityComparer.GetHashCode(Card)
+- uid: BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode*
+  name: GetHashCode
+  href: api/BurstBotShared.Shared.Models.Game.CardEqualityComparer.html#BurstBotShared_Shared_Models_Game_CardEqualityComparer_GetHashCode_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.CardEqualityComparer.GetHashCode
+  nameWithType: CardEqualityComparer.GetHashCode
 - uid: BurstBotShared.Shared.Models.Game.ChinesePoker
   name: BurstBotShared.Shared.Models.Game.ChinesePoker
   href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.html
@@ -8416,11 +8448,142 @@ references:
   commentId: N:BurstBotShared.Shared.Models.Game.Serializables
   fullName: BurstBotShared.Shared.Models.Game.Serializables
   nameWithType: BurstBotShared.Shared.Models.Game.Serializables
-- uid: BurstBotShared.Shared.Models.Game.Serializables.
-  name: ''
-  href: api/BurstBotShared.Shared.Models.Game.Serializables..html
-  commentId: T:BurstBotShared.Shared.Models.Game.Serializables.
-  fullName: BurstBotShared.Shared.Models.Game.Serializables.
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card
+  name: Card
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html
+  commentId: T:BurstBotShared.Shared.Models.Game.Serializables.Card
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card
+  nameWithType: Card
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine(BurstBotShared.Shared.Models.Game.Serializables.Card,BurstBotShared.Shared.Models.Game.Serializables.Card)
+  name: CanCombine(Card, Card)
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CanCombine_BurstBotShared_Shared_Models_Game_Serializables_Card_BurstBotShared_Shared_Models_Game_Serializables_Card_
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine(BurstBotShared.Shared.Models.Game.Serializables.Card,BurstBotShared.Shared.Models.Game.Serializables.Card)
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine(BurstBotShared.Shared.Models.Game.Serializables.Card, BurstBotShared.Shared.Models.Game.Serializables.Card)
+  nameWithType: Card.CanCombine(Card, Card)
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine*
+  name: CanCombine
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CanCombine_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine
+  nameWithType: Card.CanCombine
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String,System.String)
+  name: CreateCard(String, String)
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CreateCard_System_String_System_String_
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String,System.String)
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String, System.String)
+  nameWithType: Card.CreateCard(String, String)
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard*
+  name: CreateCard
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CreateCard_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard
+  nameWithType: Card.CreateCard
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue
+  name: GetBlackJackValue()
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_GetBlackJackValue
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue()
+  nameWithType: Card.GetBlackJackValue()
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue*
+  name: GetBlackJackValue
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_GetBlackJackValue_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue
+  nameWithType: Card.GetBlackJackValue
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue
+  name: GetChinesePokerValue()
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_GetChinesePokerValue
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue()
+  nameWithType: Card.GetChinesePokerValue()
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue*
+  name: GetChinesePokerValue
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_GetChinesePokerValue_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.GetChinesePokerValue
+  nameWithType: Card.GetChinesePokerValue
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront
+  name: IsFront
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_IsFront
+  commentId: P:BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront
+  nameWithType: Card.IsFront
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront*
+  name: IsFront
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_IsFront_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.IsFront
+  nameWithType: Card.IsFront
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Number
+  name: Number
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Number
+  commentId: P:BurstBotShared.Shared.Models.Game.Serializables.Card.Number
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Number
+  nameWithType: Card.Number
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Number*
+  name: Number
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Number_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.Number
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Number
+  nameWithType: Card.Number
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Suit
+  name: Suit
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Suit
+  commentId: P:BurstBotShared.Shared.Models.Game.Serializables.Card.Suit
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Suit
+  nameWithType: Card.Suit
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Suit*
+  name: Suit
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Suit_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.Suit
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Suit
+  nameWithType: Card.Suit
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier
+  name: ToSpecifier()
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToSpecifier
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier()
+  nameWithType: Card.ToSpecifier()
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier*
+  name: ToSpecifier
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToSpecifier_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToSpecifier
+  nameWithType: Card.ToSpecifier
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToString
+  name: ToString()
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToString
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.ToString
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToString()
+  nameWithType: Card.ToString()
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToString*
+  name: ToString
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToString_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.ToString
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToString
+  nameWithType: Card.ToString
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple
+  name: ToStringSimple()
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToStringSimple
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple()
+  nameWithType: Card.ToStringSimple()
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple*
+  name: ToStringSimple
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_ToStringSimple_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.ToStringSimple
+  nameWithType: Card.ToStringSimple
 - uid: BurstBotShared.Shared.Models.Game.Serializables.ClientType
   name: ClientType
   href: api/BurstBotShared.Shared.Models.Game.Serializables.ClientType.html
