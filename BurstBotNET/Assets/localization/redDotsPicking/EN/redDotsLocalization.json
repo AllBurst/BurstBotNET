@@ -8,7 +8,7 @@
   "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
   "initialMessageTitle": "The Red Dots Picking game is starting!",
   "initialMessageFooter": "Please wait until all players are ready.",
-  "cardsOnTable": "Current cards on the table:\n{cardNames}",
+  "cardsOnTable": "Current cards on the table:\n{cardNames}\n\n",
   "winTitle": "{playerName} is the biggest winner!",
   "won": "won",
   "lost": "lost",

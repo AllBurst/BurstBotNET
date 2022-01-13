@@ -167,7 +167,7 @@ public partial class OldMaid : OldMaidGame
             foreach (var (pId, player) in endingData.Players)
             {
                 fields.Add(new EmbedField(player.PlayerName,
-                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture), true));
+                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture) + " tips", true));
             }
 
             embed = embed with { Fields = fields };

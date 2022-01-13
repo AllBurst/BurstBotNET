@@ -5,7 +5,6 @@ using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -142,7 +141,7 @@ public partial class RedDotsPicking : RedDotsGame
             foreach (var (pId, player) in endingData.Players)
             {
                 fields.Add(new EmbedField(player.PlayerName,
-                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture), true));
+                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture) + " tips", true));
             }
 
             embed = embed with { Fields = fields };
@@ -502,7 +501,7 @@ public partial class RedDotsPicking : RedDotsGame
                 new PartialEmoji(c.Suit.ToSnowflake())));
         var menu = new SelectMenuComponent("red_dots_give_up_selection",
             remainingOptions.ToImmutableArray(),
-            localization.Use, 1, 1);
+            localization.GiveUp, 1, 1);
 
         selectMenuType = RedDotsSelectMenuType.GiveUp;
         
@@ -552,8 +551,14 @@ public partial class RedDotsPicking : RedDotsGame
 
         var tableCards = deserializedIncomingData.CardsOnTable;
 
+        var description =
+            localization.RedDotsPicking.CardsOnTable.Replace("{cardNames}", string.Join('\n', tableCards));
+        var playerScores = deserializedIncomingData
+            .Players
+            .Select(p => $"{p.Value.PlayerName} - {p.Value.Score}");
+
         var tableEmbed = new Embed(
-            Description: localization.RedDotsPicking.CardsOnTable.Replace("{cardNames}", string.Join('\n', tableCards)),
+            Description: $"{description}{string.Join('\n', playerScores)}",
             Colour: BurstColor.Burst.ToColor(),
             Thumbnail: new EmbedThumbnail(Constants.BurstLogo)
         );
