@@ -19,6 +19,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 {
     private readonly InteractionContext _context;
     private readonly IDiscordRestChannelAPI _channelApi;
+    private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly State _state;
 
     private readonly string[] _validCustomIds =
@@ -26,15 +27,18 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         "red_dots_force_five_selection",
         "red_dots_user_selection",
         "red_dots_table_selection",
-        "red_dots_give_up_selection"
+        "red_dots_give_up_selection",
+        "red_dots_help_selection"
     };
     
     public RedDotsDropDownEntity(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
+        IDiscordRestInteractionAPI interactionApi,
         State state)
     {
         _context = context;
         _channelApi = channelApi;
+        _interactionApi = interactionApi;
         _state = state;
     }
     
@@ -66,6 +70,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
             "red_dots_force_five_selection" => await PlayForceFive(message!, gameState, playerState, values, ct),
             "red_dots_user_selection" or "red_dots_table_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, customId, 2, ct),
             "red_dots_give_up_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, null, 1, ct),
+            "red_dots_help_selection" => await ShowHelpText(values, ct),
             _ => Result.FromSuccess()
         };
     }
@@ -247,6 +252,36 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 
         await SendToGameStateChannel(gameState, playerState, ct);
         
+        return Result.FromSuccess();
+    }
+
+    private async Task<Result> ShowHelpText(
+        IEnumerable<string> values,
+        CancellationToken ct)
+    {
+        var localization = _state.Localizations.GetLocalization().RedDotsPicking;
+        var content = localization.CommandList[values.FirstOrDefault()!];
+
+        var texts = new List<string>();
+        if (content.Length <= 2000)
+            texts.Add(content);
+        else
+        {
+            texts.Add(content[..2000]);
+            texts.Add(content[2000..]);
+        }
+
+        foreach (var str in texts)
+        {
+            var result = await _interactionApi
+                .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
+                    str, ct: ct);
+            if (!result.IsSuccess)
+                return Result.FromError(result);
+
+            await Task.Delay(TimeSpan.FromSeconds(1), ct);
+        }
+
         return Result.FromSuccess();
     }
 }

@@ -224,7 +224,8 @@ public partial class ChinesePoker : ChinesePokerGame
                 Description: descriptionBuilder.ToString(),
                 Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
                 Title: title,
-                Fields: fields);
+                Fields: fields,
+                Image: new EmbedImage(winner.AvatarUrl));
 
             foreach (var (_, playerState) in state.Players)
             {

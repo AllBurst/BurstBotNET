@@ -40,6 +40,7 @@ public static class SlashCommandExtensions
             .AddInteractiveEntity<ChinesePokerButtonEntity>()
             .AddInteractiveEntity<OldMaidButtonEntity>()
             .AddInteractiveEntity<OldMaidDropDownEntity>()
-            .AddInteractiveEntity<RedDotsDropDownEntity>();
+            .AddInteractiveEntity<RedDotsDropDownEntity>()
+            .AddInteractiveEntity<RedDotsButtonEntity>();
     }
 }

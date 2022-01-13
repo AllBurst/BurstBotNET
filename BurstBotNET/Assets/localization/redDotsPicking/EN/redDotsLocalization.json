@@ -22,5 +22,9 @@
   "turnMessageTitle": "It's {possessive} turn!",
   "showHelp": "Show help texts",
   "forceFive": "Because you have a Spade 5 or a Club 5, you have to eliminate the red 5 on the table.",
-  "forceGiveUp": "Because you don't have any card that matches at least a card on the table, you have to give up one of your cards to the table."
+  "forceGiveUp": "Because you don't have any card that matches at least a card on the table, you have to give up one of your cards to the table.",
+  "showGeneral": "General rules and information about Red Dots Picking.",
+  "showScoring": "About the scoring rule of Red Dots Picking.",
+  "showFlows": "The game flow of Red Dots Picking.",
+  "points": "{points} points"
 }

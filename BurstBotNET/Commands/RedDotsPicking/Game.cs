@@ -555,7 +555,7 @@ public partial class RedDotsPicking : RedDotsGame
             localization.RedDotsPicking.CardsOnTable.Replace("{cardNames}", string.Join('\n', tableCards));
         var playerScores = deserializedIncomingData
             .Players
-            .Select(p => $"{p.Value.PlayerName} - {p.Value.Score}");
+            .Select(p => $"{p.Value.PlayerName} - {localization.RedDotsPicking.Points.Replace("{points}", p.Value.Score.ToString())}");
 
         var tableEmbed = new Embed(
             Description: $"{description}{string.Join('\n', playerScores)}",

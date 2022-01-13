@@ -35,6 +35,10 @@ public record RedDotsLocalization : ILocalization<RedDotsLocalization>
     [JsonPropertyName("cardsOnTable")] public string CardsOnTable { get; init; } = "";
     [JsonPropertyName("forceFive")] public string ForceFive { get; init; } = "";
     [JsonPropertyName("forceGiveUp")] public string ForceGiveUp { get; init; } = "";
+    [JsonPropertyName("showGeneral")] public string ShowGeneral { get; init; } = "";
+    [JsonPropertyName("showScoring")] public string ShowScoring { get; init; } = "";
+    [JsonPropertyName("showFlows")] public string ShowFlows { get; init; } = "";
+    [JsonPropertyName("points")] public string Points { get; init; } = "";
 
     public Dictionary<string, string> AvailableCommands => CommandList;
 };
