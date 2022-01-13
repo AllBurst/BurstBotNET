@@ -78,7 +78,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.html",
-          "hash": "M4KSSm7HoSveu+nvnxHUmo2Xhvz3V8vglA2HqHxAVKE="
+          "hash": "wSorlCeLFZD2agtVHlJ8fZ/AxrEehAXwzCH7lLvxsfk="
         }
       },
       "is_incremental": false,
@@ -462,7 +462,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Constants.html",
-          "hash": "UmWTXKMSLFWa/cLpNCX65VOg/aOBgAudZk3v/BLkQBA="
+          "hash": "gtkq2w9Cm5j6+Yf0FGkniNy1GvrlWyioUCK6nMOxEU0="
         }
       },
       "is_incremental": false,
@@ -1466,11 +1466,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsButtonEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsButtonEntity.html",
+          "hash": "Y4fNPKwx99tO/kwlMkFJUHYE2BWuPJ8XOIZH2dBRnKI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.yml",
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html",
-          "hash": "cnPtx1uWh4xSv6FPnVvATgKE1yMX8o6Z5dpo4ywWUs8="
+          "hash": "rY7BYydNCSJvqTp6JREO0cPuLelaKefgdjyRHC1tRtw="
         }
       },
       "is_incremental": false,
@@ -1602,7 +1614,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.html",
-          "hash": "qABbJcayqe6U8b3UdDE0Ph8ZFFQ809BjasupqYMCWIs="
+          "hash": "+7fEXhbbbwngSENgxOfnmr/3AGlR3/9O8vOLhe+NbYQ="
         }
       },
       "is_incremental": false,
@@ -1830,7 +1842,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables.RedDotsLocalization.html",
-          "hash": "Byh/gkgmj91MP3ErmLRAs6FMgBYnKoafk6HmnvjwYPA="
+          "hash": "hE77gBx+Cm6j+Pc0PNLtPDJ+cD42/qKtpwclrkxGkYo="
         }
       },
       "is_incremental": false,
@@ -1962,7 +1974,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "DpOLNOHugZ4fOQl5kSi0QXGF5lAPFYzH0yiehBGKeIY="
+          "hash": "m5l3GnKeZtq2BOc3ctOdUKBi38H45N3R6/NGqImGbNw="
         }
       },
       "is_incremental": false,
@@ -2001,7 +2013,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 161,
+          "total_file_count": 162,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
