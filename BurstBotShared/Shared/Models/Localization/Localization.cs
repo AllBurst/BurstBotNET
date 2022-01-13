@@ -30,6 +30,9 @@ public record Localization
             ChinesePoker =
                 ((ILocalization<ChinesePokerLocalization>)JsonSerializer.Deserialize<ChinesePokerLocalization>(File
                     .ReadAllText(rawLocalization.ChinesePoker))!).LoadCommandHelps(),
+            //NinetyNine =
+            //    ((ILocalization<NinetyNineLocalization>)JsonSerializer.Deserialize<NinetyNineLocalization>(File
+            //        .ReadAllText(rawLocalization.NinetyNine))!).LoadCommandHelps(),
             OldMaid = ((ILocalization<OldMaidLocalization>)JsonSerializer.Deserialize<OldMaidLocalization>(File
                 .ReadAllText(rawLocalization.OldMaid))!).LoadCommandHelps(),
             RedDotsPicking = ((ILocalization<RedDotsLocalization>)JsonSerializer.Deserialize<RedDotsLocalization>(File

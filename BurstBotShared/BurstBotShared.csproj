@@ -36,7 +36,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Shared\Models" />
         <Folder Include="Shared\Models\Game\ChaseThePig" />
     </ItemGroup>
 

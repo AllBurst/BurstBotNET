@@ -27,7 +27,7 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("draw")] public string Draw { get; init; } = "";
     [JsonPropertyName("play")] public string Play { get; init; } = "";
     [JsonPropertyName("drawMessage")] public string DrawMessage { get; init; } = "";
-    [JsonPropertyName("throwMessage")] public string ThrowMessage { get; init; } = "";
+    [JsonPropertyName("throwMessage")] public string throwMessage { get; init; } = "";
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
 
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";

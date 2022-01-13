@@ -2,7 +2,6 @@
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Localization;
@@ -10,23 +9,15 @@ using Microsoft.Extensions.Logging;
 using System.Buffers;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Text;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Game.Serializables;
-using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using Newtonsoft.Json;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
-using Remora.Discord.Extensions.Embeds;
-using Remora.Rest.Core;
-using Remora.Rest.Results;
-using Channel = System.Threading.Channels.Channel;
 using Constants = BurstBotShared.Shared.Constants;
-using JsonSerializer = System.Text.Json.JsonSerializer;
-using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.NinetyNine;
 
@@ -62,8 +53,10 @@ public partial class NinetyNine : NinetyNineGame
                 logger.LogDebug("Semaphore released after progress change");
                 return progressChangeResult;
             }
-            await SendProgressMessages(gameState, deserializedIncomingData, state, channelApi, logger);
             await UpdateGameState(gameState, deserializedIncomingData, guildApi);
+
+            await SendProgressMessages(gameState, deserializedIncomingData, state, channelApi, logger);
+
 
 
         }
@@ -77,34 +70,8 @@ public partial class NinetyNine : NinetyNineGame
     public static Task HandleEndingResult(string messageContent, NinetyNineGameState state, Localizations localizations,
         DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)
     {
+
         throw new NotImplementedException();
-    }
-
-    public static async Task AddPlayerState(string gameId, Snowflake guild, NinetyNinePlayerState playerState, GameStates gameStates)
-    {
-        var state = gameStates
-           .NinetyNineGameStates
-           .Item1
-           .GetOrAdd(gameId, new NinetyNineGameState());
-        state.Players.GetOrAdd(playerState.PlayerId, playerState);
-        state.Guilds.Add(guild);
-        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
-
-        if (playerState.TextChannel == null)
-            return;
-
-        gameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.ID);
-        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
-            {
-                AvatarUrl = playerState.AvatarUrl,
-                ChannelId = playerState.TextChannel.ID.Value,
-                ClientType = ClientType.Discord,
-                GameId = gameId,
-                PlayerId = playerState.PlayerId,
-                PlayerName = playerState.PlayerName
-            })));
     }
 
     public static async Task StartListening(string gameId, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi,
@@ -215,7 +182,7 @@ public partial class NinetyNine : NinetyNineGame
             return;
         }
 
-        getPlayerStateResult = deserializedIncomingData
+         getPlayerStateResult = deserializedIncomingData
             .Players.TryGetValue(deserializedIncomingData.PreviousPlayerId, out var previousPlayerNewState);
         if (!getPlayerStateResult)
         {
@@ -247,7 +214,7 @@ public partial class NinetyNine : NinetyNineGame
                     var previousCards = deserializedIncomingData.PreviousCard;
 
                     await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
-                        previousCards!, state, channelApi, logger);
+                        previousCards, state, channelApi, logger);
 
                     if (deserializedIncomingData.Progress.Equals(NinetyNineGameProgress.Ending)) return;
 
@@ -429,7 +396,7 @@ public partial class NinetyNine : NinetyNineGame
     private static async Task ShowPreviousPlayerAction(
         NinetyNineGameState gameState,
         RawNinetyNinePlayerState previousPlayerNewState,
-        Card perviousCard,
+        Card? perviousCard,
         State state,
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
@@ -438,20 +405,36 @@ public partial class NinetyNine : NinetyNineGame
 
         var localization = state.Localizations.GetLocalization();
 
-        var ninetyNineLocalization = localization.NinetyNine;
+        var NinetyNineLocation = localization.NinetyNine;
 
-        var drawCard = perviousCard;
+        if (perviousCard == null) return;
 
-        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, drawCard);
+        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, perviousCard.Value);
 
-        foreach (var (_, player) in gameState.Players)
+        foreach (var (pId, player) in gameState.Players)
         {
             if (player.TextChannel == null) continue;
 
             var isPreviousPlayer = player.Order == gameState.CurrentPlayerOrder;
             var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : previousPlayerNewState.PlayerName;
 
+            var authorText = NinetyNineLocation.throwMessage
+                .Replace("{playName}", pronoun)
+                .Replace("{rank}", perviousCard.ToString());
+            
+            var embed = new Embed(
+                Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),
+                Colour: BurstColor.Burst.ToColor());
+            
+            var result = await channelApi
+                .CreateMessageAsync(player.TextChannel.ID,
+                embeds: new[] { embed });
 
+            if (!result.IsSuccess)
+            {
+                logger.LogError("Failed to show previous player's {PlayerId}'s action: {Reason}, inner: {Inner}",
+                    pId,result.Error.Message, result.Inner);
+            }
         }
     }
 

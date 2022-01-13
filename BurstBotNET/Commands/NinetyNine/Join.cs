@@ -1,6 +1,7 @@
 using System.Globalization;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
@@ -11,6 +12,7 @@ using Utilities = BurstBotShared.Shared.Utilities.Utilities;
 
 namespace BurstBotNET.Commands.NinetyNine;
 
+using NinetyNineGame = IGame<NinetyNineGameState, RawNinetyNineGameState, NinetyNine, NinetyNinePlayerState, NinetyNineGameProgress, NinetyNineInGameRequestType>;
 public partial class NinetyNine
 {
     private static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
@@ -53,7 +55,7 @@ public partial class NinetyNine
                         var textChannel =
                             await _state.BurstApi.CreatePlayerChannel(guild.Value, joinResult.BotUser, member,
                             _guildApi, _logger);
-                        await AddPlayerState(matchData.GameId ?? "", guild.Value, new NinetyNinePlayerState
+                        var playerState = new NinetyNinePlayerState
                         {
                             AvatarUrl = member.GetAvatarUrl(),
                             GameId = matchData.GameId ?? "",
@@ -61,7 +63,17 @@ public partial class NinetyNine
                             PlayerName = member.GetDisplayName(),
                             TextChannel = textChannel,
                             Order = 0
-                        }, _state.GameStates);
+                        };
+                        await NinetyNineGame.AddPlayerState(matchData.GameId ?? "", guild.Value, playerState,new NinetyNineInGameRequest
+                        {
+                            AvatarUrl = playerState.AvatarUrl,
+                            ChannelId = playerState.TextChannel!.ID.Value,
+                            ClientType = ClientType.Discord,
+                            GameId = playerState.GameId,
+                            PlayerId = playerState.PlayerId,
+                            PlayerName = playerState.PlayerName,
+                            RequestType = NinetyNineInGameRequestType.Deal
+                        },_state.GameStates.NinetyNineGameStates.Item1,_state.GameStates.NinetyNineGameStates.Item2);
 
                         _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
                             _channelApi, _guildApi,
@@ -96,19 +108,26 @@ public partial class NinetyNine
                     var textChannel = await _state.BurstApi.CreatePlayerChannel(guild.Value, joinResult.BotUser, joinResult.InvokingMember,
                    _guildApi, _logger);
 
-                    await AddPlayerState(
-                        joinResult.JoinStatus.GameId ?? "",
-                        guild.Value,
-                        new NinetyNinePlayerState
-                        {
-                            AvatarUrl = joinResult.InvokingMember.GetAvatarUrl(),
-                            GameId = joinResult.JoinStatus.GameId ?? "",
-                            PlayerId = joinResult.InvokingMember.User.Value.ID.Value,
-                            PlayerName = joinResult.InvokingMember.GetDisplayName(),
-                            TextChannel = textChannel,
-                            Order = 0,
-                        }, _state.GameStates
-                    );
+                    var playerState = new NinetyNinePlayerState
+                    {
+                        AvatarUrl = joinResult.InvokingMember.GetAvatarUrl(),
+                        GameId = joinResult.JoinStatus.GameId ?? "",
+                        PlayerId = joinResult.InvokingMember.User.Value.ID.Value,
+                        PlayerName = joinResult.InvokingMember.GetDisplayName(),
+                        TextChannel = textChannel,
+                        Order = 0,
+                    };
+                    await NinetyNineGame.AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, playerState, new NinetyNineInGameRequest
+                    {
+                        AvatarUrl = playerState.AvatarUrl,
+                        ChannelId = playerState.TextChannel!.ID.Value,
+                        ClientType = ClientType.Discord,
+                        GameId = playerState.GameId,
+                        PlayerId = playerState.PlayerId,
+                        PlayerName = playerState.PlayerName,
+                        RequestType = NinetyNineInGameRequestType.Deal
+                    }, _state.GameStates.NinetyNineGameStates.Item1, _state.GameStates.NinetyNineGameStates.Item2);
+
                     _ = Task.Run(() =>
                         StartListening(joinResult.JoinStatus.GameId ?? "", _state, _channelApi, _guildApi, _logger));
                     break;
@@ -138,8 +157,16 @@ public partial class NinetyNine
                             var (matchData, playerStates) = waitingResult.Value;
                             foreach (var player in playerStates)
                             {
-                                await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
-                                    _state.GameStates);
+                                await NinetyNineGame.AddPlayerState(matchData.GameId ?? "", guild.Value, player,new NinetyNineInGameRequest
+                                {
+                                    AvatarUrl = player.AvatarUrl,
+                                    ChannelId = player.TextChannel!.ID.Value,
+                                    ClientType = ClientType.Discord,
+                                    GameId = player.GameId,
+                                    PlayerId = player.PlayerId,
+                                    PlayerName = player.PlayerName,
+                                    RequestType = NinetyNineInGameRequestType.Deal
+                                },_state.GameStates.NinetyNineGameStates.Item1,_state.GameStates.NinetyNineGameStates.Item2);
 
                                 await Task.Delay(TimeSpan.FromSeconds(1));
 
