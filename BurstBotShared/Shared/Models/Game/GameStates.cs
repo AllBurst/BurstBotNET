@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.OldMaid;
@@ -40,4 +41,10 @@ public class GameStates
         get;
         set;
     } = new(new ConcurrentDictionary<string, RedDotsGameState>(10, 100), new ConcurrentHashSet<Snowflake>());
+    
+    public Tuple<ConcurrentDictionary<string, ChasePigGameState>, ConcurrentHashSet<Snowflake>> ChasePigGameStates
+    {
+        get;
+        set;
+    } = new(new ConcurrentDictionary<string, ChasePigGameState>(10, 100), new ConcurrentHashSet<Snowflake>());
 }
