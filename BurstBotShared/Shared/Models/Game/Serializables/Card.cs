@@ -7,7 +7,7 @@ using Newtonsoft.Json.Converters;
 
 namespace BurstBotShared.Shared.Models.Game.Serializables;
 
-public readonly record struct Card : IValueRealizable<ImmutableArray<int>>
+public record Card : IValueRealizable<ImmutableArray<int>>
 {
     [JsonPropertyName("suit")]
     [JsonProperty("suit")]

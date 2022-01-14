@@ -145,7 +145,7 @@ public partial class OldMaid
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<OldMaidPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue)
                             throw new Exception($"Failed to get waiting result for {GameName}.");
 

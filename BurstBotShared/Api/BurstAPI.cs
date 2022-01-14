@@ -465,6 +465,7 @@ public sealed class BurstApi
         IEnumerable<Snowflake> mentionedPlayers,
         IUser botUser,
         string description,
+        string gameName,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger) where T: IPlayerState, new()
@@ -476,7 +477,7 @@ public sealed class BurstApi
         var participatingPlayers =
             (await GetMembers(guild.Value, mentionedPlayers, guildApi, logger)).ToImmutableArray();
         
-        var matchData = await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, "Chinese Poker",
+        var matchData = await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, gameName,
             description,
             interactionApi, logger);
         if (matchData == null)
