@@ -1,17 +1,18 @@
 ﻿#pragma warning disable CA2252
 using BurstBotShared.Services;
+using BurstBotShared.Shared;
 using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
+using BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables;
 using Microsoft.Extensions.Logging;
 using System.Buffers;
 using System.Collections.Immutable;
 using System.Globalization;
-using BurstBotShared.Shared;
-using BurstBotShared.Shared.Extensions;
-using BurstBotShared.Shared.Models.Game.Serializables;
 using Newtonsoft.Json;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
@@ -28,6 +29,14 @@ public partial class NinetyNine : NinetyNineGame
     Enum.GetNames<NinetyNineInGameRequestType>()
         .ToImmutableArray();
 
+    private static readonly int[] _specialRanks =
+    {
+        4, 5, 10, 11, 12, 13,
+    };
+    private static readonly int[] _normalRandks =
+    {
+        2, 3, 6, 7, 8, 9,
+    };
 
     public static async Task<bool> HandleProgress(string messageContent, NinetyNineGameState gameState, State state,
         IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
@@ -274,7 +283,8 @@ public partial class NinetyNine : NinetyNineGame
                 newPlayerState.PlayerId,
                 sendResult.Error.Message, sendResult.Inner);
     }
-    private static async Task SendDrawingMessage(NinetyNineGameState gameState,
+    private static async Task SendDrawingMessage(
+        NinetyNineGameState gameState,
         RawNinetyNineGameState deserializedIncomingData,
         DeckService deckService,
         Localizations localizations,
@@ -288,9 +298,11 @@ public partial class NinetyNine : NinetyNineGame
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
 
-        await using var nextPlayerDeck = SkiaService.RenderDeck(deckService, nextPlayer
-            .Cards
-            .Select(c => c with { IsFront = false }));
+        var attachments = new List<OneOf<FileData, IPartialAttachment>>();
+
+        await using var nextPlayerDeck = SkiaService
+            .RenderDeck(deckService, nextPlayer.Cards);
+        attachments.Add(OneOf<FileData, IPartialAttachment>.FromT0(new FileData("playerDeck.jpg", nextPlayerDeck)));
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
@@ -318,18 +330,8 @@ public partial class NinetyNine : NinetyNineGame
                             .Replace("{player}", previousPlayer.PlayerName), new PartialEmoji(Name: "🎴")))
                     .ToImmutableArray();
 
-                var components = new IMessageComponent[]
-                {
-                    new ActionRowComponent(new []
-                    {
-                        new SelectMenuComponent("Ninety_nine_draw", previousPlayerCards, localization.Draw, 1, 1)
-                    }),
-                    new ActionRowComponent(new[]
-                    {
-                        new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
-                            new PartialEmoji(Name: "❓"), "ninety_nine_help")
-                    })
-                };
+                var components = BuildComponents(nextPlayer, deserializedIncomingData, localization,
+                    out _);
 
                 var sendResult = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
@@ -362,6 +364,67 @@ public partial class NinetyNine : NinetyNineGame
             }
         }
     }
+    private static IMessageComponent[]? BuildComponents(
+        RawNinetyNinePlayerState nextPlayer,
+        RawNinetyNineGameState deserializedIncomingData,
+        NinetyNineLocalization localization,
+        out NinetyNineInGameRequestType selectMenuType)
+    {
+        var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
+            new PartialEmoji(Name: "❓"), "ninety_nine_help");
+
+        var normalCards = new List<Card>();
+        var availableCards = new List<Card>();
+
+        foreach (var card in nextPlayer.Cards)
+        {
+            if(_normalRandks.Contains(card.Number))
+            {
+                normalCards.Add(card);
+            }
+            if(_specialRanks.Contains(card.Number) || (card.Number == 1 && card.Suit == Suit.Spade))
+            {
+                availableCards.Add(card);
+            }
+        }
+        
+        foreach (var normalCard in normalCards)
+        {
+            if(deserializedIncomingData.CurrentTotal + normalCard.Number <= 99)
+            {
+                availableCards.Add(normalCard);
+            }
+        }
+
+
+        if(availableCards.Count > 0)
+        {
+            var userSelectMenuOption = availableCards.Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                    new PartialEmoji(c.Suit.ToSnowflake()))); ;
+            var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
+                userSelectMenuOption.ToImmutableArray(),
+                localization.Play, 1, 1);
+
+            selectMenuType = NinetyNineInGameRequestType.Play;
+
+            return new IMessageComponent[]
+            {
+                new ActionRowComponent(new[]
+                {
+                    userSelectMenu
+                }),
+                new ActionRowComponent(new[]
+                {
+                    helpButton
+                })
+            };
+        }
+        else
+        {
+            selectMenuType = NinetyNineInGameRequestType.Burst;
+        }
+        return null;
+    }
     private static Embed BuildDrawingMessage(
     NinetyNinePlayerState playerState,
     RawNinetyNinePlayerState nextPlayer,
@@ -393,10 +456,11 @@ public partial class NinetyNine : NinetyNineGame
 
         return embed;
     }
+
     private static async Task ShowPreviousPlayerAction(
         NinetyNineGameState gameState,
         RawNinetyNinePlayerState previousPlayerNewState,
-        Card? perviousCard,
+        Card? previousCard,
         State state,
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
@@ -407,9 +471,9 @@ public partial class NinetyNine : NinetyNineGame
 
         var NinetyNineLocation = localization.NinetyNine;
 
-        if (perviousCard == null) return;
+        if (previousCard == null) return;
 
-        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, perviousCard.Value);
+        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
 
         foreach (var (pId, player) in gameState.Players)
         {
@@ -420,7 +484,7 @@ public partial class NinetyNine : NinetyNineGame
 
             var authorText = NinetyNineLocation.throwMessage
                 .Replace("{playName}", pronoun)
-                .Replace("{rank}", perviousCard.ToString());
+                .Replace("{rank}", previousCard.ToString());
             
             var embed = new Embed(
                 Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),

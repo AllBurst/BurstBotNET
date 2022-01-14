@@ -31,9 +31,9 @@ public partial class NinetyNine
                 {
                     var result = await Game.GenericStartGame(
                         _context, joinResult.Reply, joinResult.InvokingMember, joinResult.BotUser,
-                        joinResult.JoinStatus, GameName, "/chinese_poker/join/confirm",
+                        joinResult.JoinStatus, GameName, "/ninety_nine/join/confirm",
                         joinResult.MentionedPlayers.Select(s => s.Value),
-                        _state, 3, _interactionApi, _channelApi,
+                        _state, 2, _interactionApi, _channelApi,
                         _guildApi, _logger);
 
                     if (!result.HasValue)
@@ -147,7 +147,7 @@ public partial class NinetyNine
                         {
                             var waitingResult = await _state.BurstApi.WaitForGame<NinetyNinePlayerState>(
                                 joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                                joinResult.BotUser, "", _interactionApi, _guildApi, _logger);
+                                joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
 
                             if (!waitingResult.HasValue)
                                 throw new Exception($"Failed to get waiting result for {GameName}.");
