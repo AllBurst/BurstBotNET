@@ -74,6 +74,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.ChaseThePig.ChaseThePig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.ChaseThePig.ChaseThePig.html",
+          "hash": "8GinG4dpAmLmaPH7QbBTCQIzbFWRuFm22XUKi4zy3Yw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.ChaseThePig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.ChaseThePig.html",
+          "hash": "fUooZ/vSvV4ygnkqpuWZjB9FuZ//xbWYUJ2Sw7l86Og="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.yml",
       "output": {
         ".html": {
@@ -590,6 +614,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IRawGameState-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IRawGameState-2.html",
+          "hash": "ul0jDJSJACyjCK4uIJWxTAa1su+O+iZhhcaq4Ux9omA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IRawPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Interfaces.IRawPlayerState.html",
+          "hash": "Bi8kVC65odO8aa0jfaQvOMhhHOEBUYd05QrXY5TAqIo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Interfaces.IRawState-3.yml",
       "output": {
         ".html": {
@@ -630,7 +678,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Interfaces.html",
-          "hash": "XYrBzWNKvkRwFY8gAsknF7naZ6o4QS6T8D1Sdkgk2Mo="
+          "hash": "qosBhorzpgvX/l1IVrC7xdfFjScE1FKMjqvV8+2GSsY="
         }
       },
       "is_incremental": false,
@@ -962,6 +1010,138 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html",
+          "hash": "0e25mtfgG2KYp5yypN1djOkdhOQDUmCeumgvUKroQ1c="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigPlayerState.html",
+          "hash": "ZzwAz2q2rjo2Q4CmBHq5tWBOlGUmjbiJCj0MJRB+PtA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigExposure.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigExposure.html",
+          "hash": "XSeW55E/ruftFok0If3AxA4ZuWExPGb3plXlrq49d+E="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigGameProgress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigGameProgress.html",
+          "hash": "SlksH341uyRgkS8KL9M7D/pU3dFuW7vKXW/CZ2ZS6KY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameRequest.html",
+          "hash": "T50gYHEIQnlJosKn0a4isPFi/6F2e7hayRgF1JAxGc4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameRequestType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameRequestType.html",
+          "hash": "tdKcurB2zRwprNLe3bnLDzt5Lnj+JjBT4Myh00u848k="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameResponseEndingData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameResponseEndingData.html",
+          "hash": "wD8ZEfkVaRsoH3gY4AkWSTCrDyEXgPPWhxvTgEfhr38="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.RawChasePigGameState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.RawChasePigGameState.html",
+          "hash": "okcf3SlranSkPHaBELg18P+kWB01wS6JEVi0GJ1KIVY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.RawChasePigPlayerState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.RawChasePigPlayerState.html",
+          "hash": "8s9Gofo6VJwabzJNQ7lPBPMUZO7zd+R0iKv/U/8N0VM="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.html",
+          "hash": "e+hh1Wm1k8AVp2PYil3F2C3YF7OQ2CFomI6NCIAkqTA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.html",
+          "hash": "9cqzZDT88cZm6PFQHKTtdyVDu3YwmwKXKPb0H+wQWTs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerButtonEntity.yml",
       "output": {
         ".html": {
@@ -1182,7 +1362,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.GameStates.html",
-          "hash": "he2CSjU/zXf/yA6GHtDssKIHvGLeKJPnOvSeID98QJM="
+          "hash": "lpaCt8r+kJs3DnZ38r6DrVJX5E+l3ja45TRuwjgqNv4="
         }
       },
       "is_incremental": false,
@@ -1974,7 +2154,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "m5l3GnKeZtq2BOc3ctOdUKBi38H45N3R6/NGqImGbNw="
+          "hash": "M8ljZlACRb1zlbeeXRCmqO5HT8nzFHz1EnboH9pDSso="
         }
       },
       "is_incremental": false,
@@ -2013,7 +2193,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 162,
+          "total_file_count": 177,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
