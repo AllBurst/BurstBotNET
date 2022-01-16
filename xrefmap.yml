@@ -1553,6 +1553,22 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Services.SkiaService.RenderChinesePokerNatural
   nameWithType: SkiaService.RenderChinesePokerNatural
+- uid: BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService,IEnumerable{System.ValueTuple{System.UInt64,BurstBotShared.Shared.Models.Game.Serializables.Card}},IEnumerable{BurstBotShared.Shared.Interfaces.IPlayerState})
+  name: RenderCompetitiveTable(DeckService, IEnumerable<(UInt64, Card)>, IEnumerable<IPlayerState>)
+  href: api/BurstBotShared.Services.SkiaService.html#BurstBotShared_Services_SkiaService_RenderCompetitiveTable_BurstBotShared_Services_DeckService_IEnumerable_System_ValueTuple_System_UInt64_BurstBotShared_Shared_Models_Game_Serializables_Card___IEnumerable_BurstBotShared_Shared_Interfaces_IPlayerState__
+  commentId: M:BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService,IEnumerable{System.ValueTuple{System.UInt64,BurstBotShared.Shared.Models.Game.Serializables.Card}},IEnumerable{BurstBotShared.Shared.Interfaces.IPlayerState})
+  name.vb: RenderCompetitiveTable(DeckService, IEnumerable(Of (UInt64, Card)(Of UInt64, Card)), IEnumerable(Of IPlayerState))
+  fullName: BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService, IEnumerable<System.ValueTuple<System.UInt64, BurstBotShared.Shared.Models.Game.Serializables.Card>>, IEnumerable<BurstBotShared.Shared.Interfaces.IPlayerState>)
+  fullName.vb: BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService, IEnumerable(Of System.ValueTuple(Of System.UInt64, BurstBotShared.Shared.Models.Game.Serializables.Card)), IEnumerable(Of BurstBotShared.Shared.Interfaces.IPlayerState))
+  nameWithType: SkiaService.RenderCompetitiveTable(DeckService, IEnumerable<(UInt64, Card)>, IEnumerable<IPlayerState>)
+  nameWithType.vb: SkiaService.RenderCompetitiveTable(DeckService, IEnumerable(Of (UInt64, Card)(Of UInt64, Card)), IEnumerable(Of IPlayerState))
+- uid: BurstBotShared.Services.SkiaService.RenderCompetitiveTable*
+  name: RenderCompetitiveTable
+  href: api/BurstBotShared.Services.SkiaService.html#BurstBotShared_Services_SkiaService_RenderCompetitiveTable_
+  commentId: Overload:BurstBotShared.Services.SkiaService.RenderCompetitiveTable
+  isSpec: "True"
+  fullName: BurstBotShared.Services.SkiaService.RenderCompetitiveTable
+  nameWithType: SkiaService.RenderCompetitiveTable
 - uid: BurstBotShared.Services.SkiaService.RenderDeck(BurstBotShared.Services.DeckService,IEnumerable{BurstBotShared.Shared.Models.Game.Serializables.Card})
   name: RenderDeck(DeckService, IEnumerable<Card>)
   href: api/BurstBotShared.Services.SkiaService.html#BurstBotShared_Services_SkiaService_RenderDeck_BurstBotShared_Services_DeckService_IEnumerable_BurstBotShared_Shared_Models_Game_Serializables_Card__
@@ -4517,6 +4533,57 @@ references:
   commentId: N:BurstBotShared.Shared.Models.Game.ChaseThePig
   fullName: BurstBotShared.Shared.Models.Game.ChaseThePig
   nameWithType: BurstBotShared.Shared.Models.Game.ChaseThePig
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity
+  name: ChasePigDropDownEntity
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html
+  commentId: T:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity
+  nameWithType: ChasePigDropDownEntity
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity})
+  name: ChasePigDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger<ChasePigDropDownEntity>)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_BurstBotShared_Shared_Models_Data_State_Microsoft_Extensions_Logging_ILogger_BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity__
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity})
+  name.vb: ChasePigDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger(Of ChasePigDropDownEntity))
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.ChasePigDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger<BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity>)
+  fullName.vb: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.ChasePigDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger(Of BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity))
+  nameWithType: ChasePigDropDownEntity.ChasePigDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger<ChasePigDropDownEntity>)
+  nameWithType.vb: ChasePigDropDownEntity.ChasePigDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger(Of ChasePigDropDownEntity))
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.#ctor*
+  name: ChasePigDropDownEntity
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity__ctor_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.ChasePigDropDownEntity
+  nameWithType: ChasePigDropDownEntity.ChasePigDropDownEntity
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name: HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity_HandleInteractionAsync_Remora_Discord_API_Abstractions_Objects_IUser_System_String_IReadOnlyList_System_String__CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name.vb: HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList<System.String>, CancellationToken)
+  fullName.vb: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList(Of System.String), CancellationToken)
+  nameWithType: ChasePigDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  nameWithType.vb: ChasePigDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync*
+  name: HandleInteractionAsync
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity_HandleInteractionAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.HandleInteractionAsync
+  nameWithType: ChasePigDropDownEntity.HandleInteractionAsync
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  name: IsInterestedAsync(ComponentType, String, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity_IsInterestedAsync_Remora_Discord_API_Abstractions_Objects_ComponentType_System_String_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType, System.String, CancellationToken)
+  nameWithType: ChasePigDropDownEntity.IsInterestedAsync(ComponentType, String, CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync*
+  name: IsInterestedAsync
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigDropDownEntity_IsInterestedAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.IsInterestedAsync
+  nameWithType: ChasePigDropDownEntity.IsInterestedAsync
 - uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState
   name: ChasePigGameState
   href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html
@@ -10811,6 +10878,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposePig
   nameWithType: ChasePigLocalization.ExposePig
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle
+  name: ExposeTitle
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_ExposeTitle
+  commentId: P:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle
+  nameWithType: ChasePigLocalization.ExposeTitle
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle*
+  name: ExposeTitle
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_ExposeTitle_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTitle
+  nameWithType: ChasePigLocalization.ExposeTitle
 - uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.ExposeTransformer
   name: ExposeTransformer
   href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_ExposeTransformer
@@ -12833,6 +12913,22 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Utilities.Utilities.BuildGameEmbed
   nameWithType: Utilities.BuildGameEmbed
+- uid: BurstBotShared.Shared.Utilities.Utilities.ExtractCard(IEnumerable{System.String})
+  name: ExtractCard(IEnumerable<String>)
+  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_ExtractCard_IEnumerable_System_String__
+  commentId: M:BurstBotShared.Shared.Utilities.Utilities.ExtractCard(IEnumerable{System.String})
+  name.vb: ExtractCard(IEnumerable(Of String))
+  fullName: BurstBotShared.Shared.Utilities.Utilities.ExtractCard(IEnumerable<System.String>)
+  fullName.vb: BurstBotShared.Shared.Utilities.Utilities.ExtractCard(IEnumerable(Of System.String))
+  nameWithType: Utilities.ExtractCard(IEnumerable<String>)
+  nameWithType.vb: Utilities.ExtractCard(IEnumerable(Of String))
+- uid: BurstBotShared.Shared.Utilities.Utilities.ExtractCard*
+  name: ExtractCard
+  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_ExtractCard_
+  commentId: Overload:BurstBotShared.Shared.Utilities.Utilities.ExtractCard
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Utilities.Utilities.ExtractCard
+  nameWithType: Utilities.ExtractCard
 - uid: BurstBotShared.Shared.Utilities.Utilities.GenerateRandomString(System.Int32)
   name: GenerateRandomString(Int32)
   href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_GenerateRandomString_System_Int32_

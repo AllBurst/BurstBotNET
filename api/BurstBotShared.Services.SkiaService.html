@@ -127,11 +127,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderCard_BurstBotShared_Services_DeckService_BurstBotShared_Shared_Models_Game_Serializables_Card_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderCard(BurstBotShared.Services.DeckService%2CBurstBotShared.Shared.Models.Game.Serializables.Card)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L55">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L68">View Source</a>
   </span>
   <a id="BurstBotShared_Services_SkiaService_RenderCard_" data-uid="BurstBotShared.Services.SkiaService.RenderCard*"></a>
   <h4 id="BurstBotShared_Services_SkiaService_RenderCard_BurstBotShared_Services_DeckService_BurstBotShared_Shared_Models_Game_Serializables_Card_" data-uid="BurstBotShared.Services.SkiaService.RenderCard(BurstBotShared.Services.DeckService,BurstBotShared.Shared.Models.Game.Serializables.Card)">RenderCard(DeckService, Card)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Render a single card.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -150,12 +151,14 @@
       <tr>
         <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
         <td><span class="parametername">deck</span></td>
-        <td></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a></td>
         <td><span class="parametername">card</span></td>
-        <td></td>
+        <td><p>A single card to render image for.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -170,7 +173,8 @@
     <tbody>
       <tr>
         <td><span class="xref">Stream</span></td>
-        <td></td>
+        <td><p>The rendered image.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -179,11 +183,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderChinesePokerDeck_BurstBotShared_Services_DeckService_IEnumerable_BurstBotShared_Shared_Models_Game_Serializables_Card__.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderChinesePokerDeck(BurstBotShared.Services.DeckService%2CIEnumerable%7BBurstBotShared.Shared.Models.Game.Serializables.Card%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L63">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L82">View Source</a>
   </span>
   <a id="BurstBotShared_Services_SkiaService_RenderChinesePokerDeck_" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerDeck*"></a>
   <h4 id="BurstBotShared_Services_SkiaService_RenderChinesePokerDeck_BurstBotShared_Services_DeckService_IEnumerable_BurstBotShared_Shared_Models_Game_Serializables_Card__" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerDeck(BurstBotShared.Services.DeckService,IEnumerable{BurstBotShared.Shared.Models.Game.Serializables.Card})">RenderChinesePokerDeck(DeckService, IEnumerable&lt;Card&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Render a full deck of Chinese Poker game as 3 horizontal rows. Each row has 3, 5 and 5 cards, respectively.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -202,12 +207,14 @@
       <tr>
         <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
         <td><span class="parametername">deck</span></td>
-        <td></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a>&gt;</td>
         <td><span class="parametername">cards</span></td>
-        <td></td>
+        <td><p>A deck for which to render images.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -222,7 +229,8 @@
     <tbody>
       <tr>
         <td><span class="xref">Stream</span></td>
-        <td></td>
+        <td><p>The rendered image.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -231,11 +239,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderChinesePokerHand_IEnumerable_BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerPlayerState__BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress_BurstBotShared_Services_DeckService_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderChinesePokerHand(IEnumerable%7BBurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState%7D%2CBurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress%2CBurstBotShared.Services.DeckService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L103">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L129">View Source</a>
   </span>
   <a id="BurstBotShared_Services_SkiaService_RenderChinesePokerHand_" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerHand*"></a>
   <h4 id="BurstBotShared_Services_SkiaService_RenderChinesePokerHand_IEnumerable_BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerPlayerState__BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress_BurstBotShared_Services_DeckService_" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerHand(IEnumerable{BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState},BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress,BurstBotShared.Services.DeckService)">RenderChinesePokerHand(IEnumerable&lt;ChinesePokerPlayerState&gt;, ChinesePokerGameProgress, DeckService)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Render the hand of Chinese Poker players based on the progress (Front Hand, Middle Hand, or Back Hand).</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -254,17 +263,20 @@
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState.html">ChinesePokerPlayerState</a>&gt;</td>
         <td><span class="parametername">playerStates</span></td>
-        <td></td>
+        <td><p>Chinese Poker players whose hands will be rendered and combined as a single image.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress.html">ChinesePokerGameProgress</a></td>
         <td><span class="parametername">progress</span></td>
-        <td></td>
+        <td><p>The hand to render for.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
         <td><span class="parametername">deck</span></td>
-        <td></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -279,7 +291,8 @@
     <tbody>
       <tr>
         <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
-        <td></td>
+        <td><p>The rendered image.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -288,11 +301,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderChinesePokerNatural_BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerPlayerState_Dictionary_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerCombination__System_Collections_Immutable_ImmutableArray_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress__BurstBotShared_Services_DeckService_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderChinesePokerNatural(BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState%2CDictionary%7BBurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress%2CBurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombination%7D%2CSystem.Collections.Immutable.ImmutableArray%7BBurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress%7D%2CBurstBotShared.Services.DeckService)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L161">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L195">View Source</a>
   </span>
   <a id="BurstBotShared_Services_SkiaService_RenderChinesePokerNatural_" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerNatural*"></a>
   <h4 id="BurstBotShared_Services_SkiaService_RenderChinesePokerNatural_BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerPlayerState_Dictionary_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerCombination__System_Collections_Immutable_ImmutableArray_BurstBotShared_Shared_Models_Game_ChinesePoker_Serializables_ChinesePokerGameProgress__BurstBotShared_Services_DeckService_" data-uid="BurstBotShared.Services.SkiaService.RenderChinesePokerNatural(BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState,Dictionary{BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress,BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombination},System.Collections.Immutable.ImmutableArray{BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress},BurstBotShared.Services.DeckService)">RenderChinesePokerNatural(ChinesePokerPlayerState, Dictionary&lt;ChinesePokerGameProgress, ChinesePokerCombination&gt;, ImmutableArray&lt;ChinesePokerGameProgress&gt;, DeckService)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Render Chinese Poker natural card combinations. Used when a player wins a game through natural cards.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -311,22 +325,26 @@
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerPlayerState.html">ChinesePokerPlayerState</a></td>
         <td><span class="parametername">winner</span></td>
-        <td></td>
+        <td><p>The player who wins a game through natural cards.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">Dictionary</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress.html">ChinesePokerGameProgress</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerCombination.html">ChinesePokerCombination</a>&gt;</td>
         <td><span class="parametername">winnerPlayedCards</span></td>
-        <td></td>
+        <td><p>All cards played by the winner, grouped by hands.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.immutable.immutablearray-1">ImmutableArray</a>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables.ChinesePokerGameProgress.html">ChinesePokerGameProgress</a>&gt;</td>
         <td><span class="parametername">hands</span></td>
-        <td></td>
+        <td><p>Available hands of a Chinese Poker game.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
         <td><span class="parametername">deck</span></td>
-        <td></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -341,7 +359,70 @@
     <tbody>
       <tr>
         <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
-        <td></td>
+        <td><p>The rendered image.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderCompetitiveTable_BurstBotShared_Services_DeckService_IEnumerable_System_ValueTuple_System_UInt64_BurstBotShared_Shared_Models_Game_Serializables_Card___IEnumerable_BurstBotShared_Shared_Interfaces_IPlayerState__.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService%2CIEnumerable%7BSystem.ValueTuple%7BSystem.UInt64%2CBurstBotShared.Shared.Models.Game.Serializables.Card%7D%7D%2CIEnumerable%7BBurstBotShared.Shared.Interfaces.IPlayerState%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L260">View Source</a>
+  </span>
+  <a id="BurstBotShared_Services_SkiaService_RenderCompetitiveTable_" data-uid="BurstBotShared.Services.SkiaService.RenderCompetitiveTable*"></a>
+  <h4 id="BurstBotShared_Services_SkiaService_RenderCompetitiveTable_BurstBotShared_Services_DeckService_IEnumerable_System_ValueTuple_System_UInt64_BurstBotShared_Shared_Models_Game_Serializables_Card___IEnumerable_BurstBotShared_Shared_Interfaces_IPlayerState__" data-uid="BurstBotShared.Services.SkiaService.RenderCompetitiveTable(BurstBotShared.Services.DeckService,IEnumerable{System.ValueTuple{System.UInt64,BurstBotShared.Shared.Models.Game.Serializables.Card}},IEnumerable{BurstBotShared.Shared.Interfaces.IPlayerState})">RenderCompetitiveTable(DeckService, IEnumerable&lt;(UInt64, Card)&gt;, IEnumerable&lt;IPlayerState&gt;)</h4>
+  <div class="markdown level1 summary"><p>Render the table of a competitive card game such as Contract Bridge or Chase the Pig. The players' avatars will be on the top. Beneath players' avatars are cards played by each player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static async Task&lt;Stream&gt; RenderCompetitiveTable(DeckService deck, IEnumerable&lt;(ulong, Card)&gt; cardsOnTable, IEnumerable&lt;IPlayerState&gt; playerStates)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
+        <td><span class="parametername">deck</span></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetuple-2">(T1, T2)</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint64">UInt64</a>, <a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a>&gt;&gt;</td>
+        <td><span class="parametername">cardsOnTable</span></td>
+        <td><p>Current cards on the table.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="BurstBotShared.Shared.Interfaces.IPlayerState.html">IPlayerState</a>&gt;</td>
+        <td><span class="parametername">playerStates</span></td>
+        <td><p>Players who joined in the game.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
+        <td><p>The rendered image.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -350,11 +431,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService_RenderDeck_BurstBotShared_Services_DeckService_IEnumerable_BurstBotShared_Shared_Models_Game_Serializables_Card__.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService.RenderDeck(BurstBotShared.Services.DeckService%2CIEnumerable%7BBurstBotShared.Shared.Models.Game.Serializables.Card%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L17">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L24">View Source</a>
   </span>
   <a id="BurstBotShared_Services_SkiaService_RenderDeck_" data-uid="BurstBotShared.Services.SkiaService.RenderDeck*"></a>
   <h4 id="BurstBotShared_Services_SkiaService_RenderDeck_BurstBotShared_Services_DeckService_IEnumerable_BurstBotShared_Shared_Models_Game_Serializables_Card__" data-uid="BurstBotShared.Services.SkiaService.RenderDeck(BurstBotShared.Services.DeckService,IEnumerable{BurstBotShared.Shared.Models.Game.Serializables.Card})">RenderDeck(DeckService, IEnumerable&lt;Card&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Render a full deck of cards horizontally.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -373,12 +455,14 @@
       <tr>
         <td><a class="xref" href="BurstBotShared.Services.DeckService.html">DeckService</a></td>
         <td><span class="parametername">deck</span></td>
-        <td></td>
+        <td><p>The deck service that contains bitmaps of cards.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.Card.html">Card</a>&gt;</td>
         <td><span class="parametername">cards</span></td>
-        <td></td>
+        <td><p>A deck for which to render images.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -393,7 +477,8 @@
     <tbody>
       <tr>
         <td><span class="xref">Stream</span></td>
-        <td></td>
+        <td><p>The rendered image.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -408,7 +493,7 @@
                     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Services_SkiaService.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.SkiaService%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L11" class="contribution-link">View Source</a>
+                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Services/SkiaService.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -78,7 +78,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChaseThePig.ChaseThePig.html",
-          "hash": "MKlxocI7NvWXfpuZkvaD1dmbMUwLuXmbn3c4718sWI4="
+          "hash": "Qw3YBZYF3TdhjtPjWMx8wOxlpKeeFHKhBjTYYoaSHWU="
         }
       },
       "is_incremental": false,
@@ -342,7 +342,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
-          "hash": "fkABCHY6031Kl/+k5duEK2zvpa9EKt8roKY73ynzliU="
+          "hash": "m7WfvlEz5fLZ/IMkhHoIJsGIq9tarB7Gc/FR2UFxzxo="
         }
       },
       "is_incremental": false,
@@ -450,7 +450,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.SkiaService.html",
-          "hash": "FHxdNBOhJKDaM8x00gZQ15V/iUPxqM2ziu9xNQmsRpM="
+          "hash": "5+RocxjJMCSo1BXFZdMwyZjCiubzyOBDGFG0Knf+9BE="
         }
       },
       "is_incremental": false,
@@ -1010,11 +1010,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html",
+          "hash": "ykk0Dbf7EuGc7Mpu8WODlc/jWW5VmD8achtZ0BZxZH4="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.yml",
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html",
-          "hash": "rp4wQT4mTrcvKyJei6z518M/NOuFVNXPDQQNO4f1UMM="
+          "hash": "dqiGrnx4XWlollbgmprQHcufXMKPrxFgk8n1dnW+vdA="
         }
       },
       "is_incremental": false,
@@ -1038,7 +1050,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigExposure.html",
-          "hash": "XSeW55E/ruftFok0If3AxA4ZuWExPGb3plXlrq49d+E="
+          "hash": "y2oMITeJTYb1DmxWJH0koGhVfzxgxFA7JIIOCDtjBp8="
         }
       },
       "is_incremental": false,
@@ -1062,7 +1074,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.ChasePigInGameRequest.html",
-          "hash": "T50gYHEIQnlJosKn0a4isPFi/6F2e7hayRgF1JAxGc4="
+          "hash": "B9d+NyRt95vdtdLMVRzHoE7QEQ8wPA069JXSVJxtBX0="
         }
       },
       "is_incremental": false,
@@ -1098,7 +1110,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables.RawChasePigGameState.html",
-          "hash": "okcf3SlranSkPHaBELg18P+kWB01wS6JEVi0GJ1KIVY="
+          "hash": "UMEXWkdodZE5RcKaKJwhgD3+XVfdJyLSgvumtfSFlW8="
         }
       },
       "is_incremental": false,
@@ -1134,7 +1146,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.html",
-          "hash": "9cqzZDT88cZm6PFQHKTtdyVDu3YwmwKXKPb0H+wQWTs="
+          "hash": "+cytJDLcZ1L+2jVz5P15J8q8PhuIlM6PSIwZTnYYhz0="
         }
       },
       "is_incremental": false,
@@ -1938,7 +1950,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html",
-          "hash": "H5ENnpyMDTdgLMqDMMB3ZJOfzOfNX/xWldBurNZiok0="
+          "hash": "SDFFQx+lLYMyG4rtyWXzHAZ+4B1W3kER9oGUr61qheg="
         }
       },
       "is_incremental": false,
@@ -2130,7 +2142,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
-          "hash": "TNaMslRSQ18Fe5wTbu1JtXM4OmN2E6Cv7pXqH69+1wk="
+          "hash": "zi6+d1WnA4zfipUH046kXZTPTjQt3BLyWcaxdXZmoa0="
         }
       },
       "is_incremental": false,
@@ -2178,7 +2190,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "GcM34QvmxVJ/M1N9m5grjMJPr8//3OkHQ1JA6xL8TkE="
+          "hash": "ppgCSAWnu0gnVkgS0+Wc3Tx1hn7JZqK5QSxkjOfPiAg="
         }
       },
       "is_incremental": false,
@@ -2217,7 +2229,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 179,
+          "total_file_count": 180,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
