@@ -1,11 +1,13 @@
 using BurstBotNET.Commands;
 using BurstBotNET.Commands.BlackJack;
+using BurstBotNET.Commands.ChaseThePig;
 using BurstBotNET.Commands.ChinesePoker;
 using BurstBotNET.Commands.NinetyNine;
 using BurstBotNET.Commands.OldMaid;
 using BurstBotNET.Commands.RedDotsPicking;
 using BurstBotNET.Commands.Rewards;
 using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.OldMaid;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
@@ -33,6 +35,7 @@ public static class SlashCommandExtensions
             .AddCommandGroup<NinetyNine>()
             .AddCommandGroup<OldMaid>()
             .AddCommandGroup<RedDotsPicking>()
+            .AddCommandGroup<ChaseThePig>()
             .AddPagination()
             .AddInteractiveEntity<BlackJackDropDownEntity>()
             .AddInteractiveEntity<BlackJackButtonEntity>()
@@ -41,6 +44,7 @@ public static class SlashCommandExtensions
             .AddInteractiveEntity<OldMaidButtonEntity>()
             .AddInteractiveEntity<OldMaidDropDownEntity>()
             .AddInteractiveEntity<RedDotsDropDownEntity>()
-            .AddInteractiveEntity<RedDotsButtonEntity>();
+            .AddInteractiveEntity<RedDotsButtonEntity>()
+            .AddInteractiveEntity<ChasePigDropDownEntity>();
     }
 }

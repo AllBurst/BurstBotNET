@@ -77,15 +77,6 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 
     private static bool Validate(RedDotsPlayerState playerState, int count) => playerState.PlayedCards.Count == count;
 
-    private static Card ExtractCard(IEnumerable<string> values)
-    {
-        var selection = values.FirstOrDefault()!;
-        var suit = selection[..1];
-        var rank = selection[1..];
-        var playedCard = Card.CreateCard(suit, rank);
-        return playedCard;
-    }
-
     private static async Task SendToGameStateChannel(RedDotsGameState gameState, RedDotsPlayerState playerState, CancellationToken ct)
     {
         await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
@@ -185,7 +176,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         int validateCount,
         CancellationToken ct)
     {
-        var extractedCard = ExtractCard(values);
+        var extractedCard = Utilities.Utilities.ExtractCard(values);
         playerState.PlayedCards.Add(extractedCard);
         var validateResult = Validate(playerState, validateCount);
 
@@ -224,7 +215,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         IEnumerable<string> values,
         CancellationToken ct)
     {
-        playerState.PlayedCards.Add(ExtractCard(values));
+        playerState.PlayedCards.Add(Utilities.Utilities.ExtractCard(values));
 
         var redFive = gameState
             .CardsOnTable

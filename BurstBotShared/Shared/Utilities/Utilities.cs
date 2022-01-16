@@ -170,4 +170,13 @@ public static class Utilities
 
         return null;
     }
+    
+    public static Card ExtractCard(IEnumerable<string> values)
+    {
+        var selection = values.FirstOrDefault()!;
+        var suit = selection[..1];
+        var rank = selection[1..];
+        var playedCard = Card.CreateCard(suit, rank);
+        return playedCard;
+    }
 }

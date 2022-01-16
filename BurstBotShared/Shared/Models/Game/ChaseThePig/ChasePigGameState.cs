@@ -24,7 +24,7 @@ public class ChasePigGameState :
     public ImmutableArray<ChasePigExposure> Exposures { get; set; }
     public int CurrentPlayerOrder { get; set; }
 
-    public List<Card> CardsOnTable { get; } = new();
+    public List<(ulong, Card)> CardsOnTable { get; } = new();
     
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);

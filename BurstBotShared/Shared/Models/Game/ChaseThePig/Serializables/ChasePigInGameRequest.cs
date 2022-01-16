@@ -25,7 +25,6 @@ public record ChasePigInGameRequest : IGenericDealData
     [JsonPropertyName("avatar_url")] public string? AvatarUrl { get; init; }
     
     [JsonPropertyName("exposures")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
     public List<ChasePigExposure>? Exposures { get; init; }
     
     [JsonPropertyName("play_card")] public Card? PlayCard { get; init; }

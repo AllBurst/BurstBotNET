@@ -20,6 +20,7 @@
   "play": "Play a card",
   "playMessage": "{playerName} played a {card}.",
   "winTurnMessage": "{playerName} won this turn!",
+  "exposeTitle": "{playerName} chose to expose cards!",
   "exposeMessage": "{playerName} chose to expose {card}!",
   "noExposeMessage": "{playerName} didn't expose any card.",
   "exposeMessageFirst": "{playerName} chose to expose {card}, and it's his/her first drawn card!",

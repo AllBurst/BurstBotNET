@@ -36,6 +36,7 @@ public record ChasePigLocalization : ILocalization<ChasePigLocalization>
     [JsonPropertyName("play")] public string Play { get; init; } = "";
     [JsonPropertyName("playMessage")] public string PlayMessage { get; init; } = "";
     [JsonPropertyName("winTurnMessage")] public string WinTurnMessage { get; init; } = "";
+    [JsonPropertyName("exposeTitle")] public string ExposeTitle { get; init; } = "";
     [JsonPropertyName("exposeMessage")] public string ExposeMessage { get; init; } = "";
     [JsonPropertyName("noExposeMessage")] public string NoExposeMessage { get; init; } = "";
     [JsonPropertyName("exposeMessageFirst")] public string ExposeMessageFirst { get; init; } = "";

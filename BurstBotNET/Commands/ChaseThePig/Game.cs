@@ -16,6 +16,7 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.ChaseThePig;
 
@@ -58,7 +59,9 @@ public partial class ChaseThePig : ChasePigGame
             }
 
             await SendProgressMessages(gameState, deserializedIncomingData, state, channelApi, logger);
-            
+            await UpdateGameState(gameState, deserializedIncomingData, guildApi);
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released after sending progress messages");
         }
         catch (JsonException)
         {
@@ -72,10 +75,37 @@ public partial class ChaseThePig : ChasePigGame
         return true;
     }
 
-    public static Task<bool> HandleProgressChange(RawChasePigGameState deserializedIncomingData, ChasePigGameState gameState,
+    public static async Task<bool> HandleProgressChange(RawChasePigGameState deserializedIncomingData, ChasePigGameState gameState,
         State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
-        throw new NotImplementedException();
+        {
+            var playerId = deserializedIncomingData.PreviousPlayerId;
+            var result1 = deserializedIncomingData.Players.TryGetValue(playerId, out var previousPlayerNewState);
+            var result2 = gameState.Players.TryGetValue(playerId, out var previousPlayerOldState);
+            if (result1 && result2)
+            {
+                await ShowPreviousPlayerAction(previousPlayerOldState!, previousPlayerNewState!,
+                    gameState, deserializedIncomingData, state, channelApi, logger);
+                
+            }
+        }
+
+        switch (deserializedIncomingData.Progress)
+        {
+            case ChasePigGameProgress.Ending:
+                return true;
+            case ChasePigGameProgress.Exposing:
+                await SendExposingMessage(gameState, deserializedIncomingData, state.DeckService,
+                    state.Localizations, channelApi, logger);
+                break;
+            case ChasePigGameProgress.Progressing:
+                break;
+        }
+
+        gameState.Progress = deserializedIncomingData.Progress;
+        await UpdateGameState(gameState, deserializedIncomingData, guildApi);
+
+        return true;
     }
 
     public static Task HandleEndingResult(string messageContent, ChasePigGameState state, Localizations localizations,
@@ -117,12 +147,17 @@ public partial class ChaseThePig : ChasePigGame
                 await ShowPreviousPlayerAction(previousPlayerOldState!, previousPlayerNewState!,
                     gameState, deserializedIncomingData, state, channelApi, logger);
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                await SendExposeMessage(gameState,
+                await SendExposingMessage(gameState,
                     deserializedIncomingData, state.DeckService, state.Localizations,
                     channelApi, logger);
                 break;
             case ChasePigGameProgress.Progressing:
             case ChasePigGameProgress.Ending:
+                await ShowPreviousPlayerAction(previousPlayerOldState!, previousPlayerNewState!,
+                    gameState, deserializedIncomingData, state, channelApi, logger);
+
+                if (deserializedIncomingData.Progress == ChasePigGameProgress.Ending) return;
+                
                 break;
         }
     }
@@ -176,7 +211,7 @@ public partial class ChaseThePig : ChasePigGame
                 sendResult.Error.Message, sendResult.Inner);
     }
 
-    private static async Task SendExposeMessage(
+    private static async Task SendExposingMessage(
         ChasePigGameState oldGameState,
         RawChasePigGameState? deserializedIncomingData,
         DeckService deckService,
@@ -260,16 +295,46 @@ public partial class ChaseThePig : ChasePigGame
                         new FileData(Constants.OutputFileName, renderedCards)
                     };
 
+                    var firstCard = exposableCard
+                        .FirstOrDefault(c => c.Suit == nextPlayer.Cards[0].Suit && c.Number == nextPlayer.Cards[0].Number);
+
                     var selectOptions = exposableCard
-                        .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
-                            new PartialEmoji(c.Suit.ToSnowflake())));
+                        .Select(c =>
+                        {
+                            if (firstCard != null && c.Suit == firstCard.Suit && c.Number == firstCard.Number)
+                            {
+                                var value = c.ToSpecifier() switch
+                                {
+                                    "c10" => ChasePigExposure.FirstTransformer.ToString(),
+                                    "sq" => ChasePigExposure.FirstDoublePig.ToString(),
+                                    "dj" => ChasePigExposure.FirstDoubleGoat.ToString(),
+                                    "ha" => ChasePigExposure.FirstDoubleMinus.ToString(),
+                                    _ => string.Empty
+                                };
+                                
+                                return new SelectOption(c.ToStringSimple(), value, c.ToStringSimple(),
+                                    new PartialEmoji(c.Suit.ToSnowflake()));
+                            }
+                            
+                            var v = c.ToSpecifier() switch
+                            {
+                                "c10" => ChasePigExposure.Transformer.ToString(),
+                                "sq" => ChasePigExposure.DoublePig.ToString(),
+                                "dj" => ChasePigExposure.DoubleGoat.ToString(),
+                                "ha" => ChasePigExposure.DoubleMinus.ToString(),
+                                _ => string.Empty
+                            };
+                            
+                            return new SelectOption(c.ToStringSimple(), v, c.ToStringSimple(),
+                                new PartialEmoji(c.Suit.ToSnowflake()));
+                        }).ToImmutableArray();
 
                     var components = new IMessageComponent[]
                     {
                         new ActionRowComponent(new[]
                         {
-                            new SelectMenuComponent("chase_pig_expose_menu", selectOptions.ToImmutableArray(),
-                                localization.ChaseThePig.Expose, 0, 4)
+                            new SelectMenuComponent("chase_pig_expose_menu", selectOptions,
+                                localization.ChaseThePig.Expose, 0, selectOptions.Length)
                         })
                     };
 
@@ -295,6 +360,18 @@ public partial class ChaseThePig : ChasePigGame
                     player.PlayerId, result.Error.Message, result.Inner);
             }
         }
+        
+        if (exposableCard.IsEmpty)
+            await oldGameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                nextPlayer.PlayerId,
+                JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
+                {
+                    GameId = deserializedIncomingData.GameId,
+                    PlayerId = nextPlayer.PlayerId,
+                    PlayerOrder = nextPlayer.Order,
+                    Exposures = new List<ChasePigExposure>(),
+                    RequestType = ChasePigInGameRequestType.Expose
+                })));
     }
 
     private static async Task SendPreviousPlayerExposeMessage(
@@ -346,51 +423,67 @@ public partial class ChaseThePig : ChasePigGame
 
             return;
         }
-        
-        var playerFirstCard = previousPlayerNewState.Cards.FirstOrDefault();
-        if (playerFirstCard == null) return;
 
-        var exposure = newExposures.Last();
+        var exposedCards = newExposures
+            .Select(e => ExposableCards[e])
+            .ToImmutableArray();
 
-        var exposedCard = ExposableCards[exposure];
-
-        var title = (exposure switch
+        var titles = newExposures
+            .Zip(exposedCards)
+            .Select(pair =>
             {
-                ChasePigExposure.Transformer or ChasePigExposure.DoubleGoat or ChasePigExposure.DoubleMinus
-                    or ChasePigExposure.DoublePig => localization.ExposeMessage,
-                ChasePigExposure.FirstTransformer or ChasePigExposure.FirstDoubleGoat
-                    or ChasePigExposure.FirstDoubleMinus
-                    or ChasePigExposure.FirstDoublePig => localization.ExposeMessageFirst,
-                _ => string.Empty
-            }).Replace("{card}", exposedCard.ToStringSimple());
+                var (exposure, card) = pair;
+                return (exposure switch
+                {
+                    ChasePigExposure.Transformer or ChasePigExposure.DoubleGoat or ChasePigExposure.DoubleMinus
+                        or ChasePigExposure.DoublePig => localization.ExposeMessage,
+                    ChasePigExposure.FirstTransformer or ChasePigExposure.FirstDoubleGoat
+                        or ChasePigExposure.FirstDoubleMinus
+                        or ChasePigExposure.FirstDoublePig => localization.ExposeMessageFirst,
+                    _ => string.Empty
+                }).Replace("{card}", card.ToStringSimple());
+            })
+            .ToImmutableArray();
 
-        var description = exposure switch
-        {
-            ChasePigExposure.Transformer => localization.ExposeTransformer.Replace("{ratio}", 2.ToString()),
-            ChasePigExposure.DoubleGoat => localization.ExposeGoat.Replace("{ratio}", 2.ToString()),
-            ChasePigExposure.DoubleMinus => localization.ExposeHeartA.Replace("{ratio}", 2.ToString()),
-            ChasePigExposure.DoublePig => localization.ExposePig.Replace("{ratio}", 2.ToString()),
-            ChasePigExposure.FirstTransformer => localization.ExposeTransformer.Replace("{ratio}", 4.ToString()),
-            ChasePigExposure.FirstDoubleGoat => localization.ExposeGoat.Replace("{ratio}", 4.ToString()),
-            ChasePigExposure.FirstDoubleMinus => localization.ExposeHeartA.Replace("{ratio}", 4.ToString()),
-            ChasePigExposure.FirstDoublePig => localization.ExposePig.Replace("{ratio}", 4.ToString()),
-            _ => ""
-        };
+        var descriptions = newExposures
+            .Select(e => e switch
+            {
+                ChasePigExposure.Transformer => localization.ExposeTransformer.Replace("{ratio}", 2.ToString()),
+                ChasePigExposure.DoubleGoat => localization.ExposeGoat.Replace("{ratio}", 2.ToString()),
+                ChasePigExposure.DoubleMinus => localization.ExposeHeartA.Replace("{ratio}", 2.ToString()),
+                ChasePigExposure.DoublePig => localization.ExposePig.Replace("{ratio}", 2.ToString()),
+                ChasePigExposure.FirstTransformer => localization.ExposeTransformer.Replace("{ratio}", 4.ToString()),
+                ChasePigExposure.FirstDoubleGoat => localization.ExposeGoat.Replace("{ratio}", 4.ToString()),
+                ChasePigExposure.FirstDoubleMinus => localization.ExposeHeartA.Replace("{ratio}", 4.ToString()),
+                ChasePigExposure.FirstDoublePig => localization.ExposePig.Replace("{ratio}", 4.ToString()),
+                _ => ""
+            })
+            .ToImmutableArray();
         
-        await using var renderedCard = SkiaService.RenderCard(deckService, exposedCard);
+        await using var renderedCard = SkiaService.RenderDeck(deckService, exposedCards);
 
         foreach (var (_, player) in oldGameState.Players)
         {
             if (player.TextChannel == null) continue;
 
-            var randomFileName = Utilities.GenerateRandomString();
-            var randomAttachmentUri = $"attachment://{randomFileName}.jpg";
+            var randomFileName = Utilities.GenerateRandomString() + ".jpg";
+            var randomAttachmentUri = $"attachment://{randomFileName}";
+
+            var title = localization.ExposeTitle
+                .Replace("{playerName}", player.PlayerId == previousPlayerNewState.PlayerId
+                    ? localizations.GetLocalization().GenericWords.Pronoun
+                    : previousPlayerNewState.PlayerName);
+
+            var formattedTitles = titles
+                .Select(s => s.Replace("{playerName}", player.PlayerId == previousPlayerNewState.PlayerId
+                    ? localizations.GetLocalization().GenericWords.Pronoun
+                    : previousPlayerNewState.PlayerName));
+
+            var description = string.Join('\n', formattedTitles) + "\n\n" + string.Join('\n', descriptions);
 
             var embed = new Embed(
                 Author: new EmbedAuthor(previousPlayerNewState.PlayerName, IconUrl: previousPlayerNewState.AvatarUrl),
-                Title: title.Replace("{playerName}", player.PlayerId == previousPlayerNewState.PlayerId
-                    ? localizations.GetLocalization().GenericWords.Pronoun
-                    : previousPlayerNewState.PlayerName),
+                Title: title,
                 Description: description,
                 Colour: BurstColor.Burst.ToColor(),
                 Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
@@ -427,9 +520,7 @@ public partial class ChaseThePig : ChasePigGame
         ILogger logger)
     {
         if (oldGameState.Progress == ChasePigGameProgress.Starting) return;
-
-        var localization = state.Localizations.GetLocalization().ChaseThePig;
-
+        
         switch (oldGameState.Progress)
         {
             case ChasePigGameProgress.Exposing:
@@ -437,6 +528,9 @@ public partial class ChaseThePig : ChasePigGame
                     newGameState, state.DeckService, state.Localizations, channelApi, logger);
                 break;
             case ChasePigGameProgress.Progressing:
+                await SendPreviousPlayerActionMessage(previousPlayerOldState,
+                    previousPlayerNewState, oldGameState, newGameState, state,
+                    channelApi, logger);
                 break;
         }
     }
@@ -460,13 +554,120 @@ public partial class ChaseThePig : ChasePigGame
         if (diff.IsEmpty) return;
 
         var playedCard = diff.Last();
-        oldGameState.CardsOnTable.Add(playedCard);
+        oldGameState.CardsOnTable.Add((previousPlayerNewState.PlayerId, playedCard));
 
         var title = localization
             .ChaseThePig
             .PlayMessage
             .Replace("{card}", playedCard.ToString());
-        
-        
+
+        await using var renderedTable = await SkiaService.RenderCompetitiveTable(state.DeckService,
+            oldGameState.CardsOnTable, oldGameState.Players.Values);
+
+        foreach (var (_, playerState) in oldGameState.Players)
+        {
+            if (playerState.TextChannel == null) continue;
+            
+            var randomFileName = Utilities.GenerateRandomString() + ".jpg";
+            var randomAttachmentUri = $"attachment://{randomFileName}";
+
+            await using var imageCopy = new MemoryStream((int)renderedTable.Length);
+            await renderedTable.CopyToAsync(imageCopy);
+            renderedTable.Seek(0, SeekOrigin.Begin);
+            imageCopy.Seek(0, SeekOrigin.Begin);
+
+            var attachment = new OneOf<FileData, IPartialAttachment>[]
+            {
+                new FileData(randomFileName, imageCopy)
+            };
+
+            var embed = new Embed
+            {
+                Author = new EmbedAuthor(previousPlayerNewState.PlayerName, IconUrl: previousPlayerNewState.AvatarUrl),
+                Colour = BurstColor.Burst.ToColor(),
+                Title = title,
+                Image = new EmbedImage(randomAttachmentUri),
+                Thumbnail = new EmbedThumbnail(Constants.BurstLogo)
+            };
+
+            var sendResult = await channelApi
+                .CreateMessageAsync(playerState.TextChannel.ID,
+                    embeds: new[] { embed },
+                    attachments: attachment);
+            
+            if (sendResult.IsSuccess) continue;
+
+            logger.LogError("Failed to send previous player action message to {PlayerId}: {Reason}, inner: {Inner}",
+                playerState.PlayerId, sendResult.Error.Message, sendResult.Inner);
+        }
+
+        if (newGameState.PreviousWinner == oldGameState.PreviousWinner) return;
+
+        foreach (var (_, playerState) in oldGameState.Players)
+        {
+            if (playerState.TextChannel == null) continue;
+            
+            var winner = newGameState
+                .Players
+                .First(p => p.Value.PlayerId == newGameState.PreviousWinner)
+                .Value;
+            var message = localization
+                .ChaseThePig
+                .WinTurnMessage
+                .Replace("{playerName}", winner.PlayerName);
+            var embed = new Embed
+            {
+                Author = new EmbedAuthor(message, IconUrl: winner.AvatarUrl),
+                Colour = BurstColor.Burst.ToColor()
+            };
+
+            var sendResult = await channelApi
+                .CreateMessageAsync(playerState.TextChannel.ID,
+                    embeds: new[] { embed });
+            if (sendResult.IsSuccess) continue;
+
+            logger.LogError("Failed to send previous player action message to {PlayerId}: {Reason}, inner: {Inner}",
+                playerState.PlayerId, sendResult.Error.Message, sendResult.Inner);
+        }
+    }
+
+    private static async Task UpdateGameState(ChasePigGameState state, RawChasePigGameState? data, IDiscordRestGuildAPI guildApi)
+    {
+        if (data == null) return;
+
+        state.Exposures = data.Exposures.ToImmutableArray();
+        state.BaseBet = data.BaseBet;
+        state.PreviousWinner = data.PreviousWinner;
+        state.CurrentPlayerOrder = data.CurrentPlayerOrder;
+        state.LastActiveTime = DateTime.Parse(data.LastActiveTime);
+        state.PreviousPlayerId = data.PreviousPlayerId;
+
+        foreach (var (playerId, playerState) in data.Players)
+        {
+            if (state.Players.ContainsKey(playerId))
+            {
+                var player = state.Players[playerId];
+                player.Cards = playerState.Cards.ToImmutableArray();
+                player.Order = playerState.Order;
+                player.Scores = playerState.Scores;
+                player.AvatarUrl = playerState.AvatarUrl;
+                player.CollectedCards = playerState.CollectedCards.ToImmutableArray();
+                player.PlayerName = playerState.PlayerName;
+                
+                if (player.TextChannel != null || playerState.ChannelId == 0) continue;
+
+                player.TextChannel =
+                    await Utilities.TryGetTextChannel(state.Guilds, playerState.ChannelId, guildApi);
+            }
+            else
+            {
+                foreach (var guild in state.Guilds)
+                {
+                    var newPlayerState = await playerState.ToState(guildApi, guild);
+                    state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
+                    break;
+                }
+            }
+        }
     }
 }

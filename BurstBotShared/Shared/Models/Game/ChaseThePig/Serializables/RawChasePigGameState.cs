@@ -44,8 +44,6 @@ public record RawChasePigGameState : IRawState<ChasePigGameState, RawChasePigGam
 
     [JsonPropertyName("exposures")]
     [JsonProperty("exposures")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
-    [Newtonsoft.Json.JsonConverter(typeof(StringEnumConverter))]
     public List<ChasePigExposure> Exposures { get; init; } = new();
     
     [JsonPropertyName("current_player_order")]
