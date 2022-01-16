@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Net.WebSockets;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
@@ -21,6 +22,7 @@ namespace BurstBotNET.Commands;
 public static class Game
 {
     public static readonly JsonSerializerSettings JsonSerializerSettings = new();
+    public static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
 
     static Game()
     {

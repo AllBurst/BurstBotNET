@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using ConcurrentCollections;
 using Remora.Rest.Core;
 
@@ -22,6 +23,8 @@ public class ChasePigGameState :
     public ulong PreviousWinner { get; set; }
     public ImmutableArray<ChasePigExposure> Exposures { get; set; }
     public int CurrentPlayerOrder { get; set; }
+
+    public List<Card> CardsOnTable { get; } = new();
     
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);

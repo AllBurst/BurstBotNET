@@ -1,0 +1,15 @@
+Chase the Pig, or Gong Zhu (拱豬) is a relatively popular card game in China, Taiwan and some Asian communities.
+The rule is somewhat similar to Contract Bridge, but instead of auctions, there's a stage of exposure. In addition, players' goals are to win against all other players, instead of collaborating with partners as it is in contract bridge.
+Players' goal is to gain a higher score than other players, and avoid "minus" or "negative" scores.
+
+**Please refer to the Scoring in the help menu.**
+
+As a general rule:
+1. All <:burst_heart2:930749955914727474> Hearts have negative scores.
+2. <:burst_spade2:930749903158792192> Spade Q is the Pig, which will grant the winner of it -100 (negative 100) points.
+3. <:burst_diamond2:930749987044851712> Diamond J is the Goat, which will grant the winner of it 100 (positive 100) points.
+4. <:burst_club2:930750022167957504> Club 10 is the Transformer. **When calculating the player's score in the ending stage, if in the cards collected (won) by the player, only Club 10 has points, it will grant the player +50 points; otherwise, it will double all negative and positive points.**
+5. In the exposure stage, <:burst_heart2:930749955914727474> Heart A, <:burst_spade2:930749903158792192> Spade Q, <:burst_diamond2:930749987044851712> Diamond J and <:burst_club2:930750022167957504> Club 10 can be exposed by the player who owns it. **See the Exposure in the help menu.**
+6. When playing, each player has to play a card with the same suit as the card played by the first player in that turn.
+7. If a player doesn't have any card that belongs to the same suit as the first card in a turn, the player is allowed to play cards with other suits.
+8. The player whose card belongs to the same suit as the first card in a turn and has the largest rank wins that turn. All 4 cards (including their scores) will be collected by the winner of that turn.
