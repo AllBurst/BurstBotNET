@@ -54,7 +54,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.BlackJack.BlackJack.html",
-          "hash": "i3RlW6a1nBnSdhz2KgwNEhjzCUEt4q6IzotVe6cckFU="
+          "hash": "QDPOo5t4PiTge8AyIOa+CedXxk9uD1Rj7PQgh/+1LmA="
         }
       },
       "is_incremental": false,
@@ -78,7 +78,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChaseThePig.ChaseThePig.html",
-          "hash": "8GinG4dpAmLmaPH7QbBTCQIzbFWRuFm22XUKi4zy3Yw="
+          "hash": "MKlxocI7NvWXfpuZkvaD1dmbMUwLuXmbn3c4718sWI4="
         }
       },
       "is_incremental": false,
@@ -102,7 +102,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChinesePoker.ChinesePoker.html",
-          "hash": "wSorlCeLFZD2agtVHlJ8fZ/AxrEehAXwzCH7lLvxsfk="
+          "hash": "vJGI22Dbi/pi22aEdfJCygXs6BAbimsqpL8dIPogOsg="
         }
       },
       "is_incremental": false,
@@ -126,7 +126,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.Game.html",
-          "hash": "LjDNP/82cmoF3OJlW0VFRim/EAxWXdYQ+XZ5QbjlA6Y="
+          "hash": "8s3UcHvqEMnmdC24GZtSMxW5N1xITGdpxTkzUHiSNpE="
         }
       },
       "is_incremental": false,
@@ -1014,7 +1014,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html",
-          "hash": "0e25mtfgG2KYp5yypN1djOkdhOQDUmCeumgvUKroQ1c="
+          "hash": "rp4wQT4mTrcvKyJei6z518M/NOuFVNXPDQQNO4f1UMM="
         }
       },
       "is_incremental": false,
@@ -1806,7 +1806,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.Card.html",
-          "hash": "h/5wPJkw0SPstkLQY5Ik6BSotQxoWNx3AtUtD8bRXfw="
+          "hash": "CZz7ls9rswT+up2AepmOp8d9QhVpMw0zkB5foQ6t3Jw="
         }
       },
       "is_incremental": false,
@@ -1934,6 +1934,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html",
+          "hash": "H5ENnpyMDTdgLMqDMMB3ZJOfzOfNX/xWldBurNZiok0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.ChaseThePig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChaseThePig.html",
+          "hash": "+PZSnE/kroNsgjWfvIYMPXewQl2mLPgat+L5ifk9Bj0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables.ChinesePokerLocalization.yml",
       "output": {
         ".html": {
@@ -1974,7 +1998,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.Localization.html",
-          "hash": "ZQR4gBRA5kbE2JznlbRl++EG3wPNiPSEzQmpeH4WXmI="
+          "hash": "CzeP7B3euTfVAijXjRBsIYDoenLbuA6RdshgrEs6GUc="
         }
       },
       "is_incremental": false,
@@ -2058,7 +2082,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.RawLocalization.html",
-          "hash": "X2nNsRH7GU1ZqV2WDxPs++bI4FvygbOyHIE8OZSG/sE="
+          "hash": "2PdklaMSojs+DWiymchYUWhcsQfzX+V61dM4iBYc6Bg="
         }
       },
       "is_incremental": false,
@@ -2154,7 +2178,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "M8ljZlACRb1zlbeeXRCmqO5HT8nzFHz1EnboH9pDSso="
+          "hash": "GcM34QvmxVJ/M1N9m5grjMJPr8//3OkHQ1JA6xL8TkE="
         }
       },
       "is_incremental": false,
@@ -2193,7 +2217,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 177,
+          "total_file_count": 179,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
