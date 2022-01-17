@@ -54,7 +54,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.BlackJack.BlackJack.html",
-          "hash": "QDPOo5t4PiTge8AyIOa+CedXxk9uD1Rj7PQgh/+1LmA="
+          "hash": "t8Nv38Se6Fj3J5eNlUE4Pv2Pg1ieYSH62oNW6OKW434="
         }
       },
       "is_incremental": false,
@@ -78,7 +78,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.ChaseThePig.ChaseThePig.html",
-          "hash": "Qw3YBZYF3TdhjtPjWMx8wOxlpKeeFHKhBjTYYoaSHWU="
+          "hash": "cCj6cdkBshLIZ4gl24COLZyK7ZEmMm1MEXycXqVjI38="
         }
       },
       "is_incremental": false,
@@ -402,7 +402,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Api.BurstApi.html",
-          "hash": "dqpna/Mkunr0z7tnji2MFeuj/Twp5/9Ci800tGVgMWs="
+          "hash": "9n3NdDLXNcNYyXR5m0ebG50b7gU3hFV6tpPh5TCn9Ew="
         }
       },
       "is_incremental": false,
@@ -486,7 +486,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Constants.html",
-          "hash": "gtkq2w9Cm5j6+Yf0FGkniNy1GvrlWyioUCK6nMOxEU0="
+          "hash": "UJmU/w/hJatJVsKL2cgLJVFjun5T+MJHLtMlxb4sPXk="
         }
       },
       "is_incremental": false,
@@ -558,7 +558,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Interfaces.IGame-6.html",
-          "hash": "xW5vps5NydrAoW02v9ouRAEcycmyuklb24gL3VluJSw="
+          "hash": "CPnE3KLgVIS7rzPYiLnyBDD5y1mVWqA2pQcXttQsgh0="
         }
       },
       "is_incremental": false,
@@ -858,7 +858,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.html",
-          "hash": "62sFV7rKKnWzKlDcfUey1I60rflHPMaiNctsUuCav1g="
+          "hash": "vMQSEEQRD/J9G8p23SHVwYdZYcOLbChSZpsEGRvN0mI="
         }
       },
       "is_incremental": false,
@@ -1010,11 +1010,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html",
+          "hash": "3K/+r7tmYS70n4bz1lFdmCWMQTUCxYN9B/7imHUiXxo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.yml",
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html",
-          "hash": "ykk0Dbf7EuGc7Mpu8WODlc/jWW5VmD8achtZ0BZxZH4="
+          "hash": "2+hUn4KVnsN9fszVRu0cs8Z+wfikCCT9saivLsKrB/M="
         }
       },
       "is_incremental": false,
@@ -1146,7 +1158,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.ChaseThePig.html",
-          "hash": "+cytJDLcZ1L+2jVz5P15J8q8PhuIlM6PSIwZTnYYhz0="
+          "hash": "KiZBexoMSyNaYJbRDlYfXnayRzCQpoDAqPLjZy/7LgE="
         }
       },
       "is_incremental": false,
@@ -1530,7 +1542,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.html",
-          "hash": "yulcPPNI209hGlYlK9fqf1RfopRD0bpmkNEHUuh70v0="
+          "hash": "i7Z7+7EZJlhtnBB4aq+qjuxVJ47cc1ZYVDMcxRu1DR4="
         }
       },
       "is_incremental": false,
@@ -1674,7 +1686,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html",
-          "hash": "rY7BYydNCSJvqTp6JREO0cPuLelaKefgdjyRHC1tRtw="
+          "hash": "uqp6ldofy7KMFdZml7CLyE5nCdlr5gc0BG2ILOVBCuM="
         }
       },
       "is_incremental": false,
@@ -1818,7 +1830,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.Serializables.Card.html",
-          "hash": "CZz7ls9rswT+up2AepmOp8d9QhVpMw0zkB5foQ6t3Jw="
+          "hash": "LckgYpTdiOOG0FklFcKgPTxAmWZgn/RnlANk4I+a2oo="
         }
       },
       "is_incremental": false,
@@ -1950,7 +1962,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html",
-          "hash": "SDFFQx+lLYMyG4rtyWXzHAZ+4B1W3kER9oGUr61qheg="
+          "hash": "KAmH/CZpxaV0Uk68gi9gzzHMXM/7OMFfFaAp303s8FM="
         }
       },
       "is_incremental": false,
@@ -2082,7 +2094,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.html",
-          "hash": "2eT+I4WaSi8EswsZEiXpaXci0T5gf5oXqi3zEumlWQk="
+          "hash": "tHCTLIiIiGgGJ5UL7jaF17zpb0uaV6pXIIYHtM+AJq8="
         }
       },
       "is_incremental": false,
@@ -2142,7 +2154,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
-          "hash": "zi6+d1WnA4zfipUH046kXZTPTjQt3BLyWcaxdXZmoa0="
+          "hash": "nFZU6Vyr6Obcu/bOB0l7ughUFHljlYr0vOEjbsWdG98="
         }
       },
       "is_incremental": false,
@@ -2190,7 +2202,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "ppgCSAWnu0gnVkgS0+Wc3Tx1hn7JZqK5QSxkjOfPiAg="
+          "hash": "fit/tcVdYEmySdvKeHQ5tUYgI/DgNqHeQGWaOotCAW8="
         }
       },
       "is_incremental": false,
@@ -2229,7 +2241,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 180,
+          "total_file_count": 181,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

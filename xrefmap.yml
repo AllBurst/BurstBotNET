@@ -169,12 +169,12 @@ references:
   isSpec: "True"
   fullName: BurstBotNET.Commands.BlackJack.BlackJack.Handle
   nameWithType: BlackJack.Handle
-- uid: BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate,BurstBotShared.Shared.Models.Game.GameStates,Remora.Rest.Core.Snowflake,BurstBotShared.Shared.Models.Localization.Localizations,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)
-  name: HandleBlackJackMessage(IMessageCreate, GameStates, Snowflake, Localizations, IDiscordRestChannelAPI, ILogger)
-  href: api/BurstBotNET.Commands.BlackJack.BlackJack.html#BurstBotNET_Commands_BlackJack_BlackJack_HandleBlackJackMessage_Remora_Discord_API_Abstractions_Gateway_Events_IMessageCreate_BurstBotShared_Shared_Models_Game_GameStates_Remora_Rest_Core_Snowflake_BurstBotShared_Shared_Models_Localization_Localizations_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate,BurstBotShared.Shared.Models.Game.GameStates,Remora.Rest.Core.Snowflake,BurstBotShared.Shared.Models.Localization.Localizations,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)
-  fullName: BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate, BurstBotShared.Shared.Models.Game.GameStates, Remora.Rest.Core.Snowflake, BurstBotShared.Shared.Models.Localization.Localizations, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: BlackJack.HandleBlackJackMessage(IMessageCreate, GameStates, Snowflake, Localizations, IDiscordRestChannelAPI, ILogger)
+- uid: BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate,BurstBotShared.Shared.Models.Game.GameStates,Remora.Rest.Core.Snowflake,BurstBotShared.Shared.Models.Localization.Localizations,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  name: HandleBlackJackMessage(IMessageCreate, GameStates, Snowflake, Localizations, IDiscordRestChannelAPI, ILogger, CancellationToken)
+  href: api/BurstBotNET.Commands.BlackJack.BlackJack.html#BurstBotNET_Commands_BlackJack_BlackJack_HandleBlackJackMessage_Remora_Discord_API_Abstractions_Gateway_Events_IMessageCreate_BurstBotShared_Shared_Models_Game_GameStates_Remora_Rest_Core_Snowflake_BurstBotShared_Shared_Models_Localization_Localizations_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_
+  commentId: M:BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate,BurstBotShared.Shared.Models.Game.GameStates,Remora.Rest.Core.Snowflake,BurstBotShared.Shared.Models.Localization.Localizations,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  fullName: BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage(Remora.Discord.API.Abstractions.Gateway.Events.IMessageCreate, BurstBotShared.Shared.Models.Game.GameStates, Remora.Rest.Core.Snowflake, BurstBotShared.Shared.Models.Localization.Localizations, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken)
+  nameWithType: BlackJack.HandleBlackJackMessage(IMessageCreate, GameStates, Snowflake, Localizations, IDiscordRestChannelAPI, ILogger, CancellationToken)
 - uid: BurstBotNET.Commands.BlackJack.BlackJack.HandleBlackJackMessage*
   name: HandleBlackJackMessage
   href: api/BurstBotNET.Commands.BlackJack.BlackJack.html#BurstBotNET_Commands_BlackJack_BlackJack_HandleBlackJackMessage_
@@ -1669,6 +1669,12 @@ references:
   commentId: F:BurstBotShared.Shared.Constants.PlayMark
   fullName: BurstBotShared.Shared.Constants.PlayMark
   nameWithType: Constants.PlayMark
+- uid: BurstBotShared.Shared.Constants.QuestionMark
+  name: QuestionMark
+  href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_QuestionMark
+  commentId: F:BurstBotShared.Shared.Constants.QuestionMark
+  fullName: BurstBotShared.Shared.Constants.QuestionMark
+  nameWithType: Constants.QuestionMark
 - uid: BurstBotShared.Shared.Constants.StartingBet
   name: StartingBet
   href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_StartingBet
@@ -3446,12 +3452,12 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.IsInterestedAsync
   nameWithType: BlackJackButtonEntity.IsInterestedAsync
-- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState,System.Int32,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)
-  name: SendRaiseData(BlackJackGameState, BlackJackPlayerState, Int32, IDiscordRestChannelAPI, ILogger)
-  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackButtonEntity_SendRaiseData_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackPlayerState_System_Int32_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState,System.Int32,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)
-  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState, BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState, System.Int32, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: BlackJackButtonEntity.SendRaiseData(BlackJackGameState, BlackJackPlayerState, Int32, IDiscordRestChannelAPI, ILogger)
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState,System.Int32,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  name: SendRaiseData(BlackJackGameState, BlackJackPlayerState, Int32, IDiscordRestChannelAPI, ILogger, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackButtonEntity_SendRaiseData_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_BurstBotShared_Shared_Models_Game_BlackJack_BlackJackPlayerState_System_Int32_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState,BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState,System.Int32,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData(BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState, BurstBotShared.Shared.Models.Game.BlackJack.BlackJackPlayerState, System.Int32, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken)
+  nameWithType: BlackJackButtonEntity.SendRaiseData(BlackJackGameState, BlackJackPlayerState, Int32, IDiscordRestChannelAPI, ILogger, CancellationToken)
 - uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.SendRaiseData*
   name: SendRaiseData
   href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackButtonEntity.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackButtonEntity_SendRaiseData_
@@ -4533,6 +4539,54 @@ references:
   commentId: N:BurstBotShared.Shared.Models.Game.ChaseThePig
   fullName: BurstBotShared.Shared.Models.Game.ChaseThePig
   nameWithType: BurstBotShared.Shared.Models.Game.ChaseThePig
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity
+  name: ChasePigButtonEntity
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html
+  commentId: T:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity
+  nameWithType: ChasePigButtonEntity
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity})
+  name: ChasePigButtonEntity(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestChannelAPI, ILogger<ChasePigButtonEntity>)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity__
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity})
+  name.vb: ChasePigButtonEntity(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestChannelAPI, ILogger(Of ChasePigButtonEntity))
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.ChasePigButtonEntity(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger<BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity>)
+  fullName.vb: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.ChasePigButtonEntity(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger(Of BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity))
+  nameWithType: ChasePigButtonEntity.ChasePigButtonEntity(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestChannelAPI, ILogger<ChasePigButtonEntity>)
+  nameWithType.vb: ChasePigButtonEntity.ChasePigButtonEntity(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestChannelAPI, ILogger(Of ChasePigButtonEntity))
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.#ctor*
+  name: ChasePigButtonEntity
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity__ctor_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.ChasePigButtonEntity
+  nameWithType: ChasePigButtonEntity.ChasePigButtonEntity
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,CancellationToken)
+  name: HandleInteractionAsync(IUser, String, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity_HandleInteractionAsync_Remora_Discord_API_Abstractions_Objects_IUser_System_String_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, CancellationToken)
+  nameWithType: ChasePigButtonEntity.HandleInteractionAsync(IUser, String, CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync*
+  name: HandleInteractionAsync
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity_HandleInteractionAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.HandleInteractionAsync
+  nameWithType: ChasePigButtonEntity.HandleInteractionAsync
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  name: IsInterestedAsync(ComponentType, String, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity_IsInterestedAsync_Remora_Discord_API_Abstractions_Objects_ComponentType_System_String_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType, System.String, CancellationToken)
+  nameWithType: ChasePigButtonEntity.IsInterestedAsync(ComponentType, String, CancellationToken)
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync*
+  name: IsInterestedAsync
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigButtonEntity_IsInterestedAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigButtonEntity.IsInterestedAsync
+  nameWithType: ChasePigButtonEntity.IsInterestedAsync
 - uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity
   name: ChasePigDropDownEntity
   href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigDropDownEntity.html
@@ -7830,12 +7884,15 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity
   fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity
   nameWithType: OldMaidDropDownEntity
-- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State)
-  name: OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State)
-  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_BurstBotShared_Shared_Models_Data_State_
-  commentId: M:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State)
-  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.OldMaidDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, BurstBotShared.Shared.Models.Data.State)
-  nameWithType: OldMaidDropDownEntity.OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State)
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity})
+  name: OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State, ILogger<OldMaidDropDownEntity>)
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_BurstBotShared_Shared_Models_Data_State_Microsoft_Extensions_Logging_ILogger_BurstBotShared_Shared_Models_Game_OldMaid_OldMaidDropDownEntity__
+  commentId: M:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity})
+  name.vb: OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State, ILogger(Of OldMaidDropDownEntity))
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.OldMaidDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger<BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity>)
+  fullName.vb: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.OldMaidDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger(Of BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity))
+  nameWithType: OldMaidDropDownEntity.OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State, ILogger<OldMaidDropDownEntity>)
+  nameWithType.vb: OldMaidDropDownEntity.OldMaidDropDownEntity(InteractionContext, IDiscordRestChannelAPI, State, ILogger(Of OldMaidDropDownEntity))
 - uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.#ctor*
   name: OldMaidDropDownEntity
   href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidDropDownEntity.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidDropDownEntity__ctor_
@@ -8810,12 +8867,15 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity
   nameWithType: RedDotsDropDownEntity
-- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State)
-  name: RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State)
-  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_BurstBotShared_Shared_Models_Data_State_
-  commentId: M:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State)
-  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.RedDotsDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, BurstBotShared.Shared.Models.Data.State)
-  nameWithType: RedDotsDropDownEntity.RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State)
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity})
+  name: RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger<RedDotsDropDownEntity>)
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_BurstBotShared_Shared_Models_Data_State_Microsoft_Extensions_Logging_ILogger_BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__
+  commentId: M:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,BurstBotShared.Shared.Models.Data.State,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity})
+  name.vb: RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger(Of RedDotsDropDownEntity))
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.RedDotsDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger<BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity>)
+  fullName.vb: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.RedDotsDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, BurstBotShared.Shared.Models.Data.State, Microsoft.Extensions.Logging.ILogger(Of BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity))
+  nameWithType: RedDotsDropDownEntity.RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger<RedDotsDropDownEntity>)
+  nameWithType.vb: RedDotsDropDownEntity.RedDotsDropDownEntity(InteractionContext, IDiscordRestChannelAPI, IDiscordRestInteractionAPI, State, ILogger(Of RedDotsDropDownEntity))
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.#ctor*
   name: RedDotsDropDownEntity
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsDropDownEntity.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsDropDownEntity__ctor_
@@ -9834,25 +9894,25 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CanCombine
   nameWithType: Card.CanCombine
-- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(BurstBotShared.Shared.Models.Game.Serializables.Suit,System.Int32,System.Boolean)
-  name: CreateCard(Suit, Int32, Boolean)
-  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CreateCard_BurstBotShared_Shared_Models_Game_Serializables_Suit_System_Int32_System_Boolean_
-  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(BurstBotShared.Shared.Models.Game.Serializables.Suit,System.Int32,System.Boolean)
-  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(BurstBotShared.Shared.Models.Game.Serializables.Suit, System.Int32, System.Boolean)
-  nameWithType: Card.CreateCard(Suit, Int32, Boolean)
-- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String,System.String)
-  name: CreateCard(String, String)
-  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CreateCard_System_String_System_String_
-  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String,System.String)
-  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard(System.String, System.String)
-  nameWithType: Card.CreateCard(String, String)
-- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard*
-  name: CreateCard
-  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_CreateCard_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Create(BurstBotShared.Shared.Models.Game.Serializables.Suit,System.Int32,System.Boolean)
+  name: Create(Suit, Int32, Boolean)
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Create_BurstBotShared_Shared_Models_Game_Serializables_Suit_System_Int32_System_Boolean_
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.Create(BurstBotShared.Shared.Models.Game.Serializables.Suit,System.Int32,System.Boolean)
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Create(BurstBotShared.Shared.Models.Game.Serializables.Suit, System.Int32, System.Boolean)
+  nameWithType: Card.Create(Suit, Int32, Boolean)
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Create(System.String,System.String)
+  name: Create(String, String)
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Create_System_String_System_String_
+  commentId: M:BurstBotShared.Shared.Models.Game.Serializables.Card.Create(System.String,System.String)
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Create(System.String, System.String)
+  nameWithType: Card.Create(String, String)
+- uid: BurstBotShared.Shared.Models.Game.Serializables.Card.Create*
+  name: Create
+  href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_Create_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.Serializables.Card.Create
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.CreateCard
-  nameWithType: Card.CreateCard
+  fullName: BurstBotShared.Shared.Models.Game.Serializables.Card.Create
+  nameWithType: Card.Create
 - uid: BurstBotShared.Shared.Models.Game.Serializables.Card.GetBlackJackValue
   name: GetBlackJackValue()
   href: api/BurstBotShared.Shared.Models.Game.Serializables.Card.html#BurstBotShared_Shared_Models_Game_Serializables_Card_GetBlackJackValue
@@ -10995,6 +11055,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExposableCardsThird
   nameWithType: ChasePigLocalization.NoExposableCardsThird
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose
+  name: NoExpose
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoExpose
+  commentId: P:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose
+  nameWithType: ChasePigLocalization.NoExpose
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose*
+  name: NoExpose
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoExpose_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExpose
+  nameWithType: ChasePigLocalization.NoExpose
 - uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExposeMessage
   name: NoExposeMessage
   href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoExposeMessage
@@ -12665,6 +12738,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Card
   nameWithType: GenericWords.Card
+- uid: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm
+  name: Confirm
+  href: api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.html#BurstBotShared_Shared_Models_Localization_Serializables_GenericWords_Confirm
+  commentId: P:BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm
+  fullName: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm
+  nameWithType: GenericWords.Confirm
+- uid: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm*
+  name: Confirm
+  href: api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.html#BurstBotShared_Shared_Models_Localization_Serializables_GenericWords_Confirm_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.Confirm
+  nameWithType: GenericWords.Confirm
 - uid: BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.From
   name: From
   href: api/BurstBotShared.Shared.Models.Localization.Serializables.GenericWords.html#BurstBotShared_Shared_Models_Localization_Serializables_GenericWords_From
@@ -12913,6 +12999,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Utilities.Utilities.BuildGameEmbed
   nameWithType: Utilities.BuildGameEmbed
+- uid: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  name: DisableComponents(IMessage, IDiscordRestChannelAPI, ILogger, CancellationToken)
+  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  fullName: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken)
+  nameWithType: Utilities.DisableComponents(IMessage, IDiscordRestChannelAPI, ILogger, CancellationToken)
+- uid: BurstBotShared.Shared.Utilities.Utilities.DisableComponents*
+  name: DisableComponents
+  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_DisableComponents_
+  commentId: Overload:BurstBotShared.Shared.Utilities.Utilities.DisableComponents
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Utilities.Utilities.DisableComponents
+  nameWithType: Utilities.DisableComponents
 - uid: BurstBotShared.Shared.Utilities.Utilities.ExtractCard(IEnumerable{System.String})
   name: ExtractCard(IEnumerable<String>)
   href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_ExtractCard_IEnumerable_System_String__
