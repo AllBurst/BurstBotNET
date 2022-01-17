@@ -1753,15 +1753,15 @@ references:
   commentId: T:BurstBotShared.Shared.Extensions.BurstExtensions
   fullName: BurstBotShared.Shared.Extensions.BurstExtensions
   nameWithType: BurstExtensions
-- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Nullable{IEnumerable{System.String}})
-  name: Disable(Optional<IReadOnlyList<IMessageComponent>>, Nullable<IEnumerable<String>>)
-  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_Remora_Rest_Core_Optional_IReadOnlyList_Remora_Discord_API_Abstractions_Objects_IMessageComponent___System_Nullable_IEnumerable_System_String___
-  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Nullable{IEnumerable{System.String}})
-  name.vb: Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Nullable(Of IEnumerable(Of String)))
-  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional<IReadOnlyList<Remora.Discord.API.Abstractions.Objects.IMessageComponent>>, System.Nullable<IEnumerable<System.String>>)
-  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional(Of IReadOnlyList(Of Remora.Discord.API.Abstractions.Objects.IMessageComponent)), System.Nullable(Of IEnumerable(Of System.String)))
-  nameWithType: BurstExtensions.Disable(Optional<IReadOnlyList<IMessageComponent>>, Nullable<IEnumerable<String>>)
-  nameWithType.vb: BurstExtensions.Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Nullable(Of IEnumerable(Of String)))
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Boolean,System.Nullable{IEnumerable{System.String}})
+  name: Disable(Optional<IReadOnlyList<IMessageComponent>>, Boolean, Nullable<IEnumerable<String>>)
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_Remora_Rest_Core_Optional_IReadOnlyList_Remora_Discord_API_Abstractions_Objects_IMessageComponent___System_Boolean_System_Nullable_IEnumerable_System_String___
+  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Boolean,System.Nullable{IEnumerable{System.String}})
+  name.vb: Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Boolean, Nullable(Of IEnumerable(Of String)))
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional<IReadOnlyList<Remora.Discord.API.Abstractions.Objects.IMessageComponent>>, System.Boolean, System.Nullable<IEnumerable<System.String>>)
+  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional(Of IReadOnlyList(Of Remora.Discord.API.Abstractions.Objects.IMessageComponent)), System.Boolean, System.Nullable(Of IEnumerable(Of System.String)))
+  nameWithType: BurstExtensions.Disable(Optional<IReadOnlyList<IMessageComponent>>, Boolean, Nullable<IEnumerable<String>>)
+  nameWithType.vb: BurstExtensions.Disable(Optional(Of IReadOnlyList(Of IMessageComponent)), Boolean, Nullable(Of IEnumerable(Of String)))
 - uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable*
   name: Disable
   href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_
@@ -12999,12 +12999,15 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Utilities.Utilities.BuildGameEmbed
   nameWithType: Utilities.BuildGameEmbed
-- uid: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
-  name: DisableComponents(IMessage, IDiscordRestChannelAPI, ILogger, CancellationToken)
-  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_
-  commentId: M:BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)
-  fullName: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken)
-  nameWithType: Utilities.DisableComponents(IMessage, IDiscordRestChannelAPI, ILogger, CancellationToken)
+- uid: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,System.Boolean,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken,System.Nullable{IEnumerable{System.String}})
+  name: DisableComponents(IMessage, Boolean, IDiscordRestChannelAPI, ILogger, CancellationToken, Nullable<IEnumerable<String>>)
+  href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_System_Boolean_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_System_Nullable_IEnumerable_System_String___
+  commentId: M:BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,System.Boolean,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken,System.Nullable{IEnumerable{System.String}})
+  name.vb: DisableComponents(IMessage, Boolean, IDiscordRestChannelAPI, ILogger, CancellationToken, Nullable(Of IEnumerable(Of String)))
+  fullName: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage, System.Boolean, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken, System.Nullable<IEnumerable<System.String>>)
+  fullName.vb: BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage, System.Boolean, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Microsoft.Extensions.Logging.ILogger, CancellationToken, System.Nullable(Of IEnumerable(Of System.String)))
+  nameWithType: Utilities.DisableComponents(IMessage, Boolean, IDiscordRestChannelAPI, ILogger, CancellationToken, Nullable<IEnumerable<String>>)
+  nameWithType.vb: Utilities.DisableComponents(IMessage, Boolean, IDiscordRestChannelAPI, ILogger, CancellationToken, Nullable(Of IEnumerable(Of String)))
 - uid: BurstBotShared.Shared.Utilities.Utilities.DisableComponents*
   name: DisableComponents
   href: api/BurstBotShared.Shared.Utilities.Utilities.html#BurstBotShared_Shared_Utilities_Utilities_DisableComponents_

@@ -196,18 +196,18 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_System_Boolean_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_System_Nullable_IEnumerable_System_String___.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage%2CSystem.Boolean%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CMicrosoft.Extensions.Logging.ILogger%2CCancellationToken%2CSystem.Nullable%7BIEnumerable%7BSystem.String%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Utilities/Utilities.cs/#L184">View Source</a>
   </span>
   <a id="BurstBotShared_Shared_Utilities_Utilities_DisableComponents_" data-uid="BurstBotShared.Shared.Utilities.Utilities.DisableComponents*"></a>
-  <h4 id="BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_" data-uid="BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken)">DisableComponents(IMessage, IDiscordRestChannelAPI, ILogger, CancellationToken)</h4>
+  <h4 id="BurstBotShared_Shared_Utilities_Utilities_DisableComponents_Remora_Discord_API_Abstractions_Objects_IMessage_System_Boolean_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_CancellationToken_System_Nullable_IEnumerable_System_String___" data-uid="BurstBotShared.Shared.Utilities.Utilities.DisableComponents(Remora.Discord.API.Abstractions.Objects.IMessage,System.Boolean,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger,CancellationToken,System.Nullable{IEnumerable{System.String}})">DisableComponents(IMessage, Boolean, IDiscordRestChannelAPI, ILogger, CancellationToken, Nullable&lt;IEnumerable&lt;String&gt;&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static async Task DisableComponents(IMessage message, IDiscordRestChannelAPI channelApi, ILogger logger, CancellationToken ct)</code></pre>
+    <pre><code class="lang-csharp hljs">public static async Task DisableComponents(IMessage message, bool disableAll, IDiscordRestChannelAPI channelApi, ILogger logger, CancellationToken ct, IEnumerable&lt;string&gt;? customIds = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -225,6 +225,11 @@
         <td></td>
       </tr>
       <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">disableAll</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI</span></td>
         <td><span class="parametername">channelApi</span></td>
         <td></td>
@@ -237,6 +242,11 @@
       <tr>
         <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">ct</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;&gt;</td>
+        <td><span class="parametername">customIds</span></td>
         <td></td>
       </tr>
     </tbody>
