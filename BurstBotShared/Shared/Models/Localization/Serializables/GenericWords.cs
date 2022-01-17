@@ -17,4 +17,5 @@ public record GenericWords
 
     [JsonPropertyName("card")] public string Card { get; init; } = "";
     [JsonPropertyName("from")] public string From { get; init; } = "";
+    [JsonPropertyName("confirm")] public string Confirm { get; init; } = "";
 };

@@ -26,6 +26,7 @@ public record ChasePigLocalization : ILocalization<ChasePigLocalization>
 
     [JsonPropertyName("cards")] public string Cards { get; init; } = "";
     [JsonPropertyName("expose")] public string Expose { get; init; } = "";
+    [JsonPropertyName("noExpose")] public string NoExpose { get; init; } = "";
 
     [JsonPropertyName("noExposableCardsSecond")]
     public string NoExposableCardsSecond { get; init; } = "";

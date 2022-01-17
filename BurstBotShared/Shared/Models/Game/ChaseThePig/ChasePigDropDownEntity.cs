@@ -1,7 +1,7 @@
 using System.Text.Json;
-using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -22,6 +22,8 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
     private readonly string[] _validCustomIds =
     {
         "chase_pig_expose_menu",
+        "chase_pig_card_selection",
+        "chase_pig_help_selection"
     };
     
     public ChasePigDropDownEntity(InteractionContext context,
@@ -64,6 +66,11 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
         {
             case "chase_pig_expose_menu":
                 await ExposeCard(gameState, playerState, values);
+                await Utilities.Utilities.DisableComponents(message!, _channelApi, _logger, ct);
+                break;
+            case "chase_pig_card_selection":
+                await PlayCard(gameState, playerState, values);
+                await Utilities.Utilities.DisableComponents(message!, _channelApi, _logger, ct);
                 break;
         }
 
@@ -87,6 +94,25 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
                 Exposures = exposure.ToList(),
                 PlayerOrder = playerState.Order,
                 RequestType = ChasePigInGameRequestType.Expose
+            })));
+    }
+
+    private static async Task PlayCard(ChasePigGameState gameState, ChasePigPlayerState playerState,
+        IEnumerable<string> values)
+    {
+        var value = values.FirstOrDefault();
+        if (string.IsNullOrWhiteSpace(value)) return;
+
+        var pickedCard = Card.Create(value[..1], value[1..]);
+        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
+            {
+                RequestType = ChasePigInGameRequestType.Play,
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId,
+                PlayerOrder = playerState.Order,
+                PlayCard = pickedCard
             })));
     }
 

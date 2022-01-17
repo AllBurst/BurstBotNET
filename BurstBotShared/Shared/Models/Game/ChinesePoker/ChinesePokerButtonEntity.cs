@@ -78,33 +78,8 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         if (!dequeueResult)
             return Result.FromSuccess();
 
-        var originalEmbeds = cardMessage!.Embeds;
-        var originalAttachments = cardMessage
-            .Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var originalComponents = cardMessage.Components.Disable();
-        var editResult = await _channelApi
-            .EditMessageAsync(cardMessage.ChannelID, cardMessage.ID,
-                embeds: originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: originalComponents,
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
-
-        originalEmbeds = message.Embeds;
-        originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        originalComponents = message.Components.Disable();
-        editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                Constants.CheckMark,
-                originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: originalComponents,
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
+        await Utilities.Utilities.DisableComponents(cardMessage!, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
 
         await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,

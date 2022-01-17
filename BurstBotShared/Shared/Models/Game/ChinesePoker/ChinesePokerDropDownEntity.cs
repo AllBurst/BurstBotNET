@@ -120,7 +120,7 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
         }
         
         var cards = cardMatches
-            .Select(m => Card.CreateCard(m.Groups[1].Value, m.Groups[2].Value))
+            .Select(m => Card.Create(m.Groups[1].Value, m.Groups[2].Value))
             .ToImmutableArray()
             .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
         

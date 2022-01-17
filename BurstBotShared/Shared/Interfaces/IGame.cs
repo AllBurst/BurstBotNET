@@ -72,6 +72,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
+        Console.WriteLine("Successfully write to channel.");
     }
 
     static async Task StartListening(

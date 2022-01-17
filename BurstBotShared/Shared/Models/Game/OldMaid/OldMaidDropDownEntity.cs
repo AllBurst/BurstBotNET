@@ -1,9 +1,7 @@
-using System.Collections.Immutable;
 using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
-using OneOf;
+using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
@@ -17,14 +15,17 @@ public class OldMaidDropDownEntity : ISelectMenuInteractiveEntity
     private readonly InteractionContext _context;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly State _state;
-    
+    private readonly ILogger<OldMaidDropDownEntity> _logger;
+
     public OldMaidDropDownEntity(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
-        State state)
+        State state,
+        ILogger<OldMaidDropDownEntity> logger)
     {
         _context = context;
         _channelApi = channelApi;
         _state = state;
+        _logger = logger;
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -78,18 +79,8 @@ public class OldMaidDropDownEntity : ISelectMenuInteractiveEntity
                 RequestType = OldMaidInGameRequestType.Draw
             })), ct);
 
-        var originalEmbeds = message.Embeds;
-        var originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var originalComponents = message.Components.Disable();
+        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
 
-        var editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                embeds: originalEmbeds.ToImmutableArray(),
-                components: originalComponents,
-                attachments: originalAttachments.ToImmutableArray(),
-                ct: ct);
-
-        return !editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
+        return Result.FromSuccess();
     }
 }

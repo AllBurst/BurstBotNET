@@ -16,6 +16,7 @@ public static class Constants
     public const string CheckMark = "✅";
     public const string CrossMark = "❌";
     public const string PlayMark = "▶";
+    public const string QuestionMark = "❓";
 
     public const string GameStarted =
         "<:burst_spade2:930749903158792192> <:burst_heart2:930749955914727474> **GAME STARTED!** <:burst_diamond2:930749987044851712> <:burst_club2:930750022167957504>";

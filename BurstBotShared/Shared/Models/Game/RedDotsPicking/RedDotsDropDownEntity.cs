@@ -4,6 +4,7 @@ using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -30,16 +31,20 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         "red_dots_give_up_selection",
         "red_dots_help_selection"
     };
-    
+
+    private readonly ILogger<RedDotsDropDownEntity> _logger;
+
     public RedDotsDropDownEntity(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestInteractionAPI interactionApi,
-        State state)
+        State state,
+        ILogger<RedDotsDropDownEntity> logger)
     {
         _context = context;
         _channelApi = channelApi;
         _interactionApi = interactionApi;
         _state = state;
+        _logger = logger;
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -225,21 +230,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         var validateResult = Validate(playerState, 2);
         if (!validateResult) return Result.FromSuccess();
 
-        var originalEmbeds = message.Embeds;
-        var originalComponents = message.Components.Disable();
-        var originalAttachments = message
-            .Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-
-        var editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                Constants.CheckMark,
-                embeds: originalEmbeds.ToImmutableArray(),
-                components: originalComponents,
-                attachments: originalAttachments.ToImmutableArray(),
-                ct: ct);
-
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
+        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
 
         await SendToGameStateChannel(gameState, playerState, ct);
         

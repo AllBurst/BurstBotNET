@@ -309,12 +309,12 @@ public static class SkiaService
             var avatarScaledBitmap = new SKBitmap(avatarImageInfo);
             playerAvatar.ScalePixels(avatarScaledBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(avatarScaledBitmap, currentX, currentY);
-            currentY += incrementalPadding;
+            currentY += MathF.Floor(avatarHeight * ratio) + incrementalPadding;
             var cardScaledBitmap = new SKBitmap(cardImageInfo);
             cardBitmap.ScalePixels(cardScaledBitmap, SKFilterQuality.High);
             canvas.DrawBitmap(cardScaledBitmap, currentX, currentY);
 
-            currentX += incrementalPadding;
+            currentX += singleCardWidth + incrementalPadding;
             currentY = incrementalPadding;
         }
         

@@ -41,7 +41,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         BlackJackPlayerState playerState,
         int raiseBet,
         IDiscordRestChannelAPI channelApi,
-        ILogger logger)
+        ILogger logger,
+        CancellationToken ct)
     {
         var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
             new BlackJackInGameRequest
@@ -52,7 +53,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 Bets = raiseBet
             }));
         await gameState.Channel!.Writer.WriteAsync(sendData);
-        await DeleteComponent(playerState.MessageReference!, channelApi, logger);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, channelApi, logger, ct);
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -84,23 +85,23 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         switch (sanitizedCustomId)
         {
             case "draw":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Draw);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Draw, ct);
                 break;
             case "stand":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Stand);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Stand, ct);
                 break;
             case "fold":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Fold);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Fold, ct);
                 break;
             case "call":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Call);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Call, ct);
                 break;
             case "raise":
                 return await HandleRaise(playerState);
             case "allin":
             {
                 var remainingTips = playerState.OwnTips - playerState.BetTips - gameState.HighestBet;
-                await SendRaiseData(gameState, playerState, (int)remainingTips, _channelApi, _logger);
+                await SendRaiseData(gameState, playerState, (int)remainingTips, _channelApi, _logger, ct);
                 break;
             }
             case "blackjack_help":
@@ -112,7 +113,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
     
     private async Task SendGenericData(BlackJackGameState gameState,
         BlackJackPlayerState playerState,
-        BlackJackInGameRequestType requestType)
+        BlackJackInGameRequestType requestType,
+        CancellationToken ct)
     {
         var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
             new BlackJackInGameRequest
@@ -122,7 +124,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 PlayerId = playerState.PlayerId
             }));
         await gameState.Channel!.Writer.WriteAsync(sendData);
-        await DeleteComponent(playerState.MessageReference!, _channelApi, _logger);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, _channelApi, _logger, ct);
     }
 
     private async Task<Result> HandleRaise(BlackJackPlayerState playerState)
@@ -134,24 +136,6 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
             .CreateMessageAsync(playerState.TextChannel!.ID, localization.RaisePrompt);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
-    }
-
-    private static async Task DeleteComponent(IMessage message, IDiscordRestChannelAPI channelApi, ILogger logger)
-    {
-        var originalEmbeds = message.Embeds.ToImmutableArray();
-        var originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1)
-            .ToImmutableArray();
-        var originalComponents = message.Components.Disable();
-
-        var editResult = await channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                embeds: originalEmbeds,
-                attachments: originalAttachments,
-                components: originalComponents);
-        if (!editResult.IsSuccess)
-            logger.LogError("Failed to remove components from the original message: {Reason}, inner: {Inner}",
-                editResult.Error.Message, editResult.Inner);
     }
 
     private async Task<Result> ShowHelpMenu()

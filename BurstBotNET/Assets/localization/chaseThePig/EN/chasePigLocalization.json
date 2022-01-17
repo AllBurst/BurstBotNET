@@ -15,6 +15,7 @@
   "winDescription": "{playerName} {verb} {totalRewards} tips!",
   "cards": "Your cards:",
   "expose": "Expose your card",
+  "noExpose": "Don't expose cards",
   "noExposableCardsSecond": "You don't have any card that can be exposed.",
   "noExposableCardsThird": "{playerName} doesn't have any card that can be exposed.",
   "play": "Play a card",

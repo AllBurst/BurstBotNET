@@ -205,7 +205,8 @@ public partial class BlackJack : BlackJackGame
         Snowflake channelId,
         Localizations localizations,
         IDiscordRestChannelAPI channelApi,
-        ILogger logger)
+        ILogger logger,
+        CancellationToken ct)
     {
         var state = gameStates
             .BlackJackGameStates
@@ -255,7 +256,7 @@ public partial class BlackJack : BlackJackGame
             return;
         }
 
-        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger);
+        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger, ct);
     }
 
     public static async Task<bool> HandleProgressChange(

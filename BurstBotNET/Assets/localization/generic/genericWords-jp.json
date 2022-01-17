@@ -5,5 +5,6 @@
   "possessiveSecond": "あなたの",
   "possessiveThird": "彼の",
   "card": "カード",
-  "from": "{player}から"
+  "from": "{player}から",
+  "confirm": "はい"
 }

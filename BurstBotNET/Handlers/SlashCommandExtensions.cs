@@ -45,6 +45,7 @@ public static class SlashCommandExtensions
             .AddInteractiveEntity<OldMaidDropDownEntity>()
             .AddInteractiveEntity<RedDotsDropDownEntity>()
             .AddInteractiveEntity<RedDotsButtonEntity>()
-            .AddInteractiveEntity<ChasePigDropDownEntity>();
+            .AddInteractiveEntity<ChasePigDropDownEntity>()
+            .AddInteractiveEntity<ChasePigButtonEntity>();
     }
 }

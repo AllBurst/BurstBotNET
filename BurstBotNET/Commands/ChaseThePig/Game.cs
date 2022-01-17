@@ -26,14 +26,14 @@ public partial class ChaseThePig : ChasePigGame
 {
     private static readonly Dictionary<ChasePigExposure, Card> ExposableCards = new()
     {
-        { ChasePigExposure.Transformer, Card.CreateCard(Suit.Club, 10) },
-        { ChasePigExposure.FirstTransformer, Card.CreateCard(Suit.Club, 10) },
-        { ChasePigExposure.DoubleGoat, Card.CreateCard(Suit.Diamond, 11) },
-        { ChasePigExposure.FirstDoubleGoat, Card.CreateCard(Suit.Diamond, 11) },
-        { ChasePigExposure.DoublePig, Card.CreateCard(Suit.Spade, 12) },
-        { ChasePigExposure.FirstDoublePig, Card.CreateCard(Suit.Spade, 12) },
-        { ChasePigExposure.DoubleMinus, Card.CreateCard(Suit.Heart, 1) },
-        { ChasePigExposure.FirstDoubleMinus, Card.CreateCard(Suit.Heart, 1) }
+        { ChasePigExposure.Transformer, Card.Create(Suit.Club, 10) },
+        { ChasePigExposure.FirstTransformer, Card.Create(Suit.Club, 10) },
+        { ChasePigExposure.DoubleGoat, Card.Create(Suit.Diamond, 11) },
+        { ChasePigExposure.FirstDoubleGoat, Card.Create(Suit.Diamond, 11) },
+        { ChasePigExposure.DoublePig, Card.Create(Suit.Spade, 12) },
+        { ChasePigExposure.FirstDoublePig, Card.Create(Suit.Spade, 12) },
+        { ChasePigExposure.DoubleMinus, Card.Create(Suit.Heart, 1) },
+        { ChasePigExposure.FirstDoubleMinus, Card.Create(Suit.Heart, 1) }
     };
     
     public static async Task<bool> HandleProgress(string messageContent, ChasePigGameState gameState, State state,
@@ -86,7 +86,6 @@ public partial class ChaseThePig : ChasePigGame
             {
                 await ShowPreviousPlayerAction(previousPlayerOldState!, previousPlayerNewState!,
                     gameState, deserializedIncomingData, state, channelApi, logger);
-                
             }
         }
 
@@ -99,6 +98,8 @@ public partial class ChaseThePig : ChasePigGame
                     state.Localizations, channelApi, logger);
                 break;
             case ChasePigGameProgress.Progressing:
+                await SendPlayingMessage(gameState, deserializedIncomingData, state.DeckService,
+                    state.Localizations, channelApi, logger);
                 break;
         }
 
@@ -108,10 +109,77 @@ public partial class ChaseThePig : ChasePigGame
         return true;
     }
 
-    public static Task HandleEndingResult(string messageContent, ChasePigGameState state, Localizations localizations,
+    public static async Task HandleEndingResult(string messageContent, ChasePigGameState state, Localizations localizations,
         DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var endingData = JsonSerializer.Deserialize<ChasePigInGameResponseEndingData>(messageContent);
+            if (endingData == null) return;
+            
+            state.Progress = ChasePigGameProgress.Ending;
+            var winnerId = endingData
+                .Rewards
+                .MaxBy(pair => pair.Value)
+                .Key;
+            var winner = endingData
+                .Players
+                .FirstOrDefault(p => p.Value.PlayerId == winnerId)
+                .Value;
+
+            var localization = localizations.GetLocalization().ChaseThePig;
+            
+            var title = localization.WinTitle.Replace("{playerName}", winner.PlayerName);
+            
+            var rewardsDescription = endingData.Rewards
+                .Select(pair => localization.WinDescription
+                    .Replace("{playerName}", endingData.Players[pair.Key].PlayerName)
+                    .Replace("{verb}", pair.Value > 0 ? localization.Won : localization.Lost)
+                    .Replace("{totalRewards}", Math.Abs(pair.Value).ToString(CultureInfo.InvariantCulture)));
+
+            var description = string.Join('\n', rewardsDescription);
+            
+            var embed = new Embed(
+                title,
+                Description: description,
+                Colour: BurstColor.Burst.ToColor(),
+                Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+                Image: new EmbedImage(winner.AvatarUrl));
+
+            var fields = new List<EmbedField>(endingData.Players.Count);
+
+            foreach (var (pId, player) in endingData.Players)
+            {
+                fields.Add(new EmbedField(player.PlayerName,
+                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture) + " tips", true));
+            }
+
+            embed = embed with { Fields = fields };
+
+            foreach (var (pId, player) in state.Players)
+            {
+                var sendResult = await channelApi
+                    .CreateMessageAsync(player.TextChannel!.ID,
+                        embeds: new[] { embed });
+                if (!sendResult.IsSuccess)
+                    logger.LogError(
+                        "Failed to broadcast ending result in player {PlayerId}'s channel: {Reason}, inner: {Inner}",
+                        pId, sendResult.Error.Message, sendResult.Inner);
+            }
+
+            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                0,
+                JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
+                {
+                    GameId = state.GameId,
+                    RequestType = ChasePigInGameRequestType.Close,
+                    PlayerId = 0
+                })));
+        }
+        catch (Exception ex)
+        {
+            Utilities.HandleException(ex, messageContent, state.Semaphore, logger);
+        }
     }
 
     private static async Task SendProgressMessages(ChasePigGameState gameState,
@@ -157,6 +225,9 @@ public partial class ChaseThePig : ChasePigGame
                     gameState, deserializedIncomingData, state, channelApi, logger);
 
                 if (deserializedIncomingData.Progress == ChasePigGameProgress.Ending) return;
+
+                await SendPlayingMessage(gameState, deserializedIncomingData,
+                    state.DeckService, state.Localizations, channelApi, logger);
                 
                 break;
         }
@@ -247,32 +318,7 @@ public partial class ChaseThePig : ChasePigGame
                         ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
                         : nextPlayer.PlayerName);
 
-            if (exposableCard.IsEmpty)
-            {
-                var description = isNextPlayer
-                    ? localization.ChaseThePig.NoExposableCardsSecond
-                    : localization.ChaseThePig.NoExposableCardsThird.Replace("{playerName}", nextPlayer.PlayerName);
-
-                var embed = new Embed
-                {
-                    Author = new EmbedAuthor(nextPlayer.PlayerName, IconUrl: nextPlayer.AvatarUrl),
-                    Colour = BurstColor.Burst.ToColor(),
-                    Description = description,
-                    Title = title,
-                    Thumbnail = new EmbedThumbnail(Constants.BurstLogo)
-                };
-
-                var sendResult = await channelApi
-                    .CreateMessageAsync(player.TextChannel.ID,
-                        embeds: new[] { embed });
-                if (sendResult.IsSuccess) continue;
-
-                logger.LogError("Failed to send expose message to {PlayerId}: {Reason}, inner: {Inner}",
-                    player.PlayerId, sendResult.Error.Message, sendResult.Inner);
-            }
-            else
-            {
-                var embed = new Embed
+            var embed = new Embed
                 {
                     Author = new EmbedAuthor(nextPlayer.PlayerName, IconUrl: nextPlayer.AvatarUrl),
                     Colour = BurstColor.Burst.ToColor(),
@@ -282,73 +328,119 @@ public partial class ChaseThePig : ChasePigGame
 
                 if (isNextPlayer)
                 {
-                    await using var renderedCards = SkiaService.RenderDeck(deckService, exposableCard);
-                    
-                    embed = embed with
+                    if (exposableCard.IsEmpty)
                     {
-                        Description = localization.ChaseThePig.Expose,
-                        Image = new EmbedImage(Constants.AttachmentUri)
-                    };
-                    
-                    var attachments = new OneOf<FileData, IPartialAttachment>[]
-                    {
-                        new FileData(Constants.OutputFileName, renderedCards)
-                    };
-
-                    var firstCard = exposableCard
-                        .FirstOrDefault(c => c.Suit == nextPlayer.Cards[0].Suit && c.Number == nextPlayer.Cards[0].Number);
-
-                    var selectOptions = exposableCard
-                        .Select(c =>
+                        embed = embed with
                         {
-                            if (firstCard != null && c.Suit == firstCard.Suit && c.Number == firstCard.Number)
+                            Description = localization.ChaseThePig.NoExposableCardsSecond
+                        };
+
+                        var components = new IMessageComponent[]
+                        {
+                            new ActionRowComponent(new[]
                             {
-                                var value = c.ToSpecifier() switch
+                                new ButtonComponent(ButtonComponentStyle.Primary, localization.GenericWords.Confirm,
+                                    new PartialEmoji(Name: Constants.CheckMark), "chase_pig_confirm_no_exposable_cards"),
+                                new ButtonComponent(ButtonComponentStyle.Primary,
+                                    localization.ChaseThePig.ShowHelp,
+                                    new PartialEmoji(Name: Constants.QuestionMark),
+                                    "chase_pig_help")
+                            })
+                        };
+                        
+                        var sendResult = await channelApi
+                            .CreateMessageAsync(player.TextChannel.ID,
+                                embeds: new[] { embed },
+                                components: components);
+                        if (sendResult.IsSuccess) continue;
+
+                        logger.LogError("Failed to send expose message to {PlayerId}: {Reason}, inner: {Inner}",
+                            player.PlayerId, sendResult.Error.Message, sendResult.Inner);
+
+                        continue;
+                    }
+                    else
+                    {
+                        await using var renderedCards = SkiaService.RenderDeck(deckService, exposableCard);
+
+                        embed = embed with
+                        {
+                            Description = localization.ChaseThePig.Expose,
+                            Image = new EmbedImage(Constants.AttachmentUri)
+                        };
+
+                        var attachments = new OneOf<FileData, IPartialAttachment>[]
+                        {
+                            new FileData(Constants.OutputFileName, renderedCards)
+                        };
+
+                        var firstCard = exposableCard
+                            .FirstOrDefault(c =>
+                                c.Suit == nextPlayer.Cards[0].Suit && c.Number == nextPlayer.Cards[0].Number);
+
+                        var selectOptions = exposableCard
+                            .Select(c =>
+                            {
+                                if (firstCard != null && c.Suit == firstCard.Suit && c.Number == firstCard.Number)
                                 {
-                                    "c10" => ChasePigExposure.FirstTransformer.ToString(),
-                                    "sq" => ChasePigExposure.FirstDoublePig.ToString(),
-                                    "dj" => ChasePigExposure.FirstDoubleGoat.ToString(),
-                                    "ha" => ChasePigExposure.FirstDoubleMinus.ToString(),
+                                    var value = c.ToSpecifier() switch
+                                    {
+                                        "c10" => ChasePigExposure.FirstTransformer.ToString(),
+                                        "sq" => ChasePigExposure.FirstDoublePig.ToString(),
+                                        "dj" => ChasePigExposure.FirstDoubleGoat.ToString(),
+                                        "ha" => ChasePigExposure.FirstDoubleMinus.ToString(),
+                                        _ => string.Empty
+                                    };
+
+                                    return new SelectOption(c.ToStringSimple(), value, c.ToStringSimple(),
+                                        new PartialEmoji(c.Suit.ToSnowflake()));
+                                }
+
+                                var v = c.ToSpecifier() switch
+                                {
+                                    "c10" => ChasePigExposure.Transformer.ToString(),
+                                    "sq" => ChasePigExposure.DoublePig.ToString(),
+                                    "dj" => ChasePigExposure.DoubleGoat.ToString(),
+                                    "ha" => ChasePigExposure.DoubleMinus.ToString(),
                                     _ => string.Empty
                                 };
-                                
-                                return new SelectOption(c.ToStringSimple(), value, c.ToStringSimple(),
+
+                                return new SelectOption(c.ToStringSimple(), v, c.ToStringSimple(),
                                     new PartialEmoji(c.Suit.ToSnowflake()));
-                            }
-                            
-                            var v = c.ToSpecifier() switch
-                            {
-                                "c10" => ChasePigExposure.Transformer.ToString(),
-                                "sq" => ChasePigExposure.DoublePig.ToString(),
-                                "dj" => ChasePigExposure.DoubleGoat.ToString(),
-                                "ha" => ChasePigExposure.DoubleMinus.ToString(),
-                                _ => string.Empty
-                            };
-                            
-                            return new SelectOption(c.ToStringSimple(), v, c.ToStringSimple(),
-                                new PartialEmoji(c.Suit.ToSnowflake()));
-                        }).ToImmutableArray();
+                            }).ToImmutableArray();
 
-                    var components = new IMessageComponent[]
-                    {
-                        new ActionRowComponent(new[]
+                        var components = new IMessageComponent[]
                         {
-                            new SelectMenuComponent("chase_pig_expose_menu", selectOptions,
-                                localization.ChaseThePig.Expose, 0, selectOptions.Length)
-                        })
-                    };
+                            new ActionRowComponent(new[]
+                            {
+                                new SelectMenuComponent("chase_pig_expose_menu", selectOptions,
+                                    localization.ChaseThePig.Expose, 0, selectOptions.Length)
+                            }),
+                            new ActionRowComponent(new[]
+                            {
+                                new ButtonComponent(ButtonComponentStyle.Danger,
+                                    localization.ChaseThePig.NoExpose,
+                                    new PartialEmoji(Name: Constants.CrossMark),
+                                    "chase_pig_decline_expose"),
+                                new ButtonComponent(ButtonComponentStyle.Primary,
+                                    localization.ChaseThePig.ShowHelp,
+                                    new PartialEmoji(Name: Constants.QuestionMark),
+                                    "chase_pig_help")
+                            })
+                        };
+                        
+                        var sendResult = await channelApi
+                            .CreateMessageAsync(player.TextChannel.ID,
+                                embeds: new[] { embed },
+                                attachments: attachments,
+                                components: components);
+                        if (sendResult.IsSuccess) continue;
 
-                    var sendResult = await channelApi
-                        .CreateMessageAsync(player.TextChannel.ID,
-                            embeds: new[] { embed },
-                            attachments: attachments,
-                            components: components);
-                    if (sendResult.IsSuccess) continue;
+                        logger.LogError("Failed to send expose message to {PlayerId}: {Reason}, inner: {Inner}",
+                            player.PlayerId, sendResult.Error.Message, sendResult.Inner);
 
-                    logger.LogError("Failed to send expose message to {PlayerId}: {Reason}, inner: {Inner}",
-                        player.PlayerId, sendResult.Error.Message, sendResult.Inner);
-
-                    continue;
+                        continue;
+                    }
                 }
 
                 var result = await channelApi
@@ -358,20 +450,115 @@ public partial class ChaseThePig : ChasePigGame
 
                 logger.LogError("Failed to send expose message to {PlayerId}: {Reason}, inner: {Inner}",
                     player.PlayerId, result.Error.Message, result.Inner);
-            }
         }
+    }
+
+    private static async Task SendPlayingMessage(
+        ChasePigGameState oldGameState,
+        RawChasePigGameState newGameState,
+        DeckService deckService,
+        Localizations localizations,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger)
+    {
+        var localization = localizations.GetLocalization();
         
-        if (exposableCard.IsEmpty)
-            await oldGameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-                nextPlayer.PlayerId,
-                JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
+        var nextPlayer = newGameState
+            .Players
+            .First(p => p.Value.Order == newGameState.CurrentPlayerOrder)
+            .Value;
+
+        var playerCards = nextPlayer
+            .Cards
+            .ToImmutableArray()
+            .Sort((a, b) => a.Suit.CompareTo(b.Suit) != 0 ? a.Suit.CompareTo(b.Suit) : a.Number.CompareTo(b.Number));
+
+        await using var renderedDeck = SkiaService.RenderDeck(deckService, playerCards);
+
+        foreach (var (_, player) in oldGameState.Players)
+        {
+            if (player.TextChannel == null) continue;
+
+            var isNextPlayer = player.PlayerId == nextPlayer.PlayerId;
+
+            var title = localization.ChaseThePig.TurnMessageTitle
+                .Replace("{possessive}",
+                    isNextPlayer
+                        ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
+                        : nextPlayer.PlayerName);
+
+            var embed = new Embed
+            {
+                Author = new EmbedAuthor(nextPlayer.PlayerName, IconUrl: nextPlayer.AvatarUrl),
+                Title = title,
+                Colour = BurstColor.Burst.ToColor(),
+                Thumbnail = new EmbedThumbnail(Constants.BurstLogo)
+            };
+
+            if (isNextPlayer)
+            {
+                var description = localization.ChaseThePig.Cards + '\n' + string.Join('\n', playerCards);
+                embed = embed with
                 {
-                    GameId = deserializedIncomingData.GameId,
-                    PlayerId = nextPlayer.PlayerId,
-                    PlayerOrder = nextPlayer.Order,
-                    Exposures = new List<ChasePigExposure>(),
-                    RequestType = ChasePigInGameRequestType.Expose
-                })));
+                    Image = new EmbedImage(Constants.AttachmentUri),
+                    Description = description
+                };
+
+                var attachment = new OneOf<FileData, IPartialAttachment>[]
+                {
+                    new FileData(Constants.OutputFileName, renderedDeck)
+                };
+
+                if (oldGameState.CardsOnTable.Count > 0)
+                {
+                    var firstCard = oldGameState.CardsOnTable.First().Item2;
+                    var applicableCards = playerCards
+                        .Where(c => c.Suit == firstCard.Suit)
+                        .ToImmutableArray();
+                    playerCards = applicableCards.IsEmpty ? playerCards : applicableCards;
+                }
+
+                var selectOptions = playerCards
+                    .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                        new PartialEmoji(c.Suit.ToSnowflake())));
+
+                var components = new IMessageComponent[]
+                {
+                    new ActionRowComponent(new[]
+                    {
+                        new SelectMenuComponent("chase_pig_card_selection", selectOptions.ToImmutableArray(),
+                            localization.ChaseThePig.Play, 1, 1)
+                    }),
+                    new ActionRowComponent(new[]
+                    {
+                        new ButtonComponent(ButtonComponentStyle.Primary,
+                            localization.ChaseThePig.ShowHelp,
+                            new PartialEmoji(Name: Constants.QuestionMark),
+                            "chase_pig_help")
+                    })
+                };
+
+                var sendResult = await channelApi
+                    .CreateMessageAsync(player.TextChannel.ID,
+                        embeds: new[] { embed },
+                        attachments: attachment,
+                        components: components);
+                if (sendResult.IsSuccess) continue;
+                
+                logger.LogError("Failed to send playing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                    player.PlayerId, sendResult.Error.Message, sendResult.Inner);
+                
+                continue;
+            }
+            
+            var result = await channelApi
+                .CreateMessageAsync(player.TextChannel.ID,
+                    embeds: new[] { embed });
+            if (result.IsSuccess) continue;
+                
+            logger.LogError("Failed to send playing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                player.PlayerId, result.Error.Message, result.Inner);
+        }
     }
 
     private static async Task SendPreviousPlayerExposeMessage(
@@ -581,6 +768,11 @@ public partial class ChaseThePig : ChasePigGame
                 new FileData(randomFileName, imageCopy)
             };
 
+            var isPreviousPlayer = playerState.PlayerId == previousPlayerNewState.PlayerId;
+            title = title.Replace("{playerName}", isPreviousPlayer
+                ? localization.GenericWords.Pronoun
+                : previousPlayerNewState.PlayerName);
+
             var embed = new Embed
             {
                 Author = new EmbedAuthor(previousPlayerNewState.PlayerName, IconUrl: previousPlayerNewState.AvatarUrl),
@@ -601,7 +793,9 @@ public partial class ChaseThePig : ChasePigGame
                 playerState.PlayerId, sendResult.Error.Message, sendResult.Inner);
         }
 
-        if (newGameState.PreviousWinner == oldGameState.PreviousWinner) return;
+        if (oldGameState.CardsOnTable.Count != 4) return;
+        
+        oldGameState.CardsOnTable.Clear();
 
         foreach (var (_, playerState) in oldGameState.Players)
         {
