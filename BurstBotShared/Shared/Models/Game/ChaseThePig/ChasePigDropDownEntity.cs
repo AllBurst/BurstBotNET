@@ -66,12 +66,20 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
         {
             case "chase_pig_expose_menu":
                 await ExposeCard(gameState, playerState, values);
-                await Utilities.Utilities.DisableComponents(message!, _channelApi, _logger, ct);
+                await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
                 break;
             case "chase_pig_card_selection":
                 await PlayCard(gameState, playerState, values);
-                await Utilities.Utilities.DisableComponents(message!, _channelApi, _logger, ct);
+                await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
                 break;
+            case "chase_pig_help_selection":
+            {
+                var result = await ShowHelpText(values, ct);
+                if (!result.IsSuccess)
+                    _logger.LogError("Failed to show help text: {Reason}, inner: {Inner}", result.Error.Message,
+                        result.Inner);
+                break;
+            }
         }
 
         return Result.FromSuccess();
@@ -120,7 +128,7 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
         IEnumerable<string> values,
         CancellationToken ct)
     {
-        var localization = _state.Localizations.GetLocalization().RedDotsPicking;
+        var localization = _state.Localizations.GetLocalization().ChaseThePig;
         var content = localization.CommandList[values.FirstOrDefault()!];
 
         var texts = new List<string>();

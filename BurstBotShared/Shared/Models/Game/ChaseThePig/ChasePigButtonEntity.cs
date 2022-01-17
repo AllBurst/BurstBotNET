@@ -75,7 +75,7 @@ public class ChasePigButtonEntity : IButtonInteractiveEntity
             case "chase_pig_confirm_no_exposable_cards":
             {
                 await SendNoExposureToChannel(gameState, playerState);
-                await Utilities.Utilities.DisableComponents(message!, _channelApi, _logger, ct);
+                await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
                 break;
             }
         }

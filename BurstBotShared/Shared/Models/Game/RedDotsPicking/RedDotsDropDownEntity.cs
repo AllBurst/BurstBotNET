@@ -230,7 +230,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         var validateResult = Validate(playerState, 2);
         if (!validateResult) return Result.FromSuccess();
 
-        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         await SendToGameStateChannel(gameState, playerState, ct);
         

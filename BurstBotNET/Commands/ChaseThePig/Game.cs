@@ -470,6 +470,7 @@ public partial class ChaseThePig : ChasePigGame
 
         var playerCards = nextPlayer
             .Cards
+            .Where(c => FilterExposureCards(c, newGameState.Exposures, newGameState))
             .ToImmutableArray()
             .Sort((a, b) => a.Suit.CompareTo(b.Suit) != 0 ? a.Suit.CompareTo(b.Suit) : a.Number.CompareTo(b.Number));
 
@@ -863,5 +864,36 @@ public partial class ChaseThePig : ChasePigGame
                 }
             }
         }
+    }
+
+    private static bool FilterExposureCards(Card card, IEnumerable<ChasePigExposure> exposures, RawChasePigGameState newGameState)
+    {
+        if (newGameState.PreviousWinner != 0) return true;
+
+        var cardsToFilterOut = new List<Card>(4);
+        foreach (var exposure in exposures)
+        {
+            switch (exposure)
+            {
+                case ChasePigExposure.Transformer:
+                case ChasePigExposure.FirstTransformer:
+                    cardsToFilterOut.Add(Card.Create(Suit.Club, 10));
+                    break;
+                case ChasePigExposure.DoubleGoat:
+                case ChasePigExposure.FirstDoubleGoat:
+                    cardsToFilterOut.Add(Card.Create(Suit.Diamond, 11));
+                    break;
+                case ChasePigExposure.DoubleMinus:
+                case ChasePigExposure.FirstDoubleMinus:
+                    cardsToFilterOut.Add(Card.Create(Suit.Heart, 1));
+                    break;
+                case ChasePigExposure.DoublePig:
+                case ChasePigExposure.FirstDoublePig:
+                    cardsToFilterOut.Add(Card.Create(Suit.Spade, 12));
+                    break;
+            }
+        }
+
+        return !cardsToFilterOut.Contains(card);
     }
 }

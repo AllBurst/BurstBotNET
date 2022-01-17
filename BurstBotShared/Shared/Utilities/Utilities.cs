@@ -183,14 +183,16 @@ public static class Utilities
 
     public static async Task DisableComponents(
         IMessage message,
+        bool disableAll,
         IDiscordRestChannelAPI channelApi,
         ILogger logger,
-        CancellationToken ct)
+        CancellationToken ct,
+        IEnumerable<string>? customIds = null)
     {
-        var originalEmbeds = message!.Embeds;
+        var originalEmbeds = message.Embeds;
         var originalAttachments = message.Attachments
             .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var originalComponents = message.Components.Disable();
+        var originalComponents = message.Components.Disable(disableAll, customIds);
         var editResult = await channelApi
             .EditMessageAsync(message.ChannelID, message.ID,
                 embeds: originalEmbeds.ToImmutableArray(),

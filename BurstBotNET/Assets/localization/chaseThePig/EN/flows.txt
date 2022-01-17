@@ -1,6 +1,6 @@
-Each player will use a card that can remove another card on the table and earn points accordingly.
-If the player doesn't have any card to match against any card on the table, the player is required to give up one of his cards and move the card onto the table.
+The general game flow is as the following.
 
-Regardless of whether a player manages to earn points, the player will then draw a card from the deck.
-If the drawn card matches any card on the table (including the card player gives up if he doesn't manage to earn points), the player can remove both cards from the table, and both cards will become part of the player's scores (providing they are red or special cards in a 4-player setting.)
-If the drawn card doesn't match any card on the table, the drawn card stays on the table and becomes one of the cards available for other players to match/earn.
+1. Each player will get 13 cards.
+2. Exposure stage. Each player will have a chance to expose their special cards (providing they have one).
+3. The gaming stage, each player has to play a card with the same suit as the first card of that turn, unless they don't have any card with the same suit anymore.
+4. The final score will be calculated when the game concludes.

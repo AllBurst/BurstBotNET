@@ -1,10 +1,7 @@
-using System.Collections.Immutable;
 using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -52,8 +49,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 PlayerId = playerState.PlayerId,
                 Bets = raiseBet
             }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
-        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, channelApi, logger, ct);
+        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, channelApi, logger, ct);
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -123,8 +120,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 GameId = gameState.GameId,
                 PlayerId = playerState.PlayerId
             }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
-        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, _channelApi, _logger, ct);
+        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, _channelApi, _logger, ct);
     }
 
     private async Task<Result> HandleRaise(BlackJackPlayerState playerState)

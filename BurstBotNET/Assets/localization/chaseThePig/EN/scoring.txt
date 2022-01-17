@@ -1,18 +1,20 @@
-Generally, only <:burst_heart2:930749955914727474> Hearts and <:burst_diamond2:930749987044851712> Diamonds are counted into the final score.
-However, **in a 4-player game, <:burst_spade2:930749903158792192> Spade A is 30 points, and <:burst_club2:930750022167957504> Club A is 40 points.**
+As a general rule:
+1. Nearly all <:burst_heart2:930749955914727474> Hearts have negative points. The detail is as following.
+<:burst_heart2:930749955914727474> **Heart 2 to Heart 4** - 0 point
+<:burst_heart2:930749955914727474> **Heart 5 to Heart 10** - Negative 10 (-10) points
+<:burst_heart2:930749955914727474> **Heart J** - Negative 20 (-20) points
+<:burst_heart2:930749955914727474> **Heart Q** - Negative 30 (-30) points
+<:burst_heart2:930749955914727474> **Heart K** - Negative 40 (-40) points
+<:burst_heart2:930749955914727474> **Heart A** - Negative 50 (-50) points
 
-When the game ends, a player that gets 250 points satisfies a "win-all" (全贏) situation, and automatically gets 420 points as his final score, while all other players' final scores will be -140 points.
-A player that gets 0 points in total (excluding the minus points from a player earning Heart 5 and Diamond 5) when the game ends satisfies a "zero-attempt" (拼零分) situation, and will be rewarded the same way as win-all (while all other players' final scores will also be -140 points.)
+2. <:burst_spade2:930749903158792192> **Spade Q** is the **Pig**. It has negative 100 (-100) points.
 
-If there's neither a win-all situation nor a zero-attempt situation, players' final scores will be calculated according to the total number of players:
+3. <:burst_diamond2:930749987044851712> **Diamond J** is the **Goat**. It has positive 100 (100) points.
 
-1. 2 players - Earned scores minus 105 points.
-2. 3 players - Earned scores minus 70 points.
-3. 4 players - Earned scores minus 70 points.
+4. <:burst_club2:930750022167957504> **Club 10** is the **Transformer**. When acquired alone with other non-scoring cards, it will grant the owner +50 points. However, if the player also has any other scoring cards, all positive and negative points of that player will be doubled.
 
-However, if a player has a negative score before calculating the final score, starting from the player who gets a Heart 5 and a Diamond 5, all players will be yielding their scores to the player(s) with negative scores, until their scores become at least zero.
-The order is as follows, or until all players with negative scores get at least a score of 0, whichever comes first:
+5. **All Red**
+If a player manages to collect all <:burst_heart2:930749955914727474> Hearts (including non-scoring Hearts), all hearts will become positive points.
 
-1. The player who has got a Heart 5 and a Diamond 5 will yield his scores until his score becomes 70.
-2. The player with the highest score will yield his score until his score is equal to the player who has the second-highest score.
-3. This process continues until it reaches the player who has the lowest positive score, who will then evenly yield his score until all players have at least a score of 0.
+6. **Greatest Win**
+If a player manages to collect all <:burst_heart2:930749955914727474> Hearts, <:burst_spade2:930749903158792192> Spade Q, <:burst_diamond2:930749987044851712> Diamond J and <:burst_club2:930750022167957504> Club 10, all cards including the Pig will become positive points and further doubled by <:burst_club2:930750022167957504> Club 10. 

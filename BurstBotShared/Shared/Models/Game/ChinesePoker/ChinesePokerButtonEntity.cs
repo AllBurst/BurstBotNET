@@ -78,8 +78,8 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         if (!dequeueResult)
             return Result.FromSuccess();
 
-        await Utilities.Utilities.DisableComponents(cardMessage!, _channelApi, _logger, ct);
-        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(cardMessage!, true, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,

@@ -79,7 +79,7 @@ public class OldMaidDropDownEntity : ISelectMenuInteractiveEntity
                 RequestType = OldMaidInGameRequestType.Draw
             })), ct);
 
-        await Utilities.Utilities.DisableComponents(message, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         return Result.FromSuccess();
     }
