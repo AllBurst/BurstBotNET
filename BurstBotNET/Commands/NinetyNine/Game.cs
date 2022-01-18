@@ -8,6 +8,7 @@ using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
+using BurstBotShared.Shared.Utilities;
 using BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables;
 using Microsoft.Extensions.Logging;
 using System.Buffers;
@@ -66,14 +67,18 @@ public partial class NinetyNine : NinetyNineGame
 
             await SendProgressMessages(gameState, deserializedIncomingData, state, channelApi, logger);
 
-
-
+            gameState.Semaphore.Release();
+            logger.LogDebug("Semaphore released after sending progress messages");
+        }
+        catch (JsonSerializationException)
+        {
+            return false;
         }
         catch (Exception ex)
         {
-
+            return Utilities.HandleException(ex, messageContent, gameState.Semaphore, logger);
         }
-        throw new NotImplementedException();
+        return true;
     }
 
     public static Task HandleEndingResult(string messageContent, NinetyNineGameState state, Localizations localizations,
@@ -173,6 +178,7 @@ public partial class NinetyNine : NinetyNineGame
     {
         throw new NotImplementedException();
     }
+
     private static async Task SendProgressMessages(
      NinetyNineGameState gameState,
      RawNinetyNineGameState? deserializedIncomingData,
@@ -245,7 +251,7 @@ public partial class NinetyNine : NinetyNineGame
     ILogger logger
 )
     {
-        if (playerState?.TextChannel == null) return;
+        if (playerState?.TextChannel == null || newPlayerState == null) return;
         logger.LogDebug("Sending initial message...");
 
         var localization = localizations.GetLocalization().NinetyNine;
@@ -283,6 +289,7 @@ public partial class NinetyNine : NinetyNineGame
                 newPlayerState.PlayerId,
                 sendResult.Error.Message, sendResult.Inner);
     }
+
     private static async Task SendDrawingMessage(
         NinetyNineGameState gameState,
         RawNinetyNineGameState deserializedIncomingData,

@@ -27,6 +27,7 @@
         </None>
         <None Remove="Dockerfile" />
         <None Remove=".dockerignore" />
+        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
         <None Update="Assets\localization\chinesePoker\EN\otherHands.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -48,10 +49,6 @@
         <None Update="Assets\localization\chaseThePig\EN\scoring.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
     </ItemGroup>
 
 </Project>

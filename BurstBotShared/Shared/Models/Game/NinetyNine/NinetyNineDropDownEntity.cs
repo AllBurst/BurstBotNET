@@ -3,6 +3,7 @@ using System.Text.Json;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
@@ -18,16 +19,19 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly State _state;
+    private readonly ILogger<NinetyNineDropDownEntity> _logger;
 
     public NinetyNineDropDownEntity(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestInteractionAPI interactionApi,
-        State state)
+        State state,
+        ILogger<NinetyNineDropDownEntity> logger)
     {
         _context = context;
         _channelApi = channelApi;
         _interactionApi = interactionApi;
         _state = state;
+        _logger = logger;
     }
 
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -79,26 +83,16 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 RequestType = NinetyNineInGameRequestType.Play
             })), ct);
 
-        var originalEmbeds = message.Embeds;
-        var originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var originalComponents = message.Components.Disable();
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
-        var editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                embeds: originalEmbeds.ToImmutableArray(),
-                components: originalComponents,
-                attachments: originalAttachments.ToImmutableArray(),
-                ct: ct);
-
-        return !editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
+        return Result.FromSuccess();
     }
     private static Card ExtractCard(IEnumerable<string> values)
     {
         var selection = values.FirstOrDefault()!;
         var suit = selection[..1];
         var rank = selection[1..];
-        var playedCard = Card.CreateCard(suit, rank);
+        var playedCard = Card.Create(suit, rank);
         return playedCard;
     }
 }
