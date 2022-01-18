@@ -1,17 +1,15 @@
-﻿using System.Collections.Immutable;
-using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
+﻿using System.Text.Json;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.Commands.Contexts;
 using Remora.Discord.Interactivity;
 using Remora.Results;
 
-namespace BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
+namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
 public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
 {
@@ -60,6 +58,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
 
         return await PlayCollect(message!, gameState, values, ct);
     }
+
     private async Task<Result> PlayCollect(
     IMessage message,
     NinetyNineGameState gameState,

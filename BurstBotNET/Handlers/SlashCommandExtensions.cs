@@ -10,6 +10,7 @@ using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.OldMaid;
+using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using Microsoft.Extensions.DependencyInjection;
 using Remora.Commands.Extensions;
@@ -46,6 +47,8 @@ public static class SlashCommandExtensions
             .AddInteractiveEntity<RedDotsDropDownEntity>()
             .AddInteractiveEntity<RedDotsButtonEntity>()
             .AddInteractiveEntity<ChasePigDropDownEntity>()
-            .AddInteractiveEntity<ChasePigButtonEntity>();
+            .AddInteractiveEntity<ChasePigButtonEntity>()
+            .AddInteractiveEntity<NinetyNineDropDownEntity>()
+            .AddInteractiveEntity<NinetyNineButtonEntity>();
     }
 }

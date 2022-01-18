@@ -11,10 +11,8 @@
   "lost": "lost",
   "winDescription": "{playerName} {verb} {totalRewards} tips!",
   "cards": "Your cards:",
-  "draw": "Draw",
   "play": "Play",
-  "drawMessage": "{previousPlayerName} drew a {card} from {ppPlayerName}.",
-  "throwMessage": "{previousPlayerName} threw away a pair of {rank}!",
+  "playMessage": "{previousPlayerName} played a {card}!",
   "turnMessageTitle": "It's {possessive} turn!",
   "showHelp": "Show help texts"
 }
