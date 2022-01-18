@@ -1,0 +1,6 @@
+The general game flow is as the following.
+
+1. Each player will get 13 cards.
+2. Exposure stage. Each player will have a chance to expose their special cards (providing they have one).
+3. The gaming stage, each player has to play a card with the same suit as the first card of that turn, unless they don't have any card with the same suit anymore.
+4. The final score will be calculated when the game concludes.

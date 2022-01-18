@@ -91,7 +91,15 @@ public record Card : IValueRealizable<ImmutableArray<int>>
         return suit + rank;
     }
 
-    public static Card CreateCard(string suit, string rank)
+    public static Card Create(Suit suit, int rank, bool isFront = true)
+        => new()
+        {
+            IsFront = isFront,
+            Number = rank,
+            Suit = suit
+        };
+
+    public static Card Create(string suit, string rank)
     {
         var s = suit switch
         {

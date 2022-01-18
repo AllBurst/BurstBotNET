@@ -169,7 +169,7 @@ public static class BurstExtensions
         return newList;
     }
 
-    public static List<IMessageComponent> Disable(this Optional<IReadOnlyList<IMessageComponent>> components, IEnumerable<string>? customIds = null)
+    public static List<IMessageComponent> Disable(this Optional<IReadOnlyList<IMessageComponent>> components, bool disableAll, IEnumerable<string>? customIds)
     {
         if (!components.HasValue) return new List<IMessageComponent>();
 
@@ -191,13 +191,13 @@ public static class BurstExtensions
                         if (!idsToRemove.IsEmpty && idsToRemove.Contains(button.CustomID.Value))
                             newActionRow.Add(button with { IsDisabled = true });
                         else
-                            newActionRow.Add(button);
+                            newActionRow.Add(button with { IsDisabled = disableAll ? true : button.IsDisabled });
                         break;
                     }
                     case SelectMenuComponent menu:
                     {
                         if (!idsToRemove.IsEmpty && idsToRemove.Contains(menu.CustomID))
-                            newActionRow.Add(menu with { IsDisabled = true });
+                            newActionRow.Add(menu with { IsDisabled = disableAll ? true : menu.IsDisabled });
                         else
                             newActionRow.Add(menu);
                         break;

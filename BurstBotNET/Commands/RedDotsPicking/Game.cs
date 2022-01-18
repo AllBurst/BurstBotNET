@@ -168,6 +168,7 @@ public partial class RedDotsPicking : RedDotsGame
         }
         catch (Exception ex)
         {
+            if (string.IsNullOrWhiteSpace(messageContent)) return;
             Utilities.HandleException(ex, messageContent, state.Semaphore, logger);
         }
     }
@@ -202,7 +203,7 @@ public partial class RedDotsPicking : RedDotsGame
         switch (gameState.Progress)
         {
             case RedDotsGameProgress.Starting:
-                await SendInitialMessage(previousPlayerOldState, previousPlayerNewState!, deserializedIncomingData,
+                await SendInitialMessage(previousPlayerOldState, previousPlayerNewState, deserializedIncomingData,
                     state.DeckService, state.Localizations, channelApi, logger);
                 break;
             case RedDotsGameProgress.Progressing:
@@ -222,8 +223,8 @@ public partial class RedDotsPicking : RedDotsGame
     }
 
     private static async Task SendInitialMessage(
-        RedDotsPlayerState? playerState,
-        RawRedDotsPlayerState newPlayerState,
+        IPlayerState? playerState,
+        RawRedDotsPlayerState? newPlayerState,
         RawRedDotsGameState deserializedIncomingData,
         DeckService deckService,
         Localizations localizations,
@@ -231,7 +232,7 @@ public partial class RedDotsPicking : RedDotsGame
         ILogger logger
     )
     {
-        if (playerState?.TextChannel == null) return;
+        if (playerState?.TextChannel == null || newPlayerState == null) return;
         logger.LogDebug("Sending initial message...");
 
         var localization = localizations.GetLocalization().RedDotsPicking;

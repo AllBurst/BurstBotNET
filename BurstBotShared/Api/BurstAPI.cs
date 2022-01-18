@@ -11,7 +11,6 @@ using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game.BlackJack;
-using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
@@ -146,7 +145,7 @@ public sealed class BurstApi
         while (true)
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var receiveTask = ReceiveMatchData(socketSession, logger, cancellationTokenSource.Token);
+            var receiveTask = ReceiveMatchData(socketSession, cancellationTokenSource.Token);
             var timeoutTask = Task.Run(async () =>
             {
                 try
@@ -159,9 +158,8 @@ public sealed class BurstApi
                         StatusType = GenericJoinStatusType.TimedOut
                     };
                 }
-                catch (TaskCanceledException ex)
+                catch (TaskCanceledException)
                 {
-                    logger.LogDebug("Timeout task for matching has been cancelled: {@Exception}", ex);
                 }
                 finally
                 {
@@ -172,7 +170,6 @@ public sealed class BurstApi
             }, cancellationTokenSource.Token);
 
             var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
-            logger.LogDebug("Match data: {Data}", matchData?.ToString());
             if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
             {
                 const string message = "Timeout because no match game is found";
@@ -500,7 +497,7 @@ public sealed class BurstApi
         return (matchData, playerStates.ToImmutableArray());
     }
 
-    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession, ILogger logger,
+    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession,
         CancellationToken token)
     {
         var buffer = new byte[BufferSize];

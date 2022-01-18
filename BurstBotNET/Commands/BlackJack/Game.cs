@@ -164,13 +164,8 @@ public partial class BlackJack : BlackJackGame
         }
         catch (Exception ex)
         {
-            if (string.IsNullOrWhiteSpace(messageContent))
-                return;
-            logger.LogError("An exception occurred when handling ending result: {Exception}", ex);
-            logger.LogError("Exception message: {Message}", ex.Message);
-            logger.LogError("Source: {Source}", ex.Source);
-            logger.LogError("Stack trace: {Trace}", ex.StackTrace);
-            logger.LogError("Message content: {Content}", messageContent);
+            if (string.IsNullOrWhiteSpace(messageContent)) return;
+            Utilities.HandleException(ex, messageContent, state.Semaphore, logger);
         }
     }
 
@@ -210,7 +205,8 @@ public partial class BlackJack : BlackJackGame
         Snowflake channelId,
         Localizations localizations,
         IDiscordRestChannelAPI channelApi,
-        ILogger logger)
+        ILogger logger,
+        CancellationToken ct)
     {
         var state = gameStates
             .BlackJackGameStates
@@ -260,7 +256,7 @@ public partial class BlackJack : BlackJackGame
             return;
         }
 
-        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger);
+        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger, ct);
     }
 
     public static async Task<bool> HandleProgressChange(

@@ -72,6 +72,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
+        Console.WriteLine("Successfully write to channel.");
     }
 
     static async Task StartListening(
@@ -176,6 +177,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         CancellationTokenSource cancellationTokenSource)
     {
         var channelMessage = await state.Channel!.Reader.ReadAsync();
+        Console.WriteLine("Successfully read from channel.");
         var (playerId, payload) = channelMessage;
         var operation =
             await HandleChannelMessage(playerId, payload, socketSession, state, inGameRequestTypes, closeRequestType, closedProgress, logger, cancellationTokenSource.Token);

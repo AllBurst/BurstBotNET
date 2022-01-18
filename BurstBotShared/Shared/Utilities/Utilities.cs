@@ -6,6 +6,7 @@ using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -169,5 +170,38 @@ public static class Utilities
         }
 
         return null;
+    }
+    
+    public static Card ExtractCard(IEnumerable<string> values)
+    {
+        var selection = values.FirstOrDefault()!;
+        var suit = selection[..1];
+        var rank = selection[1..];
+        var playedCard = Card.Create(suit, rank);
+        return playedCard;
+    }
+
+    public static async Task DisableComponents(
+        IMessage message,
+        bool disableAll,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger,
+        CancellationToken ct,
+        IEnumerable<string>? customIds = null)
+    {
+        var originalEmbeds = message.Embeds;
+        var originalAttachments = message.Attachments
+            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
+        var originalComponents = message.Components.Disable(disableAll, customIds);
+        var editResult = await channelApi
+            .EditMessageAsync(message.ChannelID, message.ID,
+                embeds: originalEmbeds.ToImmutableArray(),
+                attachments: originalAttachments.ToImmutableArray(),
+                components: originalComponents,
+                ct: ct);
+        if (!editResult.IsSuccess)
+            logger.LogError(
+                "Failed to remove components from the original message: {Reason}, inner: {Inner}",
+                editResult.Error.Message, editResult.Inner);
     }
 }
