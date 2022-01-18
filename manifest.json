@@ -162,7 +162,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.NinetyNine.NinetyNine.html",
-          "hash": "GuT5T+JNHkPU0YWb0A7Dpzv6N4ggUE8FA4lIx78ignc="
+          "hash": "qtdu6bGdlbtlgYwy3FqZS1Nlgpo6WuuJShwVVpElu+A="
         }
       },
       "is_incremental": false,
@@ -342,7 +342,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
-          "hash": "DgUQB4msXeh02gpCPHD7mc3MxoyJ64P93mcYQ51xndM="
+          "hash": "+hPA+j6KPNaAC+affDDNqUqptVlTom6ZJhumjFdyRUE="
         }
       },
       "is_incremental": false,
@@ -1418,6 +1418,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html",
+          "hash": "m0KRj8f8jOoBkbwKhJtYydXR2IPOeM62Ksw4VV7KIJ0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.yml",
       "output": {
         ".html": {
@@ -1466,18 +1478,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDropDownEntity.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDropDownEntity.html",
-          "hash": "u14da3jtEIL/f1C21tMdVqrHCpU8CFksMMklMWSy58Q="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineGameProgress.yml",
       "output": {
         ".html": {
@@ -1507,6 +1507,18 @@
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequestType.html",
           "hash": "oCj4GIMaBphz/bbTABQl8sT+q3KbBtBbW1RnqWfF1Uw="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameResponseEndingData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameResponseEndingData.html",
+          "hash": "vATex3NoDx2ZwAg0uuJ4nHVk2i/9tOgixooqeMM3x5Q="
         }
       },
       "is_incremental": false,
@@ -1554,7 +1566,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.html",
-          "hash": "ZbeGn56nVIOiuWDqVqWK3c/KANUiEpGbfrevu7s1avY="
+          "hash": "cl2+6nyj/f9ExWpqbRJkSz9spk943g09mfrpURit1ok="
         }
       },
       "is_incremental": false,
@@ -1566,7 +1578,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.html",
-          "hash": "WEHr5t37g0If9YEPCqDcgK1ZIHNiHqhtyiSVOdRnlwc="
+          "hash": "1G85JfwRaKcFAFIByEa6xuAl/reSnwfVexF/NsYu+lY="
         }
       },
       "is_incremental": false,
@@ -2094,7 +2106,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html",
-          "hash": "Ui86jXdswP1SeXp3V5Xek7XafT+O3Ep2ty8suF4L6yQ="
+          "hash": "EQV4FK3aV06tSubD4FJW86GD/ttN/duQgdc/fK3SLe0="
         }
       },
       "is_incremental": false,
@@ -2274,7 +2286,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "8zSBWy4mq5VlRAcaOBw1i2gnGpPZhOFnxKTwS4TN6RU="
+          "hash": "0bLqJ50LOMGpjmcA65XY8phW+HljxjuKmugbQnRBfvg="
         }
       },
       "is_incremental": false,
@@ -2313,7 +2325,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 187,
+          "total_file_count": 188,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
