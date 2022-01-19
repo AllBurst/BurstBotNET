@@ -52,6 +52,7 @@ public record ChasePigLocalization : ILocalization<ChasePigLocalization>
     [JsonPropertyName("showFlows")] public string ShowFlows { get; init; } = "";
     [JsonPropertyName("showExposure")] public string ShowExposure { get; init; } = "";
     [JsonPropertyName("points")] public string Points { get; init; } = "";
+    [JsonPropertyName("about")] public string About { get; init; } = "";
 
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

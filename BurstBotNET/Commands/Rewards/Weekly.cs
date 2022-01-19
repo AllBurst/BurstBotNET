@@ -32,7 +32,7 @@ public class Weekly : CommandGroup
     }
 
     [Command("weekly")]
-    [Description("Get your weekly reward of 70 tips here.")]
+    [Description("Get your weekly reward of 700 tips here.")]
     public async Task<IResult> Handle()
     {
         var rewardResult =

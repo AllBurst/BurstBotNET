@@ -237,7 +237,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             logger.LogDebug("Game timed out due to inactivity");
             state.Progress = closedProgress;
         }
-        catch (TaskCanceledException _)
+        catch (TaskCanceledException)
         {
         }
         catch (ObjectDisposedException ex)

@@ -45,5 +45,6 @@
     "raisePrompt": "Please type in the number of tips you want to raise with.\n**You can only type in a whole number (no floating points), and the amount you want to raise with, plus the tips you've bet so far, cannot exceed the tips you currently own!**",
     "rules": "Rules",
     "gameFlow": "Game Flow",
-    "showHelp": "Show help texts"
+    "showHelp": "Show help texts",
+    "about": "About Black Jack"
 }

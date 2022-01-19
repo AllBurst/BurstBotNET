@@ -35,5 +35,6 @@
   "showScoring": "About the scoring rule of Chase the Pig.",
   "showFlows": "The game flow of Chase the Pig.",
   "showExposure": "The exposure rule of Chase the Pig.",
-  "points": "{points} points"
+  "points": "{points} points",
+  "about": "About Chase the Pig"
 }

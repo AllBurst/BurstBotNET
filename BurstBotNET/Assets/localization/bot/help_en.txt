@@ -1,29 +1,24 @@
-🎉**Connect to server**
+🎉 **Register to server**
 
     `/start`
-    *Register and join the server and get 100 initial tips.*
+    *Register and join the server and get 1000 initial tips.*
 
-🎁**Rewards**
+🎁 **Rewards**
 
     `/daily`   `/weekly`
     *Get daily and weekly rewards.*
 
-🔍**Query**
+🔍 **Query**
 
     `/balance`
     *Check your current tips.*
 
-📡**Latency**
+📡 **Latency**
 
     `/ping`
     *Check the latency.*
 
 🔧 **About the bot**
 
-     `/about`
-     *Check information about the bot.*
-
-🃏 **BlackJack**
-
-    `/blackjack join` (Player2...Player6)
-    *Invite other players (up to 6 people in total) to make your own room, or wait for other people to join.*
+    `/about`
+    *Check information about the bot.*

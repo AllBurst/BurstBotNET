@@ -69,6 +69,7 @@ public record BlackJackLocalization : ILocalization<BlackJackLocalization>
     [JsonPropertyName("rules")] public string Rules { get; init; } = "";
     [JsonPropertyName("gameFlow")] public string GameFlow { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
+    [JsonPropertyName("about")] public string About { get; init; } = "";
 
     [JsonIgnore] public Dictionary<string, string> AvailableCommands => CommandList;
 }

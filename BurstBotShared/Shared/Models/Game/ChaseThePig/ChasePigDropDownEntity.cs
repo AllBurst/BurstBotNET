@@ -51,35 +51,41 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
     {
         var hasMessage = _context.Message.IsDefined(out var message);
         if (!hasMessage) return Result.FromSuccess();
-
-        var gameState = Utilities.Utilities
-            .GetGameState<ChasePigGameState, ChasePigPlayerState, ChasePigGameProgress>(user,
-                _state.GameStates.ChasePigGameStates.Item1,
-                _state.GameStates.ChasePigGameStates.Item2,
-                _context,
-                out var playerState);
-        if (playerState == null) return Result.FromSuccess();
         
         var sanitizedCustomId = customId.Trim();
 
-        switch (sanitizedCustomId)
+        if (_state.GameStates.ChasePigGameStates.Item2.Contains(_context.ChannelID))
         {
-            case "chase_pig_expose_menu":
-                await ExposeCard(gameState, playerState, values);
-                await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
-                break;
-            case "chase_pig_card_selection":
-                await PlayCard(gameState, playerState, values);
-                await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
-                break;
-            case "chase_pig_help_selection":
+            var gameState = Utilities.Utilities
+                .GetGameState<ChasePigGameState, ChasePigPlayerState, ChasePigGameProgress>(user,
+                    _state.GameStates.ChasePigGameStates.Item1,
+                    _state.GameStates.ChasePigGameStates.Item2,
+                    _context,
+                    out var playerState);
+            if (playerState == null) return Result.FromSuccess();
+
+            switch (sanitizedCustomId)
             {
-                var result = await ShowHelpText(values, ct);
-                if (!result.IsSuccess)
-                    _logger.LogError("Failed to show help text: {Reason}, inner: {Inner}", result.Error.Message,
-                        result.Inner);
-                break;
+                case "chase_pig_expose_menu":
+                    await ExposeCard(gameState, playerState, values);
+                    await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
+                    break;
+                case "chase_pig_card_selection":
+                    await PlayCard(gameState, playerState, values);
+                    await Utilities.Utilities.DisableComponents(message!, true, _channelApi, _logger, ct);
+                    break;
+                case "chase_pig_help_selection":
+                {
+                    var result = await ShowHelpText(values, ct);
+                    if (!result.IsSuccess)
+                        _logger.LogError("Failed to show help text: {Reason}, inner: {Inner}", result.Error.Message,
+                            result.Inner);
+                    break;
+                }
             }
+        } else if (sanitizedCustomId == "chase_pig_help_selection")
+        {
+            return await ShowHelpText(values, ct);
         }
 
         return Result.FromSuccess();

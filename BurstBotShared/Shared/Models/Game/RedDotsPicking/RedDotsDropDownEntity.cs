@@ -59,25 +59,33 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
     {
         var hasMessage = _context.Message.IsDefined(out var message);
         if (!hasMessage) return Result.FromSuccess();
-
-        var gameState = Utilities.Utilities
-            .GetGameState<RedDotsGameState, RedDotsPlayerState, RedDotsGameProgress>(user,
-                _state.GameStates.RedDotsGameStates.Item1,
-                _state.GameStates.RedDotsGameStates.Item2,
-                _context,
-                out var playerState);
-        if (playerState == null) return Result.FromSuccess();
         
         var sanitizedCustomId = customId.Trim();
 
-        return sanitizedCustomId switch
+        if (_state.GameStates.RedDotsGameStates.Item2.Contains(_context.ChannelID))
         {
-            "red_dots_force_five_selection" => await PlayForceFive(message!, gameState, playerState, values, ct),
-            "red_dots_user_selection" or "red_dots_table_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, customId, 2, ct),
-            "red_dots_give_up_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, null, 1, ct),
-            "red_dots_help_selection" => await ShowHelpText(values, ct),
-            _ => Result.FromSuccess()
-        };
+            var gameState = Utilities.Utilities
+                .GetGameState<RedDotsGameState, RedDotsPlayerState, RedDotsGameProgress>(user,
+                    _state.GameStates.RedDotsGameStates.Item1,
+                    _state.GameStates.RedDotsGameStates.Item2,
+                    _context,
+                    out var playerState);
+            if (playerState == null) return Result.FromSuccess();
+
+            return sanitizedCustomId switch
+            {
+                "red_dots_force_five_selection" => await PlayForceFive(message!, gameState, playerState, values, ct),
+                "red_dots_user_selection" or "red_dots_table_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, customId, 2, ct),
+                "red_dots_give_up_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, null, 1, ct),
+                "red_dots_help_selection" => await ShowHelpText(values, ct),
+                _ => Result.FromSuccess()
+            };
+        }
+
+        if (sanitizedCustomId == "red_dots_help_selection")
+            return await ShowHelpText(values, ct);
+        
+        return Result.FromSuccess();
     }
 
     private static bool Validate(RedDotsPlayerState playerState, int count) => playerState.PlayedCards.Count == count;

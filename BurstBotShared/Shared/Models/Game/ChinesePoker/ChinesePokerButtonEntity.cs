@@ -63,9 +63,34 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         {
             "chinese_poker_confirm" => await ConfirmSelection(playerState, gameState, message!, ct),
             "chinese_poker_cancel" => await CancelSelection(playerState, message!, ct),
-            "chinese_poker_help" => await ShowHelpMenu(),
+            "chinese_poker_help" => await ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()
         };
+    }
+    
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
+    {
+        var localization = state.Localizations.GetLocalization().ChinesePoker;
+
+        var components = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent("chinese_poker_help_selections", new[]
+                {
+                    new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
+                    new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),
+                    new SelectOption(localization.BackHand, "Back Hand", localization.BackHand, default, false)
+                }, localization.ShowHelp, 0, 1, false)
+            })
+        };
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
+                components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
     private async Task<Result> ConfirmSelection(
@@ -135,30 +160,5 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
                 embeds: Array.Empty<IEmbed>(),
                 ct: ct);
         return !editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
-    }
-
-    private async Task<Result> ShowHelpMenu()
-    {
-        var localization = _state.Localizations.GetLocalization().ChinesePoker;
-
-        var components = new IMessageComponent[]
-        {
-            new ActionRowComponent(new[]
-            {
-                new SelectMenuComponent("chinese_poker_help_selections", new[]
-                {
-                    new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
-                    new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),
-                    new SelectOption(localization.BackHand, "Back Hand", localization.BackHand, default, false)
-                }, localization.ShowHelp, 0, 1, false)
-            })
-        };
-
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
-                components: components);
-
-        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 }

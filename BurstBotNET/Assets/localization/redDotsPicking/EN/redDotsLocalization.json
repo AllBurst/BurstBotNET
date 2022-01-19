@@ -26,5 +26,6 @@
   "showGeneral": "General rules and information about Red Dots Picking.",
   "showScoring": "About the scoring rule of Red Dots Picking.",
   "showFlows": "The game flow of Red Dots Picking.",
-  "points": "{points} points"
+  "points": "{points} points",
+  "about": "About Red Dots Picking"
 }

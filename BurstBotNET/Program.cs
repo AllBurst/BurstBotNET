@@ -78,7 +78,7 @@ namespace BurstBotNET
                         .ToImmutableArray();
                     foreach (var guild in snowflakes)
                     {
-                        var updateResult = await slashService.UpdateSlashCommandsAsync(guild, shutdownTokenSource.Token);
+                        var updateResult = await slashService.UpdateSlashCommandsAsync(guild, ct: shutdownTokenSource.Token);
                         if (!updateResult.IsSuccess)
                         {
                             logger.LogError("Failed to update slash commands: {Reason}, inner: {Inner}",
@@ -88,7 +88,7 @@ namespace BurstBotNET
                 }
                 else
                 {
-                    var updateResult = await slashService.UpdateSlashCommandsAsync(null, shutdownTokenSource.Token);
+                    var updateResult = await slashService.UpdateSlashCommandsAsync(null, ct: shutdownTokenSource.Token);
                     if (!updateResult.IsSuccess)
                     {
                         logger.LogError("Failed to update slash commands: {Reason}, inner: {Inner}",

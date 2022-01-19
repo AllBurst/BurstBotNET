@@ -102,10 +102,43 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 break;
             }
             case "blackjack_help":
-                return await ShowHelpMenu();
+                return await ShowHelpMenu(_context, _state, _interactionApi);
         }
 
         return Result.FromSuccess();
+    }
+    
+    public static async Task<Result> ShowHelpMenu(
+        InteractionContext context,
+        State state,
+        IDiscordRestInteractionAPI interactionApi)
+    {
+        var localization = state.Localizations.GetLocalization().BlackJack;
+
+        var components = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent("blackjack_help_selections", new[]
+                {
+                    new SelectOption(localization.Rules, "helprule", localization.Rules, new PartialEmoji(Name: "🥷"), false),
+                    new SelectOption(localization.GameFlow, "helpflow", localization.GameFlow, new PartialEmoji(Name: "🌫️"), false),
+                    new SelectOption(localization.Draw, "helpdraw", localization.Draw, new PartialEmoji(Name: "🎴"), false),
+                    new SelectOption(localization.Stand, "helpstand", localization.Stand, new PartialEmoji(Name: "😑"), false),
+                    new SelectOption(localization.Call, "helpcall", localization.Call, new PartialEmoji(Name: "🤔"), false),
+                    new SelectOption(localization.Fold, "helpfold", localization.Fold, new PartialEmoji(Name: "😫"), false),
+                    new SelectOption(localization.Raise, "helpraise", localization.Raise, new PartialEmoji(Name: "🤑"), false),
+                    new SelectOption(localization.AllIn, "helpallin", localization.AllIn, new PartialEmoji(Name: "😈"), false)
+                }, localization.ShowHelp, 0, 1, false)
+            })
+        };
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
+                components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
     
     private async Task SendGenericData(BlackJackGameState gameState,
@@ -131,36 +164,6 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
 
         var result = await _channelApi
             .CreateMessageAsync(playerState.TextChannel!.ID, localization.RaisePrompt);
-
-        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
-    }
-
-    private async Task<Result> ShowHelpMenu()
-    {
-        var localization = _state.Localizations.GetLocalization().BlackJack;
-
-        var components = new IMessageComponent[]
-        {
-            new ActionRowComponent(new[]
-            {
-                new SelectMenuComponent("blackjack_help_selections", new[]
-                {
-                    new SelectOption(localization.Rules, "helprule", localization.Rules, new PartialEmoji(Name: "🥷"), false),
-                    new SelectOption(localization.GameFlow, "helpflow", localization.GameFlow, new PartialEmoji(Name: "🌫️"), false),
-                    new SelectOption(localization.Draw, "helpdraw", localization.Draw, new PartialEmoji(Name: "🎴"), false),
-                    new SelectOption(localization.Stand, "helpstand", localization.Stand, new PartialEmoji(Name: "😑"), false),
-                    new SelectOption(localization.Call, "helpcall", localization.Call, new PartialEmoji(Name: "🤔"), false),
-                    new SelectOption(localization.Fold, "helpfold", localization.Fold, new PartialEmoji(Name: "😫"), false),
-                    new SelectOption(localization.Raise, "helpraise", localization.Raise, new PartialEmoji(Name: "🤑"), false),
-                    new SelectOption(localization.AllIn, "helpallin", localization.AllIn, new PartialEmoji(Name: "😈"), false)
-                }, localization.ShowHelp, 0, 1, false)
-            })
-        };
-
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
-                components: components);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }

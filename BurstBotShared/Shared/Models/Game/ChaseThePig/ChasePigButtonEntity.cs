@@ -16,10 +16,10 @@ namespace BurstBotShared.Shared.Models.Game.ChaseThePig;
 
 public class ChasePigButtonEntity : IButtonInteractiveEntity
 {
+    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly InteractionContext _context;
     private readonly State _state;
     private readonly IDiscordRestInteractionAPI _interactionApi;
-    private readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly ILogger<ChasePigButtonEntity> _logger;
     private readonly IDiscordRestChannelAPI _channelApi;
 
@@ -65,7 +65,7 @@ public class ChasePigButtonEntity : IButtonInteractiveEntity
         {
             case "chase_pig_help":
             {
-                var result = await ShowHelpMenu();
+                var result = await ShowHelpMenu(_context, _state, _interactionApi);
                 if (!result.IsSuccess)
                     _logger.LogError("Failed to show help menu: {Reason}, inner: {Inner}",
                         result.Error.Message, result.Inner);
@@ -81,6 +81,37 @@ public class ChasePigButtonEntity : IButtonInteractiveEntity
         }
 
         return Result.FromSuccess();
+    }
+    
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
+    {
+        var localization = state.Localizations.GetLocalization().ChaseThePig;
+
+        var options = localization
+            .CommandList
+            .Keys
+            .Select(k =>
+            {
+                var (desc, emoji) = GetHelpMenuItemDescription(k, localization);
+                return (k, desc, emoji);
+            })
+            .Select(item => new SelectOption(TextInfo.ToTitleCase(item.k), item.k, item.desc, item.emoji));
+
+        var components = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent("chase_pig_help_selection", options.ToImmutableArray(), localization.ShowHelp, 1,
+                    1)
+            })
+        };
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
+                components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
     private static (string, PartialEmoji) GetHelpMenuItemDescription(string key, ChasePigLocalization localization)
@@ -105,36 +136,5 @@ public class ChasePigButtonEntity : IButtonInteractiveEntity
                 Exposures = new List<ChasePigExposure>(),
                 RequestType = ChasePigInGameRequestType.Expose
             })));
-    }
-
-    private async Task<Result> ShowHelpMenu()
-    {
-        var localization = _state.Localizations.GetLocalization().ChaseThePig;
-
-        var options = localization
-            .CommandList
-            .Keys
-            .Select(k =>
-            {
-                var (desc, emoji) = GetHelpMenuItemDescription(k, localization);
-                return (k, desc, emoji);
-            })
-            .Select(item => new SelectOption(_textInfo.ToTitleCase(item.k), item.k, item.desc, item.emoji));
-
-        var components = new IMessageComponent[]
-        {
-            new ActionRowComponent(new[]
-            {
-                new SelectMenuComponent("chase_pig_help_selection", options.ToImmutableArray(), localization.ShowHelp, 1,
-                    1)
-            })
-        };
-
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
-                components: components);
-
-        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 }

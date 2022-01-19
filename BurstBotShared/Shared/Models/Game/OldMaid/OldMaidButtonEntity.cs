@@ -46,15 +46,15 @@ public class OldMaidButtonEntity : IButtonInteractiveEntity
         
         if (playerState?.TextChannel == null) return Result.FromSuccess();
 
-        return await ShowHelpText();
+        return await ShowHelpText(_context, _state, _interactionApi);
     }
-
-    private async Task<Result> ShowHelpText()
+    
+    public static async Task<Result> ShowHelpText(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
     {
-        var localization = _state.Localizations.GetLocalization().OldMaid;
+        var localization = state.Localizations.GetLocalization().OldMaid;
 
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
                 localization.CommandList["draw"]);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();

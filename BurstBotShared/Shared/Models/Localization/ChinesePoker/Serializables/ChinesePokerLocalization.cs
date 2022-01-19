@@ -79,6 +79,7 @@ public record ChinesePokerLocalization : ILocalization<ChinesePokerLocalization>
     [JsonPropertyName("backStraightFlush")] public string BackStraightFlush { get; init; } = "";
     [JsonPropertyName("natural")] public string Natural { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
+    [JsonPropertyName("about")] public string About { get; init; } = "";
     
     public Dictionary<string, string> AvailableCommands => CommandList;
 };
