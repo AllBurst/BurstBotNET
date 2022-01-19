@@ -410,9 +410,9 @@ public partial class NinetyNine : NinetyNineGame
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
                 };
 
-                var components = BuildComponents(playerState, gameState, localization,
+                var component = BuildComponents(playerState, gameState, localization,
                     out _);
-                if(components == null)
+                if(component == null)
                 {
                     embed = embed with
                     {
@@ -431,7 +431,7 @@ public partial class NinetyNine : NinetyNineGame
                         .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: new[] { embed },
                         attachments: attachment,
-                        components: components);
+                        components: component);
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);

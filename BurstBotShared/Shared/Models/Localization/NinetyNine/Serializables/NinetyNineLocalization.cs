@@ -26,8 +26,9 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("cards")] public string Cards { get; init; } = "";
     [JsonPropertyName("play")] public string Play { get; init; } = "";
     [JsonPropertyName("playMessage")] public string PlayMessage { get; init; } = "";
+
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
-
+    [JsonPropertyName("selectPlayerMessage")] public string SelectPlayerMessage { get; init; } = "";
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

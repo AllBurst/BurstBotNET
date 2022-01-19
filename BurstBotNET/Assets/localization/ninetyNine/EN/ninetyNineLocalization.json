@@ -14,5 +14,6 @@
   "play": "Play",
   "playMessage": "{previousPlayerName} played a {card}!",
   "turnMessageTitle": "It's {possessive} turn!",
+  "selectPlayerMessage": "Select a player",
   "showHelp": "Show help texts"
 }
