@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text.Json;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChaseThePig;
@@ -14,7 +15,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.ChaseThePig;
 
-public class ChasePigButtonEntity : IButtonInteractiveEntity
+public class ChasePigButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly InteractionContext _context;

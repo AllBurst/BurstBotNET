@@ -197,9 +197,9 @@ public static class BurstExtensions
                     case SelectMenuComponent menu:
                     {
                         if (!idsToRemove.IsEmpty && idsToRemove.Contains(menu.CustomID))
-                            newActionRow.Add(menu with { IsDisabled = disableAll ? true : menu.IsDisabled });
+                            newActionRow.Add(menu with { IsDisabled = true });
                         else
-                            newActionRow.Add(menu);
+                            newActionRow.Add(menu with { IsDisabled = disableAll ? true : menu.IsDisabled });
                         break;
                     }
                 }

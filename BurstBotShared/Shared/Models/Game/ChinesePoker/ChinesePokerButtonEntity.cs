@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
-public class ChinesePokerButtonEntity : IButtonInteractiveEntity
+public class ChinesePokerButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;

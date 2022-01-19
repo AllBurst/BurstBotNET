@@ -255,34 +255,6 @@ public partial class ChinesePoker : ChinesePokerGame
         }
     }
 
-    public static async Task AddPlayerState(string gameId, Snowflake guild,
-        ChinesePokerPlayerState playerState, GameStates gameStates)
-    {
-        var state = gameStates
-            .ChinesePokerGameStates
-            .Item1
-            .GetOrAdd(gameId, new ChinesePokerGameState());
-        state.Players.GetOrAdd(playerState.PlayerId, playerState);
-        state.Guilds.Add(guild);
-        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
-
-        if (playerState.TextChannel == null)
-            return;
-
-        gameStates.ChinesePokerGameStates.Item2.Add(playerState.TextChannel.ID);
-        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
-            {
-                AvatarUrl = playerState.AvatarUrl,
-                ChannelId = playerState.TextChannel.ID.Value,
-                ClientType = ClientType.Discord,
-                GameId = gameId,
-                PlayerId = playerState.PlayerId,
-                PlayerName = playerState.PlayerName
-            })));
-    }
-
     public static async Task<bool> HandleProgressChange(
         RawChinesePokerGameState deserializedIncomingData,
         ChinesePokerGameState gameState,

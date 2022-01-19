@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Globalization;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables;
@@ -12,7 +13,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.RedDotsPicking;
 
-public class RedDotsButtonEntity : IButtonInteractiveEntity
+public class RedDotsButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;

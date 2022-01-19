@@ -1,3 +1,4 @@
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
 using Remora.Discord.API.Abstractions.Objects;
@@ -8,7 +9,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.OldMaid;
 
-public class OldMaidButtonEntity : IButtonInteractiveEntity
+public class OldMaidButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
@@ -46,10 +47,10 @@ public class OldMaidButtonEntity : IButtonInteractiveEntity
         
         if (playerState?.TextChannel == null) return Result.FromSuccess();
 
-        return await ShowHelpText(_context, _state, _interactionApi);
+        return await ShowHelpMenu(_context, _state, _interactionApi);
     }
     
-    public static async Task<Result> ShowHelpText(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
     {
         var localization = state.Localizations.GetLocalization().OldMaid;
 

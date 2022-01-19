@@ -204,4 +204,21 @@ public static class Utilities
                 "Failed to remove components from the original message: {Reason}, inner: {Inner}",
                 editResult.Error.Message, editResult.Inner);
     }
+
+    public static async Task<OneOf<FileData, IPartialAttachment>[]> BuildRepeatedAttachment(
+        Stream originalImage,
+        string fileName)
+    {
+        await using var imageCopy = new MemoryStream((int)originalImage.Length);
+        await originalImage.CopyToAsync(imageCopy);
+        originalImage.Seek(0, SeekOrigin.Begin);
+        imageCopy.Seek(0, SeekOrigin.Begin);
+
+        var attachments = new OneOf<FileData, IPartialAttachment>[]
+        {
+            new FileData(fileName, imageCopy)
+        };
+
+        return attachments;
+    }
 }

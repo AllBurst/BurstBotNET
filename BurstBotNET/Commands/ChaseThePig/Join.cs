@@ -1,11 +1,13 @@
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChaseThePig.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.ChaseThePig;
@@ -26,12 +28,25 @@ public partial class ChaseThePig
         {
             case GenericJoinStatusType.Start:
             {
-                var result = await Game.GenericStartGame(
-                    _context, joinResult.Reply, joinResult.InvokingMember, joinResult.BotUser,
-                    joinResult.JoinStatus, GameName, "/chase_the_pig/join/confirm",
-                    joinResult.MentionedPlayers.Select(s => s.Value),
-                    _state, 4, _interactionApi, _channelApi,
-                    _guildApi, _logger);
+                var startGameData = new GenericStartGameData
+                {
+                    BotUser = joinResult.BotUser,
+                    ChannelApi = _channelApi,
+                    ConfirmationEndpoint = "/chase_the_pig/join/confirm",
+                    Context = _context,
+                    GameName = GameName,
+                    GuildApi = _guildApi,
+                    InteractionApi = _interactionApi,
+                    InvokingMember = joinResult.InvokingMember,
+                    JoinStatus = joinResult.JoinStatus,
+                    Logger = _logger,
+                    State = _state,
+                    PlayerIds = joinResult.MentionedPlayers.Select(s => s.Value),
+                    MinPlayerCount = 4,
+                    Reply = joinResult.Reply
+                };
+
+                var result = await Game.GenericStartGame(startGameData);
                 
                 if (!result.HasValue) return Result.FromSuccess();
 
@@ -54,31 +69,7 @@ public partial class ChaseThePig
                         TextChannel = textChannel
                     };
 
-                    await ChasePigGame.AddPlayerState(matchData.GameId ?? "", guild.Value, playerState, new ChasePigInGameRequest
-                    {
-                        AvatarUrl = playerState.AvatarUrl,
-                        ChannelId = playerState.TextChannel!.ID.Value,
-                        ClientType = ClientType.Discord,
-                        GameId = playerState.GameId,
-                        PlayerId = playerState.PlayerId,
-                        PlayerName = playerState.PlayerName,
-                        RequestType = ChasePigInGameRequestType.Deal
-                    }, _state.GameStates.ChasePigGameStates.Item1, _state.GameStates.ChasePigGameStates.Item2);
-
-                    _ = Task.Run(() => ChasePigGame.StartListening(matchData.GameId ?? "",
-                        _state.GameStates.ChasePigGameStates,
-                        GameName,
-                        ChasePigGameProgress.NotAvailable,
-                        ChasePigGameProgress.Starting,
-                        ChasePigGameProgress.Closed,
-                        ChasePigGame.InGameRequestTypes,
-                        ChasePigInGameRequestType.Close,
-                        Game.GenericOpenWebSocketSession,
-                        Game.GenericCloseGame,
-                        _state,
-                        _channelApi,
-                        _guildApi,
-                        _logger));
+                    await AddPlayerStateAndStartListening(matchData, playerState, guild.Value);
                 }
                 
                 break;
@@ -124,32 +115,7 @@ public partial class ChaseThePig
                     TextChannel = textChannel
                 };
 
-                await ChasePigGame.AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, playerState,
-                    new ChasePigInGameRequest
-                    {
-                        AvatarUrl = playerState.AvatarUrl,
-                        ChannelId = playerState.TextChannel!.ID.Value,
-                        ClientType = ClientType.Discord,
-                        GameId = playerState.GameId,
-                        PlayerId = playerState.PlayerId,
-                        PlayerName = playerState.PlayerName,
-                        RequestType = ChasePigInGameRequestType.Deal
-                    }, _state.GameStates.ChasePigGameStates.Item1, _state.GameStates.ChasePigGameStates.Item2);
-                
-                _ = Task.Run(() => ChasePigGame.StartListening(joinResult.JoinStatus.GameId ?? "",
-                    _state.GameStates.ChasePigGameStates,
-                    GameName,
-                    ChasePigGameProgress.NotAvailable,
-                    ChasePigGameProgress.Starting,
-                    ChasePigGameProgress.Closed,
-                    ChasePigGame.InGameRequestTypes,
-                    ChasePigInGameRequestType.Close,
-                    Game.GenericOpenWebSocketSession,
-                    Game.GenericCloseGame,
-                    _state,
-                    _channelApi,
-                    _guildApi,
-                    _logger));
+                await AddPlayerStateAndStartListening(joinResult.JoinStatus, playerState, guild.Value);
                 
                 break;
             }
@@ -177,38 +143,7 @@ public partial class ChaseThePig
 
                         var (matchData, playerStates) = waitingResult.Value;
                         foreach (var player in playerStates)
-                        {
-
-                            await ChasePigGame.AddPlayerState(matchData.GameId ?? "", guild.Value, player,
-                                new ChasePigInGameRequest
-                                {
-                                    AvatarUrl = player.AvatarUrl,
-                                    ChannelId = player.TextChannel!.ID.Value,
-                                    ClientType = ClientType.Discord,
-                                    GameId = player.GameId,
-                                    PlayerId = player.PlayerId,
-                                    PlayerName = player.PlayerName,
-                                    RequestType = ChasePigInGameRequestType.Deal
-                                }, _state.GameStates.ChasePigGameStates.Item1,
-                                _state.GameStates.ChasePigGameStates.Item2);
-                            
-                            await Task.Delay(TimeSpan.FromSeconds(1));
-                            
-                            _ = Task.Run(() => ChasePigGame.StartListening(matchData.GameId ?? "",
-                                _state.GameStates.ChasePigGameStates,
-                                GameName,
-                                ChasePigGameProgress.NotAvailable,
-                                ChasePigGameProgress.Starting,
-                                ChasePigGameProgress.Closed,
-                                ChasePigGame.InGameRequestTypes,
-                                ChasePigInGameRequestType.Close,
-                                Game.GenericOpenWebSocketSession,
-                                Game.GenericCloseGame,
-                                _state,
-                                _channelApi,
-                                _guildApi,
-                                _logger));
-                        }
+                            await AddPlayerStateAndStartListening(matchData, player, guild.Value);
                     }
                     catch (Exception ex)
                     {
@@ -220,5 +155,37 @@ public partial class ChaseThePig
         }
 
         return Result.FromSuccess();
+    }
+    
+    public async Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, ChasePigPlayerState playerState, Snowflake guild)
+    {
+        await ChasePigGame.AddPlayerState(joinStatus?.GameId ?? "", guild, playerState, new ChasePigInGameRequest
+            {
+                AvatarUrl = playerState.AvatarUrl,
+                ChannelId = playerState.TextChannel!.ID.Value,
+                ClientType = ClientType.Discord,
+                GameId = joinStatus?.GameId ?? "",
+                PlayerId = playerState.PlayerId,
+                PlayerName = playerState.PlayerName,
+                RequestType = ChasePigInGameRequestType.Deal
+            }, _state.GameStates.ChasePigGameStates.Item1,
+            _state.GameStates.ChasePigGameStates.Item2);
+        
+        await Task.Delay(TimeSpan.FromSeconds(1));
+
+        _ = Task.Run(() => ChasePigGame.StartListening(joinStatus?.GameId ?? "",
+            _state.GameStates.ChasePigGameStates,
+            GameName,
+            ChasePigGameProgress.NotAvailable,
+            ChasePigGameProgress.Starting,
+            ChasePigGameProgress.Closed,
+            ChasePigGame.InGameRequestTypes,
+            ChasePigInGameRequestType.Close,
+            Game.GenericOpenWebSocketSession,
+            Game.GenericCloseGame,
+            _state,
+            _channelApi,
+            _guildApi,
+            _logger));
     }
 }

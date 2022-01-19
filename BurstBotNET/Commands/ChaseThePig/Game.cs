@@ -16,6 +16,7 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Rest.Core;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.ChaseThePig;
@@ -679,14 +680,14 @@ public partial class ChaseThePig : ChasePigGame
 
             await using var imageCopy = new MemoryStream((int)renderedCard.Length);
             await renderedCard.CopyToAsync(imageCopy);
-            renderedCard.Seek(0, SeekOrigin.Begin);
+            imageCopy.Seek(0, SeekOrigin.Begin);
             imageCopy.Seek(0, SeekOrigin.Begin);
 
             var attachments = new OneOf<FileData, IPartialAttachment>[]
             {
                 new FileData(randomFileName, imageCopy)
             };
-
+            
             var sendResult = await channelApi
                 .CreateMessageAsync(player.TextChannel.ID,
                     embeds: new[] { embed },

@@ -59,7 +59,7 @@ public class Help : CommandGroup
             GameType.BlackJack => await BlackJackButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChinesePoker => await ChinesePokerButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.NinetyNine => Result.FromSuccess(),
-            GameType.OldMaid => await OldMaidButtonEntity.ShowHelpText(_context, _state, _interactionApi),
+            GameType.OldMaid => await OldMaidButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.RedDotsPicking => await RedDotsButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChaseThePig => await ChasePigButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()

@@ -14,6 +14,7 @@ public static class SkiaService
     private const int MaxWidth = 2048;
     private const int Quality = 95;
     private const int Padding = 50;
+    private const SKEncodedImageFormat ImageFormat = SKEncodedImageFormat.Jpeg;
     
     /// <summary>
     /// Render a full deck of cards horizontally.
@@ -54,7 +55,7 @@ public static class SkiaService
         }
         
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        surface.Snapshot().Encode(ImageFormat, Quality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
@@ -114,7 +115,7 @@ public static class SkiaService
         }
 
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        surface.Snapshot().Encode(ImageFormat, Quality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
@@ -179,7 +180,7 @@ public static class SkiaService
         }
 
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        surface.Snapshot().Encode(ImageFormat, Quality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
@@ -245,7 +246,7 @@ public static class SkiaService
         }
 
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        surface.Snapshot().Encode(ImageFormat, Quality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }
@@ -319,7 +320,7 @@ public static class SkiaService
         }
         
         var stream = new MemoryStream();
-        surface.Snapshot().Encode(SKEncodedImageFormat.Jpeg, Quality).SaveTo(stream);
+        surface.Snapshot().Encode(ImageFormat, Quality).SaveTo(stream);
         stream.Seek(0, SeekOrigin.Begin);
         return stream;
     }

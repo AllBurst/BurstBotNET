@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
-public class BlackJackButtonEntity : IButtonInteractiveEntity
+public class BlackJackButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
