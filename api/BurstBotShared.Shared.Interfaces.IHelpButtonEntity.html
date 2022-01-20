@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum NinetyNineDirection
+    <title>Interface IHelpButtonEntity
    | Jack of All Trades </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum NinetyNineDirection
+    <meta name="title" content="Interface IHelpButtonEntity
    | Jack of All Trades ">
     <meta name="generator" content="docfx 2.58.9.0">
     
@@ -78,39 +78,78 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDirection">
+            <article class="content wrap" id="_content" data-uid="BurstBotShared.Shared.Interfaces.IHelpButtonEntity">
   
   
-  <h1 id="BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineDirection" data-uid="BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDirection" class="text-break">Enum NinetyNineDirection
+  <h1 id="BurstBotShared_Shared_Interfaces_IHelpButtonEntity" data-uid="BurstBotShared.Shared.Interfaces.IHelpButtonEntity" class="text-break">Interface IHelpButtonEntity
   </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.html">BurstBotShared.Shared.Models.Game.NinetyNine.Serializables</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="BurstBotShared.Shared.Interfaces.html">BurstBotShared.Shared.Interfaces</a></h6>
   <h6><strong>Assembly</strong>: BurstBotShared.dll</h6>
-  <h5 id="BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineDirection_syntax">Syntax</h5>
+  <h5 id="BurstBotShared_Shared_Interfaces_IHelpButtonEntity_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum NinetyNineDirection</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IHelpButtonEntity</code></pre>
   </div>
-  <h3 id="fields">Fields
+  <h3 id="methods">Methods
   </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IHelpButtonEntity_ShowHelpMenu_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IHelpButtonEntity.ShowHelpMenu(Remora.Discord.Commands.Contexts.InteractionContext%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Interfaces/IHelpButtonEntity.cs/#L10">View Source</a>
+  </span>
+  <a id="BurstBotShared_Shared_Interfaces_IHelpButtonEntity_ShowHelpMenu_" data-uid="BurstBotShared.Shared.Interfaces.IHelpButtonEntity.ShowHelpMenu*"></a>
+  <h4 id="BurstBotShared_Shared_Interfaces_IHelpButtonEntity_ShowHelpMenu_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_" data-uid="BurstBotShared.Shared.Interfaces.IHelpButtonEntity.ShowHelpMenu(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI)">ShowHelpMenu(InteractionContext, State, IDiscordRestInteractionAPI)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">static Task&lt;Result&gt; ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
+        <th>Type</th>
         <th>Name</th>
         <th>Description</th>
       </tr>
-    <thead>
+    </thead>
     <tbody>
       <tr>
-        <td id="BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineDirection_Clockwise">Clockwise</td>
+        <td><span class="xref">Remora.Discord.Commands.Contexts.InteractionContext</span></td>
+        <td><span class="parametername">context</span></td>
         <td></td>
       </tr>
       <tr>
-        <td id="BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineDirection_Counterclockwise">Counterclockwise</td>
+        <td><a class="xref" href="BurstBotShared.Shared.Models.Data.State.html">State</a></td>
+        <td><span class="parametername">state</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI</span></td>
+        <td><span class="parametername">interactionApi</span></td>
         <td></td>
       </tr>
     </tbody>
-  </thead></thead></table>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">Remora.Results.Result</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           
@@ -119,10 +158,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/ninety_nine/apiSpec/new?filename=BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineDirection.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineDirection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/AllBurst/BurstBotNET/new/dev/red_dots_chase_pig/apiSpec/new?filename=BurstBotShared_Shared_Interfaces_IHelpButtonEntity.md&amp;value=---%0Auid%3A%20BurstBotShared.Shared.Interfaces.IHelpButtonEntity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/ninety_nine/BurstBotShared/Shared/Models/Game/NinetyNine/Serializables/NinetyNineDirection.cs/#L2" class="contribution-link">View Source</a>
+                    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/red_dots_chase_pig/BurstBotShared/Shared/Interfaces/IHelpButtonEntity.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
