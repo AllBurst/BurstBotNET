@@ -6,6 +6,7 @@ using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
+using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -133,5 +134,91 @@ public static class Utilities
             });
         playerState = pState;
         return gameState;
+    }
+
+    public static bool HandleException(Exception exception, string messageContent, SemaphoreSlim semaphore, ILogger logger)
+    {
+        logger.LogError("An exception occurred when handling progress/ending result: {Exception}", exception);
+        logger.LogError("Exception message: {Message}", exception.Message);
+        logger.LogError("Source: {Source}", exception.Source);
+        logger.LogError("Stack trace: {Trace}", exception.StackTrace);
+        logger.LogError("Message content: {Content}", messageContent);
+        
+        if (semaphore.CurrentCount <= 0) return false;
+        
+        semaphore.Release();
+        logger.LogDebug("Semaphore released in an exception");
+        return false;
+    }
+
+    public static async Task<IChannel?> TryGetTextChannel(
+        IEnumerable<Snowflake> guilds,
+        ulong channelId,
+        IDiscordRestGuildAPI guildApi)
+    {
+        foreach (var guild in guilds)
+        {
+            var getChannelsResult = await guildApi
+                .GetGuildChannelsAsync(guild);
+            if (!getChannelsResult.IsSuccess) continue;
+            var channels = getChannelsResult.Entity;
+            if (!channels.Any()) continue;
+            var textChannel = channels
+                .FirstOrDefault(c => c.ID.Value == channelId);
+            if (textChannel == null) continue;
+            return textChannel;
+        }
+
+        return null;
+    }
+    
+    public static Card ExtractCard(IEnumerable<string> values)
+    {
+        var selection = values.FirstOrDefault()!;
+        var suit = selection[..1];
+        var rank = selection[1..];
+        var playedCard = Card.Create(suit, rank);
+        return playedCard;
+    }
+
+    public static async Task DisableComponents(
+        IMessage message,
+        bool disableAll,
+        IDiscordRestChannelAPI channelApi,
+        ILogger logger,
+        CancellationToken ct,
+        IEnumerable<string>? customIds = null)
+    {
+        var originalEmbeds = message.Embeds;
+        var originalAttachments = message.Attachments
+            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
+        var originalComponents = message.Components.Disable(disableAll, customIds);
+        var editResult = await channelApi
+            .EditMessageAsync(message.ChannelID, message.ID,
+                embeds: originalEmbeds.ToImmutableArray(),
+                attachments: originalAttachments.ToImmutableArray(),
+                components: originalComponents,
+                ct: ct);
+        if (!editResult.IsSuccess)
+            logger.LogError(
+                "Failed to remove components from the original message: {Reason}, inner: {Inner}",
+                editResult.Error.Message, editResult.Inner);
+    }
+
+    public static async Task<OneOf<FileData, IPartialAttachment>[]> BuildRepeatedAttachment(
+        Stream originalImage,
+        string fileName)
+    {
+        await using var imageCopy = new MemoryStream((int)originalImage.Length);
+        await originalImage.CopyToAsync(imageCopy);
+        originalImage.Seek(0, SeekOrigin.Begin);
+        imageCopy.Seek(0, SeekOrigin.Begin);
+
+        var attachments = new OneOf<FileData, IPartialAttachment>[]
+        {
+            new FileData(fileName, imageCopy)
+        };
+
+        return attachments;
     }
 }

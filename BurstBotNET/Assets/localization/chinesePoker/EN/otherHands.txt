@@ -2,15 +2,15 @@ The {hand} consists of 5 cards in total. Players are required to set 5 cards in 
 
 Since {hand} has 5 cards, possible combinations are as follows.
 
-<:burst_spade:910826637657010226> **High card**: 5 different cards in terms of numbers (ranks) and suits.
-<:burst_heart:910826529511051284> **One pair**: 2 cards with the same rank, plus 3 card with different ranks.
-<:burst_diamond:910826609576140821> **Two pairs**: 2 cards with the same rank, 2 cards with another same rank, plus 1 card with a different rank.
-<:burst_club:910826578336948234> **Three of a kind**: 3 cards with the same rank, plus 2 cards with different ranks.
-<:burst_spade:910826637657010226> **Straight**: 5 cards of sequential ranks. Ace (A) comes after the King (K), i.e. *10, J, Q, K, A* is a straight.
-<:burst_heart:910826529511051284> **Flush**: 5 cards of the same suit.
-<:burst_diamond:910826609576140821> **Full house**: 3 cards with the same rank, plus 2 cards with another same rank. E.g. *3 3 3 J J*. **Setting your middle hand with a Full-house and win against another player's middle hand will grant you additional 2 units.** 
-<:burst_club:910826578336948234> **Four of a kind**: 4 cards with the same rank, plus 1 card with a different rank. E.g. *6 6 6 6 Q*. **Setting your middle hand with a Four-of-a-kind and win against another player's middle hand will grant you additional 8 units. If you set it in your back hand, the additional units are halved.**
-<:burst_spade:910826637657010226> **Straight flush**: 5 cards with the same suit and sequential ranks. **Setting your middle hand with a Straight-flush and win against another player's middle hand will grant you additional 10 units. If you set it in your back hand, the additional units are halved.**
+<:burst_spade2:930749903158792192> **High card**: 5 different cards in terms of numbers (ranks) and suits.
+<:burst_heart2:930749955914727474> **One pair**: 2 cards with the same rank, plus 3 card with different ranks.
+<:burst_diamond2:930749987044851712> **Two pairs**: 2 cards with the same rank, 2 cards with another same rank, plus 1 card with a different rank.
+<:burst_club2:930750022167957504> **Three of a kind**: 3 cards with the same rank, plus 2 cards with different ranks.
+<:burst_spade2:930749903158792192> **Straight**: 5 cards of sequential ranks. Ace (A) comes after the King (K), i.e. *10, J, Q, K, A* is a straight.
+<:burst_heart2:930749955914727474> **Flush**: 5 cards of the same suit.
+<:burst_diamond2:930749987044851712> **Full house**: 3 cards with the same rank, plus 2 cards with another same rank. E.g. *3 3 3 J J*. **Setting your middle hand with a Full-house and win against another player's middle hand will grant you additional 2 units.** 
+<:burst_club2:930750022167957504> **Four of a kind**: 4 cards with the same rank, plus 1 card with a different rank. E.g. *6 6 6 6 Q*. **Setting your middle hand with a Four-of-a-kind and win against another player's middle hand will grant you additional 8 units. If you set it in your back hand, the additional units are halved.**
+<:burst_spade2:930749903158792192> **Straight flush**: 5 cards with the same suit and sequential ranks. **Setting your middle hand with a Straight-flush and win against another player's middle hand will grant you additional 10 units. If you set it in your back hand, the additional units are halved.**
 
 **Be careful! Your middle hand has to be smaller than or equal to your back hand; otherwise, it's a mis-set.**
 For example, you should not put a four-of-a-kind in your middle hand, then put a full-house in your back hand.

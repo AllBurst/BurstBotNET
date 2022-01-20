@@ -1,0 +1,20 @@
+As a general rule:
+1. Nearly all <:burst_heart2:930749955914727474> Hearts have negative points. The detail is as following.
+<:burst_heart2:930749955914727474> **Heart 2 to Heart 4** - 0 point
+<:burst_heart2:930749955914727474> **Heart 5 to Heart 10** - Negative 10 (-10) points
+<:burst_heart2:930749955914727474> **Heart J** - Negative 20 (-20) points
+<:burst_heart2:930749955914727474> **Heart Q** - Negative 30 (-30) points
+<:burst_heart2:930749955914727474> **Heart K** - Negative 40 (-40) points
+<:burst_heart2:930749955914727474> **Heart A** - Negative 50 (-50) points
+
+2. <:burst_spade2:930749903158792192> **Spade Q** is the **Pig**. It has negative 100 (-100) points.
+
+3. <:burst_diamond2:930749987044851712> **Diamond J** is the **Goat**. It has positive 100 (100) points.
+
+4. <:burst_club2:930750022167957504> **Club 10** is the **Transformer**. When acquired alone with other non-scoring cards, it will grant the owner +50 points. However, if the player also has any other scoring cards, all positive and negative points of that player will be doubled.
+
+5. **All Red**
+If a player manages to collect all <:burst_heart2:930749955914727474> Hearts (including non-scoring Hearts), all hearts will become positive points.
+
+6. **Greatest Win**
+If a player manages to collect all <:burst_heart2:930749955914727474> Hearts, <:burst_spade2:930749903158792192> Spade Q, <:burst_diamond2:930749987044851712> Diamond J and <:burst_club2:930750022167957504> Club 10, all cards including the Pig will become positive points and further doubled by <:burst_club2:930750022167957504> Club 10. 

@@ -31,6 +31,7 @@ public record OldMaidLocalization : ILocalization<OldMaidLocalization>
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
     
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
+    [JsonPropertyName("about")] public string About { get; init; } = "";
     
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

@@ -15,5 +15,6 @@
   "drawMessage": "{previousPlayerName} drew a {card} from {ppPlayerName}.",
   "throwMessage": "{previousPlayerName} threw away a pair of {rank}!",
   "turnMessageTitle": "It's {possessive} turn!",
-  "showHelp": "Show help texts"
+  "showHelp": "Show help texts",
+  "about": "About Old Maid"
 }

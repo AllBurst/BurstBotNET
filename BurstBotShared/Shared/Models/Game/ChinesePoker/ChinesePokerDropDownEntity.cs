@@ -60,6 +60,17 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
     {
         var hasMessage = _context.Message.IsDefined(out var message);
         if (!hasMessage) return Result.FromSuccess();
+
+        if (_state.GameStates.ChinesePokerGameStates.Item2.Contains(_context.ChannelID))
+        {
+            var _ = Utilities.Utilities
+                .GetGameState<ChinesePokerGameState, ChinesePokerPlayerState, ChinesePokerGameProgress>(user,
+                    _state.GameStates.ChinesePokerGameStates.Item1,
+                    _state.GameStates.ChinesePokerGameStates.Item2,
+                    _context,
+                    out var playerState);
+            if (playerState == null) return Result.FromSuccess();
+        }
         
         var sanitizedCustomId = customId.Trim();
 
@@ -67,7 +78,7 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
         {
             "chinese_poker_cards" => await HandleSelectCards(message!, user, values, ct),
             "naturals" => await HandleSelectNatural(message!, user, values, ct),
-            "chinese_poker_help_selections" => await ShowHelpTexts(user, values, ct),
+            "chinese_poker_help_selections" => await ShowHelpTexts(values, ct),
             _ => Result.FromSuccess()
         };
     }
@@ -120,7 +131,7 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
         }
         
         var cards = cardMatches
-            .Select(m => Card.CreateCard(m.Groups[1].Value, m.Groups[2].Value))
+            .Select(m => Card.Create(m.Groups[1].Value, m.Groups[2].Value))
             .ToImmutableArray()
             .Sort((a, b) => a.GetChinesePokerValue().CompareTo(b.GetChinesePokerValue()));
         
@@ -221,16 +232,9 @@ public class ChinesePokerDropDownEntity : ISelectMenuInteractiveEntity
         return !deleteResult.IsSuccess ? Result.FromError(deleteResult.Error) : Result.FromSuccess();
     }
 
-    private async Task<Result> ShowHelpTexts(IUser user, IEnumerable<string> values, CancellationToken ct)
+    private async Task<Result> ShowHelpTexts(IEnumerable<string> values, CancellationToken ct)
     {
         var localization = _state.Localizations.GetLocalization().ChinesePoker;
-        var _ = Utilities.Utilities
-            .GetGameState<ChinesePokerGameState, ChinesePokerPlayerState, ChinesePokerGameProgress>(user,
-                _state.GameStates.ChinesePokerGameStates.Item1,
-                _state.GameStates.ChinesePokerGameStates.Item2,
-                _context,
-                out var playerState);
-        if (playerState == null) return Result.FromSuccess();
 
         var selection = values.FirstOrDefault();
         if (string.IsNullOrWhiteSpace(selection)) return Result.FromSuccess();

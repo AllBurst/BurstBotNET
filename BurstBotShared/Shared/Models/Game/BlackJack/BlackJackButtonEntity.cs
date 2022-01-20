@@ -1,10 +1,8 @@
-using System.Collections.Immutable;
 using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
 using Microsoft.Extensions.Logging;
-using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
@@ -14,7 +12,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
-public class BlackJackButtonEntity : IButtonInteractiveEntity
+public class BlackJackButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
@@ -41,7 +39,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         BlackJackPlayerState playerState,
         int raiseBet,
         IDiscordRestChannelAPI channelApi,
-        ILogger logger)
+        ILogger logger,
+        CancellationToken ct)
     {
         var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
             new BlackJackInGameRequest
@@ -51,8 +50,8 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
                 PlayerId = playerState.PlayerId,
                 Bets = raiseBet
             }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
-        await DeleteComponent(playerState.MessageReference!, channelApi, logger);
+        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, channelApi, logger, ct);
     }
     
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -84,79 +83,38 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
         switch (sanitizedCustomId)
         {
             case "draw":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Draw);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Draw, ct);
                 break;
             case "stand":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Stand);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Stand, ct);
                 break;
             case "fold":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Fold);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Fold, ct);
                 break;
             case "call":
-                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Call);
+                await SendGenericData(gameState, playerState, BlackJackInGameRequestType.Call, ct);
                 break;
             case "raise":
                 return await HandleRaise(playerState);
             case "allin":
             {
                 var remainingTips = playerState.OwnTips - playerState.BetTips - gameState.HighestBet;
-                await SendRaiseData(gameState, playerState, (int)remainingTips, _channelApi, _logger);
+                await SendRaiseData(gameState, playerState, (int)remainingTips, _channelApi, _logger, ct);
                 break;
             }
             case "blackjack_help":
-                return await ShowHelpMenu();
+                return await ShowHelpMenu(_context, _state, _interactionApi);
         }
 
         return Result.FromSuccess();
     }
     
-    private async Task SendGenericData(BlackJackGameState gameState,
-        BlackJackPlayerState playerState,
-        BlackJackInGameRequestType requestType)
+    public static async Task<Result> ShowHelpMenu(
+        InteractionContext context,
+        State state,
+        IDiscordRestInteractionAPI interactionApi)
     {
-        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
-            new BlackJackInGameRequest
-            {
-                RequestType = requestType,
-                GameId = gameState.GameId,
-                PlayerId = playerState.PlayerId
-            }));
-        await gameState.Channel!.Writer.WriteAsync(sendData);
-        await DeleteComponent(playerState.MessageReference!, _channelApi, _logger);
-    }
-
-    private async Task<Result> HandleRaise(BlackJackPlayerState playerState)
-    {
-        var localization = _state.Localizations.GetLocalization().BlackJack;
-        playerState.IsRaising = true;
-
-        var result = await _channelApi
-            .CreateMessageAsync(playerState.TextChannel!.ID, localization.RaisePrompt);
-
-        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
-    }
-
-    private static async Task DeleteComponent(IMessage message, IDiscordRestChannelAPI channelApi, ILogger logger)
-    {
-        var originalEmbeds = message.Embeds.ToImmutableArray();
-        var originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1)
-            .ToImmutableArray();
-        var originalComponents = message.Components.Disable();
-
-        var editResult = await channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                embeds: originalEmbeds,
-                attachments: originalAttachments,
-                components: originalComponents);
-        if (!editResult.IsSuccess)
-            logger.LogError("Failed to remove components from the original message: {Reason}, inner: {Inner}",
-                editResult.Error.Message, editResult.Inner);
-    }
-
-    private async Task<Result> ShowHelpMenu()
-    {
-        var localization = _state.Localizations.GetLocalization().BlackJack;
+        var localization = state.Localizations.GetLocalization().BlackJack;
 
         var components = new IMessageComponent[]
         {
@@ -176,10 +134,37 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity
             })
         };
 
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
                 components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
+    }
+    
+    private async Task SendGenericData(BlackJackGameState gameState,
+        BlackJackPlayerState playerState,
+        BlackJackInGameRequestType requestType,
+        CancellationToken ct)
+    {
+        var sendData = new Tuple<ulong, byte[]>(playerState.PlayerId, JsonSerializer.SerializeToUtf8Bytes(
+            new BlackJackInGameRequest
+            {
+                RequestType = requestType,
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId
+            }));
+        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, _channelApi, _logger, ct);
+    }
+
+    private async Task<Result> HandleRaise(BlackJackPlayerState playerState)
+    {
+        var localization = _state.Localizations.GetLocalization().BlackJack;
+        playerState.IsRaising = true;
+
+        var result = await _channelApi
+            .CreateMessageAsync(playerState.TextChannel!.ID, localization.RaisePrompt);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }

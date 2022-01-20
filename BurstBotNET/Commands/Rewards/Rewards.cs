@@ -54,7 +54,7 @@ public class Rewards
                     $"{typeText} Reward",
                     Author: new EmbedAuthor(displayName, IconUrl: invokingUser.GetAvatarUrl()),
                     Colour: color,
-                    Thumbnail: new EmbedThumbnail(bot.GetAvatarUrl()),
+                    Thumbnail: new EmbedThumbnail(Constants.BurstGold),
                     Description: description,
                     Fields: new[] { new EmbedField("Current Tips", rewardResponse.Amount.ToString()) }
                 );

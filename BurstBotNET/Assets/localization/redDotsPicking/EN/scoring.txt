@@ -1,0 +1,18 @@
+Generally, only <:burst_heart2:930749955914727474> Hearts and <:burst_diamond2:930749987044851712> Diamonds are counted into the final score.
+However, **in a 4-player game, <:burst_spade2:930749903158792192> Spade A is 30 points, and <:burst_club2:930750022167957504> Club A is 40 points.**
+
+When the game ends, a player that gets 250 points satisfies a "win-all" (全贏) situation, and automatically gets 420 points as his final score, while all other players' final scores will be -140 points.
+A player that gets 0 points in total (excluding the minus points from a player earning Heart 5 and Diamond 5) when the game ends satisfies a "zero-attempt" (拼零分) situation, and will be rewarded the same way as win-all (while all other players' final scores will also be -140 points.)
+
+If there's neither a win-all situation nor a zero-attempt situation, players' final scores will be calculated according to the total number of players:
+
+1. 2 players - Earned scores minus 105 points.
+2. 3 players - Earned scores minus 70 points.
+3. 4 players - Earned scores minus 70 points.
+
+However, if a player has a negative score before calculating the final score, starting from the player who gets a Heart 5 and a Diamond 5, all players will be yielding their scores to the player(s) with negative scores, until their scores become at least zero.
+The order is as follows, or until all players with negative scores get at least a score of 0, whichever comes first:
+
+1. The player who has got a Heart 5 and a Diamond 5 will yield his scores until his score becomes 70.
+2. The player with the highest score will yield his score until his score is equal to the player who has the second-highest score.
+3. This process continues until it reaches the player who has the lowest positive score, who will then evenly yield his score until all players have at least a score of 0.

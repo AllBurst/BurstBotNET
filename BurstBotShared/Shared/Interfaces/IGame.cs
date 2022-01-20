@@ -3,11 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
@@ -25,11 +27,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
     where TPlayerState: IPlayerState
 {
 #pragma warning disable CA2252
-    static abstract Task AddPlayerState(string gameId,
-        Snowflake guild,
-        TPlayerState playerState,
-        GameStates gameStates);
-
     static abstract Task<bool> HandleProgress(
         string messageContent,
         TState gameState,
@@ -54,6 +51,30 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         IDiscordRestChannelAPI channelApi,
         ILogger logger);
 #pragma warning restore CA2252
+
+    static ImmutableArray<string> InGameRequestTypes => Enum.GetNames<TInGameRequestType>().ToImmutableArray();
+
+    static async Task AddPlayerState<TRequest>(string gameId,
+        Snowflake guild,
+        TPlayerState playerState,
+        TRequest dealRequest,
+        ConcurrentDictionary<string, TState> gameStates,
+        ConcurrentHashSet<Snowflake> textChannels) where TRequest: IGenericDealData
+    {
+        var state = gameStates
+            .GetOrAdd(gameId, new TState());
+        state.Players.GetOrAdd(playerState.PlayerId, playerState);
+        state.Guilds.Add(guild);
+        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
+
+        if (playerState.TextChannel == null) return;
+
+        textChannels.Add(playerState.TextChannel.ID);
+        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
+        Console.WriteLine("Successfully write to channel.");
+    }
 
     static async Task StartListening(
         string gameId,
@@ -118,7 +139,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             _ = Task.Run(() =>
             {
                 timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task cancelled");
                 timeoutCancellationTokenSource.Dispose();
             });
         }
@@ -148,7 +168,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         gameStateTuple.Item1.Remove(gameState.GameId, out _);
         socketSession.Dispose();
     }
-    
+
     static async Task RunChannelTask(WebSocket socketSession,
         TState state,
         IEnumerable<string> inGameRequestTypes,
@@ -158,6 +178,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         CancellationTokenSource cancellationTokenSource)
     {
         var channelMessage = await state.Channel!.Reader.ReadAsync();
+        Console.WriteLine("Successfully read from channel.");
         var (playerId, payload) = channelMessage;
         var operation =
             await HandleChannelMessage(playerId, payload, socketSession, state, inGameRequestTypes, closeRequestType, closedProgress, logger, cancellationTokenSource.Token);
@@ -217,9 +238,8 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             logger.LogDebug("Game timed out due to inactivity");
             state.Progress = closedProgress;
         }
-        catch (TaskCanceledException ex)
+        catch (TaskCanceledException)
         {
-            logger.LogDebug("Timeout task has been cancelled: {@Exception}", ex);
         }
         catch (ObjectDisposedException ex)
         {
@@ -263,4 +283,10 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         logger.LogDebug("Received close response. Closing the session...");
         return SocketOperation.Close;
     }
+
+    Task AddPlayerStateAndStartListening(
+        GenericJoinStatus? joinStatus,
+        TPlayerState playerState,
+        Snowflake guild
+    );
 }

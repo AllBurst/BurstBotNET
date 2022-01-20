@@ -35,7 +35,7 @@ public class MessageResponder : IResponder<IMessageCreate>
             _ = Task.Run(async () =>
             {
                 await BlackJack.HandleBlackJackMessage(gatewayEvent, _state.GameStates,
-                    gatewayEvent.ChannelID, _state.Localizations, _channelApi, _logger);
+                    gatewayEvent.ChannelID, _state.Localizations, _channelApi, _logger, ct);
             }, ct);
         }
         

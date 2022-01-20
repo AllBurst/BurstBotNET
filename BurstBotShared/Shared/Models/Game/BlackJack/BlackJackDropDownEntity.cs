@@ -26,7 +26,7 @@ public class BlackJackDropDownEntity : ISelectMenuInteractiveEntity
         _state = state;
     }
     
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new CancellationToken())
+    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
     {
         return componentType is not ComponentType.SelectMenu
             ? Task.FromResult<Result<bool>>(false)
@@ -36,27 +36,31 @@ public class BlackJackDropDownEntity : ISelectMenuInteractiveEntity
     public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
         CancellationToken ct = new())
     {
-        var hasMessage = _context.Message.IsDefined(out var message);
+        var hasMessage = _context.Message.IsDefined(out var _);
         if (!hasMessage) return Result.FromSuccess();
-        
+
+        if (_state.GameStates.BlackJackGameStates.Item2.Contains(_context.ChannelID))
+        {
+            var _ = Utilities.Utilities
+                .GetGameState<BlackJackGameState, BlackJackPlayerState, BlackJackGameProgress>(user,
+                    _state.GameStates.BlackJackGameStates.Item1,
+                    _state.GameStates.BlackJackGameStates.Item2,
+                    _context,
+                    out var playerState);
+            if (playerState == null) return Result.FromSuccess();
+        }
+
         var sanitizedCustomId = customId.Trim();
         
         if (!string.Equals(sanitizedCustomId, "blackjack_help_selections")) return Result.FromSuccess();
 
-        return await ShowHelpTexts(user, values, ct);
+        return await ShowHelpTexts(values, ct);
     }
     
-    private async Task<Result> ShowHelpTexts(IUser user, IEnumerable<string> values, CancellationToken ct)
+    private async Task<Result> ShowHelpTexts(IEnumerable<string> values, CancellationToken ct)
     {
         var localization = _state.Localizations.GetLocalization().BlackJack;
-        var _ = Utilities.Utilities
-            .GetGameState<BlackJackGameState, BlackJackPlayerState, BlackJackGameProgress>(user,
-                _state.GameStates.BlackJackGameStates.Item1,
-                _state.GameStates.BlackJackGameStates.Item2,
-                _context,
-                out var playerState);
-        if (playerState == null) return Result.FromSuccess();
-
+        
         var selection = values.FirstOrDefault();
         if (string.IsNullOrWhiteSpace(selection)) return Result.FromSuccess();
 

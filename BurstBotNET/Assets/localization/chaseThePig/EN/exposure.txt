@@ -1,0 +1,31 @@
+Exposure is a process during which you can choose to let all other players know that you have certain cards.
+By allowing other players to know that you hold special cards, the effect of the exposed special card will be doubled.
+
+The effect of exposure is global, which means when you hold the card and choose to expose it, during the game whoever wins a turn and gets that card will be subject to the effect of exposure.
+**Since <:burst_heart2:930749955914727474> Heart A affects all Hearts, when exposed, all Hearts won by each player will be doubled.**
+
+In addition, if the card you choose to expose is the first card you got (which can be seen in the initial message of the game), the effect will be further doubled.
+The following is the effects of each special card and the intensified effects thereof after they are exposed.
+
+<:burst_spade2:930749903158792192> **Spade Q (Pig)**
+- *Not exposed* - Negative 100 (-100) points
+- *Exposed* - Negative 200 (-200) points
+- *Exposed as the first card* - Negative 400 points 
+
+<:burst_diamond2:930749987044851712> **Diamond J (Goat)**
+- *Not exposed* - Positive 100 points
+- *Exposed* - Positive 200 points
+- *Exposed as the first card* - Positive 400 points
+
+<:burst_heart2:930749955914727474> **Heart A**
+- *Not exposed* - All Hearts will have their original negative points.
+- *Exposed* - All Hearts' negative points are doubled.
+- *Exposed as the first card* - All Hearts' negative points are doubled again (4x).
+
+<:burst_club2:930750022167957504> **Club 10 (Transformer)**
+- *Not exposed* - All positive and negative points are doubled, or +50 points if acquired alone with other non-scoring cards.
+- *Exposed* - All positive and negative points are multiplied by 4, or +100 points if acquired alone.
+- *Exposed as the first card* - All positive and negative points are multiplied by 8 (2 to the power of 3), or +200 points if acquired alone.
+
+As a general rule, **players who expose their cards won't be able to play that card if the first turn is that suit.**
+For example, if you choose to expose <:burst_spade2:930749903158792192> Spade Q and the first player plays a Spade card in the first turn, you won't be able to play Spade Q in that turn.

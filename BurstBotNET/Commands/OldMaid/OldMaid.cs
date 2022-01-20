@@ -42,8 +42,8 @@ public partial class OldMaid : CommandGroup
     [Command("join")]
     [Description("Request to be enqueued to the waiting list to match with other players.")]
     public async Task<IResult> Handle(
-        [Description("The base bet. The reward will be the number of players multiplied by this.")]
-        float baseBet = 1.0f,
+        [Description("The base bet. The reward will be the number of players multiplied by this. The default is 10.0.")]
+        float baseBet = 10.0f,
         [Description("(Optional) The 2nd player you want to invite.")]
         IUser? player2 = null,
         [Description("(Optional) The 3rd player you want to invite.")]

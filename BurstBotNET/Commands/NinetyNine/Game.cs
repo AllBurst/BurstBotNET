@@ -27,17 +27,6 @@ public partial class NinetyNine : NinetyNineGame
         throw new NotImplementedException();
     }
 
-    public static Task AddPlayerState(string gameId, Snowflake guild, NinetyNinePlayerState playerState, GameStates gameStates)
-    {
-        throw new NotImplementedException();
-    }
-
-    public static Task StartListening(string gameId, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi,
-        ILogger logger)
-    {
-        throw new NotImplementedException();
-    }
-
     public static Task<bool> HandleProgressChange(RawNinetyNineGameState deserializedIncomingData, NinetyNineGameState gameState,
         State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {

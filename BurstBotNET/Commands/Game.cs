@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Net.WebSockets;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
@@ -21,6 +22,7 @@ namespace BurstBotNET.Commands;
 public static class Game
 {
     public static readonly JsonSerializerSettings JsonSerializerSettings = new();
+    public static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
 
     static Game()
     {
@@ -40,15 +42,15 @@ public static class Game
     public static async Task GenericCloseGame(WebSocket socketSession, ILogger logger, CancellationTokenSource cancellationTokenSource)
     {
         logger.LogDebug("Cleaning up resource...");
-        await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
-            cancellationTokenSource.Token);
-        logger.LogDebug("Socket session closed");
         _ = Task.Run(() =>
         {
             cancellationTokenSource.Cancel();
             logger.LogDebug("All tasks cancelled");
             cancellationTokenSource.Dispose();
         });
+        await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
+            cancellationTokenSource.Token);
+        logger.LogDebug("Socket session closed");
         await Task.Delay(TimeSpan.FromSeconds(60));
     }
 
@@ -140,55 +142,45 @@ public static class Game
     }
 
     public static async Task<(ImmutableArray<IGuildMember>, GenericJoinStatus)?> GenericStartGame(
-        InteractionContext context,
-        string reply,
-        IGuildMember invokingMember,
-        IUser botUser,
-        GenericJoinStatus joinStatus,
-        string gameName,
-        string confirmationEndpoint,
-        IEnumerable<ulong> playerIds,
-        State state,
-        int minPlayerCount,
-        IDiscordRestInteractionAPI interactionApi,
-        IDiscordRestChannelAPI channelApi,
-        IDiscordRestGuildAPI guildApi,
-        ILogger logger)
+        GenericStartGameData startGameData)
     {
-        var startResult = await interactionApi
+        var startResult = await startGameData.InteractionApi
             .EditOriginalInteractionResponseAsync(
-                context.ApplicationID,
-                context.Token,
-                reply,
+                startGameData.Context.ApplicationID,
+                startGameData.Context.Token,
+                startGameData.Reply,
                 new[]
                 {
-                    Utilities.BuildGameEmbed(invokingMember, botUser, joinStatus, gameName,
+                    Utilities.BuildGameEmbed(startGameData.InvokingMember, startGameData.BotUser,
+                        startGameData.JoinStatus, startGameData.GameName,
                         "", null)
                 });
 
         if (!startResult.IsSuccess)
         {
-            logger.LogError("Failed to edit message for starting game: {Reason}, inner: {Inner}",
+            startGameData.Logger.LogError("Failed to edit message for starting game: {Reason}, inner: {Inner}",
                 startResult.Error.Message, startResult.Inner);
             return null;
         }
-        
+
         var reactionResult = await BurstApi
             .HandleStartGameReactions(
-                gameName, context, startResult.Entity, invokingMember, botUser, joinStatus,
-                playerIds, confirmationEndpoint, state,
-                channelApi, interactionApi, guildApi, logger, minPlayerCount);
+                startGameData.GameName, startGameData.Context, startResult.Entity, startGameData.InvokingMember,
+                startGameData.BotUser, startGameData.JoinStatus,
+                startGameData.PlayerIds, startGameData.ConfirmationEndpoint, startGameData.State,
+                startGameData.ChannelApi, startGameData.InteractionApi, startGameData.GuildApi, startGameData.Logger,
+                startGameData.MinPlayerCount);
 
         if (reactionResult.HasValue) return reactionResult;
         
-        var failureResult = await interactionApi
+        var failureResult = await startGameData.InteractionApi
             .EditOriginalInteractionResponseAsync(
-                context.ApplicationID,
-                context.Token,
+                startGameData.Context.ApplicationID,
+                startGameData.Context.Token,
                 ErrorMessages.HandleReactionFailed);
 
         if (!failureResult.IsSuccess)
-            logger.LogError(
+            startGameData.Logger.LogError(
                 "Failed to edit original response for failing to handle reactions: {Reason}, inner: {Inner}",
                 failureResult.Error.Message, failureResult.Inner);
         

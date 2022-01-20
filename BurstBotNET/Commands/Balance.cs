@@ -67,7 +67,7 @@ public class Balance : CommandGroup
             Author: new EmbedAuthor(displayName, IconUrl: member.User.Value.GetAvatarUrl()),
             Colour: BurstColor.Burst.ToColor(),
             Description: "Here is your account balance.",
-            Thumbnail: new EmbedThumbnail(bot.GetAvatarUrl()),
+            Thumbnail: new EmbedThumbnail(Constants.BurstGold),
             Title: "Account Balance",
             Fields: new[]
             {

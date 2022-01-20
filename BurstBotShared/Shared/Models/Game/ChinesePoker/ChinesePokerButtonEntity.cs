@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 using System.Text.Json;
-using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
-public class ChinesePokerButtonEntity : IButtonInteractiveEntity
+public class ChinesePokerButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
@@ -63,9 +63,34 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         {
             "chinese_poker_confirm" => await ConfirmSelection(playerState, gameState, message!, ct),
             "chinese_poker_cancel" => await CancelSelection(playerState, message!, ct),
-            "chinese_poker_help" => await ShowHelpMenu(),
+            "chinese_poker_help" => await ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()
         };
+    }
+    
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
+    {
+        var localization = state.Localizations.GetLocalization().ChinesePoker;
+
+        var components = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent("chinese_poker_help_selections", new[]
+                {
+                    new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
+                    new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),
+                    new SelectOption(localization.BackHand, "Back Hand", localization.BackHand, default, false)
+                }, localization.ShowHelp, 0, 1, false)
+            })
+        };
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
+                components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
     private async Task<Result> ConfirmSelection(
@@ -78,33 +103,8 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
         if (!dequeueResult)
             return Result.FromSuccess();
 
-        var originalEmbeds = cardMessage!.Embeds;
-        var originalAttachments = cardMessage
-            .Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        var originalComponents = cardMessage.Components.Disable();
-        var editResult = await _channelApi
-            .EditMessageAsync(cardMessage.ChannelID, cardMessage.ID,
-                embeds: originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: originalComponents,
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
-
-        originalEmbeds = message.Embeds;
-        originalAttachments = message.Attachments
-            .Select(OneOf<FileData, IPartialAttachment>.FromT1);
-        originalComponents = message.Components.Disable();
-        editResult = await _channelApi
-            .EditMessageAsync(message.ChannelID, message.ID,
-                Constants.CheckMark,
-                originalEmbeds.ToImmutableArray(),
-                attachments: originalAttachments.ToImmutableArray(),
-                components: originalComponents,
-                ct: ct);
-                
-        if (!editResult.IsSuccess) return Result.FromError(editResult);
+        await Utilities.Utilities.DisableComponents(cardMessage!, true, _channelApi, _logger, ct);
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
@@ -160,30 +160,5 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity
                 embeds: Array.Empty<IEmbed>(),
                 ct: ct);
         return !editResult.IsSuccess ? Result.FromError(editResult) : Result.FromSuccess();
-    }
-
-    private async Task<Result> ShowHelpMenu()
-    {
-        var localization = _state.Localizations.GetLocalization().ChinesePoker;
-
-        var components = new IMessageComponent[]
-        {
-            new ActionRowComponent(new[]
-            {
-                new SelectMenuComponent("chinese_poker_help_selections", new[]
-                {
-                    new SelectOption(localization.FrontHand, "Front Hand", localization.FrontHand, default, false),
-                    new SelectOption(localization.MiddleHand, "Middle Hand", localization.MiddleHand, default, false),
-                    new SelectOption(localization.BackHand, "Back Hand", localization.BackHand, default, false)
-                }, localization.ShowHelp, 0, 1, false)
-            })
-        };
-
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
-                components: components);
-
-        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 }

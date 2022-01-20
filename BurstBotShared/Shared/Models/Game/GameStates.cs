@@ -1,8 +1,10 @@
 using System.Collections.Concurrent;
 using BurstBotShared.Shared.Models.Game.BlackJack;
+using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.OldMaid;
+using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using ConcurrentCollections;
 using Remora.Rest.Core;
 
@@ -33,4 +35,16 @@ public class GameStates
         get;
         set;
     } = new(new ConcurrentDictionary<string, OldMaidGameState>(10, 100), new ConcurrentHashSet<Snowflake>());
+    
+    public Tuple<ConcurrentDictionary<string, RedDotsGameState>, ConcurrentHashSet<Snowflake>> RedDotsGameStates
+    {
+        get;
+        set;
+    } = new(new ConcurrentDictionary<string, RedDotsGameState>(10, 100), new ConcurrentHashSet<Snowflake>());
+    
+    public Tuple<ConcurrentDictionary<string, ChasePigGameState>, ConcurrentHashSet<Snowflake>> ChasePigGameStates
+    {
+        get;
+        set;
+    } = new(new ConcurrentDictionary<string, ChasePigGameState>(10, 100), new ConcurrentHashSet<Snowflake>());
 }
