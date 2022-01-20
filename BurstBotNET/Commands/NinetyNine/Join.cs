@@ -3,6 +3,7 @@ using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using Remora.Discord.API.Abstractions.Objects;
@@ -30,12 +31,26 @@ public partial class NinetyNine
         {
             case GenericJoinStatusType.Start:
                 {
-                    var result = await Game.GenericStartGame(
-                        _context, joinResult.Reply, joinResult.InvokingMember, joinResult.BotUser,
-                        joinResult.JoinStatus, GameName, "/ninety_nine/join/confirm",
-                        joinResult.MentionedPlayers.Select(s => s.Value),
-                        _state, 2, _interactionApi, _channelApi,
-                        _guildApi, _logger);
+
+                    var startData = new GenericStartGameData
+                    {
+                        Context = _context,
+                        Reply = joinResult.Reply,
+                        InvokingMember = joinResult.InvokingMember,
+                        BotUser = joinResult.BotUser,
+                        JoinStatus = joinResult.JoinStatus,
+                        GameName = GameName,
+                        ConfirmationEndpoint = "/ninety_nine/join/confirm",
+                        PlayerIds = joinResult.MentionedPlayers.Select(s => s.Value),
+                        State = _state,
+                        MinPlayerCount = 2,
+                        InteractionApi = _interactionApi,
+                        ChannelApi = _channelApi,
+                        GuildApi = _guildApi,
+                        Logger = _logger
+                    };
+                    
+                    var result = await Game.GenericStartGame(startData);
 
                     if (!result.HasValue)
                     {
@@ -65,20 +80,7 @@ public partial class NinetyNine
                             TextChannel = textChannel,
                             Order = 0
                         };
-                        await NinetyNineGame.AddPlayerState(matchData.GameId ?? "", guild.Value, playerState,new NinetyNineInGameRequest
-                        {
-                            AvatarUrl = playerState.AvatarUrl,
-                            ChannelId = playerState.TextChannel!.ID.Value,
-                            ClientType = ClientType.Discord,
-                            GameId = playerState.GameId,
-                            PlayerId = playerState.PlayerId,
-                            PlayerName = playerState.PlayerName,
-                            RequestType = NinetyNineInGameRequestType.Deal
-                        },_state.GameStates.NinetyNineGameStates.Item1,_state.GameStates.NinetyNineGameStates.Item2);
-
-                        _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
-                            _channelApi, _guildApi,
-                            _logger));
+                        await AddPlayerStateAndStartListening(matchData, playerState, guild.Value);
                     }
                     break;
                 }
@@ -118,19 +120,7 @@ public partial class NinetyNine
                         TextChannel = textChannel,
                         Order = 0,
                     };
-                    await NinetyNineGame.AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, playerState, new NinetyNineInGameRequest
-                    {
-                        AvatarUrl = playerState.AvatarUrl,
-                        ChannelId = playerState.TextChannel!.ID.Value,
-                        ClientType = ClientType.Discord,
-                        GameId = playerState.GameId,
-                        PlayerId = playerState.PlayerId,
-                        PlayerName = playerState.PlayerName,
-                        RequestType = NinetyNineInGameRequestType.Deal
-                    }, _state.GameStates.NinetyNineGameStates.Item1, _state.GameStates.NinetyNineGameStates.Item2);
-
-                    _ = Task.Run(() =>
-                        StartListening(joinResult.JoinStatus.GameId ?? "", _state, _channelApi, _guildApi, _logger));
+                    await AddPlayerStateAndStartListening(joinResult.JoinStatus, playerState, guild.Value);
                     break;
                 }
             case GenericJoinStatusType.Waiting:
@@ -158,23 +148,7 @@ public partial class NinetyNine
                             var (matchData, playerStates) = waitingResult.Value;
                             foreach (var player in playerStates)
                             {
-                                await NinetyNineGame.AddPlayerState(matchData.GameId ?? "", guild.Value, player,new NinetyNineInGameRequest
-                                {
-                                    AvatarUrl = player.AvatarUrl,
-                                    ChannelId = player.TextChannel!.ID.Value,
-                                    ClientType = ClientType.Discord,
-                                    GameId = player.GameId,
-                                    PlayerId = player.PlayerId,
-                                    PlayerName = player.PlayerName,
-                                    RequestType = NinetyNineInGameRequestType.Deal
-                                },_state.GameStates.NinetyNineGameStates.Item1,_state.GameStates.NinetyNineGameStates.Item2);
-
-                                await Task.Delay(TimeSpan.FromSeconds(1));
-
-                                _ = Task.Run(() => StartListening(matchData.GameId ?? "", _state,
-                                    _channelApi,
-                                    _guildApi,
-                                    _logger));
+                                await AddPlayerStateAndStartListening(matchData, player, guild.Value);
                             }
                         }
                         catch (Exception ex)
@@ -197,8 +171,34 @@ public partial class NinetyNine
         //return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
-    public Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, NinetyNinePlayerState playerState, Snowflake guild)
+    public async Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, NinetyNinePlayerState playerState, Snowflake guild)
     {
-        throw new NotImplementedException();
+        await NinetyNineGame.AddPlayerState(joinStatus?.GameId ?? "", guild, playerState, new NinetyNineInGameRequest
+        {
+            AvatarUrl = playerState.AvatarUrl,
+            ChannelId = playerState.TextChannel!.ID.Value,
+            ClientType = ClientType.Discord,
+            GameId = playerState.GameId,
+            PlayerId = playerState.PlayerId,
+            PlayerName = playerState.PlayerName,
+            RequestType = NinetyNineInGameRequestType.Deal
+        }, _state.GameStates.NinetyNineGameStates.Item1, 
+        _state.GameStates.NinetyNineGameStates.Item2);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+
+        _ = Task.Run(() => NinetyNineGame.StartListening(joinStatus?.GameId ?? "",
+            _state.GameStates.NinetyNineGameStates,
+            GameName,
+            NinetyNineGameProgress.NotAvailable,
+            NinetyNineGameProgress.Starting,
+            NinetyNineGameProgress.Closed,
+            NinetyNineGame.InGameRequestTypes,
+            NinetyNineInGameRequestType.Close,
+            Game.GenericOpenWebSocketSession,
+            Game.GenericCloseGame,
+            _state,
+            _channelApi,
+            _guildApi,
+            _logger));
     }
 }

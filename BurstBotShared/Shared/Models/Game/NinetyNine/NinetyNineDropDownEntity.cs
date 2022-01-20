@@ -78,13 +78,15 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         CancellationToken ct)
     {
         var extractedCard = ExtractCard(values);
+        var localization = _state.Localizations.GetLocalization().NinetyNine;
 
         if (extractedCard.Number == 5)
         {
-            playerState.Five = extractedCard;
-            var localization = _state.Localizations.GetLocalization().NinetyNine;
-            var playerList = gameState.Players;
-            var playerNameList = playerList.Select(c => new SelectOption(c.Value.PlayerName, c.Key.ToString()));
+            playerState.UniversalCard = extractedCard;
+
+            var playerNameList = gameState.Players
+                .Where(p => p.Value.PlayerId != playerState.PlayerId)
+                .Select(p => new SelectOption(p.Value.PlayerName, p.Key.ToString()));
 
             var fiveSelectMenu = new SelectMenuComponent("ninety_nine_five_selection",
                 playerNameList.ToImmutableArray(),
@@ -104,6 +106,47 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 ct: ct);
 
             return Result.FromSuccess();
+        }
+        if(extractedCard.Number == 10 || extractedCard.Number == 12)
+        {
+            playerState.UniversalCard = extractedCard;
+
+            var count = extractedCard.Number == 12 ? extractedCard.Number + 8 : extractedCard.Number;
+
+            var plusButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Plus,
+                new PartialEmoji(Name: "➕"), $"plus{count}");
+            var minusButton = new ButtonComponent(ButtonComponentStyle.Danger, localization.Minus,
+                new PartialEmoji(Name: "➖"), $"minus{count}");
+
+            var plusComponent = (new IMessageComponent[]{
+                new ActionRowComponent(new []
+                {
+                    plusButton
+                })
+            });
+            var minusComponent = (new IMessageComponent[]{
+                new ActionRowComponent(new []
+                {
+                    minusButton
+                })
+            });
+
+            if (gameState.CurrentTotal + count > 99)
+            {
+                var sendResult = await _channelApi
+    .CreateMessageAsync(message.ChannelID,
+    content: localization.SelectPlayerMessage,
+    components: minusComponent,
+    ct: ct);
+                return Result.FromSuccess();
+            }
+
+
+
+
+
+
+
         }
 
         var currentPlayer = gameState
@@ -140,7 +183,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {
                 GameId = gameState.GameId,
-                PlayCard = playerState.Five,
+                PlayCard = playerState.UniversalCard,
                 PlayerId = playerState.PlayerId,
                 SpecifiedPlayer = nextPlayerId,
                 RequestType = NinetyNineInGameRequestType.Play

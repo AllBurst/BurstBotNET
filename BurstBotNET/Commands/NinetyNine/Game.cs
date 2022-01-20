@@ -37,7 +37,7 @@ public partial class NinetyNine : NinetyNineGame
     };
     private static readonly int[] _normalRandks =
     {
-        2, 3, 6, 7, 8, 9,
+        1, 2, 3, 6, 7, 8, 9,
     };
 
     public static async Task<bool> HandleProgress(string messageContent, NinetyNineGameState gameState, State state,
@@ -410,7 +410,7 @@ public partial class NinetyNine : NinetyNineGame
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
                 };
 
-                var component = BuildComponents(playerState, gameState, localization,
+                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization,
                     out _);
                 if(component == null)
                 {
@@ -449,43 +449,24 @@ public partial class NinetyNine : NinetyNineGame
         }
     }
     private static IMessageComponent[]? BuildComponents(
-        NinetyNinePlayerState currentPlayer,
-        NinetyNineGameState gameState,
+        RawNinetyNinePlayerState currentPlayer,
+        RawNinetyNineGameState gameState,
         NinetyNineLocalization localization,
         out NinetyNineInGameRequestType selectMenuType)
     {
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
             new PartialEmoji(Name: "❓"), "ninety_nine_help");
 
-        var normalCards = new List<Card>();
-        var availableCards = new List<Card>();
+        var availableCards = currentPlayer.Cards
+            .Where(c => _specialRanks.Contains(c.Number) || (c.Suit == Suit.Spade && c.Number == 1)
+            || gameState.CurrentTotal + c.Number <= 99)
+            .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(), new PartialEmoji(c.Suit.ToSnowflake())))
+            .ToImmutableArray();
 
-        foreach (var card in currentPlayer.Cards)
+        if (!availableCards.IsEmpty)
         {
-            if(_normalRandks.Contains(card.Number))
-            {
-                normalCards.Add(card);
-            }
-            if(_specialRanks.Contains(card.Number) || (card.Number == 1 && card.Suit == Suit.Spade))
-            {
-                availableCards.Add(card);
-            }
-        }
-        
-        foreach (var normalCard in normalCards)
-        {
-            if(gameState.CurrentTotal + normalCard.Number <= 99)
-            {
-                availableCards.Add(normalCard);
-            }
-        }
-
-        if(availableCards.Count > 0)
-        {
-            var userSelectMenuOption = availableCards.Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
-                    new PartialEmoji(c.Suit.ToSnowflake()))); ;
             var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
-                userSelectMenuOption.ToImmutableArray(),
+                availableCards,
                 localization.Play, 1, 1);
 
             selectMenuType = NinetyNineInGameRequestType.Play;
@@ -502,11 +483,9 @@ public partial class NinetyNine : NinetyNineGame
                 })
             };
         }
-        else
-        {
-            selectMenuType = NinetyNineInGameRequestType.Burst;
-            return null;
-        }
+
+        selectMenuType = NinetyNineInGameRequestType.Burst;
+        return null;
     }
 
     private static Embed BuildDrawingMessage(

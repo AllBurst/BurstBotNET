@@ -12,6 +12,8 @@
   "winDescription": "{playerName} {verb} {totalRewards} tips!",
   "cards": "Your cards:",
   "play": "Play",
+  "plus": "Plus",
+  "minus": "Minus",
   "playMessage": "{previousPlayerName} played a {card}!",
   "turnMessageTitle": "It's {possessive} turn!",
   "selectPlayerMessage": "Select a player",
