@@ -41,7 +41,6 @@ public class Trade : CommandGroup
 
     [Command("donate")]
     [CommandType(ApplicationCommandType.User)]
-    [Description("Donate 500 tips to the player.")]
     public async Task<IResult> Donate()
     {
         var resolveResult = _context.Data.Resolved.IsDefined(out var resolved);
