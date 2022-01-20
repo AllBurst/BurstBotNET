@@ -2,6 +2,7 @@ using BurstBotNET.Commands;
 using BurstBotNET.Commands.BlackJack;
 using BurstBotNET.Commands.ChaseThePig;
 using BurstBotNET.Commands.ChinesePoker;
+using BurstBotNET.Commands.Help;
 using BurstBotNET.Commands.NinetyNine;
 using BurstBotNET.Commands.OldMaid;
 using BurstBotNET.Commands.RedDotsPicking;
@@ -24,19 +25,22 @@ public static class SlashCommandExtensions
 {
     public static IServiceCollection AddSlashCommands(this IServiceCollection serviceCollection)
     {
+        serviceCollection.AddCommandTree()
+            .WithCommandGroup<About>()
+            .WithCommandGroup<Balance>()
+            .WithCommandGroup<Daily>()
+            .WithCommandGroup<Ping>()
+            .WithCommandGroup<Start>()
+            .WithCommandGroup<Weekly>()
+            .WithCommandGroup<Help>()
+            .WithCommandGroup<BlackJack>()
+            .WithCommandGroup<ChinesePoker>()
+            .WithCommandGroup<NinetyNine>()
+            .WithCommandGroup<OldMaid>()
+            .WithCommandGroup<RedDotsPicking>()
+            .WithCommandGroup<ChaseThePig>();
+        
         return serviceCollection
-            .AddCommandGroup<About>()
-            .AddCommandGroup<Balance>()
-            .AddCommandGroup<Daily>()
-            .AddCommandGroup<Ping>()
-            .AddCommandGroup<Start>()
-            .AddCommandGroup<Weekly>()
-            .AddCommandGroup<BlackJack>()
-            .AddCommandGroup<ChinesePoker>()
-            .AddCommandGroup<NinetyNine>()
-            .AddCommandGroup<OldMaid>()
-            .AddCommandGroup<RedDotsPicking>()
-            .AddCommandGroup<ChaseThePig>()
             .AddPagination()
             .AddInteractiveEntity<BlackJackDropDownEntity>()
             .AddInteractiveEntity<BlackJackButtonEntity>()

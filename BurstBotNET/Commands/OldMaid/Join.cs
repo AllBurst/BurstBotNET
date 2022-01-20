@@ -1,11 +1,13 @@
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
+using BurstBotShared.Shared.Models.Game;
 using BurstBotShared.Shared.Models.Game.OldMaid;
 using BurstBotShared.Shared.Models.Game.OldMaid.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.OldMaid;
@@ -26,12 +28,25 @@ public partial class OldMaid
         {
             case GenericJoinStatusType.Start:
             {
-                var result = await Game.GenericStartGame(
-                    _context, joinResult.Reply, joinResult.InvokingMember, joinResult.BotUser,
-                    joinResult.JoinStatus, GameName, "/old_maid/join/confirm",
-                    joinResult.MentionedPlayers.Select(s => s.Value),
-                    _state, 4, _interactionApi, _channelApi,
-                    _guildApi, _logger);
+                var startGameData = new GenericStartGameData
+                {
+                    BotUser = joinResult.BotUser,
+                    ChannelApi = _channelApi,
+                    ConfirmationEndpoint = "/old_maid/join/confirm",
+                    Context = _context,
+                    GameName = GameName,
+                    GuildApi = _guildApi,
+                    InteractionApi = _interactionApi,
+                    InvokingMember = joinResult.InvokingMember,
+                    JoinStatus = joinResult.JoinStatus,
+                    Logger = _logger,
+                    State = _state,
+                    PlayerIds = joinResult.MentionedPlayers.Select(s => s.Value),
+                    MinPlayerCount = 4,
+                    Reply = joinResult.Reply
+                };
+                
+                var result = await Game.GenericStartGame(startGameData);
                 
                 if (!result.HasValue) return Result.FromSuccess();
 
@@ -45,29 +60,16 @@ public partial class OldMaid
                         await _state.BurstApi.CreatePlayerChannel(guild.Value, joinResult.BotUser,
                             member, _guildApi, _logger);
 
-                    await AddPlayerState(matchData.GameId ?? "", guild.Value, new OldMaidPlayerState
+                    var playerState = new OldMaidPlayerState
                     {
                         AvatarUrl = member.GetAvatarUrl(),
                         GameId = matchData.GameId ?? "",
                         PlayerId = member.User.Value.ID.Value,
                         PlayerName = member.GetDisplayName(),
                         TextChannel = textChannel
-                    }, _state.GameStates);
+                    };
 
-                    _ = Task.Run(() => OldMaidGame.StartListening(matchData.GameId ?? "",
-                        _state.GameStates.OldMaidGameStates,
-                        GameName,
-                        OldMaidGameProgress.NotAvailable,
-                        OldMaidGameProgress.Starting,
-                        OldMaidGameProgress.Closed,
-                        OldMaidGame.InGameRequestTypes,
-                        OldMaidInGameRequestType.Close,
-                        Game.GenericOpenWebSocketSession,
-                        Game.GenericCloseGame,
-                        _state,
-                        _channelApi,
-                        _guildApi,
-                        _logger));
+                    await AddPlayerStateAndStartListening(matchData, playerState, guild.Value);
                 }
                 
                 break;
@@ -103,30 +105,17 @@ public partial class OldMaid
                     joinResult.InvokingMember,
                     _guildApi,
                     _logger);
-                
-                await AddPlayerState(joinResult.JoinStatus.GameId ?? "", guild.Value, new OldMaidPlayerState
+
+                var playerState = new OldMaidPlayerState
                 {
                     AvatarUrl = joinResult.InvokingMember.GetAvatarUrl(),
                     GameId = joinResult.JoinStatus.GameId ?? "",
                     PlayerId = joinResult.InvokingMember.User.Value.ID.Value,
                     PlayerName = joinResult.InvokingMember.GetDisplayName(),
                     TextChannel = textChannel
-                }, _state.GameStates);
-                
-                _ = Task.Run(() => OldMaidGame.StartListening(joinResult.JoinStatus.GameId ?? "",
-                    _state.GameStates.OldMaidGameStates,
-                    GameName,
-                    OldMaidGameProgress.NotAvailable,
-                    OldMaidGameProgress.Starting,
-                    OldMaidGameProgress.Closed,
-                    OldMaidGame.InGameRequestTypes,
-                    OldMaidInGameRequestType.Close,
-                    Game.GenericOpenWebSocketSession,
-                    Game.GenericCloseGame,
-                    _state,
-                    _channelApi,
-                    _guildApi,
-                    _logger));
+                };
+
+                await AddPlayerStateAndStartListening(joinResult.JoinStatus, playerState, guild.Value);
                 
                 break;
             }
@@ -154,27 +143,7 @@ public partial class OldMaid
 
                         var (matchData, playerStates) = waitingResult.Value;
                         foreach (var player in playerStates)
-                        {
-                            await AddPlayerState(matchData.GameId ?? "", guild.Value, player,
-                                _state.GameStates);
-                            
-                            await Task.Delay(TimeSpan.FromSeconds(1));
-                            
-                            _ = Task.Run(() => OldMaidGame.StartListening(matchData.GameId ?? "",
-                                _state.GameStates.OldMaidGameStates,
-                                GameName,
-                                OldMaidGameProgress.NotAvailable,
-                                OldMaidGameProgress.Starting,
-                                OldMaidGameProgress.Closed,
-                                OldMaidGame.InGameRequestTypes,
-                                OldMaidInGameRequestType.Close,
-                                Game.GenericOpenWebSocketSession,
-                                Game.GenericCloseGame,
-                                _state,
-                                _channelApi,
-                                _guildApi,
-                                _logger));
-                        }
+                            await AddPlayerStateAndStartListening(matchData, player, guild.Value);
                     }
                     catch (Exception ex)
                     {
@@ -186,5 +155,38 @@ public partial class OldMaid
         }
         
         return Result.FromSuccess();
+    }
+
+    public async Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, OldMaidPlayerState playerState, Snowflake guild)
+    {
+        await OldMaidGame.AddPlayerState(joinStatus?.GameId ?? "", guild, playerState, new OldMaidInGameRequest
+            {
+                AvatarUrl = playerState.AvatarUrl,
+                ChannelId = playerState.TextChannel!.ID.Value,
+                ClientType = ClientType.Discord,
+                GameId = joinStatus?.GameId ?? "",
+                PlayerId = playerState.PlayerId,
+                PlayerName = playerState.PlayerName,
+                RequestType = OldMaidInGameRequestType.Deal
+            },
+            _state.GameStates.OldMaidGameStates.Item1,
+            _state.GameStates.OldMaidGameStates.Item2);
+                            
+        await Task.Delay(TimeSpan.FromSeconds(1));
+                            
+        _ = Task.Run(() => OldMaidGame.StartListening(joinStatus?.GameId ?? "",
+            _state.GameStates.OldMaidGameStates,
+            GameName,
+            OldMaidGameProgress.NotAvailable,
+            OldMaidGameProgress.Starting,
+            OldMaidGameProgress.Closed,
+            OldMaidGame.InGameRequestTypes,
+            OldMaidInGameRequestType.Close,
+            Game.GenericOpenWebSocketSession,
+            Game.GenericCloseGame,
+            _state,
+            _channelApi,
+            _guildApi,
+            _logger));
     }
 }

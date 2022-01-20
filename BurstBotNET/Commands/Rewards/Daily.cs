@@ -31,7 +31,7 @@ public class Daily : CommandGroup
     }
 
     [Command("daily")]
-    [Description("Get your daily reward of 10 tips here.")]
+    [Description("Get your daily reward of 100 tips here.")]
     public async Task<IResult> Handle()
     {
         var rewardResult =

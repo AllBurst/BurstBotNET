@@ -39,6 +39,7 @@ public record RedDotsLocalization : ILocalization<RedDotsLocalization>
     [JsonPropertyName("showScoring")] public string ShowScoring { get; init; } = "";
     [JsonPropertyName("showFlows")] public string ShowFlows { get; init; } = "";
     [JsonPropertyName("points")] public string Points { get; init; } = "";
+    [JsonPropertyName("about")] public string About { get; init; } = "";
 
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

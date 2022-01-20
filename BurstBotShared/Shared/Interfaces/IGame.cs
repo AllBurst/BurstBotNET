@@ -9,6 +9,7 @@ using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
 using ConcurrentCollections;
 using Microsoft.Extensions.Logging;
@@ -167,7 +168,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         gameStateTuple.Item1.Remove(gameState.GameId, out _);
         socketSession.Dispose();
     }
-    
+
     static async Task RunChannelTask(WebSocket socketSession,
         TState state,
         IEnumerable<string> inGameRequestTypes,
@@ -237,7 +238,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             logger.LogDebug("Game timed out due to inactivity");
             state.Progress = closedProgress;
         }
-        catch (TaskCanceledException _)
+        catch (TaskCanceledException)
         {
         }
         catch (ObjectDisposedException ex)
@@ -282,4 +283,10 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         logger.LogDebug("Received close response. Closing the session...");
         return SocketOperation.Close;
     }
+
+    Task AddPlayerStateAndStartListening(
+        GenericJoinStatus? joinStatus,
+        TPlayerState playerState,
+        Snowflake guild
+    );
 }

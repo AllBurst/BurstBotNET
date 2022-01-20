@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Globalization;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables;
@@ -12,12 +13,12 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.RedDotsPicking;
 
-public class RedDotsButtonEntity : IButtonInteractiveEntity
+public class RedDotsButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
     private readonly IDiscordRestInteractionAPI _interactionApi;
-    private readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
+    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
 
     public RedDotsButtonEntity(
         InteractionContext context,
@@ -51,21 +52,12 @@ public class RedDotsButtonEntity : IButtonInteractiveEntity
         
         if (playerState?.TextChannel == null) return Result.FromSuccess();
 
-        return await ShowHelpMenu();
+        return await ShowHelpMenu(_context, _state, _interactionApi);
     }
-
-    private static (string, PartialEmoji) GetHelpMenuItemDescription(string key, RedDotsLocalization localization)
-        => key switch
-        {
-            "general" => (localization.ShowGeneral, new PartialEmoji(Name: "ℹ️")),
-            "scoring" => (localization.ShowScoring, new PartialEmoji(Name: "💯")),
-            "flows" => (localization.ShowFlows, new PartialEmoji(Name: "➡️")),
-            _ => ("", new PartialEmoji(Name: "❓"))
-        };
-
-    private async Task<Result> ShowHelpMenu()
+    
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
     {
-        var localization = _state.Localizations.GetLocalization().RedDotsPicking;
+        var localization = state.Localizations.GetLocalization().RedDotsPicking;
 
         var options = localization
             .CommandList
@@ -75,7 +67,7 @@ public class RedDotsButtonEntity : IButtonInteractiveEntity
                 var (desc, emoji) = GetHelpMenuItemDescription(k, localization);
                 return (k, desc, emoji);
             })
-            .Select(item => new SelectOption(_textInfo.ToTitleCase(item.k), item.k, item.desc, item.emoji));
+            .Select(item => new SelectOption(TextInfo.ToTitleCase(item.k), item.k, item.desc, item.emoji));
 
         var components = new IMessageComponent[]
         {
@@ -86,11 +78,20 @@ public class RedDotsButtonEntity : IButtonInteractiveEntity
             })
         };
 
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.ShowHelp,
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
                 components: components);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
+
+    private static (string, PartialEmoji) GetHelpMenuItemDescription(string key, RedDotsLocalization localization)
+        => key switch
+        {
+            "general" => (localization.ShowGeneral, new PartialEmoji(Name: "ℹ️")),
+            "scoring" => (localization.ShowScoring, new PartialEmoji(Name: "💯")),
+            "flows" => (localization.ShowFlows, new PartialEmoji(Name: "➡️")),
+            _ => ("", new PartialEmoji(Name: "❓"))
+        };
 }

@@ -169,36 +169,6 @@ public partial class BlackJack : BlackJackGame
         }
     }
 
-    public static async Task AddPlayerState(string gameId,
-        Snowflake guild,
-        BlackJackPlayerState playerState,
-        GameStates gameStates)
-    {
-        var state = gameStates.BlackJackGameStates.Item1.GetOrAdd(gameId, new BlackJackGameState());
-        state.Players.GetOrAdd(playerState.PlayerId, playerState);
-        state.Guilds.Add(guild);
-        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
-
-        if (playerState.TextChannel == null)
-            return;
-
-        gameStates.BlackJackGameStates.Item2.Add(playerState.TextChannel.ID);
-        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-            playerState.PlayerId,
-            JsonSerializer.SerializeToUtf8Bytes(new BlackJackInGameRequest
-            {
-                GameId = gameId,
-                AvatarUrl = playerState.AvatarUrl,
-                PlayerId = playerState.PlayerId,
-                ChannelId = playerState.TextChannel.ID.Value,
-                PlayerName = playerState.PlayerName,
-                OwnTips = playerState.OwnTips,
-                ClientType = ClientType.Discord,
-                RequestType = BlackJackInGameRequestType.Deal,
-            })
-        ));
-    }
-
     public static async Task HandleBlackJackMessage(
         IMessageCreate gatewayEvent,
         GameStates gameStates,

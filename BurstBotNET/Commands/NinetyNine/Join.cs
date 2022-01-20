@@ -6,6 +6,7 @@ using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Game.NinetyNine;
 using Remora.Discord.API.Abstractions.Objects;
+using Remora.Rest.Core;
 using Remora.Results;
 using Microsoft.Extensions.Logging;
 using Utilities = BurstBotShared.Shared.Utilities.Utilities;
@@ -194,5 +195,10 @@ public partial class NinetyNine
         //        $"Difficulty: {difficulty}\nVariation: {variation}\nInvited players: {string.Join(' ', mentionedPlayers.Select(p => $"<@!{p}>"))}");
 
         //return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
+    }
+
+    public Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, NinetyNinePlayerState playerState, Snowflake guild)
+    {
+        throw new NotImplementedException();
     }
 }
