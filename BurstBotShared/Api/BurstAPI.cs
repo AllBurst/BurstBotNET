@@ -70,6 +70,7 @@ public sealed class BurstApi
             {
                 ApiRequestType.Get => await url.GetAsync(),
                 ApiRequestType.Post => await Post(url, payload),
+                ApiRequestType.Patch => await Patch(url, payload),
                 _ => throw new InvalidOperationException("Unsupported raw request type.")
             };
         }
@@ -642,5 +643,13 @@ public sealed class BurstApi
             throw new ArgumentException("The payload cannot be null when sending POST requests.");
 
         return await url.PostJsonAsync(payload);
+    }
+    
+    private static async Task<IFlurlResponse> Patch<TPayloadType>(string url, TPayloadType? payload)
+    {
+        if (payload == null)
+            throw new ArgumentException("The payload cannot be null when sending POST requests.");
+
+        return await url.PatchJsonAsync(payload);
     }
 }

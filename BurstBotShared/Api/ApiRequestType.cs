@@ -2,5 +2,5 @@ namespace BurstBotShared.Api;
 
 public enum ApiRequestType
 {
-    Get, Post
+    Get, Post, Patch
 }

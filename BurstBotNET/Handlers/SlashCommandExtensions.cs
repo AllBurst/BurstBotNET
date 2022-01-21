@@ -33,6 +33,7 @@ public static class SlashCommandExtensions
             .WithCommandGroup<Start>()
             .WithCommandGroup<Weekly>()
             .WithCommandGroup<Help>()
+            .WithCommandGroup<Trade>()
             .WithCommandGroup<BlackJack>()
             .WithCommandGroup<ChinesePoker>()
             .WithCommandGroup<NinetyNine>()
