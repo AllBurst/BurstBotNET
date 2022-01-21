@@ -141,12 +141,6 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 return Result.FromSuccess();
             }
 
-
-
-
-
-
-
         }
 
         var currentPlayer = gameState
