@@ -107,6 +107,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
 
             return Result.FromSuccess();
         }
+
         if(extractedCard.Number == 10 || extractedCard.Number == 12)
         {
             playerState.UniversalCard = extractedCard;
@@ -118,29 +119,26 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             var minusButton = new ButtonComponent(ButtonComponentStyle.Danger, localization.Minus,
                 new PartialEmoji(Name: "➖"), $"minus{count}");
 
-            var plusComponent = (new IMessageComponent[]{
-                new ActionRowComponent(new []
-                {
-                    plusButton
-                })
-            });
-            var minusComponent = (new IMessageComponent[]{
-                new ActionRowComponent(new []
-                {
-                    minusButton
-                })
-            });
+            var buttonComponents = new List<IMessageComponent>();
 
-            if (gameState.CurrentTotal + count > 99)
+            if (gameState.CurrentTotal + count <= 99)
+                buttonComponents.Add(plusButton);
+            if (gameState.CurrentTotal - count >= 0)
+                buttonComponents.Add(minusButton);
+
+
+            var component = new IMessageComponent[]
             {
-                var sendResult = await _channelApi
-    .CreateMessageAsync(message.ChannelID,
-    content: localization.SelectPlayerMessage,
-    components: minusComponent,
-    ct: ct);
-                return Result.FromSuccess();
-            }
+                new ActionRowComponent(buttonComponents)
+            };
 
+            var sendResult = await _channelApi
+                .CreateMessageAsync(message.ChannelID,
+                content: localization.PlusOrMinusMessage,
+                components: component,
+                ct: ct);
+
+            return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
         }
 
         var currentPlayer = gameState

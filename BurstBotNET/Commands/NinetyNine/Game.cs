@@ -100,7 +100,7 @@ public partial class NinetyNine : NinetyNineGame
                 .FirstOrDefault(p => p.Value.PlayerId == winnerId)
                 .Value;
 
-            var localization = localizations.GetLocalization().RedDotsPicking;
+            var localization = localizations.GetLocalization().NinetyNine;
 
             var title = localization.WinTitle.Replace("{playerName}", winner.PlayerName);
 
@@ -421,6 +421,8 @@ public partial class NinetyNine : NinetyNineGame
                     var sendResult = await channelApi
                         .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: new[] { embed });
+
+
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);

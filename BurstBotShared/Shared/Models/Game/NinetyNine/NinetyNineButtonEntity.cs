@@ -17,6 +17,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly ILogger<NinetyNineButtonEntity> _logger;
+
     public NinetyNineButtonEntity(
         InteractionContext context,
         IDiscordRestChannelAPI channelAPI,
@@ -30,13 +31,20 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
         _channelApi = channelAPI;
         _logger = logger;
     }
+    private readonly string[] _validCustomIds =
+{
+        "plus10",
+        "plus20",
+        "minus10",
+        "minus20",
+        "ninety_nine_help_selection"
+    };
 
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
     {
-        var isValidButton = customId is "plus" or "minus" or "ninety_nine_help_selection";
         return componentType is not ComponentType.Button
             ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(isValidButton);
+            : Task.FromResult<Result<bool>>(_validCustomIds.Contains(customId));
     }
 
     public async Task<Result> HandleInteractionAsync(IUser user, string customId, CancellationToken ct = new())
@@ -56,11 +64,13 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
         var sanitizedCustomId = customId.Trim();
         return sanitizedCustomId switch
         {
-            "plus" => await PlusOrMinus(message!, gameState, playerState, NinetyNineInGameAdjustmentType.Plus, ct),
-            "minus" => await PlusOrMinus(message!,gameState, playerState,NinetyNineInGameAdjustmentType.Minus, ct),
-            "ninety_nine_help_selection" => await ShowHelpMenu()
+            "plus10" or "plus20" => await PlusOrMinus(message!, gameState, playerState, NinetyNineInGameAdjustmentType.Plus, ct),
+            "minus10" or "minus20" => await PlusOrMinus(message!,gameState, playerState,NinetyNineInGameAdjustmentType.Minus, ct),
+            "ninety_nine_help_selection" => await ShowHelpMenu(),
+            _ => Result.FromSuccess()
         };
     }
+
     private async Task<Result> PlusOrMinus(
     IMessage message,
     NinetyNineGameState gameState,
@@ -82,6 +92,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
 
         return Result.FromSuccess();
     }
+
     private async Task<Result> ShowHelpMenu()
     {
         var localization = _state.Localizations.GetLocalization().NinetyNine;
