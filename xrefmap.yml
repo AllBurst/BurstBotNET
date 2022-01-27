@@ -7527,6 +7527,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BaseBet
   nameWithType: NinetyNineGameState.BaseBet
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
+  name: BurstPlayers
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstPlayers
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
+  nameWithType: NinetyNineGameState.BurstPlayers
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers*
+  name: BurstPlayers
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstPlayers_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
+  nameWithType: NinetyNineGameState.BurstPlayers
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
   name: Channel
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_Channel
