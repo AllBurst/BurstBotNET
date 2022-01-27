@@ -398,9 +398,11 @@ public partial class NinetyNine : NinetyNineGame
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
+            var memberCount = gameState.BurstPlayers.Count;
+
             if (playerState.TextChannel == null) continue;
 
-            var embed = BuildDrawingMessage(playerState, nextPlayer, localizations);
+            var embed = BuildTurnMessage(playerState, nextPlayer, localizations);
 
             if (nextPlayer.PlayerId == playerId)
             {
@@ -410,10 +412,12 @@ public partial class NinetyNine : NinetyNineGame
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
                 };
 
-                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization,
-                    out _);
+                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
+
                 if(component == null)
                 {
+                    gameState.BurstPlayers.Add(nextPlayer.PlayerId);
+
                     embed = embed with
                     {
                         Description = "you lost"
@@ -422,10 +426,36 @@ public partial class NinetyNine : NinetyNineGame
                         .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: new[] { embed });
 
-
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);
+
+                    foreach (var (pId, pState) in gameState.Players)
+                    {
+                        if(pState.TextChannel == null) continue;
+                        if (nextPlayer.PlayerId != pId)
+                        {
+                            embed = embed with
+                            {
+                                Description = $"{nextPlayer.PlayerName} lost the game"
+                            };
+                            sendResult = await channelApi
+                                .CreateMessageAsync(pState.TextChannel.ID,
+                                embeds: new[] { embed });
+                        }
+                    }
+                    if (!sendResult.IsSuccess)
+                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                            playerId, sendResult.Error.Message, sendResult.Inner);
+                    
+                    await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                        0,
+                        JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
+                        {
+                            GameId = gameState.GameId,
+                            RequestType = NinetyNineInGameRequestType.Burst,
+                            PlayerId = nextPlayer.PlayerId
+                        })));
                 }
                 else
                 {
@@ -453,8 +483,7 @@ public partial class NinetyNine : NinetyNineGame
     private static IMessageComponent[]? BuildComponents(
         RawNinetyNinePlayerState currentPlayer,
         RawNinetyNineGameState gameState,
-        NinetyNineLocalization localization,
-        out NinetyNineInGameRequestType selectMenuType)
+        NinetyNineLocalization localization)
     {
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
             new PartialEmoji(Name: "❓"), "ninety_nine_help");
@@ -471,8 +500,6 @@ public partial class NinetyNine : NinetyNineGame
                 availableCards,
                 localization.Play, 1, 1);
 
-            selectMenuType = NinetyNineInGameRequestType.Play;
-
             return new IMessageComponent[]
             {
                 new ActionRowComponent(new[]
@@ -486,11 +513,10 @@ public partial class NinetyNine : NinetyNineGame
             };
         }
 
-        selectMenuType = NinetyNineInGameRequestType.Burst;
         return null;
     }
 
-    private static Embed BuildDrawingMessage(
+    private static Embed BuildTurnMessage(
     NinetyNinePlayerState playerState,
     RawNinetyNinePlayerState nextPlayer,
     Localizations localizations)

@@ -30,6 +30,8 @@ public class NinetyNineGameState :
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 
+    public List<ulong> BurstPlayers { get; set; } = new();
+
     private bool _disposed;
 
     public void Dispose()
