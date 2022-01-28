@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using System.Collections.Immutable;
 using BurstBotShared.Shared.Models.Data;
-using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using Microsoft.Extensions.Logging;
 using Remora.Discord.API.Abstractions.Objects;
@@ -20,6 +19,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly State _state;
     private readonly ILogger<NinetyNineDropDownEntity> _logger;
+
     private readonly string[] _validCustomIds =
     {
         "ninety_nine_user_selection",
@@ -39,14 +39,16 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         _logger = logger;
     }
 
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
+    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId,
+        CancellationToken ct = new())
     {
         return componentType is not ComponentType.SelectMenu
             ? Task.FromResult<Result<bool>>(false)
             : Task.FromResult<Result<bool>>(_validCustomIds.Contains(customId));
     }
+
     public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
-    CancellationToken ct = new())
+        CancellationToken ct = new())
     {
         var hasMessage = _context.Message.IsDefined(out var message);
         if (!hasMessage) return Result.FromSuccess();
@@ -77,68 +79,73 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         IEnumerable<string> values,
         CancellationToken ct)
     {
-        var extractedCard = ExtractCard(values);
+        var extractedCard = Utilities.Utilities.ExtractCard(values);
         var localization = _state.Localizations.GetLocalization().NinetyNine;
 
-        if (extractedCard.Number == 5)
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
+
+        switch (extractedCard.Number)
         {
-            playerState.UniversalCard = extractedCard;
-
-            var playerNameList = gameState.Players
-                .Where(p => p.Value.PlayerId != playerState.PlayerId)
-                .Select(p => new SelectOption(p.Value.PlayerName, p.Key.ToString()));
-
-            var fiveSelectMenu = new SelectMenuComponent("ninety_nine_five_selection",
-                playerNameList.ToImmutableArray(),
-                localization.SelectPlayerMessage, 1, 1);
-
-            var component = (new IMessageComponent[]{
-                new ActionRowComponent(new []
-                {
-                    fiveSelectMenu
-                })
-            });
-
-            var sendResult = await _channelApi
-                .CreateMessageAsync(message.ChannelID,
-                content: localization.SelectPlayerMessage,
-                components: component,
-                ct: ct);
-
-            return Result.FromSuccess();
-        }
-
-        if(extractedCard.Number == 10 || extractedCard.Number == 12)
-        {
-            playerState.UniversalCard = extractedCard;
-
-            var count = extractedCard.Number == 12 ? extractedCard.Number + 8 : extractedCard.Number;
-
-            var plusButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Plus,
-                new PartialEmoji(Name: "➕"), $"plus{count}");
-            var minusButton = new ButtonComponent(ButtonComponentStyle.Danger, localization.Minus,
-                new PartialEmoji(Name: "➖"), $"minus{count}");
-
-            var buttonComponents = new List<IMessageComponent>();
-
-            if (gameState.CurrentTotal + count <= 99)
-                buttonComponents.Add(plusButton);
-            if (gameState.CurrentTotal - count >= 0)
-                buttonComponents.Add(minusButton);
-
-
-            var component = new IMessageComponent[]
+            case 5:
             {
-                new ActionRowComponent(buttonComponents)
-            };
+                playerState.UniversalCard = extractedCard;
 
-            var sendResult = await _channelApi
-                .CreateMessageAsync(message.ChannelID,
-                content: localization.PlusOrMinusMessage,
-                components: component,
-                ct: ct);
+                var playerNameList = gameState.Players
+                    .Where(p => p.Value.PlayerId != playerState.PlayerId && !gameState.BurstPlayers.Contains(p.Value.PlayerId))
+                    .Select(p => new SelectOption(p.Value.PlayerName, p.Key.ToString()));
 
-            return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
+                var fiveSelectMenu = new SelectMenuComponent("ninety_nine_five_selection",
+                    playerNameList.ToImmutableArray(),
+                    localization.SelectPlayerMessage, 1, 1);
+
+                var component = (new IMessageComponent[]
+                {
+                    new ActionRowComponent(new[]
+                    {
+                        fiveSelectMenu
+                    })
+                });
+
+                var sendResult = await _channelApi
+                    .CreateMessageAsync(message.ChannelID,
+                        localization.SelectPlayerMessage,
+                        components: component,
+                        ct: ct);
+
+                return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
+            }
+            case 10 or 12:
+            {
+                playerState.UniversalCard = extractedCard;
+
+                var count = extractedCard.Number == 12 ? extractedCard.Number + 8 : extractedCard.Number;
+
+                var plusButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Plus,
+                    new PartialEmoji(Name: "➕"), $"plus{count}");
+                var minusButton = new ButtonComponent(ButtonComponentStyle.Danger, localization.Minus,
+                    new PartialEmoji(Name: "➖"), $"minus{count}");
+
+                var buttonComponents = new List<IMessageComponent>();
+
+                if (gameState.CurrentTotal + count <= 99)
+                    buttonComponents.Add(plusButton);
+                if (gameState.CurrentTotal - count >= 0)
+                    buttonComponents.Add(minusButton);
+
+
+                var component = new IMessageComponent[]
+                {
+                    new ActionRowComponent(buttonComponents)
+                };
+
+                var sendResult = await _channelApi
+                    .CreateMessageAsync(message.ChannelID,
+                        content: localization.PlusOrMinusMessage,
+                        components: component,
+                        ct: ct);
+
+                return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
+            }
         }
 
         var currentPlayer = gameState
@@ -168,7 +175,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         IEnumerable<string> values,
         CancellationToken ct)
     {
-        ulong nextPlayerId = ulong.Parse(values.First().ToString());
+        var nextPlayerId = ulong.Parse(values.First());
 
         await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             nextPlayerId,
@@ -184,13 +191,5 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         return Result.FromSuccess();
-    }
-    private static Card ExtractCard(IEnumerable<string> values)
-    {
-        var selection = values.First()!;
-        var suit = selection[..1];
-        var rank = selection[1..];
-        var playedCard = Card.Create(suit, rank);
-        return playedCard;
     }
 }

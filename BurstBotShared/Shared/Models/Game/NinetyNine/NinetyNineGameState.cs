@@ -1,5 +1,6 @@
 #pragma warning disable CA2252
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
@@ -26,11 +27,11 @@ public class NinetyNineGameState :
     public NinetyNineVariation Variation { get; set; }
     public NinetyNineDifficulty Difficulty { get; set; }
     public int TotalBet { get; set; }
+    public ImmutableArray<ulong> BurstPlayers { get; set; } = ImmutableArray<ulong>.Empty;
+    
     public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
-
-    public List<ulong> BurstPlayers { get; set; } = new();
 
     private bool _disposed;
 

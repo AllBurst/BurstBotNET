@@ -49,7 +49,7 @@ public static class Game
             cancellationTokenSource.Dispose();
         });
         await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
-            cancellationTokenSource.Token);
+            default);
         logger.LogDebug("Socket session closed");
         await Task.Delay(TimeSpan.FromSeconds(60));
     }

@@ -1,5 +1,6 @@
 #pragma warning disable CA2252
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text.Json.Serialization;
@@ -68,6 +69,10 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
     [JsonProperty("total_bet")]
     public int TotalBet { get; init; }
 
+    [JsonPropertyName("burst_players")]
+    [JsonProperty("burst_players")]
+    public List<ulong> BurstPlayers { get; init; } = new();
+
     [Pure]
     public static RawNinetyNineGameState FromState(IState<NinetyNineGameState, RawNinetyNineGameState, NinetyNineGameProgress> state)
     {
@@ -90,7 +95,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             Progress = gameState.Progress,
             TotalBet = gameState.TotalBet,
             Variation = gameState.Variation,
-            BaseBet = gameState.BaseBet
+            BaseBet = gameState.BaseBet,
+            BurstPlayers = gameState.BurstPlayers.ToList()
         };
     }
 
@@ -118,7 +124,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             Variation = Variation,
             TotalBet = TotalBet,
             PreviousPlayerId = PreviousPlayerId,
-            BaseBet = BaseBet
+            BaseBet = BaseBet,
+            BurstPlayers = BurstPlayers.ToImmutableArray()
         };
     }
 };

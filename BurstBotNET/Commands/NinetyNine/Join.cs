@@ -19,9 +19,15 @@ using NinetyNineGame =
 
 public partial class NinetyNine
 {
+    private NinetyNineDifficulty _difficulty;
+    private NinetyNineVariation _variation;
+    
     private async Task<IResult> Join(float baseBet, NinetyNineDifficulty difficulty, NinetyNineVariation variation,
         params IUser?[] users)
     {
+        _difficulty = difficulty;
+        _variation = variation;
+        
         var joinResult = await Game.GenericJoinGame(
             baseBet, users, GameType.NinetyNine, "/ninety_nine/join",
             _state, _context, _interactionApi, _userApi, _logger
@@ -163,15 +169,6 @@ public partial class NinetyNine
         }
 
         return Result.FromSuccess();
-        //var mentionedPlayers = Game
-        //    .BuildPlayerList(_context, users)
-        //    .ToImmutableArray();
-
-        //var result = await _interactionApi
-        //    .EditOriginalInteractionResponseAsync(_context.ApplicationID, _context.Token,
-        //        $"Difficulty: {difficulty}\nVariation: {variation}\nInvited players: {string.Join(' ', mentionedPlayers.Select(p => $"<@!{p}>"))}");
-
-        //return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
     public async Task AddPlayerStateAndStartListening(GenericJoinStatus? joinStatus, NinetyNinePlayerState playerState,
@@ -185,7 +182,9 @@ public partial class NinetyNine
                 GameId = playerState.GameId,
                 PlayerId = playerState.PlayerId,
                 PlayerName = playerState.PlayerName,
-                RequestType = NinetyNineInGameRequestType.Deal
+                RequestType = NinetyNineInGameRequestType.Deal,
+                Variation = _variation,
+                Difficulty = _difficulty
             }, _state.GameStates.NinetyNineGameStates.Item1,
             _state.GameStates.NinetyNineGameStates.Item2);
         await Task.Delay(TimeSpan.FromSeconds(1));

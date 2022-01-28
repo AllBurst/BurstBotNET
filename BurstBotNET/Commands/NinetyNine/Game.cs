@@ -1,5 +1,4 @@
 ﻿#pragma warning disable CA2252
-using System.Buffers;
 using System.Collections.Immutable;
 using System.Globalization;
 using BurstBotShared.Services;
@@ -19,6 +18,7 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Discord.Extensions.Embeds;
 using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -30,20 +30,11 @@ using NinetyNineGame =
 
 public partial class NinetyNine : NinetyNineGame
 {
-    private static readonly ImmutableArray<string> InGameRequestTypes =
-        Enum.GetNames<NinetyNineInGameRequestType>()
-            .ToImmutableArray();
-
     private static readonly int[] SpecialRanks =
     {
         4, 5, 10, 11, 12, 13,
     };
-
-    private static readonly int[] NormalRanks =
-    {
-        1, 2, 3, 6, 7, 8, 9,
-    };
-
+    
     public static async Task<bool> HandleProgress(string messageContent, NinetyNineGameState gameState, State state,
         IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
@@ -69,9 +60,11 @@ public partial class NinetyNine : NinetyNineGame
                 return progressChangeResult;
             }
 
+            var oldBurstPlayers = new List<ulong>(gameState.BurstPlayers);
+            var previousPlayerOrder = gameState.CurrentPlayerOrder;
             await UpdateGameState(gameState, deserializedIncomingData, guildApi);
-
-            await SendProgressMessages(gameState, deserializedIncomingData, state, channelApi, logger);
+            await SendProgressMessages(gameState, deserializedIncomingData, previousPlayerOrder, oldBurstPlayers,
+                deserializedIncomingData.BurstPlayers, state, channelApi, logger);
 
             gameState.Semaphore.Release();
             logger.LogDebug("Semaphore released after sending progress messages");
@@ -98,43 +91,25 @@ public partial class NinetyNine : NinetyNineGame
             if (endingData == null) return;
 
             state.Progress = NinetyNineGameProgress.Ending;
-            var winnerId = endingData
-                .Rewards
-                .MaxBy(pair => pair.Value)
-                .Key;
-            var winner = endingData
-                .Players
-                .FirstOrDefault(p => p.Value.PlayerId == winnerId)
-                .Value;
+            var winner = endingData.Winner;
+
+            if (winner == null) return;
 
             var localization = localizations.GetLocalization().NinetyNine;
 
             var title = localization.WinTitle.Replace("{playerName}", winner.PlayerName);
 
-            var rewardsDescription = endingData.Rewards
-                .Select(pair => localization.WinDescription
-                    .Replace("{playerName}", endingData.Players[pair.Key].PlayerName)
-                    .Replace("{verb}", pair.Value > 0 ? localization.Won : localization.Lost)
-                    .Replace("{totalRewards}", Math.Abs(pair.Value).ToString(CultureInfo.InvariantCulture)));
-
-            var description = string.Join('\n', rewardsDescription);
-
+            var description = localization.WinDescription
+                .Replace("{playerName}", winner.PlayerName)
+                .Replace("{verb}", localization.Won)
+                .Replace("{totalRewards}", endingData.TotalRewards.ToString());
+            
             var embed = new Embed(
                 title,
                 Description: description,
                 Colour: BurstColor.Burst.ToColor(),
                 Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
                 Image: new EmbedImage(winner.AvatarUrl));
-
-            var fields = new List<EmbedField>(endingData.Players.Count);
-
-            foreach (var (pId, player) in endingData.Players)
-            {
-                fields.Add(new EmbedField(player.PlayerName,
-                    endingData.Rewards[pId].ToString(CultureInfo.InvariantCulture) + " tips", true));
-            }
-
-            embed = embed with { Fields = fields };
 
             foreach (var (pId, player) in state.Players)
             {
@@ -163,93 +138,8 @@ public partial class NinetyNine : NinetyNineGame
         }
     }
 
-    public static async Task StartListening(string gameId, State state, IDiscordRestChannelAPI channelApi,
-        IDiscordRestGuildAPI guildApi,
-        ILogger logger)
-    {
-        if (string.IsNullOrWhiteSpace(gameId))
-            return;
-
-        var gameState = state.GameStates.NinetyNineGameStates.Item1
-            .GetOrAdd(gameId, new NinetyNineGameState());
-        logger.LogDebug("Chinese Poker game progress: {Progress}", gameState.Progress);
-
-        await gameState.Semaphore.WaitAsync();
-        logger.LogDebug("Semaphore acquired in StartListening");
-        if (gameState.Progress != NinetyNineGameProgress.NotAvailable)
-        {
-            gameState.Semaphore.Release();
-            logger.LogDebug("Semaphore released in StartListening (game state existed)");
-            return;
-        }
-
-        gameState.Progress = NinetyNineGameProgress.Starting;
-        gameState.GameId = gameId;
-        logger.LogDebug("Initial game state successfully set");
-
-        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
-
-        var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession =
-            await Game.GenericOpenWebSocketSession(GameName, state.Config, logger, cancellationTokenSource);
-        gameState.Semaphore.Release();
-        logger.LogDebug("Semaphore released in StartListening (game state created)");
-
-        var timeout = state.Config.Timeout;
-        while (!gameState.Progress.Equals(NinetyNineGameProgress.Closed))
-        {
-            var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var channelTask = NinetyNineGame.RunChannelTask(socketSession, gameState, InGameRequestTypes,
-                NinetyNineInGameRequestType.Close, NinetyNineGameProgress.Closed, logger, cancellationTokenSource);
-
-            var broadcastTask = NinetyNineGame.RunBroadcastTask(socketSession, gameState, buffer, state,
-                channelApi,
-                guildApi,
-                logger, cancellationTokenSource);
-
-            var timeoutTask = NinetyNineGame.RunTimeoutTask(timeout, gameState, NinetyNineGameProgress.Closed,
-                logger,
-                timeoutCancellationTokenSource);
-
-            await await Task.WhenAny(channelTask, broadcastTask, timeoutTask);
-            _ = Task.Run(() =>
-            {
-                timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task cancelled");
-                timeoutCancellationTokenSource.Dispose();
-            });
-        }
-
-        await Game.GenericCloseGame(socketSession, logger, cancellationTokenSource);
-        var retrieveResult =
-            state.GameStates.ChinesePokerGameStates.Item1.TryGetValue(gameState.GameId, out var retrievedState);
-        if (!retrieveResult)
-            return;
-
-        foreach (var (_, value) in retrievedState!.Players)
-        {
-            if (value.TextChannel == null)
-                continue;
-
-            var channelId = value.TextChannel.ID;
-
-            var deleteResult = await channelApi
-                .DeleteChannelAsync(channelId);
-            if (!deleteResult.IsSuccess)
-                logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
-                    deleteResult.Error.Message, deleteResult.Inner);
-
-            state.GameStates.ChinesePokerGameStates.Item2.TryRemove(channelId);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-        }
-
-        gameState.Dispose();
-        state.GameStates.ChinesePokerGameStates.Item1.Remove(gameState.GameId, out _);
-        socketSession.Dispose();
-        throw new NotImplementedException();
-    }
-
-    public static async Task<bool> HandleProgressChange(RawNinetyNineGameState deserializedIncomingData,
+    public static async Task<bool> HandleProgressChange(
+        RawNinetyNineGameState deserializedIncomingData,
         NinetyNineGameState gameState,
         State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
@@ -259,10 +149,14 @@ public partial class NinetyNine : NinetyNineGame
             var result2 = gameState.Players.TryGetValue(playerId, out _);
             if (result1 && result2)
             {
+                var oldBurstPlayers = new List<ulong>(gameState.BurstPlayers);
                 await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
-                    deserializedIncomingData.PreviousCard, state, channelApi, logger);
+                    deserializedIncomingData.PreviousCard, gameState.CurrentPlayerOrder, oldBurstPlayers,
+                    deserializedIncomingData.BurstPlayers,
+                    state, channelApi, logger);
             }
         }
+        
         switch (deserializedIncomingData.Progress)
         {
             case NinetyNineGameProgress.Ending:
@@ -282,6 +176,9 @@ public partial class NinetyNine : NinetyNineGame
     private static async Task SendProgressMessages(
         NinetyNineGameState gameState,
         RawNinetyNineGameState? deserializedIncomingData,
+        int previousPlayerOrder,
+        IEnumerable<ulong> oldBurstPlayers,
+        IEnumerable<ulong> newBurstPlayers,
         State state,
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
@@ -326,10 +223,10 @@ public partial class NinetyNine : NinetyNineGame
                     return;
                 }
 
-                var previousCards = deserializedIncomingData.PreviousCard;
+                var previousCard = deserializedIncomingData.PreviousCard;
 
                 await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
-                    previousCards, state, channelApi, logger);
+                    previousCard, previousPlayerOrder, oldBurstPlayers, newBurstPlayers, state, channelApi, logger);
 
                 if (deserializedIncomingData.Progress.Equals(NinetyNineGameProgress.Ending)) return;
 
@@ -407,30 +304,21 @@ public partial class NinetyNine : NinetyNineGame
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
-            var memberCount = gameState.BurstPlayers.Count;
-
             if (playerState.TextChannel == null) continue;
 
-            var embed = BuildTurnMessage(playerState, nextPlayer, localizations);
+            var embed = BuildTurnMessage(playerState, nextPlayer, deserializedIncomingData.CurrentTotal, localizations);
 
             if (nextPlayer.PlayerId == playerId)
             {
-                await using var renderedImage = SkiaService.RenderDeck(deckService, nextPlayer.Cards);
-                var attachment = new[]
-                {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
-                };
-
                 var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
 
                 if (component == null)
                 {
-                    gameState.BurstPlayers.Add(nextPlayer.PlayerId);
-
                     embed = embed with
                     {
-                        Description = "you lost"
+                        Description = "You lost."
                     };
+                    
                     var sendResult = await channelApi
                         .CreateMessageAsync(playerState.TextChannel.ID,
                             embeds: new[] { embed });
@@ -438,26 +326,7 @@ public partial class NinetyNine : NinetyNineGame
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);
-
-                    foreach (var (pId, pState) in gameState.Players)
-                    {
-                        if (pState.TextChannel == null) continue;
-                        if (nextPlayer.PlayerId != pId)
-                        {
-                            embed = embed with
-                            {
-                                Description = $"{nextPlayer.PlayerName} lost the game"
-                            };
-                            sendResult = await channelApi
-                                .CreateMessageAsync(pState.TextChannel.ID,
-                                    embeds: new[] { embed });
-                        }
-                    }
-
-                    if (!sendResult.IsSuccess)
-                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
-                            playerId, sendResult.Error.Message, sendResult.Inner);
-
+                    
                     await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                         0,
                         JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
@@ -466,18 +335,24 @@ public partial class NinetyNine : NinetyNineGame
                             RequestType = NinetyNineInGameRequestType.Burst,
                             PlayerId = nextPlayer.PlayerId
                         })));
+
+                    continue;
                 }
-                else
+                
+                await using var renderedImage = SkiaService.RenderDeck(deckService, nextPlayer.Cards);
+                var attachment = new[]
                 {
-                    var sendResult = await channelApi
-                        .CreateMessageAsync(playerState.TextChannel.ID,
-                            embeds: new[] { embed },
-                            attachments: attachment,
-                            components: component);
-                    if (!sendResult.IsSuccess)
-                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
-                            playerId, sendResult.Error.Message, sendResult.Inner);
-                }
+                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
+                };
+
+                var result = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: new[] { embed },
+                        attachments: attachment,
+                        components: component);
+                if (!result.IsSuccess)
+                    logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                        playerId, result.Error.Message, result.Inner);
             }
             else
             {
@@ -500,37 +375,36 @@ public partial class NinetyNine : NinetyNineGame
             new PartialEmoji(Name: "❓"), "ninety_nine_help");
 
         var availableCards = currentPlayer.Cards
-            .Where(c => SpecialRanks.Contains(c.Number) || (c.Suit == Suit.Spade && c.Number == 1)
+            .Where(c => SpecialRanks.Contains(c.Number) || c.Suit == Suit.Spade && c.Number == 1
                                                         || gameState.CurrentTotal + c.Number <= 99)
             .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                 new PartialEmoji(c.Suit.ToSnowflake())))
             .ToImmutableArray();
 
-        if (!availableCards.IsEmpty)
+        if (availableCards.IsEmpty) return null;
+        
+        var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
+            availableCards,
+            localization.Play, 1, 1);
+
+        return new IMessageComponent[]
         {
-            var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
-                availableCards,
-                localization.Play, 1, 1);
-
-            return new IMessageComponent[]
+            new ActionRowComponent(new[]
             {
-                new ActionRowComponent(new[]
-                {
-                    userSelectMenu
-                }),
-                new ActionRowComponent(new[]
-                {
-                    helpButton
-                })
-            };
-        }
+                userSelectMenu
+            }),
+            new ActionRowComponent(new[]
+            {
+                helpButton
+            })
+        };
 
-        return null;
     }
 
     private static Embed BuildTurnMessage(
         NinetyNinePlayerState playerState,
         RawNinetyNinePlayerState nextPlayer,
+        ushort currentTotal,
         Localizations localizations)
     {
         var isCurrentPlayer = nextPlayer.PlayerId == playerState.PlayerId;
@@ -553,7 +427,7 @@ public partial class NinetyNine : NinetyNineGame
 
         embed = embed with
         {
-            Description = $"{localization.NinetyNine.Cards}\n\n{string.Join('\n', nextPlayer.Cards)}",
+            Description = $"{localization.NinetyNine.Cards}\n\n{string.Join('\n', nextPlayer.Cards)}\n\n{localization.NinetyNine.CurrentTotal.Replace("{total}", currentTotal.ToString())}",
             Image = new EmbedImage(Constants.AttachmentUri)
         };
 
@@ -564,6 +438,9 @@ public partial class NinetyNine : NinetyNineGame
         NinetyNineGameState gameState,
         RawNinetyNinePlayerState previousPlayerNewState,
         Card? previousCard,
+        int previousPlayerOrder,
+        IEnumerable<ulong> oldBurstPlayers,
+        IEnumerable<ulong> newBurstPlayers,
         State state,
         IDiscordRestChannelAPI channelApi,
         ILogger logger)
@@ -571,49 +448,78 @@ public partial class NinetyNine : NinetyNineGame
         if (gameState.Progress.Equals(NinetyNineGameProgress.Starting)) return;
 
         var localization = state.Localizations.GetLocalization();
+        var ninetyNineLocalization = localization.NinetyNine;
 
-        var ninetyNineLocation = localization.NinetyNine;
-
-        if (previousCard == null) return;
-
-        await using var drawCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
+        var newBurstPlayer = newBurstPlayers
+            .Except(oldBurstPlayers)
+            .ToImmutableArray();
 
         foreach (var (pId, player) in gameState.Players)
         {
             if (player.TextChannel == null) continue;
 
-            var isPreviousPlayer = player.Order == gameState.CurrentPlayerOrder;
+            var isPreviousPlayer = player.Order == previousPlayerOrder;
             var pronoun = isPreviousPlayer ? localization.GenericWords.Pronoun : previousPlayerNewState.PlayerName;
 
-            var authorText = ninetyNineLocation.PlayMessage
-                .Replace("{previousPlayerName}", pronoun)
-                .Replace("{card}", previousCard.ToStringSimple());
-
-            await using var imageCopy = new MemoryStream((int)drawCardImage.Length);
-            await drawCardImage.CopyToAsync(imageCopy);
-            drawCardImage.Seek(0, SeekOrigin.Begin);
-            imageCopy.Seek(0, SeekOrigin.Begin);
-
-            var attachment = new[]
+            if (!newBurstPlayer.IsEmpty)
             {
-                OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
-            };
+                var authorText = ninetyNineLocalization.BurstMessage
+                    .Replace("{previousPlayerName}", pronoun);
 
-            var embed = new Embed(
-                Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),
-                Description: $"TotalBet: {gameState.CurrentTotal}",
-                Colour: BurstColor.Burst.ToColor(),
-                Image: new EmbedImage(Constants.AttachmentUri));
+                var embed = new EmbedBuilder()
+                    .WithAuthor(authorText, iconUrl: previousPlayerNewState.AvatarUrl)
+                    .WithDescription(
+                        ninetyNineLocalization.CurrentTotal.Replace("{total}", gameState.CurrentTotal.ToString()))
+                    .WithColour(BurstColor.Burst.ToColor())
+                    .WithThumbnailUrl(Constants.BurstLogo)
+                    .Build();
 
-            var result = await channelApi
-                .CreateMessageAsync(player.TextChannel.ID,
-                    embeds: new[] { embed },
-                    attachments: attachment);
-
-            if (!result.IsSuccess)
+                var result = await channelApi
+                    .CreateMessageAsync(player.TextChannel.ID,
+                        embeds: new[] { embed.Entity });
+                
+                if (!result.IsSuccess)
+                {
+                    logger.LogError("Failed to show previous player {PlayerId}'s action: {Reason}, inner: {Inner}",
+                        pId, result.Error.Message, result.Inner);
+                }
+            }
+            else
             {
-                logger.LogError("Failed to show previous player {PlayerId}'s action: {Reason}, inner: {Inner}",
-                    pId, result.Error.Message, result.Inner);
+                if (previousCard == null) return;
+                
+                await using var drawCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
+                
+                var authorText = ninetyNineLocalization.PlayMessage
+                    .Replace("{previousPlayerName}", pronoun)
+                    .Replace("{card}", previousCard.ToStringSimple());
+
+                await using var imageCopy = new MemoryStream((int)drawCardImage.Length);
+                await drawCardImage.CopyToAsync(imageCopy);
+                drawCardImage.Seek(0, SeekOrigin.Begin);
+                imageCopy.Seek(0, SeekOrigin.Begin);
+
+                var attachment = new[]
+                {
+                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, imageCopy))
+                };
+
+                var embed = new Embed(
+                    Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),
+                    Description: $"Current total: {gameState.CurrentTotal}",
+                    Colour: BurstColor.Burst.ToColor(),
+                    Image: new EmbedImage(Constants.AttachmentUri));
+
+                var result = await channelApi
+                    .CreateMessageAsync(player.TextChannel.ID,
+                        embeds: new[] { embed },
+                        attachments: attachment);
+
+                if (!result.IsSuccess)
+                {
+                    logger.LogError("Failed to show previous player {PlayerId}'s action: {Reason}, inner: {Inner}",
+                        pId, result.Error.Message, result.Inner);
+                }
             }
         }
     }
@@ -634,6 +540,7 @@ public partial class NinetyNine : NinetyNineGame
         state.Difficulty = data.Difficulty;
         state.TotalBet = data.TotalBet;
         state.Variation = data.Variation;
+        state.BurstPlayers = data.BurstPlayers.ToImmutableArray();
 
         foreach (var (playerId, playerState) in data.Players)
         {

@@ -26,6 +26,7 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("cards")] public string Cards { get; init; } = "";
     [JsonPropertyName("play")] public string Play { get; init; } = "";
     [JsonPropertyName("playMessage")] public string PlayMessage { get; init; } = "";
+    [JsonPropertyName("burstMessage")] public string BurstMessage { get; init; } = "";
 
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
@@ -33,5 +34,6 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("minus")] public string Minus { get; init; } = "";
     [JsonPropertyName("selectPlayerMessage")] public string SelectPlayerMessage { get; init; } = "";
     [JsonPropertyName("plusOrMinusMessage")] public string PlusOrMinusMessage { get; init; } = "";
+    [JsonPropertyName("currentTotal")] public string CurrentTotal { get; init; } = "";
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

@@ -15,8 +15,10 @@
   "plus": "Plus",
   "minus": "Minus",
   "playMessage": "{previousPlayerName} played a {card}!",
+  "burstMessage": "{previousPlayerName} burst!",
   "turnMessageTitle": "It's {possessive} turn!",
   "selectPlayerMessage": "Select a player",
-  "plusOrMinusMessage": "Plus or minus total count",
+  "plusOrMinusMessage": "Plus or minus the current total",
+  "currentTotal": "Current Total: {total}",
   "showHelp": "Show help texts"
 }
