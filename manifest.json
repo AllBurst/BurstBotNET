@@ -162,7 +162,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.NinetyNine.NinetyNine.html",
-          "hash": "J1J1xrS3vIXbNMMpqtC2B5quAQub0H0y9/V22viC1pg="
+          "hash": "JpvofznDuLNNRVZWOGirDS8A+S1r9b43kMWMDPJxQsM="
         }
       },
       "is_incremental": false,
@@ -1458,7 +1458,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html",
-          "hash": "a2skkAzANOw+PJtnDNFF3/HvM6JezIeM7zbzIweKZn4="
+          "hash": "LwtoipjPCNeJPYcssBL4oBG3/bC0wh6WIe+By5BbZDM="
         }
       },
       "is_incremental": false,
@@ -1470,7 +1470,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html",
-          "hash": "lQbFfGt40U5zYHf+osX2n5ra33OsL+92PkboLepV+DQ="
+          "hash": "qpK/0VJGqAgm45nZNSKCjl/FkkzXUGUIvXn336/l44Y="
         }
       },
       "is_incremental": false,
@@ -1566,7 +1566,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameResponseEndingData.html",
-          "hash": "WhrRMw8nKo4DvEdDTMeo7bphlIrOtjQqtGEOo+mubZI="
+          "hash": "2LZYgH9mrbVDn0kqVp3eiWcCydsbhL0Vov3khTUSo90="
         }
       },
       "is_incremental": false,
@@ -1590,7 +1590,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html",
-          "hash": "WB9rQEOwUbTDByG/A3euxtHpwt1PaLdHVjKT2QQG0gI="
+          "hash": "0Mj/oVuLaNRlAQusBPQnC8VeH59SNEub3nV+Iuj3gVw="
         }
       },
       "is_incremental": false,
@@ -2154,7 +2154,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html",
-          "hash": "PlK3YVsjO+jBDWlGAJSPhnHGxo0RWy05CP+MB6/mcSg="
+          "hash": "8DVgnVNnsmHTi5JfcWDFbV3lTJuKdy+4/QRYNuyBIgY="
         }
       },
       "is_incremental": false,
