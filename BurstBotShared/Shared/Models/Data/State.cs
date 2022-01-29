@@ -13,4 +13,6 @@ public record State
     public Config.Config Config { get; init; } = null!;
 
     public DeckService DeckService { get; init; } = null!;
+
+    public AmqpService AmqpService { get; init; } = null!;
 };

@@ -14,7 +14,10 @@ public record Config
     public string SocketEndpoint { get; init; } = "";
     public int SocketPort { get; init; }
     public long Timeout { get; init; }
-    
+    public string RabbitMqEndpoint { get; init; } = "";
+    public string RabbitMqUsername { get; init; } = "";
+    public string RabbitMqPassword { get; init; } = "";
+
     private const string ConfigDirectoryName = "Config";
     private const string ConfigFilePath = ConfigDirectoryName + "/config.yaml";
     private static readonly ISerializer ConfigSerializer = new SerializerBuilder()

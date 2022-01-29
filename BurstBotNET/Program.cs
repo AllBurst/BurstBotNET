@@ -106,13 +106,15 @@ namespace BurstBotNET
             var localizations = new Localizations();
             var burstApi = new BurstApi(config);
             var deckService = new DeckService();
+            var amqpService = new AmqpService(config);
             var state = new State
             {
                 BurstApi = burstApi,
                 Config = config,
                 GameStates = gameStates,
                 Localizations = localizations,
-                DeckService = deckService
+                DeckService = deckService,
+                AmqpService = amqpService
             };
 
             return Host.CreateDefaultBuilder(args)
