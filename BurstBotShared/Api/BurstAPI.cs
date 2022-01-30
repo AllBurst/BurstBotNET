@@ -175,7 +175,7 @@ public sealed class BurstApi
             {
                 const string message = "Timeout because no match game is found";
                 logger.LogDebug(message);
-                await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, message,
+                await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, message,
                     cancellationTokenSource.Token);
                 _ = Task.Run(() =>
                 {
@@ -195,7 +195,7 @@ public sealed class BurstApi
 
             if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
 
-            await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
+            await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
                 cancellationTokenSource.Token);
             cancellationTokenSource.Dispose();
 
@@ -432,7 +432,14 @@ public sealed class BurstApi
                 interactionApi, logger);
 
         if (matchData == null)
+        {
+            var result = await interactionApi
+                .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                    "Sorry, but looks like there are not enough players waiting for a match!");
+            if (!result.IsSuccess)
+                logger.LogError("Failed to reply with match not found message: {Reason}, inner: {Inner}", result.Error.Message, result.Inner);
             return null;
+        }
 
         var playerStates = new List<BlackJackPlayerState>(participatingPlayers.Length);
         foreach (var member in participatingPlayers)
@@ -479,7 +486,14 @@ public sealed class BurstApi
             description,
             interactionApi, logger);
         if (matchData == null)
+        {
+            var result = await interactionApi
+                .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                    "Sorry, but looks like there are not enough players waiting for a match!");
+            if (!result.IsSuccess)
+                logger.LogError("Failed to reply with match not found message: {Reason}, inner: {Inner}", result.Error.Message, result.Inner);
             return null;
+        }
 
         var playerStates = new List<T>(participatingPlayers.Length);
         foreach (var member in participatingPlayers)

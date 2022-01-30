@@ -216,7 +216,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             var receiveContent = rentBuffer[..receiveResult.Count];
             var stringContent = Encoding.UTF8.GetString(receiveContent);
             contentStack.Push(stringContent);
-            //logger.LogDebug("Received content: {Content}", stringContent);
             buffer.Return(rentBuffer, true);
         } while (!receiveResult.EndOfMessage);
 
