@@ -31,7 +31,8 @@ namespace BurstBotNET
         private static readonly Activity[] Activities =
             new[]
                 {
-                    "Black Jack", "Chinese Poker", "Ninety Nine", "Old Maid"
+                    "Black Jack", "Chinese Poker", "Ninety Nine", "Old Maid",
+                    "Red Dots Picking", "Chase the Pig"
                 }
                 .Select(s => new Activity(s, ActivityType.Game))
                 .ToArray();
@@ -56,6 +57,7 @@ namespace BurstBotNET
             var services = host.Services;
             var logger = services.GetRequiredService<ILogger<Program>>();
             var slashService = services.GetRequiredService<SlashService>();
+            logger.LogInformation("Processor count: {Count}", Environment.ProcessorCount);
 
             var checkSlashSupport = slashService.SupportsSlashCommands();
             if (!checkSlashSupport.IsSuccess)
