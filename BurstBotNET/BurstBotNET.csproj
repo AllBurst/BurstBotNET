@@ -44,6 +44,18 @@
         <None Update="Assets\localization\chaseThePig\EN\scoring.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\chaseThePig\JP\chasePigLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\chinesePoker\JP\chinesePokerLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\oldMaid\JP\oldMaidLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\redDotsPicking\JP\redDotsLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
