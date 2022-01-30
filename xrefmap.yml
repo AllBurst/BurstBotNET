@@ -1252,15 +1252,15 @@ references:
   commentId: T:BurstBotNET.Handlers.ReadyResponder
   fullName: BurstBotNET.Handlers.ReadyResponder
   nameWithType: ReadyResponder
-- uid: BurstBotNET.Handlers.ReadyResponder.#ctor(Microsoft.Extensions.Logging.ILogger{BurstBotNET.Handlers.ReadyResponder},Remora.Discord.API.Abstractions.Rest.IDiscordRestApplicationAPI)
-  name: ReadyResponder(ILogger<ReadyResponder>, IDiscordRestApplicationAPI)
-  href: api/BurstBotNET.Handlers.ReadyResponder.html#BurstBotNET_Handlers_ReadyResponder__ctor_Microsoft_Extensions_Logging_ILogger_BurstBotNET_Handlers_ReadyResponder__Remora_Discord_API_Abstractions_Rest_IDiscordRestApplicationAPI_
-  commentId: M:BurstBotNET.Handlers.ReadyResponder.#ctor(Microsoft.Extensions.Logging.ILogger{BurstBotNET.Handlers.ReadyResponder},Remora.Discord.API.Abstractions.Rest.IDiscordRestApplicationAPI)
-  name.vb: ReadyResponder(ILogger(Of ReadyResponder), IDiscordRestApplicationAPI)
-  fullName: BurstBotNET.Handlers.ReadyResponder.ReadyResponder(Microsoft.Extensions.Logging.ILogger<BurstBotNET.Handlers.ReadyResponder>, Remora.Discord.API.Abstractions.Rest.IDiscordRestApplicationAPI)
-  fullName.vb: BurstBotNET.Handlers.ReadyResponder.ReadyResponder(Microsoft.Extensions.Logging.ILogger(Of BurstBotNET.Handlers.ReadyResponder), Remora.Discord.API.Abstractions.Rest.IDiscordRestApplicationAPI)
-  nameWithType: ReadyResponder.ReadyResponder(ILogger<ReadyResponder>, IDiscordRestApplicationAPI)
-  nameWithType.vb: ReadyResponder.ReadyResponder(ILogger(Of ReadyResponder), IDiscordRestApplicationAPI)
+- uid: BurstBotNET.Handlers.ReadyResponder.#ctor(Microsoft.Extensions.Logging.ILogger{BurstBotNET.Handlers.ReadyResponder},Remora.Discord.Gateway.DiscordGatewayClient)
+  name: ReadyResponder(ILogger<ReadyResponder>, DiscordGatewayClient)
+  href: api/BurstBotNET.Handlers.ReadyResponder.html#BurstBotNET_Handlers_ReadyResponder__ctor_Microsoft_Extensions_Logging_ILogger_BurstBotNET_Handlers_ReadyResponder__Remora_Discord_Gateway_DiscordGatewayClient_
+  commentId: M:BurstBotNET.Handlers.ReadyResponder.#ctor(Microsoft.Extensions.Logging.ILogger{BurstBotNET.Handlers.ReadyResponder},Remora.Discord.Gateway.DiscordGatewayClient)
+  name.vb: ReadyResponder(ILogger(Of ReadyResponder), DiscordGatewayClient)
+  fullName: BurstBotNET.Handlers.ReadyResponder.ReadyResponder(Microsoft.Extensions.Logging.ILogger<BurstBotNET.Handlers.ReadyResponder>, Remora.Discord.Gateway.DiscordGatewayClient)
+  fullName.vb: BurstBotNET.Handlers.ReadyResponder.ReadyResponder(Microsoft.Extensions.Logging.ILogger(Of BurstBotNET.Handlers.ReadyResponder), Remora.Discord.Gateway.DiscordGatewayClient)
+  nameWithType: ReadyResponder.ReadyResponder(ILogger<ReadyResponder>, DiscordGatewayClient)
+  nameWithType.vb: ReadyResponder.ReadyResponder(ILogger(Of ReadyResponder), DiscordGatewayClient)
 - uid: BurstBotNET.Handlers.ReadyResponder.#ctor*
   name: ReadyResponder
   href: api/BurstBotNET.Handlers.ReadyResponder.html#BurstBotNET_Handlers_ReadyResponder__ctor_
@@ -1714,6 +1714,12 @@ references:
   commentId: T:BurstBotShared.Shared.Constants
   fullName: BurstBotShared.Shared.Constants
   nameWithType: Constants
+- uid: BurstBotShared.Shared.Constants.Activities
+  name: Activities
+  href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_Activities
+  commentId: F:BurstBotShared.Shared.Constants.Activities
+  fullName: BurstBotShared.Shared.Constants.Activities
+  nameWithType: Constants.Activities
 - uid: BurstBotShared.Shared.Constants.AttachmentUri
   name: AttachmentUri
   href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_AttachmentUri
@@ -1852,6 +1858,38 @@ references:
   commentId: T:BurstBotShared.Shared.Extensions.BurstExtensions
   fullName: BurstBotShared.Shared.Extensions.BurstExtensions
   nameWithType: BurstExtensions
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Choose*
+  name: Choose
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Choose_
+  commentId: Overload:BurstBotShared.Shared.Extensions.BurstExtensions.Choose
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Choose
+  nameWithType: BurstExtensions.Choose
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.Choose``1(IEnumerable{``0})
+  name: Choose<T>(IEnumerable<T>)
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Choose__1_IEnumerable___0__
+  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.Choose``1(IEnumerable{``0})
+  name.vb: Choose(Of T)(IEnumerable(Of T))
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.Choose<T>(IEnumerable<T>)
+  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.Choose(Of T)(IEnumerable(Of T))
+  nameWithType: BurstExtensions.Choose<T>(IEnumerable<T>)
+  nameWithType.vb: BurstExtensions.Choose(Of T)(IEnumerable(Of T))
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple*
+  name: ChooseMultiple
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_ChooseMultiple_
+  commentId: Overload:BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple
+  nameWithType: BurstExtensions.ChooseMultiple
+- uid: BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple``1(IEnumerable{``0},System.Int32)
+  name: ChooseMultiple<T>(IEnumerable<T>, Int32)
+  href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_ChooseMultiple__1_IEnumerable___0__System_Int32_
+  commentId: M:BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple``1(IEnumerable{``0},System.Int32)
+  name.vb: ChooseMultiple(Of T)(IEnumerable(Of T), Int32)
+  fullName: BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple<T>(IEnumerable<T>, System.Int32)
+  fullName.vb: BurstBotShared.Shared.Extensions.BurstExtensions.ChooseMultiple(Of T)(IEnumerable(Of T), System.Int32)
+  nameWithType: BurstExtensions.ChooseMultiple<T>(IEnumerable<T>, Int32)
+  nameWithType.vb: BurstExtensions.ChooseMultiple(Of T)(IEnumerable(Of T), Int32)
 - uid: BurstBotShared.Shared.Extensions.BurstExtensions.Disable(Remora.Rest.Core.Optional{IReadOnlyList{Remora.Discord.API.Abstractions.Objects.IMessageComponent}},System.Boolean,System.Nullable{IEnumerable{System.String}})
   name: Disable(Optional<IReadOnlyList<IMessageComponent>>, Boolean, Nullable<IEnumerable<String>>)
   href: api/BurstBotShared.Shared.Extensions.BurstExtensions.html#BurstBotShared_Shared_Extensions_BurstExtensions_Disable_Remora_Rest_Core_Optional_IReadOnlyList_Remora_Discord_API_Abstractions_Objects_IMessageComponent___System_Boolean_System_Nullable_IEnumerable_System_String___
