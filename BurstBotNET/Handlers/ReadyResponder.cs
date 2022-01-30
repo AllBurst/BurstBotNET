@@ -33,6 +33,12 @@ public class ReadyResponder : IResponder<IReady>
             while (true)
             {
                 await Task.Delay(TimeSpan.FromHours(1), ct);
+                if (ct.IsCancellationRequested)
+                {
+                    _logger.LogInformation("Activity update task has been cancelled");
+                    break;
+                }
+                
                 var newActivity = new UpdatePresence(ClientStatus.Online, false, null,
                     new[] { Constants.Activities.Choose() });
                 _gatewayClient.SubmitCommand(newActivity);
