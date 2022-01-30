@@ -1508,6 +1508,51 @@ references:
   commentId: N:BurstBotShared.Services
   fullName: BurstBotShared.Services
   nameWithType: BurstBotShared.Services
+- uid: BurstBotShared.Services.AmqpService
+  name: AmqpService
+  href: api/BurstBotShared.Services.AmqpService.html
+  commentId: T:BurstBotShared.Services.AmqpService
+  fullName: BurstBotShared.Services.AmqpService
+  nameWithType: AmqpService
+- uid: BurstBotShared.Services.AmqpService.#ctor(BurstBotShared.Shared.Models.Config.Config)
+  name: AmqpService(Config)
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService__ctor_BurstBotShared_Shared_Models_Config_Config_
+  commentId: M:BurstBotShared.Services.AmqpService.#ctor(BurstBotShared.Shared.Models.Config.Config)
+  fullName: BurstBotShared.Services.AmqpService.AmqpService(BurstBotShared.Shared.Models.Config.Config)
+  nameWithType: AmqpService.AmqpService(Config)
+- uid: BurstBotShared.Services.AmqpService.#ctor*
+  name: AmqpService
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService__ctor_
+  commentId: Overload:BurstBotShared.Services.AmqpService.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.AmqpService
+  nameWithType: AmqpService.AmqpService
+- uid: BurstBotShared.Services.AmqpService.Dispose
+  name: Dispose()
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_Dispose
+  commentId: M:BurstBotShared.Services.AmqpService.Dispose
+  fullName: BurstBotShared.Services.AmqpService.Dispose()
+  nameWithType: AmqpService.Dispose()
+- uid: BurstBotShared.Services.AmqpService.Dispose*
+  name: Dispose
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_Dispose_
+  commentId: Overload:BurstBotShared.Services.AmqpService.Dispose
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.Dispose
+  nameWithType: AmqpService.Dispose
+- uid: BurstBotShared.Services.AmqpService.Finalize
+  name: Finalize()
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_Finalize
+  commentId: M:BurstBotShared.Services.AmqpService.Finalize
+  fullName: BurstBotShared.Services.AmqpService.Finalize()
+  nameWithType: AmqpService.Finalize()
+- uid: BurstBotShared.Services.AmqpService.Finalize*
+  name: Finalize
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_Finalize_
+  commentId: Overload:BurstBotShared.Services.AmqpService.Finalize
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.Finalize
+  nameWithType: AmqpService.Finalize
 - uid: BurstBotShared.Services.DeckService
   name: DeckService
   href: api/BurstBotShared.Services.DeckService.html
@@ -2866,6 +2911,45 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Config.Config.LogLevel
   nameWithType: Config.LogLevel
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+  name: RabbitMqEndpoint
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqEndpoint
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+  nameWithType: Config.RabbitMqEndpoint
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint*
+  name: RabbitMqEndpoint
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqEndpoint_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+  nameWithType: Config.RabbitMqEndpoint
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
+  name: RabbitMqPassword
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqPassword
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
+  nameWithType: Config.RabbitMqPassword
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword*
+  name: RabbitMqPassword
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqPassword_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
+  nameWithType: Config.RabbitMqPassword
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
+  name: RabbitMqUsername
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqUsername
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
+  nameWithType: Config.RabbitMqUsername
+- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername*
+  name: RabbitMqUsername
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqUsername_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
+  nameWithType: Config.RabbitMqUsername
 - uid: BurstBotShared.Shared.Models.Config.Config.RecreateGlobals
   name: RecreateGlobals
   href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RecreateGlobals
@@ -3372,6 +3456,19 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Data.State
   fullName: BurstBotShared.Shared.Models.Data.State
   nameWithType: State
+- uid: BurstBotShared.Shared.Models.Data.State.AmqpService
+  name: AmqpService
+  href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_AmqpService
+  commentId: P:BurstBotShared.Shared.Models.Data.State.AmqpService
+  fullName: BurstBotShared.Shared.Models.Data.State.AmqpService
+  nameWithType: State.AmqpService
+- uid: BurstBotShared.Shared.Models.Data.State.AmqpService*
+  name: AmqpService
+  href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_AmqpService_
+  commentId: Overload:BurstBotShared.Shared.Models.Data.State.AmqpService
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Data.State.AmqpService
+  nameWithType: State.AmqpService
 - uid: BurstBotShared.Shared.Models.Data.State.BurstApi
   name: BurstApi
   href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_BurstApi
