@@ -1,3 +1,7 @@
+using System.Collections.Immutable;
+using Remora.Discord.API.Abstractions.Objects;
+using Remora.Discord.API.Objects;
+
 namespace BurstBotShared.Shared;
 
 public static class Constants
@@ -20,4 +24,13 @@ public static class Constants
 
     public const string GameStarted =
         "<:burst_spade2:930749903158792192> <:burst_heart2:930749955914727474> **GAME STARTED!** <:burst_diamond2:930749987044851712> <:burst_club2:930750022167957504>";
+
+    public static readonly ImmutableArray<Activity> Activities =
+        new[]
+            {
+                "Black Jack", "Chinese Poker", "Ninety Nine", "Old Maid",
+                "Red Dots Picking", "Chase the Pig"
+            }
+            .Select(s => new Activity(s, ActivityType.Game))
+            .ToImmutableArray();
 }

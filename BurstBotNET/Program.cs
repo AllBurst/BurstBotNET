@@ -2,6 +2,7 @@
 using BurstBotNET.Handlers;
 using BurstBotShared.Api;
 using BurstBotShared.Services;
+using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game;
@@ -21,6 +22,7 @@ using Remora.Discord.Gateway.Extensions;
 using Remora.Discord.Hosting.Extensions;
 using Remora.Discord.Interactivity.Extensions;
 using ActivityType = Remora.Discord.API.Abstractions.Objects.ActivityType;
+using Constants = BurstBotShared.Shared.Constants;
 
 #pragma warning disable CA2252
 
@@ -28,15 +30,6 @@ namespace BurstBotNET
 {
     public class Program
     {
-        private static readonly Activity[] Activities =
-            new[]
-                {
-                    "Black Jack", "Chinese Poker", "Ninety Nine", "Old Maid",
-                    "Red Dots Picking", "Chase the Pig"
-                }
-                .Select(s => new Activity(s, ActivityType.Game))
-                .ToArray();
-        
         public static async Task Main(string[] args)
         {
             var config = Config.LoadConfig();
@@ -132,7 +125,8 @@ namespace BurstBotNET
                     {
                         opt.Intents = GatewayIntents.Guilds | GatewayIntents.GuildMessages |
                                       GatewayIntents.GuildMessageReactions;
-                        opt.Presence = new UpdatePresence(ClientStatus.Online, false, null, Activities);
+                        opt.Presence = new UpdatePresence(ClientStatus.Online, false, null,
+                            new[] { Constants.Activities.Choose() });
                     }))
                 .ConfigureLogging(builder => builder
                     .AddConsole()
