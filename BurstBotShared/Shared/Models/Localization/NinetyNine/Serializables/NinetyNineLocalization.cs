@@ -32,6 +32,7 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
     [JsonPropertyName("plus")] public string Plus { get; init; } = "";
     [JsonPropertyName("minus")] public string Minus { get; init; } = "";
+    [JsonPropertyName("confirm")] public string Confirm { get; init; } = "";
     [JsonPropertyName("selectPlayerMessage")] public string SelectPlayerMessage { get; init; } = "";
     [JsonPropertyName("plusOrMinusMessage")] public string PlusOrMinusMessage { get; init; } = "";
     [JsonPropertyName("currentTotal")] public string CurrentTotal { get; init; } = "";

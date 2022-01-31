@@ -14,6 +14,7 @@
   "play": "Play",
   "plus": "Plus",
   "minus": "Minus",
+  "confirm": "Confirm",
   "playMessage": "{previousPlayerName} played a {card}!",
   "burstMessage": "{previousPlayerName} burst!",
   "turnMessageTitle": "It's {possessive} turn!",

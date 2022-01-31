@@ -314,19 +314,34 @@ public partial class NinetyNine : NinetyNineGame
 
                 if (component == null)
                 {
+                    var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
+                        new PartialEmoji(Name: "😫"), "confirm");
+
+                    var newcomponent = (new IMessageComponent[] {
+                        new ActionRowComponent(new []
+                        {
+                            confirmButton 
+                        })
+                    });
+
                     embed = embed with
                     {
-                        Description = "You lost."
+                        Description = $"You lost." +
+                        $"\n\n{localization.Cards}" +
+                        $"\n\n{ string.Join('\n', nextPlayer.Cards)}" +
+                        $"\n\n{ localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
+                        Image = new EmbedImage(Constants.AttachmentUri)
                     };
                     
                     var sendResult = await channelApi
                         .CreateMessageAsync(playerState.TextChannel.ID,
-                            embeds: new[] { embed });
+                            embeds: new[] { embed },
+                            components: newcomponent);
 
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);
-                    
+
                     await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                         0,
                         JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
