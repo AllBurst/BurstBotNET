@@ -228,7 +228,7 @@ public class NinetyNine : CommandGroup, IGame&lt;NinetyNineGameState, RawNinetyN
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq_and_localization/apiSpec/new?filename=BurstBotNET_Commands_NinetyNine_NinetyNine_AddPlayerStateAndStartListening_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_Remora_Rest_Core_Snowflake_.md&amp;value=---%0Auid%3A%20BurstBotNET.Commands.NinetyNine.NinetyNine.AddPlayerStateAndStartListening(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus%2CBurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState%2CRemora.Rest.Core.Snowflake)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Join.cs/#L29">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Join.cs/#L174">View Source</a>
   </span>
   <a id="BurstBotNET_Commands_NinetyNine_NinetyNine_AddPlayerStateAndStartListening_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.AddPlayerStateAndStartListening*"></a>
   <h4 id="BurstBotNET_Commands_NinetyNine_NinetyNine_AddPlayerStateAndStartListening_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_Remora_Rest_Core_Snowflake_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.AddPlayerStateAndStartListening(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState,Remora.Rest.Core.Snowflake)">AddPlayerStateAndStartListening(GenericJoinStatus, NinetyNinePlayerState, Snowflake)</h4>
@@ -236,7 +236,7 @@ public class NinetyNine : CommandGroup, IGame&lt;NinetyNineGameState, RawNinetyN
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task AddPlayerStateAndStartListening(GenericJoinStatus joinStatus, NinetyNinePlayerState playerState, Snowflake guild)</code></pre>
+    <pre><code class="lang-csharp hljs">public async Task AddPlayerStateAndStartListening(GenericJoinStatus joinStatus, NinetyNinePlayerState playerState, Snowflake guild)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -294,7 +294,7 @@ public class NinetyNine : CommandGroup, IGame&lt;NinetyNineGameState, RawNinetyN
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Command(&quot;join&quot;, new string[]{})]
-public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float baseBet = 1F, NinetyNineVariation variation = NinetyNineVariation.Taiwanese, IUser player2 = null, IUser player3 = null, IUser player4 = null, IUser player5 = null, IUser player6 = null, IUser player7 = null, IUser player8 = null)</code></pre>
+public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float baseBet = 50F, NinetyNineVariation variation = NinetyNineVariation.Taiwanese, IUser player2 = null, IUser player3 = null, IUser player4 = null, IUser player5 = null, IUser player6 = null, IUser player7 = null, IUser player8 = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -378,7 +378,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq_and_localization/apiSpec/new?filename=BurstBotNET_Commands_NinetyNine_NinetyNine_HandleEndingResult_System_String_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Localization_Localizations_BurstBotShared_Services_DeckService_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotNET.Commands.NinetyNine.NinetyNine.HandleEndingResult(System.String%2CBurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState%2CBurstBotShared.Shared.Models.Localization.Localizations%2CBurstBotShared.Services.DeckService%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L24">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L84">View Source</a>
   </span>
   <a id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleEndingResult_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleEndingResult*"></a>
   <h4 id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleEndingResult_System_String_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Localization_Localizations_BurstBotShared_Services_DeckService_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleEndingResult(System.String,BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState,BurstBotShared.Shared.Models.Localization.Localizations,BurstBotShared.Services.DeckService,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Microsoft.Extensions.Logging.ILogger)">HandleEndingResult(String, NinetyNineGameState, Localizations, DeckService, IDiscordRestChannelAPI, ILogger)</h4>
@@ -386,7 +386,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task HandleEndingResult(string messageContent, NinetyNineGameState state, Localizations localizations, DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)</code></pre>
+    <pre><code class="lang-csharp hljs">public static async Task HandleEndingResult(string messageContent, NinetyNineGameState state, Localizations localizations, DeckService deckService, IDiscordRestChannelAPI channelApi, ILogger logger)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -450,7 +450,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq_and_localization/apiSpec/new?filename=BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgress_System_String_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgress(System.String%2CBurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L18">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L38">View Source</a>
   </span>
   <a id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgress_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgress*"></a>
   <h4 id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgress_System_String_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgress(System.String,BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)">HandleProgress(String, NinetyNineGameState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)</h4>
@@ -458,7 +458,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task&lt;bool&gt; HandleProgress(string messageContent, NinetyNineGameState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
+    <pre><code class="lang-csharp hljs">public static async Task&lt;bool&gt; HandleProgress(string messageContent, NinetyNineGameState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -522,7 +522,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq_and_localization/apiSpec/new?filename=BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgressChange_BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_.md&amp;value=---%0Auid%3A%20BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgressChange(BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState%2CBurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState%2CBurstBotShared.Shared.Models.Data.State%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI%2CRemora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI%2CMicrosoft.Extensions.Logging.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L30">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq_and_localization/BurstBotNET/Commands/NinetyNine/Game.cs/#L141">View Source</a>
   </span>
   <a id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgressChange_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgressChange*"></a>
   <h4 id="BurstBotNET_Commands_NinetyNine_NinetyNine_HandleProgressChange_BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_" data-uid="BurstBotNET.Commands.NinetyNine.NinetyNine.HandleProgressChange(BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState,BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)">HandleProgressChange(RawNinetyNineGameState, NinetyNineGameState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)</h4>
@@ -530,7 +530,7 @@ public async Task&lt;IResult&gt; Handle(NinetyNineDifficulty difficulty, float b
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Task&lt;bool&gt; HandleProgressChange(RawNinetyNineGameState deserializedIncomingData, NinetyNineGameState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
+    <pre><code class="lang-csharp hljs">public static async Task&lt;bool&gt; HandleProgressChange(RawNinetyNineGameState deserializedIncomingData, NinetyNineGameState gameState, State state, IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
