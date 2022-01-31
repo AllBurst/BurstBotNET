@@ -1,6 +1,7 @@
 bot: "Assets/localization/bot/help_jp.txt"
 blackJack: "Assets/localization/blackJack/JP/blackjackLocalization.json"
 chinesePoker: "Assets/localization/chinesePoker/JP/chinesePokerLocalization.json"
+ninetyNine: "Assets/localization/ninetyNine/JP/ninetyNineLocalization.json"
 oldMaid: "Assets/localization/oldMaid/JP/oldMaidLocalization.json"
 redDotsPicking: "Assets/localization/redDotsPicking/JP/redDotsLocalization.json"
 chaseThePig: "Assets/localization/chaseThePig/JP/chasePigLocalization.json"
