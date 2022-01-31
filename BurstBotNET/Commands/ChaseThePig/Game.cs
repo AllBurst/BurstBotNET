@@ -317,7 +317,7 @@ public partial class ChaseThePig : ChasePigGame
                 .Replace("{possessive}",
                     isNextPlayer
                         ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
-                        : nextPlayer.PlayerName);
+                        : localization.GenericWords.PossessiveThird.Replace("{playerName}", nextPlayer.PlayerName));
 
             var embed = new Embed
                 {
@@ -487,7 +487,7 @@ public partial class ChaseThePig : ChasePigGame
                 .Replace("{possessive}",
                     isNextPlayer
                         ? localization.GenericWords.PossessiveSecond.ToLowerInvariant()
-                        : nextPlayer.PlayerName);
+                        : localization.GenericWords.PossessiveThird.Replace("{playerName}", nextPlayer.PlayerName));
 
             var embed = new Embed
             {
