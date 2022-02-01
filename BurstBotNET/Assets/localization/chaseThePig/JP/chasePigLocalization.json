@@ -20,7 +20,7 @@
   "noExposableCardsSecond": "あなたは公開できるカードを持っていません。",
   "noExposableCardsThird": "{playerName}は公開できるカードを持っていません。",
   "play": "カードを出す",
-  "playMessage": "{playerName}を{card}を出した。",
+  "playMessage": "{playerName}は{card}を出した。",
   "winTurnMessage": "このターンは{playerName}の勝ちです！",
   "exposeTitle": "{playerName}はカードを公開した！",
   "exposeMessage": "{playerName}は{card}を公開した！",
