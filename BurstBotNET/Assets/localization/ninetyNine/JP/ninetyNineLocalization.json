@@ -1,0 +1,24 @@
+{
+  "commandList": {
+    "general": "Assets/localization/ninetyNine/JP/general.txt"
+  },
+  "initialMessagePrefix": "あなたのカード：\n",
+  "initialMessageDescription": "**ベースベット：{baseBet}。**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "九十九が始まりました！",
+  "initialMessageFooter": "他のプレイヤーをお待ちください。",
+  "winTitle": "{playerName}の勝ちです！",
+  "won": "手に入れた",
+  "lost": "失った",
+  "winDescription": "{playerName}が{totalRewards}チップを{verb}！",
+  "cards": "あなたのカード：",
+  "play": "出す",
+  "plus": "足す",
+  "minus": "引く",
+  "playMessage": "{previousPlayerName}は{card}を出した！",
+  "burstMessage": "{previousPlayerName}はバーストした！",
+  "turnMessageTitle": "{possessive}番です！",
+  "selectPlayerMessage": "プレイヤーを選んでください",
+  "plusOrMinusMessage": "現在の合計に足すか引くか",
+  "currentTotal": "現在の合計：{total}",
+  "showHelp": "九十九について"
+}

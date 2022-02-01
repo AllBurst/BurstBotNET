@@ -258,7 +258,7 @@ public partial class NinetyNine : NinetyNineGame
 
         var description = localization.InitialMessageDescription
             .Replace("{baseBet}", deserializedIncomingData.BaseBet.ToString(CultureInfo.InvariantCulture))
-            .Replace("{helpText}", localization.CommandList["draw"])
+            .Replace("{helpText}", localization.CommandList["general"])
             .Replace("{cardNames}", cardNames);
 
         await using var renderedDeck = SkiaService.RenderDeck(deckService, newPlayerState.Cards);

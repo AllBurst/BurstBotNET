@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using Remora.Discord.API.Abstractions.Objects;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
-public class NinetyNineButtonEntity : IButtonInteractiveEntity
+public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 {
     private readonly InteractionContext _context;
     private readonly State _state;
@@ -66,7 +67,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
         {
             "plus10" or "plus20" => await PlusOrMinus(message!, gameState, playerState, NinetyNineInGameAdjustmentType.Plus, ct),
             "minus10" or "minus20" => await PlusOrMinus(message!,gameState, playerState,NinetyNineInGameAdjustmentType.Minus, ct),
-            "ninety_nine_help_selection" => await ShowHelpMenu(),
+            "ninety_nine_help_selection" => await ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()
         };
     }
@@ -93,13 +94,13 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity
         return Result.FromSuccess();
     }
 
-    private async Task<Result> ShowHelpMenu()
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
     {
-        var localization = _state.Localizations.GetLocalization().NinetyNine;
+        var localization = state.Localizations.GetLocalization().NinetyNine;
 
-        var result = await _interactionApi
-            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,
-                localization.CommandList["draw"]);
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.CommandList["general"]);
 
         return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }

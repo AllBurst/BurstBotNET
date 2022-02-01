@@ -3,6 +3,7 @@ using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
+using BurstBotShared.Shared.Models.Game.NinetyNine;
 using BurstBotShared.Shared.Models.Game.OldMaid;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -58,7 +59,7 @@ public class Help : CommandGroup
         {
             GameType.BlackJack => await BlackJackButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChinesePoker => await ChinesePokerButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
-            GameType.NinetyNine => Result.FromSuccess(),
+            GameType.NinetyNine => await NinetyNineButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.OldMaid => await OldMaidButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.RedDotsPicking => await RedDotsButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChaseThePig => await ChasePigButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),

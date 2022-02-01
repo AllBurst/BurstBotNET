@@ -57,6 +57,12 @@
         <None Update="Assets\localization\redDotsPicking\JP\redDotsLocalization.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\ninetyNine\JP\ninetyNineLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\ninetyNine\CN\ninetyNineLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

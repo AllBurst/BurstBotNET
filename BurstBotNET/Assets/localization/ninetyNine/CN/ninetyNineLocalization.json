@@ -1,6 +1,6 @@
 {
   "commandList": {
-    "general": "Assets/localization/ninetyNine/EN/general.txt"
+    "general": "Assets/localization/ninetyNine/CN/general.txt"
   },
   "initialMessagePrefix": "You currently own:\n",
   "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
@@ -18,7 +18,7 @@
   "burstMessage": "{previousPlayerName} burst!",
   "turnMessageTitle": "It's {possessive} turn!",
   "selectPlayerMessage": "Select a player",
-  "plusOrMinusMessage": "Add or deduct from the current total",
+  "plusOrMinusMessage": "Plus or minus the current total",
   "currentTotal": "Current Total: {total}",
   "showHelp": "Show help texts"
 }
