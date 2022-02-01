@@ -16,7 +16,6 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
-using Remora.Rest.Core;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.ChaseThePig;
@@ -133,10 +132,19 @@ public partial class ChaseThePig : ChasePigGame
             var title = localization.WinTitle.Replace("{playerName}", winner.PlayerName);
             
             var rewardsDescription = endingData.Rewards
-                .Select(pair => localization.WinDescription
-                    .Replace("{playerName}", endingData.Players[pair.Key].PlayerName)
-                    .Replace("{verb}", pair.Value > 0 ? localization.Won : localization.Lost)
-                    .Replace("{totalRewards}", Math.Abs(pair.Value).ToString(CultureInfo.InvariantCulture)));
+                .Select(pair =>
+                {
+                    var playerName = endingData.Players[pair.Key].PlayerName;
+                    if (pair.Value != 0)
+                    {
+                        return localization.WinDescription
+                            .Replace("{playerName}", playerName)
+                            .Replace("{verb}", pair.Value > 0 ? localization.Won : localization.Lost)
+                            .Replace("{totalRewards}", Math.Abs(pair.Value).ToString(CultureInfo.InvariantCulture));
+                    }
+
+                    return localization.NoChange.Replace("{playerName}", playerName);
+                });
 
             var description = string.Join('\n', rewardsDescription);
             

@@ -12,6 +12,7 @@
   "winTitle": "{playerName} is the biggest winner!",
   "won": "won",
   "lost": "lost",
+  "noChange": "{playerName}'s tips didn't change!",
   "winDescription": "{playerName} {verb} {totalRewards} tips!",
   "cards": "Your cards:",
   "expose": "Expose your card",

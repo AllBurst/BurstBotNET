@@ -12,6 +12,7 @@
   "winTitle": "{playerName}の勝ちです！",
   "won": "手に入れた",
   "lost": "失った",
+  "noChange": "{playerName}のチップは変わらなかった！",
   "winDescription": "{playerName}が{totalRewards}チップを{verb}！",
   "cards": "あなたのカード：",
   "expose": "カードを公開する",
