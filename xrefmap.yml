@@ -11973,6 +11973,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.Lost
   nameWithType: ChasePigLocalization.Lost
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange
+  name: NoChange
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoChange
+  commentId: P:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange
+  nameWithType: ChasePigLocalization.NoChange
+- uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange*
+  name: NoChange
+  href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoChange_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoChange
+  nameWithType: ChasePigLocalization.NoChange
 - uid: BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.NoExposableCardsSecond
   name: NoExposableCardsSecond
   href: api/BurstBotShared.Shared.Models.Localization.ChaseThePig.ChasePigLocalization.html#BurstBotShared_Shared_Models_Localization_ChaseThePig_ChasePigLocalization_NoExposableCardsSecond
