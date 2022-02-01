@@ -310,41 +310,46 @@ public partial class NinetyNine : NinetyNineGame
 
             if (nextPlayer.PlayerId == playerId)
             {
-                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
-
-                if (component == null)
-                {
-                    embed = embed with
-                    {
-                        Description = "You lost."
-                    };
-                    
-                    var sendResult = await channelApi
-                        .CreateMessageAsync(playerState.TextChannel.ID,
-                            embeds: new[] { embed });
-
-                    if (!sendResult.IsSuccess)
-                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
-                            playerId, sendResult.Error.Message, sendResult.Inner);
-                    
-                    await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
-                        0,
-                        JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
-                        {
-                            GameId = gameState.GameId,
-                            RequestType = NinetyNineInGameRequestType.Burst,
-                            PlayerId = nextPlayer.PlayerId
-                        })));
-
-                    continue;
-                }
-                
                 await using var renderedImage = SkiaService.RenderDeck(deckService, nextPlayer.Cards);
                 var attachment = new[]
                 {
                     OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
                 };
 
+                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
+
+                if (component == null)
+                {
+                    var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
+                        new PartialEmoji(Name: "😫"), "confirm");
+
+                    var newcomponent = (new IMessageComponent[] {
+                        new ActionRowComponent(new []
+                        {
+                            confirmButton 
+                        })
+                    });
+
+                    embed = embed with
+                    {
+                        Description = $"You lost." +
+                        $"\n\n{localization.Cards}" +
+                        $"\n\n{ string.Join('\n', nextPlayer.Cards)}" +
+                        $"\n\n{ localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
+                        Image = new EmbedImage(Constants.AttachmentUri)
+                    };
+                    
+                    var sendResult = await channelApi
+                        .CreateMessageAsync(playerState.TextChannel.ID,
+                            embeds: new[] { embed },
+                            attachments: attachment,
+                            components: newcomponent);
+
+                    if (!sendResult.IsSuccess)
+                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                            playerId, sendResult.Error.Message, sendResult.Inner);
+                    continue;
+                }
                 var result = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: new[] { embed },

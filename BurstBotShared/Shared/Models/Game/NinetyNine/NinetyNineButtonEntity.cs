@@ -38,6 +38,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         "plus20",
         "minus10",
         "minus20",
+        "confirm",
         "ninety_nine_help_selection"
     };
 
@@ -68,6 +69,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
             "plus10" or "plus20" => await PlusOrMinus(message!, gameState, playerState, NinetyNineInGameAdjustmentType.Plus, ct),
             "minus10" or "minus20" => await PlusOrMinus(message!,gameState, playerState,NinetyNineInGameAdjustmentType.Minus, ct),
             "ninety_nine_help_selection" => await ShowHelpMenu(_context, _state, _interactionApi),
+            "confirm" => await GiveUp(message!,gameState,playerState,ct),
             _ => Result.FromSuccess()
         };
     }
@@ -88,6 +90,24 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
                 PlayerId = playerState.PlayerId,
                 Adjustment = plusOrMinus,
                 RequestType = NinetyNineInGameRequestType.Play
+            })), ct);
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
+
+        return Result.FromSuccess();
+    }
+    private async Task<Result> GiveUp(
+        IMessage message,
+        NinetyNineGameState gameState,
+        NinetyNinePlayerState playerState,
+        CancellationToken ct)
+    {
+        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
+            {
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId,
+                RequestType = NinetyNineInGameRequestType.Burst
             })), ct);
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
