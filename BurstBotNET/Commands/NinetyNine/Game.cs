@@ -323,7 +323,7 @@ public partial class NinetyNine : NinetyNineGame
                     var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
                         new PartialEmoji(Name: "😫"), "confirm");
 
-                    var newcomponent = (new IMessageComponent[] {
+                    var newComponent = (new IMessageComponent[] {
                         new ActionRowComponent(new []
                         {
                             confirmButton 
@@ -332,7 +332,7 @@ public partial class NinetyNine : NinetyNineGame
 
                     embed = embed with
                     {
-                        Description = $"You lost." +
+                        Description = localization.GameOver +
                         $"\n\n{localization.Cards}" +
                         $"\n\n{ string.Join('\n', nextPlayer.Cards)}" +
                         $"\n\n{ localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
@@ -343,7 +343,7 @@ public partial class NinetyNine : NinetyNineGame
                         .CreateMessageAsync(playerState.TextChannel.ID,
                             embeds: new[] { embed },
                             attachments: attachment,
-                            components: newcomponent);
+                            components: newComponent);
 
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
@@ -511,7 +511,7 @@ public partial class NinetyNine : NinetyNineGame
 
                 var embed = new Embed(
                     Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),
-                    Description: $"Current total: {gameState.CurrentTotal}",
+                    Description: ninetyNineLocalization.CurrentTotal.Replace("{total}", gameState.CurrentTotal.ToString()),
                     Colour: BurstColor.Burst.ToColor(),
                     Image: new EmbedImage(Constants.AttachmentUri));
 
