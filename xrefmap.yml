@@ -7579,6 +7579,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.IsInterestedAsync
   nameWithType: NinetyNineButtonEntity.IsInterestedAsync
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI)
+  name: ShowHelpMenu(InteractionContext, State, IDiscordRestInteractionAPI)
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineButtonEntity_ShowHelpMenu_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_
+  commentId: M:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI)
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI)
+  nameWithType: NinetyNineButtonEntity.ShowHelpMenu(InteractionContext, State, IDiscordRestInteractionAPI)
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu*
+  name: ShowHelpMenu
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineButtonEntity_ShowHelpMenu_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.ShowHelpMenu
+  nameWithType: NinetyNineButtonEntity.ShowHelpMenu
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity
   name: NinetyNineDropDownEntity
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html
@@ -13177,6 +13190,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.CommandList
   nameWithType: NinetyNineLocalization.CommandList
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm
+  name: Confirm
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Confirm
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm
+  nameWithType: NinetyNineLocalization.Confirm
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm*
+  name: Confirm
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Confirm_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Confirm
+  nameWithType: NinetyNineLocalization.Confirm
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.CurrentTotal
   name: CurrentTotal
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_CurrentTotal
