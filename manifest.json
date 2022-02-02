@@ -414,7 +414,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Api.BurstApi.html",
-          "hash": "CfA112WTtCOF1lbEhXD1WUyMpXMoexf1nk1lkNLYRaY="
+          "hash": "YR4aqBXDnQKTYIVmkXrSdcXDI9KqlI6T1P67riFAY1s="
         }
       },
       "is_incremental": false,
@@ -450,7 +450,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.AmqpService.html",
-          "hash": "/+ePoflLzaGtKuAFKxuffa3HNepNzTeDjIP0GZHuMf4="
+          "hash": "lW1RX2ZDRFa4oXJ6IMNLPrfZu8y4B6QK+c3rnuCkyCE="
         }
       },
       "is_incremental": false,

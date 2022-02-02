@@ -1553,6 +1553,35 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Services.AmqpService.Finalize
   nameWithType: AmqpService.Finalize
+- uid: BurstBotShared.Services.AmqpService.ReceiveMatchData(System.String)
+  name: ReceiveMatchData(String)
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_ReceiveMatchData_System_String_
+  commentId: M:BurstBotShared.Services.AmqpService.ReceiveMatchData(System.String)
+  fullName: BurstBotShared.Services.AmqpService.ReceiveMatchData(System.String)
+  nameWithType: AmqpService.ReceiveMatchData(String)
+- uid: BurstBotShared.Services.AmqpService.ReceiveMatchData*
+  name: ReceiveMatchData
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_ReceiveMatchData_
+  commentId: Overload:BurstBotShared.Services.AmqpService.ReceiveMatchData
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.ReceiveMatchData
+  nameWithType: AmqpService.ReceiveMatchData
+- uid: BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType,System.Byte[])
+  name: RequestMatch(GameType, Byte[])
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_RequestMatch_BurstBotShared_Shared_Models_Game_Serializables_GameType_System_Byte___
+  commentId: M:BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType,System.Byte[])
+  name.vb: RequestMatch(GameType, Byte())
+  fullName: BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType, System.Byte[])
+  fullName.vb: BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType, System.Byte())
+  nameWithType: AmqpService.RequestMatch(GameType, Byte[])
+  nameWithType.vb: AmqpService.RequestMatch(GameType, Byte())
+- uid: BurstBotShared.Services.AmqpService.RequestMatch*
+  name: RequestMatch
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_RequestMatch_
+  commentId: Overload:BurstBotShared.Services.AmqpService.RequestMatch
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.RequestMatch
+  nameWithType: AmqpService.RequestMatch
 - uid: BurstBotShared.Services.DeckService
   name: DeckService
   href: api/BurstBotShared.Services.DeckService.html
