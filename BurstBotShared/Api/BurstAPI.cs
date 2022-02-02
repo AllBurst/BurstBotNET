@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using BurstBotShared.Services;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
 using BurstBotShared.Shared.Interfaces;
@@ -121,7 +122,48 @@ public sealed class BurstApi
             .Select(m => m!);
     }
 
-    private async Task<GenericJoinStatus?> GenericWaitForGame(GenericJoinStatus waitingData,
+    private static async Task<GenericJoinStatus?> GenericWaitForGame(
+        GenericJoinStatus waitingData,
+        InteractionContext context,
+        IEnumerable<IGuildMember> mentionedPlayers,
+        IUser botUser,
+        string gameName,
+        string description,
+        AmqpService amqpService,
+        IDiscordRestInteractionAPI interactionApi,
+        ILogger logger)
+    {
+        var serializedWaitingData = JsonSerializer.SerializeToUtf8Bytes(waitingData);
+        await amqpService.RequestMatch(waitingData.GameType, serializedWaitingData);
+        var matchData = await amqpService.ReceiveMatchData(waitingData.SocketIdentifier!);
+
+        if (matchData == null) return null;
+        
+        var participatingPlayers = mentionedPlayers.ToImmutableArray();
+        foreach (var player in participatingPlayers)
+        {
+            var followUpResult = await interactionApi
+                .CreateFollowupMessageAsync(
+                    context.ApplicationID,
+                    context.Token,
+                    embeds: new[]
+                    {
+                        Utilities.BuildGameEmbed(player, botUser, matchData, gameName, description,
+                            null)
+                    });
+
+            if (!followUpResult.IsSuccess)
+            {
+                logger.LogError("Failed to create follow-up message: {Reason}, inner: {Inner}",
+                    followUpResult.Error.Message, followUpResult.Inner);
+            }
+        }
+
+        return matchData;
+    }
+
+    private async Task<GenericJoinStatus?> GenericWaitForGame(
+        GenericJoinStatus waitingData,
         InteractionContext context,
         IEnumerable<IGuildMember> mentionedPlayers,
         IUser botUser,
