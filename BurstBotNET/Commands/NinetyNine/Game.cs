@@ -214,15 +214,6 @@ public partial class NinetyNine : NinetyNineGame
             case NinetyNineGameProgress.Progressing:
             case NinetyNineGameProgress.Ending:
             {
-                getPlayerStateResult = deserializedIncomingData
-                    .Players.TryGetValue(gameState.PreviousPlayerId, out var ppPlayerState);
-                if (!getPlayerStateResult)
-                {
-                    logger.LogError("Failed to get second previous player {PlayerId}'s state",
-                        gameState.PreviousPlayerId);
-                    return;
-                }
-
                 var previousCard = deserializedIncomingData.PreviousCard;
 
                 await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,

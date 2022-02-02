@@ -21,7 +21,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
 
     public NinetyNineButtonEntity(
         InteractionContext context,
-        IDiscordRestChannelAPI channelAPI,
+        IDiscordRestChannelAPI channelApi,
         IDiscordRestInteractionAPI interactionApi,
         State state,
         ILogger<NinetyNineButtonEntity> logger)
@@ -29,7 +29,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         _context = context;
         _state = state;
         _interactionApi = interactionApi;
-        _channelApi = channelAPI;
+        _channelApi = channelApi;
         _logger = logger;
     }
     private readonly string[] _validCustomIds =
@@ -39,7 +39,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         "minus10",
         "minus20",
         "confirm",
-        "ninety_nine_help_selection"
+        "ninety_nine_help"
     };
 
     public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
@@ -68,7 +68,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         {
             "plus10" or "plus20" => await PlusOrMinus(message!, gameState, playerState, NinetyNineInGameAdjustmentType.Plus, ct),
             "minus10" or "minus20" => await PlusOrMinus(message!,gameState, playerState,NinetyNineInGameAdjustmentType.Minus, ct),
-            "ninety_nine_help_selection" => await ShowHelpMenu(_context, _state, _interactionApi),
+            "ninety_nine_help" => await ShowHelpMenu(_context, _state, _interactionApi),
             "confirm" => await GiveUp(message!,gameState,playerState,ct),
             _ => Result.FromSuccess()
         };
