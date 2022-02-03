@@ -42,16 +42,26 @@ public static class Game
     public static async Task GenericCloseGame(WebSocket socketSession, ILogger logger, CancellationTokenSource cancellationTokenSource)
     {
         logger.LogDebug("Cleaning up resource...");
-        _ = Task.Run(() =>
+        try
         {
-            cancellationTokenSource.Cancel();
-            logger.LogDebug("All tasks cancelled");
-            cancellationTokenSource.Dispose();
-        });
-        await socketSession.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
-            cancellationTokenSource.Token);
-        logger.LogDebug("Socket session closed");
-        await Task.Delay(TimeSpan.FromSeconds(60));
+            await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
+                default);
+            logger.LogDebug("Socket session closed");
+            _ = Task.Run(() =>
+            {
+                cancellationTokenSource.Cancel();
+                logger.LogDebug("All tasks cancelled");
+                cancellationTokenSource.Dispose();
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Failed to close socket session: {Exception}", ex);
+        }
+        finally
+        {
+            await Task.Delay(TimeSpan.FromSeconds(60));
+        }
     }
 
     public static async Task<GenericJoinResult?> GenericJoinGame(

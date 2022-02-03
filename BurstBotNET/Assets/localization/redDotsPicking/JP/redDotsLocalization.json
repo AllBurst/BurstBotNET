@@ -1,0 +1,31 @@
+{
+  "commandList": {
+    "general": "Assets/localization/redDotsPicking/JP/general.txt",
+    "scoring": "Assets/localization/redDotsPicking/JP/scoring.txt",
+    "flows": "Assets/localization/redDotsPicking/JP/flows.txt"
+  },
+  "initialMessagePrefix": "あなたのカード：\n",
+  "initialMessageDescription": "**ベースベット：{baseBet}。**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "赤点拾いが始まりました！",
+  "initialMessageFooter": "他のプレイヤーをお待ちください。",
+  "cardsOnTable": "場のカード：\n{cardNames}\n\n",
+  "winTitle": "{playerName}の勝ちです！",
+  "won": "手に入れた",
+  "lost": "失った",
+  "winDescription": "{playerName}が{totalRewards}チップを{verb}！",
+  "cards": "あなたのカード：",
+  "use": "カードを使って点数を取得しよう",
+  "giveUp": "カードを捨てる",
+  "useMessage": "{playerName}は{card}を使って、{card}と{card2}を手に入れた。",
+  "giveUpMessage": "{playerName}は{card}を捨てて、そしてこのカードは場のカードになった。",
+  "drawMessage": "{playerName}は山札から{card}を引いた。",
+  "turnMessageTitle": "{possessive}番です！",
+  "showHelp": "ゲームのやり方",
+  "forceFive": "あなたはスペード5またはクローバー5は持っていますので、場の赤い5を消滅しなければなりません。",
+  "forceGiveUp": "あなたの手札の中に場のカードに足して10になれるカードはありませんので、手札1枚を場のカードとして捨てないといけません。",
+  "showGeneral": "赤点拾いについて。",
+  "showScoring": "赤点拾い点数の計算方法。",
+  "showFlows": "赤点拾いの流れ。",
+  "points": "{points}点",
+  "about": "赤点拾いについて"
+}

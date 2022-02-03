@@ -9,7 +9,7 @@ on:
   schedule:
     - cron: '15 18 * * *'
   push:
-    branches: [ main, dev/red_dots_chase_pig ]
+    branches: [ main, dev/rabbitmq_and_localization ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:

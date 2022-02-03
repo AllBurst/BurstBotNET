@@ -15,5 +15,6 @@ public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNine
     public IChannel? TextChannel { get; set; }
     public int Order { get; set; }
     public ImmutableArray<Card> Cards { get; set; } = new();
+    public Card UniversalCard { get; set; } = new();
     public string AvatarUrl { get; set; } = null!;
 }

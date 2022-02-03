@@ -211,6 +211,28 @@ public static class BurstExtensions
         return newComponents;
     }
 
+    public static T Choose<T>(this IEnumerable<T> collection)
+    {
+        var random = new Random();
+        var arr = collection.ToImmutableArray();
+        return arr[random.Next(0, arr.Length)];
+    }
+
+    public static IEnumerable<T> ChooseMultiple<T>(this IEnumerable<T> collection, int count)
+    {
+        var arr = new List<T>(collection);
+        var resultArr = new List<T>(count);
+        var random = new Random();
+        for (var i = 0; i < count; i++)
+        {
+            var n = random.Next(0, arr.Count);
+            resultArr.Add(arr[n]);
+            arr.RemoveAt(n);
+        }
+
+        return resultArr;
+    }
+
     private static int GetBlackJackValue(this IEnumerable<Card> cards)
     {
         return cards.Sum(card => card.GetBlackJackValue().Max());

@@ -47,8 +47,8 @@ public partial class NinetyNine : CommandGroup
     public async Task<IResult> Handle(
         [Description("The difficulty. Players will only have 4 cards instead of 5 in the hard mode.")]
         NinetyNineDifficulty difficulty,
-        [Description("The base bet. The reward will be the number of players multiplied by this.")]
-        float baseBet = 1.0f,
+        [Description("The base bet. The reward will be the number of players multiplied by this. The default is 50.0.")]
+        float baseBet = 50.0f,
         [Description("Choose flavors of Ninety-Nine. Available variations: Taiwanese (default), Icelandic, Standard.")]
         NinetyNineVariation variation = NinetyNineVariation.Taiwanese,
         [Description("(Optional) The 2nd player you want to invite.")]

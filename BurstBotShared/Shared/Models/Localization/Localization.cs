@@ -4,6 +4,7 @@ using BurstBotShared.Shared.Models.Localization.BlackJack.Serializables;
 using BurstBotShared.Shared.Models.Localization.ChaseThePig;
 using BurstBotShared.Shared.Models.Localization.ChinesePoker.Serializables;
 using BurstBotShared.Shared.Models.Localization.OldMaid.Serializables;
+using BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Localization.Serializables;
 
@@ -15,6 +16,7 @@ public record Localization
     public BlackJackLocalization BlackJack { get; private init; } = null!;
     public ChinesePokerLocalization ChinesePoker { get; private init; } = null!;
     public OldMaidLocalization OldMaid { get; private init; } = null!;
+    public NinetyNineLocalization NinetyNine { get; private init; } = null!;
     public RedDotsLocalization RedDotsPicking { get; private init; } = null!;
     public ChasePigLocalization ChaseThePig { get; private init; } = null!;
     public GenericWords GenericWords { get; private init; } = null!;
@@ -30,6 +32,9 @@ public record Localization
             ChinesePoker =
                 ((ILocalization<ChinesePokerLocalization>)JsonSerializer.Deserialize<ChinesePokerLocalization>(File
                     .ReadAllText(rawLocalization.ChinesePoker))!).LoadCommandHelps(),
+            NinetyNine =
+                ((ILocalization<NinetyNineLocalization>)JsonSerializer.Deserialize<NinetyNineLocalization>(File
+                    .ReadAllText(rawLocalization.NinetyNine))!).LoadCommandHelps(),
             OldMaid = ((ILocalization<OldMaidLocalization>)JsonSerializer.Deserialize<OldMaidLocalization>(File
                 .ReadAllText(rawLocalization.OldMaid))!).LoadCommandHelps(),
             RedDotsPicking = ((ILocalization<RedDotsLocalization>)JsonSerializer.Deserialize<RedDotsLocalization>(File

@@ -1,0 +1,20 @@
+{
+  "commandList": {
+    "draw": "Assets/localization/oldMaid/JP/draw.txt"
+  },
+  "initialMessagePrefix": "あなたのカード：\n",
+  "initialMessageDescription": "**ベースベット：{baseBet}。**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "ババ抜きが始まりました！",
+  "initialMessageFooter": "他のプレイヤーをお待ちください。",
+  "winTitle": "{playerName}の勝ちです！",
+  "won": "手に入れた",
+  "lost": "失った",
+  "winDescription": "{playerName}が{totalRewards}チップを{verb}！",
+  "cards": "あなたのカード：",
+  "draw": "ドロー",
+  "drawMessage": "{previousPlayerName}は{ppPlayerName}から{card}を引いた。",
+  "throwMessage": "{previousPlayerName}は{rank}2枚を捨てた！",
+  "turnMessageTitle": "{possessive}番です！",
+  "showHelp": "ゲームのやり方",
+  "about": "ババ抜きについて"
+}

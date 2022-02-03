@@ -135,8 +135,7 @@ public partial class ChaseThePig
                         var waitingResult = await _state.BurstApi.WaitForGame<ChasePigPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
                             joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
-                        if (!waitingResult.HasValue)
-                            throw new Exception($"Failed to get waiting result for {GameName}.");
+                        if (!waitingResult.HasValue) return;
 
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
                         if (!guild.HasValue) return;

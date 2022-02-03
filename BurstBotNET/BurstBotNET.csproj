@@ -18,15 +18,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="Assets\**\*.*">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Remove="Dockerfile" />
         <None Remove=".dockerignore" />
+        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
         <None Update="Assets\localization\chinesePoker\EN\otherHands.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -48,10 +45,24 @@
         <None Update="Assets\localization\chaseThePig\EN\scoring.txt">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\BurstBotShared\BurstBotShared.csproj" />
+        <None Update="Assets\localization\chaseThePig\JP\chasePigLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\chinesePoker\JP\chinesePokerLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\oldMaid\JP\oldMaidLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\redDotsPicking\JP\redDotsLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\ninetyNine\JP\ninetyNineLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\ninetyNine\CN\ninetyNineLocalization.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

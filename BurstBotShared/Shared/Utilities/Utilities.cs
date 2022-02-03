@@ -125,7 +125,12 @@ public static class Utilities
                 var hasPlayer = v.Players.ContainsKey(user.ID.Value);
                 var (_, channelId, _) = context;
                 var matchedPlayer = v.Players.Values
-                    .Where(p => p.TextChannel!.ID.Equals(channelId) && p.PlayerId.Equals(user.ID.Value))
+                    .Where(p =>
+                    {
+                        var playerChannelId = p.TextChannel?.ID.Value ?? 0;
+                        var channelMatched = playerChannelId != 0 && playerChannelId == channelId.Value;
+                        return channelMatched && p.PlayerId.Equals(user.ID.Value);
+                    })
                     .ToImmutableList();
                 var hasChannel = channels.Contains(channelId);
                 if (!hasPlayer || matchedPlayer.IsEmpty || !hasChannel) return false;

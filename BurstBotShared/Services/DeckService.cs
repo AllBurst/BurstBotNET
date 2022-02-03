@@ -20,7 +20,7 @@ public class DeckService
             Directory.CreateDirectory(SpritePath + UserInterfaceLogoPath);
         }
 
-        var suits = new[] { Suit.Spade, Suit.Heart, Suit.Diamond, Suit.Club };
+        var suits = Enum.GetValues<Suit>();
         var numbers = Enumerable
             .Range(1, 13)
             .ToImmutableDictionary(n => n, n => n switch
@@ -60,6 +60,6 @@ public class DeckService
         return card.Number == 0 ? _cardJoker.Value : _cardSprites[card].Value;
     }
 
-    private static SKBitmap LoadBitmap(Suit suit, string character)
-        => SKBitmap.Decode($"{SpritePath}/{suit.ToString().ToLowerInvariant()}{character}.png");
+    private static SKBitmap LoadBitmap(Suit suit, string rank)
+        => SKBitmap.Decode($"{SpritePath}/{suit.ToString().ToLowerInvariant()}{rank}.png");
 }

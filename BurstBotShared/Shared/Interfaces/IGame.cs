@@ -177,8 +177,8 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
-        var channelMessage = await state.Channel!.Reader.ReadAsync();
-        Console.WriteLine("Successfully read from channel.");
+        var channelMessage = await state.Channel!.Reader.ReadAsync(cancellationTokenSource.Token);
+        Console.WriteLine($"Successfully read from channel. Current count: {state.Channel.Reader.Count}");
         var (playerId, payload) = channelMessage;
         var operation =
             await HandleChannelMessage(playerId, payload, socketSession, state, inGameRequestTypes, closeRequestType, closedProgress, logger, cancellationTokenSource.Token);
@@ -216,7 +216,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             var receiveContent = rentBuffer[..receiveResult.Count];
             var stringContent = Encoding.UTF8.GetString(receiveContent);
             contentStack.Push(stringContent);
-            //logger.LogDebug("Received content: {Content}", stringContent);
             buffer.Return(rentBuffer, true);
         } while (!receiveResult.EndOfMessage);
 

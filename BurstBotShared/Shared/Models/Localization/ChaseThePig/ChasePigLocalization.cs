@@ -23,6 +23,7 @@ public record ChasePigLocalization : ILocalization<ChasePigLocalization>
     [JsonPropertyName("winDescription")] public string WinDescription { get; init; } = "";
     [JsonPropertyName("won")] public string Won { get; init; } = "";
     [JsonPropertyName("lost")] public string Lost { get; init; } = "";
+    [JsonPropertyName("noChange")] public string NoChange { get; init; } = "";
 
     [JsonPropertyName("cards")] public string Cards { get; init; } = "";
     [JsonPropertyName("expose")] public string Expose { get; init; } = "";

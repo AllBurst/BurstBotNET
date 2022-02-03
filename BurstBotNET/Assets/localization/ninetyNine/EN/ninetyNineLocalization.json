@@ -1,0 +1,26 @@
+{
+  "commandList": {
+    "general": "Assets/localization/ninetyNine/EN/general.txt"
+  },
+  "initialMessagePrefix": "You currently own:\n",
+  "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageTitle": "The Ninety Nine game is starting!",
+  "initialMessageFooter": "Please wait until all players are ready.",
+  "winTitle": "{playerName} is the biggest winner!",
+  "won": "won",
+  "lost": "lost",
+  "winDescription": "{playerName} {verb} {totalRewards} tips!",
+  "cards": "Your cards:",
+  "play": "Play",
+  "plus": "Plus",
+  "minus": "Minus",
+  "confirm": "Confirm",
+  "gameOver": "You don't have any playable cards anymore.",
+  "playMessage": "{previousPlayerName} played a {card}!",
+  "burstMessage": "{previousPlayerName} burst!",
+  "turnMessageTitle": "It's {possessive} turn!",
+  "selectPlayerMessage": "Select a player",
+  "plusOrMinusMessage": "Add or deduct from the current total",
+  "currentTotal": "Current Total: {total}",
+  "showHelp": "Show help texts"
+}
