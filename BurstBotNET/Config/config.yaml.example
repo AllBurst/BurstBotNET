@@ -10,6 +10,7 @@ serverEndpoint: ""
 socketEndpoint: "localhost"
 socketPort: 8080
 timeout: 300
-rabbitMqEndpoint: ""
-rabbitMqUsername: ""
-rabbitMqPassword: ""
+rabbit:
+  endpoint: ""
+  username: ""
+  password: ""

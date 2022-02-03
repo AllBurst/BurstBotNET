@@ -37,10 +37,10 @@ public sealed class AmqpService : IDisposable
     {
         var factory = new ConnectionFactory
         {
-            HostName = config.RabbitMqEndpoint,
+            HostName = config.Rabbit.Endpoint,
             DispatchConsumersAsync = true,
-            UserName = config.RabbitMqUsername,
-            Password = config.RabbitMqPassword
+            UserName = config.Rabbit.Username,
+            Password = config.Rabbit.Password
         };
 
         _publishConnection = factory.CreateConnection();
@@ -154,7 +154,6 @@ public sealed class AmqpService : IDisposable
             var matchData = await await Task.WhenAny(receiveTask, timeoutTask);
             if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
             {
-                const string message = "Timeout because no match game is found";
                 _ = Task.Run(() =>
                 {
                     cancellationTokenSource.Cancel();
