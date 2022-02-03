@@ -146,8 +146,9 @@ public partial class BlackJack
                         var waitingResult = await _state.BurstApi
                             .WaitForBlackJackGame(joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
                                 joinResult.BotUser, "",
-                            _interactionApi, _guildApi,
-                            _logger);
+                                _state.AmqpService,
+                                _interactionApi, _guildApi,
+                                _logger);
 
                         if (!waitingResult.HasValue) return;
 

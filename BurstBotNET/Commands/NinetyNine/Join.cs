@@ -146,7 +146,7 @@ public partial class NinetyNine
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<NinetyNinePlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _state.AmqpService, _interactionApi, _guildApi, _logger);
 
                         if (!waitingResult.HasValue)
                             throw new Exception($"Failed to get waiting result for {GameName}.");

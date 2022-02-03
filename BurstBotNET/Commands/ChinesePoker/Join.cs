@@ -138,7 +138,7 @@ public partial class ChinesePoker
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<ChinesePokerPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _state.AmqpService, _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue) return;
 
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
