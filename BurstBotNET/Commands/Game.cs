@@ -51,7 +51,6 @@ public static class Game
             {
                 cancellationTokenSource.Cancel();
                 logger.LogDebug("All tasks cancelled");
-                cancellationTokenSource.Dispose();
             });
         }
         catch (Exception ex)

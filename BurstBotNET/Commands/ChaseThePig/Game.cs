@@ -176,7 +176,7 @@ public partial class ChaseThePig : ChasePigGame
                         pId, sendResult.Error.Message, sendResult.Inner);
             }
 
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            await state.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                 0,
                 JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
                 {

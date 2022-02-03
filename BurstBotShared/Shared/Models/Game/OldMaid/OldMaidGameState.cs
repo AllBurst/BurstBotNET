@@ -15,6 +15,7 @@ public class OldMaidGameState :
     IDisposable
 {
     public string GameId { get; set; } = "";
+    public GameType GameType => GameType.OldMaid;
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
     public ConcurrentDictionary<ulong, OldMaidPlayerState> Players { get; init; } = new(10, 4);
     public OldMaidGameProgress Progress { get; set; }
@@ -25,7 +26,8 @@ public class OldMaidGameState :
     public ImmutableArray<Card> DumpedCards { get; set; } = ImmutableArray<Card>.Empty;
     public Card? PreviouslyDrawnCard { get; set; }
     public ImmutableArray<ulong> FinishedPlayers { get; set; }
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

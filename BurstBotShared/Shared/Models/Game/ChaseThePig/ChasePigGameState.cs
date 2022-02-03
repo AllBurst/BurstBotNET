@@ -15,6 +15,7 @@ public class ChasePigGameState :
     IDisposable
 {
     public string GameId { get; set; } = null!;
+    public GameType GameType => GameType.ChaseThePig;
     public DateTime LastActiveTime { get; set; }
     public ConcurrentDictionary<ulong, ChasePigPlayerState> Players { get; init; } = new(10, 4);
     public ChasePigGameProgress Progress { get; set; }
@@ -26,7 +27,8 @@ public class ChasePigGameState :
 
     public List<(ulong, Card)> CardsOnTable { get; } = new();
     
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

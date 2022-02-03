@@ -99,7 +99,7 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
         var exposure = values
             .Select(Enum.Parse<ChasePigExposure>);
 
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
             {
@@ -118,7 +118,7 @@ public class ChasePigDropDownEntity : ISelectMenuInteractiveEntity
         if (string.IsNullOrWhiteSpace(value)) return;
 
         var pickedCard = Card.Create(value[..1], value[1..]);
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
             {

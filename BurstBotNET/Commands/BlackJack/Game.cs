@@ -154,7 +154,7 @@ public partial class BlackJack : BlackJackGame
                         sendEmbedResult.Error.Message, sendEmbedResult.Inner);
             }
 
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
+            await state.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(0, JsonSerializer.SerializeToUtf8Bytes(
                 new BlackJackInGameRequest
                 {
                     RequestType = BlackJackInGameRequestType.Close,

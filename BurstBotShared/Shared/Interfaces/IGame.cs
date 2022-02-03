@@ -1,13 +1,10 @@
-using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Channels;
 using BurstBotShared.Services;
 using BurstBotShared.Shared.Enums;
-using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using BurstBotShared.Shared.Models.Localization;
@@ -54,23 +51,28 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
 
     static ImmutableArray<string> InGameRequestTypes => Enum.GetNames<TInGameRequestType>().ToImmutableArray();
 
-    static async Task AddPlayerState<TRequest>(string gameId,
+    static async Task AddPlayerState<TRequest>(
+        string gameId,
         Snowflake guild,
         TPlayerState playerState,
         TRequest dealRequest,
         ConcurrentDictionary<string, TState> gameStates,
-        ConcurrentHashSet<Snowflake> textChannels) where TRequest: IGenericDealData
+        ConcurrentHashSet<Snowflake> textChannels,
+        AmqpService amqpService) where TRequest: IGenericDealData
     {
         var state = gameStates
             .GetOrAdd(gameId, new TState());
         state.Players.GetOrAdd(playerState.PlayerId, playerState);
         state.Guilds.Add(guild);
-        state.Channel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
+        state.RequestChannel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
+        state.ResponseChannel ??= Channel.CreateUnbounded<byte[]>();
+
+        amqpService.RegisterResponseChannel(gameId, state.ResponseChannel);
 
         if (playerState.TextChannel == null) return;
 
         textChannels.Add(playerState.TextChannel.ID);
-        await state.Channel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await state.RequestChannel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
         Console.WriteLine("Successfully write to channel.");
@@ -85,8 +87,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         TProgress closedProgress,
         ImmutableArray<string> inGameRequestTypes,
         TInGameRequestType closeRequestType,
-        Func<string, Config, ILogger, CancellationTokenSource, Task<WebSocket>> socketOpener,
-        Func<WebSocket, ILogger, CancellationTokenSource, Task> closeHandler,
         State state,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestGuildAPI guildApi,
@@ -113,9 +113,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         gameState.GameId = gameId;
         logger.LogDebug("Initial game state successfully set");
         
-        var buffer = ArrayPool<byte>.Create(Constants.BufferSize, 1024);
         var cancellationTokenSource = new CancellationTokenSource();
-        var socketSession = await socketOpener.Invoke(gameName, state.Config, logger, cancellationTokenSource);
         gameState.Semaphore.Release();
         logger.LogDebug("Semaphore released in StartListening (game state created)");
         
@@ -123,10 +121,10 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         while (!gameState.Progress.Equals(closedProgress))
         {
             var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var channelTask = RunChannelTask(socketSession, gameState, inGameRequestTypes,
-                closeRequestType, closedProgress, logger, cancellationTokenSource);
+            var channelTask = RunChannelTask(gameState, inGameRequestTypes,
+                closeRequestType, closedProgress, state.AmqpService, logger, cancellationTokenSource);
 
-            var broadcastTask = RunBroadcastTask(socketSession, gameState, buffer, state,
+            var broadcastTask = RunBroadcastTask(gameState, state,
                 channelApi,
                 guildApi,
                 logger, cancellationTokenSource);
@@ -140,10 +138,18 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             {
                 timeoutCancellationTokenSource.Cancel();
                 timeoutCancellationTokenSource.Dispose();
-            });
+            }, default);
         }
 
-        await closeHandler.Invoke(socketSession, logger, cancellationTokenSource);
+        _ = Task.Run(() =>
+        {
+            cancellationTokenSource.Cancel();
+            logger.LogDebug("All tasks cancelled");
+            cancellationTokenSource.Dispose();
+        });
+        
+        await Task.Delay(TimeSpan.FromSeconds(60), default);
+        
         var retrieveResult = gameStateTuple.Item1
             .TryGetValue(gameState.GameId, out var retrievedState);
         if (!retrieveResult) return;
@@ -161,34 +167,35 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
                     deleteResult.Error.Message, deleteResult.Inner);
 
             gameStateTuple.Item2.TryRemove(channelId);
-            await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(1), default);
         }
         
+        state.AmqpService.UnregisterResponseChannel(gameState.GameId);
         gameState.Dispose();
         gameStateTuple.Item1.Remove(gameState.GameId, out _);
-        socketSession.Dispose();
     }
 
-    static async Task RunChannelTask(WebSocket socketSession,
+    static async Task RunChannelTask(
         TState state,
         IEnumerable<string> inGameRequestTypes,
         TInGameRequestType closeRequestType,
         TProgress closedProgress,
+        AmqpService amqpService,
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
-        var channelMessage = await state.Channel!.Reader.ReadAsync(cancellationTokenSource.Token);
-        Console.WriteLine($"Successfully read from channel. Current count: {state.Channel.Reader.Count}");
+        var channelMessage = await state.RequestChannel!.Reader.ReadAsync(cancellationTokenSource.Token);
         var (playerId, payload) = channelMessage;
         var operation =
-            await HandleChannelMessage(playerId, payload, socketSession, state, inGameRequestTypes, closeRequestType, closedProgress, logger, cancellationTokenSource.Token);
+            await HandleChannelMessage(playerId, payload, state, inGameRequestTypes, closeRequestType, closedProgress,
+                amqpService, logger, cancellationTokenSource.Token);
 
         if (operation.Equals(SocketOperation.Continue))
             return;
         
         var message = operation switch
         {
-            SocketOperation.Shutdown => "WebSocket session ends due to timeout",
+            SocketOperation.Shutdown => "Game session ends due to timeout",
             SocketOperation.Close => "Received close response",
             _ => ""
         };
@@ -196,35 +203,18 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
     }
 
     static async Task RunBroadcastTask(
-        WebSocket socketSession,
         TState gameState,
-        ArrayPool<byte> buffer,
         State state,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger,
         CancellationTokenSource cancellationTokenSource)
     {
-        var contentStack = new Stack<string>();
-        WebSocketReceiveResult? receiveResult;
+        var payload = await gameState.ResponseChannel!.Reader.ReadAsync(cancellationTokenSource.Token);
+        var content = Encoding.UTF8.GetString(payload);
 
-        do
-        {
-            var rentBuffer = buffer.Rent(Constants.BufferSize);
-            receiveResult = await socketSession.ReceiveAsync(rentBuffer, cancellationTokenSource.Token);
-            logger.LogDebug("Received broadcast message from WS");
-            var receiveContent = rentBuffer[..receiveResult.Count];
-            var stringContent = Encoding.UTF8.GetString(receiveContent);
-            contentStack.Push(stringContent);
-            buffer.Return(rentBuffer, true);
-        } while (!receiveResult.EndOfMessage);
-
-        var content = new StringBuilder();
-        while (contentStack.TryPop(out var str))
-            content.Append(str);
-
-        if (!await TGame.HandleProgress(content.ToString(), gameState, state, channelApi, guildApi, logger))
-            await TGame.HandleEndingResult(content.ToString(), gameState, state.Localizations, state.DeckService,
+        if (!await TGame.HandleProgress(content, gameState, state, channelApi, guildApi, logger))
+            await TGame.HandleEndingResult(content, gameState, state.Localizations, state.DeckService,
                 channelApi, logger);
     }
 
@@ -246,11 +236,16 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         }
     }
 
-    static async Task<SocketOperation> HandleChannelMessage(ulong playerId, byte[] payload, WebSocket socketSession,
+    static async Task<SocketOperation> HandleChannelMessage(
+        ulong playerId,
+        byte[] payload,
         TState state,
         IEnumerable<string> inGameRequestTypes,
         TInGameRequestType closeRequestType,
-        TProgress closedProgress, ILogger logger, CancellationToken token)
+        TProgress closedProgress,
+        AmqpService amqpService,
+        ILogger logger,
+        CancellationToken token)
     {
         logger.LogDebug("Received message from channel");
         var payloadText = Encoding.UTF8.GetString(payload);
@@ -263,18 +258,15 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         
         var requestTypeString = inGameRequestTypes
             .Where(s => payloadText.Contains(s))
-            .FirstOrDefault(s => Enum.TryParse<TInGameRequestType>(s, out var _));
+            .FirstOrDefault(s => Enum.TryParse<TInGameRequestType>(s, out _));
 
-        if (string.IsNullOrWhiteSpace(requestTypeString))
-            return SocketOperation.Continue;
+        if (string.IsNullOrWhiteSpace(requestTypeString)) return SocketOperation.Continue;
 
         var parseResult = Enum.TryParse<TInGameRequestType>(requestTypeString, out var requestType);
 
-        if (!parseResult)
-            return SocketOperation.Continue;
+        if (!parseResult) return SocketOperation.Continue;
 
-        await socketSession.SendAsync(new ReadOnlyMemory<byte>(payload), WebSocketMessageType.Text,
-            true, token);
+        await amqpService.SendInGameRequestData(payload, state.GameType, state.GameId);
 
         if (!requestType.Equals(closeRequestType)) return SocketOperation.Continue;
 

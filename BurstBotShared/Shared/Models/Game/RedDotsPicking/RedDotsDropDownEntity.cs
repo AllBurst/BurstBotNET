@@ -92,7 +92,7 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 
     private static async Task SendToGameStateChannel(RedDotsGameState gameState, RedDotsPlayerState playerState, CancellationToken ct)
     {
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new RedDotsInGameRequest
             {
@@ -149,26 +149,28 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
                                     "red_dots_user_selection" => playerState
                                         .Cards
                                         .Where(c => Card.CanCombine(selectedCard, c))
-                                        .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                                        .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(),
+                                            c.ToStringSimple(),
                                             new PartialEmoji(c.Suit.ToSnowflake()))),
                                     "red_dots_table_selection" => gameState
                                         .CardsOnTable
                                         .Where(c => Card.CanCombine(selectedCard, c))
-                                        .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
+                                        .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(),
+                                            c.ToStringSimple(),
                                             new PartialEmoji(c.Suit.ToSnowflake()))),
                                     _ => Enumerable.Empty<SelectOption>()
                                 };
-                                
+
                                 var newMenu = menu with
                                 {
                                     Options = availableTableCards.ToImmutableArray()
                                 };
-                            
+
                                 newActionRow.Add(newMenu);
                             }
                         }
                         else
-                            newActionRow.Add(menu);
+                            newActionRow.Add(menu with { IsDisabled = true });
                         break;
                     }
                 }

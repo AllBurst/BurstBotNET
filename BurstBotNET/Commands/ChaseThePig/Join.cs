@@ -168,7 +168,8 @@ public partial class ChaseThePig
                 PlayerName = playerState.PlayerName,
                 RequestType = ChasePigInGameRequestType.Deal
             }, _state.GameStates.ChasePigGameStates.Item1,
-            _state.GameStates.ChasePigGameStates.Item2);
+            _state.GameStates.ChasePigGameStates.Item2,
+            _state.AmqpService);
         
         await Task.Delay(TimeSpan.FromSeconds(1));
 
@@ -180,8 +181,6 @@ public partial class ChaseThePig
             ChasePigGameProgress.Closed,
             ChasePigGame.InGameRequestTypes,
             ChasePigInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,

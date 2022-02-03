@@ -186,7 +186,8 @@ public partial class NinetyNine
                 Variation = _variation,
                 Difficulty = _difficulty
             }, _state.GameStates.NinetyNineGameStates.Item1,
-            _state.GameStates.NinetyNineGameStates.Item2);
+            _state.GameStates.NinetyNineGameStates.Item2,
+            _state.AmqpService);
         await Task.Delay(TimeSpan.FromSeconds(1));
 
         _ = Task.Run(() => NinetyNineGame.StartListening(joinStatus?.GameId ?? "",
@@ -197,8 +198,6 @@ public partial class NinetyNine
             NinetyNineGameProgress.Closed,
             NinetyNineGame.InGameRequestTypes,
             NinetyNineInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,

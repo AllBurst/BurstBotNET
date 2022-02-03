@@ -127,7 +127,7 @@ public class ChasePigButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
 
     private static async Task SendNoExposureToChannel(ChasePigGameState gameState, ChasePigPlayerState playerState)
     {
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
             {

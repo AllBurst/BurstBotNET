@@ -240,7 +240,7 @@ public partial class ChinesePoker : ChinesePokerGame
                         sendEmbedResult.Error.Message, sendEmbedResult.Inner);
             }
 
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            await state.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                 0, JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
                 {
                     GameId = state.GameId,

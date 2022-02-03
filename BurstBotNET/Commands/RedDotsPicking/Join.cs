@@ -169,7 +169,8 @@ public partial class RedDotsPicking
                 PlayerName = playerState.PlayerName,
                 RequestType = RedDotsInGameRequestType.Deal
             }, _state.GameStates.RedDotsGameStates.Item1,
-            _state.GameStates.RedDotsGameStates.Item2);
+            _state.GameStates.RedDotsGameStates.Item2,
+            _state.AmqpService);
                             
         await Task.Delay(TimeSpan.FromSeconds(1));
                             
@@ -181,8 +182,6 @@ public partial class RedDotsPicking
             RedDotsGameProgress.Closed,
             RedDotsGame.InGameRequestTypes,
             RedDotsInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,
