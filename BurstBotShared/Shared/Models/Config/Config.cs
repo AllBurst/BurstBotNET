@@ -14,9 +14,7 @@ public record Config
     public string SocketEndpoint { get; init; } = "";
     public int SocketPort { get; init; }
     public long Timeout { get; init; }
-    public string RabbitMqEndpoint { get; init; } = "";
-    public string RabbitMqUsername { get; init; } = "";
-    public string RabbitMqPassword { get; init; } = "";
+    public RabbitMqConfig Rabbit { get; init; } = new();
 
     private const string ConfigDirectoryName = "Config";
     private const string ConfigFilePath = ConfigDirectoryName + "/config.yaml";
@@ -53,15 +51,8 @@ public record Config
     {
         var defaultConfig = new Config
         {
-            TestGuilds = new List<string>(),
-            RecreateGlobals = false,
-            RecreateGuilds = false,
-            ServerEndpoint = "",
-            SocketEndpoint = "",
-            SocketPort = 0,
             Timeout = 60,
-            LogLevel = "DEBUG",
-            Token = ""
+            LogLevel = "DEBUG"
         };
         
         File.WriteAllText(ConfigFilePath, ConfigSerializer.Serialize(defaultConfig));
