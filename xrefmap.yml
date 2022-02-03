@@ -1464,15 +1464,15 @@ references:
   fullName.vb: BurstBotShared.Api.BurstApi.SendRawRequest(Of TPayloadType)(System.String, BurstBotShared.Api.ApiRequestType, TPayloadType)
   nameWithType: BurstApi.SendRawRequest<TPayloadType>(String, ApiRequestType, TPayloadType)
   nameWithType.vb: BurstApi.SendRawRequest(Of TPayloadType)(String, ApiRequestType, TPayloadType)
-- uid: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,BurstBotShared.Services.AmqpService,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name: WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForBlackJackGame_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_BurstBotShared_Services_AmqpService_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,BurstBotShared.Services.AmqpService,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name.vb: WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  fullName: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, BurstBotShared.Services.AmqpService, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  fullName.vb: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, BurstBotShared.Services.AmqpService, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: BurstApi.WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  nameWithType.vb: BurstApi.WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+- uid: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name: WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForBlackJackGame_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
+  commentId: M:BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name.vb: WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  fullName: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  fullName.vb: BurstBotShared.Api.BurstApi.WaitForBlackJackGame(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  nameWithType: BurstApi.WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  nameWithType.vb: BurstApi.WaitForBlackJackGame(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
 - uid: BurstBotShared.Api.BurstApi.WaitForBlackJackGame*
   name: WaitForBlackJackGame
   href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForBlackJackGame_
@@ -1487,15 +1487,15 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Api.BurstApi.WaitForGame
   nameWithType: BurstApi.WaitForGame
-- uid: BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,BurstBotShared.Services.AmqpService,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name: WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForGame__1_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_System_String_BurstBotShared_Services_AmqpService_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,BurstBotShared.Services.AmqpService,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name.vb: WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  fullName: BurstBotShared.Api.BurstApi.WaitForGame<T>(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, BurstBotShared.Services.AmqpService, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  fullName.vb: BurstBotShared.Api.BurstApi.WaitForGame(Of T)(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, BurstBotShared.Services.AmqpService, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: BurstApi.WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
-  nameWithType.vb: BurstApi.WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, AmqpService, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+- uid: BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name: WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  href: api/BurstBotShared.Api.BurstApi.html#BurstBotShared_Api_BurstApi_WaitForGame__1_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus_Remora_Discord_Commands_Contexts_InteractionContext_IEnumerable_Remora_Rest_Core_Snowflake__Remora_Discord_API_Abstractions_Objects_IUser_System_String_System_String_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
+  commentId: M:BurstBotShared.Api.BurstApi.WaitForGame``1(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,Remora.Discord.Commands.Contexts.InteractionContext,IEnumerable{Remora.Rest.Core.Snowflake},Remora.Discord.API.Abstractions.Objects.IUser,System.String,System.String,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name.vb: WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  fullName: BurstBotShared.Api.BurstApi.WaitForGame<T>(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable<Remora.Rest.Core.Snowflake>, Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  fullName.vb: BurstBotShared.Api.BurstApi.WaitForGame(Of T)(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus, Remora.Discord.Commands.Contexts.InteractionContext, IEnumerable(Of Remora.Rest.Core.Snowflake), Remora.Discord.API.Abstractions.Objects.IUser, System.String, System.String, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  nameWithType: BurstApi.WaitForGame<T>(GenericJoinStatus, InteractionContext, IEnumerable<Snowflake>, IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
+  nameWithType.vb: BurstApi.WaitForGame(Of T)(GenericJoinStatus, InteractionContext, IEnumerable(Of Snowflake), IUser, String, String, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger)
 - uid: BurstBotShared.Class1
   name: Class1
   href: api/BurstBotShared.Class1.html
@@ -2978,45 +2978,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Config.Config.LogLevel
   nameWithType: Config.LogLevel
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
-  name: RabbitMqEndpoint
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqEndpoint
-  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
-  nameWithType: Config.RabbitMqEndpoint
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint*
-  name: RabbitMqEndpoint
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqEndpoint_
-  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
+- uid: BurstBotShared.Shared.Models.Config.Config.Rabbit
+  name: Rabbit
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_Rabbit
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.Rabbit
+  fullName: BurstBotShared.Shared.Models.Config.Config.Rabbit
+  nameWithType: Config.Rabbit
+- uid: BurstBotShared.Shared.Models.Config.Config.Rabbit*
+  name: Rabbit
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_Rabbit_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.Rabbit
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqEndpoint
-  nameWithType: Config.RabbitMqEndpoint
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
-  name: RabbitMqPassword
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqPassword
-  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
-  nameWithType: Config.RabbitMqPassword
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword*
-  name: RabbitMqPassword
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqPassword_
-  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqPassword
-  nameWithType: Config.RabbitMqPassword
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
-  name: RabbitMqUsername
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqUsername
-  commentId: P:BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
-  nameWithType: Config.RabbitMqUsername
-- uid: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername*
-  name: RabbitMqUsername
-  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RabbitMqUsername_
-  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Config.Config.RabbitMqUsername
-  nameWithType: Config.RabbitMqUsername
+  fullName: BurstBotShared.Shared.Models.Config.Config.Rabbit
+  nameWithType: Config.Rabbit
 - uid: BurstBotShared.Shared.Models.Config.Config.RecreateGlobals
   name: RecreateGlobals
   href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_RecreateGlobals
@@ -3121,6 +3095,51 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Config.Config.Token
   nameWithType: Config.Token
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig
+  name: RabbitMqConfig
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html
+  commentId: T:BurstBotShared.Shared.Models.Config.RabbitMqConfig
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig
+  nameWithType: RabbitMqConfig
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint
+  name: Endpoint
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Endpoint
+  commentId: P:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint
+  nameWithType: RabbitMqConfig.Endpoint
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint*
+  name: Endpoint
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Endpoint_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Endpoint
+  nameWithType: RabbitMqConfig.Endpoint
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password
+  name: Password
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Password
+  commentId: P:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password
+  nameWithType: RabbitMqConfig.Password
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password*
+  name: Password
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Password_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Password
+  nameWithType: RabbitMqConfig.Password
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username
+  name: Username
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Username
+  commentId: P:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username
+  nameWithType: RabbitMqConfig.Username
+- uid: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username*
+  name: Username
+  href: api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html#BurstBotShared_Shared_Models_Config_RabbitMqConfig_Username_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.RabbitMqConfig.Username
+  nameWithType: RabbitMqConfig.Username
 - uid: BurstBotShared.Shared.Models.Data
   name: BurstBotShared.Shared.Models.Data
   href: api/BurstBotShared.Shared.Models.Data.html
