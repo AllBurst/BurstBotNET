@@ -127,10 +127,12 @@ public sealed class AmqpService : IDisposable
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(30), timeoutCancellationTokenSource.Token);
+                    await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
                     var subscribedChannel = _subscribeChannels
                         .First(c => c.ChannelNumber == channelNumber);
                     subscribedChannel.BasicCancel(socketIdentifier);
+                    subscribedChannel.QueueUnbind(queue, BurstMatchExchangeName, $"match.responses.{socketIdentifier}");
+                    subscribedChannel.QueueDelete(queue);
                     return new GenericJoinStatus
                     {
                         SocketIdentifier = null,
@@ -168,6 +170,8 @@ public sealed class AmqpService : IDisposable
                 var subscribedChannel = _subscribeChannels
                     .First(c => c.ChannelNumber == channelNumber);
                 subscribedChannel.BasicCancel(socketIdentifier);
+                subscribedChannel.QueueUnbind(queue, BurstMatchExchangeName, $"match.responses.{socketIdentifier}");
+                subscribedChannel.QueueDelete(queue);
             });
             
             if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
@@ -202,14 +206,20 @@ public sealed class AmqpService : IDisposable
 
         if (disposing)
         {
-            _publishConnection.Dispose();
-            _subscribeConnection.Dispose();
             var pools = new[] { _publishChannels, _subscribeChannels };
             foreach (var pool in pools)
             {
                 foreach (var channel in pool)
+                {
+                    channel.Close();
                     channel.Dispose();
+                }
             }
+            
+            _publishConnection.Close();
+            _publishConnection.Dispose();
+            _subscribeConnection.Close();
+            _subscribeConnection.Dispose();
         }
 
         _disposed = true;

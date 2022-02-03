@@ -31,13 +31,16 @@ public sealed class BurstApi
     private const string CategoryName = "All-Burst-Category";
     private const int BufferSize = 2048;
 
-    private static readonly DiscordPermissionSet PlayerPermissions = new(
+    private static readonly DiscordPermissionSet PlayerAllowPermissions = new(
         DiscordPermission.AddReactions,
         DiscordPermission.EmbedLinks,
         DiscordPermission.ReadMessageHistory,
         DiscordPermission.SendMessages,
         DiscordPermission.UseExternalEmojis,
         DiscordPermission.ViewChannel);
+
+    private static readonly DiscordPermissionSet PlayerDenyPermissions = new(
+        DiscordPermission.UseSlashCommands);
 
     private static readonly DiscordPermissionSet BotPermissions = new(
         DiscordPermission.AddReactions,
@@ -458,6 +461,7 @@ public sealed class BurstApi
         IEnumerable<Snowflake> mentionedPlayers,
         IUser botUser,
         string description,
+        AmqpService amqpService,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger)
@@ -471,6 +475,7 @@ public sealed class BurstApi
         
         var matchData =
             await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, "Black Jack", description,
+                amqpService,
                 interactionApi, logger);
 
         if (matchData == null)
@@ -513,6 +518,7 @@ public sealed class BurstApi
         IUser botUser,
         string description,
         string gameName,
+        AmqpService amqpService,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
         ILogger logger) where T: IPlayerState, new()
@@ -526,6 +532,7 @@ public sealed class BurstApi
         
         var matchData = await GenericWaitForGame(waitingData, context, participatingPlayers, botUser, gameName,
             description,
+            amqpService,
             interactionApi, logger);
         if (matchData == null)
         {
@@ -591,8 +598,8 @@ public sealed class BurstApi
                             DiscordPermissionSet.Empty,
                             new DiscordPermissionSet(DiscordPermission.ViewChannel)),
                         new PermissionOverwrite(member.User.Value.ID, PermissionOverwriteType.Member,
-                            PlayerPermissions,
-                            DiscordPermissionSet.Empty),
+                            PlayerAllowPermissions,
+                            PlayerDenyPermissions),
                         new PermissionOverwrite(botUser.ID, PermissionOverwriteType.Member,
                             BotPermissions,
                             DiscordPermissionSet.Empty)
