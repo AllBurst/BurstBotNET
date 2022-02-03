@@ -1566,6 +1566,22 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Services.AmqpService.ReceiveMatchData
   nameWithType: AmqpService.ReceiveMatchData
+- uid: BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String,System.Threading.Channels.Channel{System.Byte[]})
+  name: RegisterResponseChannel(String, Channel<Byte[]>)
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_RegisterResponseChannel_System_String_System_Threading_Channels_Channel_System_Byte____
+  commentId: M:BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String,System.Threading.Channels.Channel{System.Byte[]})
+  name.vb: RegisterResponseChannel(String, Channel(Of Byte()))
+  fullName: BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String, System.Threading.Channels.Channel<System.Byte[]>)
+  fullName.vb: BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String, System.Threading.Channels.Channel(Of System.Byte()))
+  nameWithType: AmqpService.RegisterResponseChannel(String, Channel<Byte[]>)
+  nameWithType.vb: AmqpService.RegisterResponseChannel(String, Channel(Of Byte()))
+- uid: BurstBotShared.Services.AmqpService.RegisterResponseChannel*
+  name: RegisterResponseChannel
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_RegisterResponseChannel_
+  commentId: Overload:BurstBotShared.Services.AmqpService.RegisterResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.RegisterResponseChannel
+  nameWithType: AmqpService.RegisterResponseChannel
 - uid: BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType,System.Byte[])
   name: RequestMatch(GameType, Byte[])
   href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_RequestMatch_BurstBotShared_Shared_Models_Game_Serializables_GameType_System_Byte___
@@ -1582,6 +1598,35 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Services.AmqpService.RequestMatch
   nameWithType: AmqpService.RequestMatch
+- uid: BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte[],BurstBotShared.Shared.Models.Game.Serializables.GameType,System.String)
+  name: SendInGameRequestData(Byte[], GameType, String)
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_SendInGameRequestData_System_Byte___BurstBotShared_Shared_Models_Game_Serializables_GameType_System_String_
+  commentId: M:BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte[],BurstBotShared.Shared.Models.Game.Serializables.GameType,System.String)
+  name.vb: SendInGameRequestData(Byte(), GameType, String)
+  fullName: BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte[], BurstBotShared.Shared.Models.Game.Serializables.GameType, System.String)
+  fullName.vb: BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte(), BurstBotShared.Shared.Models.Game.Serializables.GameType, System.String)
+  nameWithType: AmqpService.SendInGameRequestData(Byte[], GameType, String)
+  nameWithType.vb: AmqpService.SendInGameRequestData(Byte(), GameType, String)
+- uid: BurstBotShared.Services.AmqpService.SendInGameRequestData*
+  name: SendInGameRequestData
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_SendInGameRequestData_
+  commentId: Overload:BurstBotShared.Services.AmqpService.SendInGameRequestData
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.SendInGameRequestData
+  nameWithType: AmqpService.SendInGameRequestData
+- uid: BurstBotShared.Services.AmqpService.UnregisterResponseChannel(System.String)
+  name: UnregisterResponseChannel(String)
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_UnregisterResponseChannel_System_String_
+  commentId: M:BurstBotShared.Services.AmqpService.UnregisterResponseChannel(System.String)
+  fullName: BurstBotShared.Services.AmqpService.UnregisterResponseChannel(System.String)
+  nameWithType: AmqpService.UnregisterResponseChannel(String)
+- uid: BurstBotShared.Services.AmqpService.UnregisterResponseChannel*
+  name: UnregisterResponseChannel
+  href: api/BurstBotShared.Services.AmqpService.html#BurstBotShared_Services_AmqpService_UnregisterResponseChannel_
+  commentId: Overload:BurstBotShared.Services.AmqpService.UnregisterResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AmqpService.UnregisterResponseChannel
+  nameWithType: AmqpService.UnregisterResponseChannel
 - uid: BurstBotShared.Services.DeckService
   name: DeckService
   href: api/BurstBotShared.Services.DeckService.html
@@ -2087,15 +2132,15 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState
   nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerState
   nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState
-- uid: BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState``1(System.String,Remora.Rest.Core.Snowflake,`3,``0,System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake})
-  name: AddPlayerState<TRequest>(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>)
-  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerState__1_System_String_Remora_Rest_Core_Snowflake__3___0_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake__
-  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState``1(System.String,Remora.Rest.Core.Snowflake,`3,``0,System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake})
-  name.vb: AddPlayerState(Of TRequest)(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake))
-  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerState<TRequest>(System.String, Remora.Rest.Core.Snowflake, TPlayerState, TRequest, System.Collections.Concurrent.ConcurrentDictionary<System.String, TState>, ConcurrentCollections.ConcurrentHashSet<Remora.Rest.Core.Snowflake>)
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState(Of TRequest)(System.String, Remora.Rest.Core.Snowflake, TPlayerState, TRequest, System.Collections.Concurrent.ConcurrentDictionary(Of System.String, TState), ConcurrentCollections.ConcurrentHashSet(Of Remora.Rest.Core.Snowflake))
-  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerState<TRequest>(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>)
-  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState(Of TRequest)(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake))
+- uid: BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState``1(System.String,Remora.Rest.Core.Snowflake,`3,``0,System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake},BurstBotShared.Services.AmqpService)
+  name: AddPlayerState<TRequest>(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>, AmqpService)
+  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerState__1_System_String_Remora_Rest_Core_Snowflake__3___0_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake__BurstBotShared_Services_AmqpService_
+  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerState``1(System.String,Remora.Rest.Core.Snowflake,`3,``0,System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake},BurstBotShared.Services.AmqpService)
+  name.vb: AddPlayerState(Of TRequest)(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake), AmqpService)
+  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerState<TRequest>(System.String, Remora.Rest.Core.Snowflake, TPlayerState, TRequest, System.Collections.Concurrent.ConcurrentDictionary<System.String, TState>, ConcurrentCollections.ConcurrentHashSet<Remora.Rest.Core.Snowflake>, BurstBotShared.Services.AmqpService)
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState(Of TRequest)(System.String, Remora.Rest.Core.Snowflake, TPlayerState, TRequest, System.Collections.Concurrent.ConcurrentDictionary(Of System.String, TState), ConcurrentCollections.ConcurrentHashSet(Of Remora.Rest.Core.Snowflake), BurstBotShared.Services.AmqpService)
+  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerState<TRequest>(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>, AmqpService)
+  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerState(Of TRequest)(String, Snowflake, TPlayerState, TRequest, ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake), AmqpService)
 - uid: BurstBotShared.Shared.Interfaces.IGame`6.AddPlayerStateAndStartListening(BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus,`3,Remora.Rest.Core.Snowflake)
   name: AddPlayerStateAndStartListening(GenericJoinStatus, TPlayerState, Snowflake)
   href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_AddPlayerStateAndStartListening_BurstBotShared_Shared_Models_Game_Serializables_GenericJoinStatus__3_Remora_Rest_Core_Snowflake_
@@ -2113,15 +2158,15 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerStateAndStartListening
   nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.AddPlayerStateAndStartListening
   nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).AddPlayerStateAndStartListening
-- uid: BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage(System.UInt64,System.Byte[],System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationToken)
-  name: HandleChannelMessage(UInt64, Byte[], WebSocket, TState, IEnumerable<String>, TInGameRequestType, TProgress, ILogger, CancellationToken)
-  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_System_UInt64_System_Byte___System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationToken_
-  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage(System.UInt64,System.Byte[],System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationToken)
-  name.vb: HandleChannelMessage(UInt64, Byte(), WebSocket, TState, IEnumerable(Of String), TInGameRequestType, TProgress, ILogger, CancellationToken)
-  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.HandleChannelMessage(System.UInt64, System.Byte[], System.Net.WebSockets.WebSocket, TState, IEnumerable<System.String>, TInGameRequestType, TProgress, Microsoft.Extensions.Logging.ILogger, CancellationToken)
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).HandleChannelMessage(System.UInt64, System.Byte(), System.Net.WebSockets.WebSocket, TState, IEnumerable(Of System.String), TInGameRequestType, TProgress, Microsoft.Extensions.Logging.ILogger, CancellationToken)
-  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.HandleChannelMessage(UInt64, Byte[], WebSocket, TState, IEnumerable<String>, TInGameRequestType, TProgress, ILogger, CancellationToken)
-  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).HandleChannelMessage(UInt64, Byte(), WebSocket, TState, IEnumerable(Of String), TInGameRequestType, TProgress, ILogger, CancellationToken)
+- uid: BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage(System.UInt64,System.Byte[],`0,IEnumerable{System.String},`5,`4,BurstBotShared.Services.AmqpService,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  name: HandleChannelMessage(UInt64, Byte[], TState, IEnumerable<String>, TInGameRequestType, TProgress, AmqpService, ILogger, CancellationToken)
+  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_System_UInt64_System_Byte____0_IEnumerable_System_String___5__4_BurstBotShared_Services_AmqpService_Microsoft_Extensions_Logging_ILogger_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage(System.UInt64,System.Byte[],`0,IEnumerable{System.String},`5,`4,BurstBotShared.Services.AmqpService,Microsoft.Extensions.Logging.ILogger,CancellationToken)
+  name.vb: HandleChannelMessage(UInt64, Byte(), TState, IEnumerable(Of String), TInGameRequestType, TProgress, AmqpService, ILogger, CancellationToken)
+  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.HandleChannelMessage(System.UInt64, System.Byte[], TState, IEnumerable<System.String>, TInGameRequestType, TProgress, BurstBotShared.Services.AmqpService, Microsoft.Extensions.Logging.ILogger, CancellationToken)
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).HandleChannelMessage(System.UInt64, System.Byte(), TState, IEnumerable(Of System.String), TInGameRequestType, TProgress, BurstBotShared.Services.AmqpService, Microsoft.Extensions.Logging.ILogger, CancellationToken)
+  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.HandleChannelMessage(UInt64, Byte[], TState, IEnumerable<String>, TInGameRequestType, TProgress, AmqpService, ILogger, CancellationToken)
+  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).HandleChannelMessage(UInt64, Byte(), TState, IEnumerable(Of String), TInGameRequestType, TProgress, AmqpService, ILogger, CancellationToken)
 - uid: BurstBotShared.Shared.Interfaces.IGame`6.HandleChannelMessage*
   name: HandleChannelMessage
   href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_HandleChannelMessage_
@@ -2199,15 +2244,14 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).InGameRequestTypes
   nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.InGameRequestTypes
   nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).InGameRequestTypes
-- uid: BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask(System.Net.WebSockets.WebSocket,`0,System.Buffers.ArrayPool{System.Byte},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name: RunBroadcastTask(WebSocket, TState, ArrayPool<Byte>, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
-  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask_System_Net_WebSockets_WebSocket__0_System_Buffers_ArrayPool_System_Byte__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
-  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask(System.Net.WebSockets.WebSocket,`0,System.Buffers.ArrayPool{System.Byte},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name.vb: RunBroadcastTask(WebSocket, TState, ArrayPool(Of Byte), State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
-  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunBroadcastTask(System.Net.WebSockets.WebSocket, TState, System.Buffers.ArrayPool<System.Byte>, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask(System.Net.WebSockets.WebSocket, TState, System.Buffers.ArrayPool(Of System.Byte), BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunBroadcastTask(WebSocket, TState, ArrayPool<Byte>, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
-  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask(WebSocket, TState, ArrayPool(Of Byte), State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
+- uid: BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask(`0,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
+  name: RunBroadcastTask(TState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
+  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask__0_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
+  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask(`0,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
+  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunBroadcastTask(TState, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask(TState, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
+  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunBroadcastTask(TState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
+  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask(TState, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger, CancellationTokenSource)
 - uid: BurstBotShared.Shared.Interfaces.IGame`6.RunBroadcastTask*
   name: RunBroadcastTask
   href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunBroadcastTask_
@@ -2217,15 +2261,15 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask
   nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunBroadcastTask
   nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunBroadcastTask
-- uid: BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask(System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name: RunChannelTask(WebSocket, TState, IEnumerable<String>, TInGameRequestType, TProgress, ILogger, CancellationTokenSource)
-  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask_System_Net_WebSockets_WebSocket__0_IEnumerable_System_String___5__4_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
-  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask(System.Net.WebSockets.WebSocket,`0,IEnumerable{System.String},`5,`4,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name.vb: RunChannelTask(WebSocket, TState, IEnumerable(Of String), TInGameRequestType, TProgress, ILogger, CancellationTokenSource)
-  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunChannelTask(System.Net.WebSockets.WebSocket, TState, IEnumerable<System.String>, TInGameRequestType, TProgress, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunChannelTask(System.Net.WebSockets.WebSocket, TState, IEnumerable(Of System.String), TInGameRequestType, TProgress, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunChannelTask(WebSocket, TState, IEnumerable<String>, TInGameRequestType, TProgress, ILogger, CancellationTokenSource)
-  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunChannelTask(WebSocket, TState, IEnumerable(Of String), TInGameRequestType, TProgress, ILogger, CancellationTokenSource)
+- uid: BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask(`0,IEnumerable{System.String},`5,`4,BurstBotShared.Services.AmqpService,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
+  name: RunChannelTask(TState, IEnumerable<String>, TInGameRequestType, TProgress, AmqpService, ILogger, CancellationTokenSource)
+  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask__0_IEnumerable_System_String___5__4_BurstBotShared_Services_AmqpService_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
+  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask(`0,IEnumerable{System.String},`5,`4,BurstBotShared.Services.AmqpService,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
+  name.vb: RunChannelTask(TState, IEnumerable(Of String), TInGameRequestType, TProgress, AmqpService, ILogger, CancellationTokenSource)
+  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunChannelTask(TState, IEnumerable<System.String>, TInGameRequestType, TProgress, BurstBotShared.Services.AmqpService, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunChannelTask(TState, IEnumerable(Of System.String), TInGameRequestType, TProgress, BurstBotShared.Services.AmqpService, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
+  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunChannelTask(TState, IEnumerable<String>, TInGameRequestType, TProgress, AmqpService, ILogger, CancellationTokenSource)
+  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunChannelTask(TState, IEnumerable(Of String), TInGameRequestType, TProgress, AmqpService, ILogger, CancellationTokenSource)
 - uid: BurstBotShared.Shared.Interfaces.IGame`6.RunChannelTask*
   name: RunChannelTask
   href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_RunChannelTask_
@@ -2252,15 +2296,15 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunTimeoutTask
   nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.RunTimeoutTask
   nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).RunTimeoutTask
-- uid: BurstBotShared.Shared.Interfaces.IGame`6.StartListening(System.String,Tuple{System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake}},System.String,`4,`4,`4,System.Collections.Immutable.ImmutableArray{System.String},`5,Func{System.String,BurstBotShared.Shared.Models.Config.Config,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task{System.Net.WebSockets.WebSocket}},Func{System.Net.WebSockets.WebSocket,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name: StartListening(String, Tuple<ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>>, String, TProgress, TProgress, TProgress, ImmutableArray<String>, TInGameRequestType, Func<String, Config, ILogger, CancellationTokenSource, Task<WebSocket>>, Func<WebSocket, ILogger, CancellationTokenSource, Task>, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
-  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_StartListening_System_String_Tuple_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake___System_String__4__4__4_System_Collections_Immutable_ImmutableArray_System_String___5_Func_System_String_BurstBotShared_Shared_Models_Config_Config_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task_System_Net_WebSockets_WebSocket___Func_System_Net_WebSockets_WebSocket_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_Task__BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
-  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.StartListening(System.String,Tuple{System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake}},System.String,`4,`4,`4,System.Collections.Immutable.ImmutableArray{System.String},`5,Func{System.String,BurstBotShared.Shared.Models.Config.Config,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task{System.Net.WebSockets.WebSocket}},Func{System.Net.WebSockets.WebSocket,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource,Task},BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
-  name.vb: StartListening(String, Tuple(Of ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake)), String, TProgress, TProgress, TProgress, ImmutableArray(Of String), TInGameRequestType, Func(Of String, Config, ILogger, CancellationTokenSource, Task(Of WebSocket)), Func(Of WebSocket, ILogger, CancellationTokenSource, Task), State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
-  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.StartListening(System.String, Tuple<System.Collections.Concurrent.ConcurrentDictionary<System.String, TState>, ConcurrentCollections.ConcurrentHashSet<Remora.Rest.Core.Snowflake>>, System.String, TProgress, TProgress, TProgress, System.Collections.Immutable.ImmutableArray<System.String>, TInGameRequestType, Func<System.String, BurstBotShared.Shared.Models.Config.Config, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource, Task<System.Net.WebSockets.WebSocket>>, Func<System.Net.WebSockets.WebSocket, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource, Task>, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).StartListening(System.String, Tuple(Of System.Collections.Concurrent.ConcurrentDictionary(Of System.String, TState), ConcurrentCollections.ConcurrentHashSet(Of Remora.Rest.Core.Snowflake)), System.String, TProgress, TProgress, TProgress, System.Collections.Immutable.ImmutableArray(Of System.String), TInGameRequestType, Func(Of System.String, BurstBotShared.Shared.Models.Config.Config, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource, Task(Of System.Net.WebSockets.WebSocket)), Func(Of System.Net.WebSockets.WebSocket, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource, Task), BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
-  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.StartListening(String, Tuple<ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>>, String, TProgress, TProgress, TProgress, ImmutableArray<String>, TInGameRequestType, Func<String, Config, ILogger, CancellationTokenSource, Task<WebSocket>>, Func<WebSocket, ILogger, CancellationTokenSource, Task>, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
-  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).StartListening(String, Tuple(Of ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake)), String, TProgress, TProgress, TProgress, ImmutableArray(Of String), TInGameRequestType, Func(Of String, Config, ILogger, CancellationTokenSource, Task(Of WebSocket)), Func(Of WebSocket, ILogger, CancellationTokenSource, Task), State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
+- uid: BurstBotShared.Shared.Interfaces.IGame`6.StartListening(System.String,Tuple{System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake}},System.String,`4,`4,`4,System.Collections.Immutable.ImmutableArray{System.String},`5,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name: StartListening(String, Tuple<ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>>, String, TProgress, TProgress, TProgress, ImmutableArray<String>, TInGameRequestType, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
+  href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_StartListening_System_String_Tuple_System_Collections_Concurrent_ConcurrentDictionary_System_String__0__ConcurrentCollections_ConcurrentHashSet_Remora_Rest_Core_Snowflake___System_String__4__4__4_System_Collections_Immutable_ImmutableArray_System_String___5_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestChannelAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_
+  commentId: M:BurstBotShared.Shared.Interfaces.IGame`6.StartListening(System.String,Tuple{System.Collections.Concurrent.ConcurrentDictionary{System.String,`0},ConcurrentCollections.ConcurrentHashSet{Remora.Rest.Core.Snowflake}},System.String,`4,`4,`4,System.Collections.Immutable.ImmutableArray{System.String},`5,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger)
+  name.vb: StartListening(String, Tuple(Of ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake)), String, TProgress, TProgress, TProgress, ImmutableArray(Of String), TInGameRequestType, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
+  fullName: BurstBotShared.Shared.Interfaces.IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.StartListening(System.String, Tuple<System.Collections.Concurrent.ConcurrentDictionary<System.String, TState>, ConcurrentCollections.ConcurrentHashSet<Remora.Rest.Core.Snowflake>>, System.String, TProgress, TProgress, TProgress, System.Collections.Immutable.ImmutableArray<System.String>, TInGameRequestType, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).StartListening(System.String, Tuple(Of System.Collections.Concurrent.ConcurrentDictionary(Of System.String, TState), ConcurrentCollections.ConcurrentHashSet(Of Remora.Rest.Core.Snowflake)), System.String, TProgress, TProgress, TProgress, System.Collections.Immutable.ImmutableArray(Of System.String), TInGameRequestType, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestChannelAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger)
+  nameWithType: IGame<TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType>.StartListening(String, Tuple<ConcurrentDictionary<String, TState>, ConcurrentHashSet<Snowflake>>, String, TProgress, TProgress, TProgress, ImmutableArray<String>, TInGameRequestType, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
+  nameWithType.vb: IGame(Of TState, TRaw, TGame, TPlayerState, TProgress, TInGameRequestType).StartListening(String, Tuple(Of ConcurrentDictionary(Of String, TState), ConcurrentHashSet(Of Snowflake)), String, TProgress, TProgress, TProgress, ImmutableArray(Of String), TInGameRequestType, State, IDiscordRestChannelAPI, IDiscordRestGuildAPI, ILogger)
 - uid: BurstBotShared.Shared.Interfaces.IGame`6.StartListening*
   name: StartListening
   href: api/BurstBotShared.Shared.Interfaces.IGame-6.html#BurstBotShared_Shared_Interfaces_IGame_6_StartListening_
@@ -2296,23 +2340,6 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).BaseBet
   nameWithType: IGameState<TPlayerState, TProgress>.BaseBet
   nameWithType.vb: IGameState(Of TPlayerState, TProgress).BaseBet
-- uid: BurstBotShared.Shared.Interfaces.IGameState`2.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_Channel
-  commentId: P:BurstBotShared.Shared.Interfaces.IGameState`2.Channel
-  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.Channel
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).Channel
-  nameWithType: IGameState<TPlayerState, TProgress>.Channel
-  nameWithType.vb: IGameState(Of TPlayerState, TProgress).Channel
-- uid: BurstBotShared.Shared.Interfaces.IGameState`2.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_Channel_
-  commentId: Overload:BurstBotShared.Shared.Interfaces.IGameState`2.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.Channel
-  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).Channel
-  nameWithType: IGameState<TPlayerState, TProgress>.Channel
-  nameWithType.vb: IGameState(Of TPlayerState, TProgress).Channel
 - uid: BurstBotShared.Shared.Interfaces.IGameState`2.GameId
   name: GameId
   href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_GameId
@@ -2330,6 +2357,23 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).GameId
   nameWithType: IGameState<TPlayerState, TProgress>.GameId
   nameWithType.vb: IGameState(Of TPlayerState, TProgress).GameId
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_GameType
+  commentId: P:BurstBotShared.Shared.Interfaces.IGameState`2.GameType
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.GameType
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).GameType
+  nameWithType: IGameState<TPlayerState, TProgress>.GameType
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).GameType
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_GameType_
+  commentId: Overload:BurstBotShared.Shared.Interfaces.IGameState`2.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.GameType
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).GameType
+  nameWithType: IGameState<TPlayerState, TProgress>.GameType
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).GameType
 - uid: BurstBotShared.Shared.Interfaces.IGameState`2.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_Guilds
@@ -2398,6 +2442,40 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).Progress
   nameWithType: IGameState<TPlayerState, TProgress>.Progress
   nameWithType.vb: IGameState(Of TPlayerState, TProgress).Progress
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_RequestChannel
+  commentId: P:BurstBotShared.Shared.Interfaces.IGameState`2.RequestChannel
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.RequestChannel
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).RequestChannel
+  nameWithType: IGameState<TPlayerState, TProgress>.RequestChannel
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).RequestChannel
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Interfaces.IGameState`2.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.RequestChannel
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).RequestChannel
+  nameWithType: IGameState<TPlayerState, TProgress>.RequestChannel
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).RequestChannel
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Interfaces.IGameState`2.ResponseChannel
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.ResponseChannel
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).ResponseChannel
+  nameWithType: IGameState<TPlayerState, TProgress>.ResponseChannel
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).ResponseChannel
+- uid: BurstBotShared.Shared.Interfaces.IGameState`2.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Interfaces.IGameState`2.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Interfaces.IGameState<TPlayerState, TProgress>.ResponseChannel
+  fullName.vb: BurstBotShared.Shared.Interfaces.IGameState(Of TPlayerState, TProgress).ResponseChannel
+  nameWithType: IGameState<TPlayerState, TProgress>.ResponseChannel
+  nameWithType.vb: IGameState(Of TPlayerState, TProgress).ResponseChannel
 - uid: BurstBotShared.Shared.Interfaces.IGameState`2.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Interfaces.IGameState-2.html#BurstBotShared_Shared_Interfaces_IGameState_2_Semaphore
@@ -3818,19 +3896,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.BaseBet
   nameWithType: BlackJackGameState.BaseBet
-- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel
-  nameWithType: BlackJackGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Channel
-  nameWithType: BlackJackGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.CurrentPlayerOrder
   name: CurrentPlayerOrder
   href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_CurrentPlayerOrder
@@ -3889,6 +3954,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameId
   nameWithType: BlackJackGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType
+  nameWithType: BlackJackGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.GameType
+  nameWithType: BlackJackGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_Guilds
@@ -3980,6 +4058,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Progress
   nameWithType: BlackJackGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel
+  nameWithType: BlackJackGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.RequestChannel
+  nameWithType: BlackJackGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel
+  nameWithType: BlackJackGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.ResponseChannel
+  nameWithType: BlackJackGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.BlackJack.BlackJackGameState.html#BurstBotShared_Shared_Models_Game_BlackJack_BlackJackGameState_Semaphore
@@ -4969,19 +5073,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.CardsOnTable
   nameWithType: ChasePigGameState.CardsOnTable
-- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel
-  nameWithType: ChasePigGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Channel
-  nameWithType: ChasePigGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.CurrentPlayerOrder
   name: CurrentPlayerOrder
   href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_CurrentPlayerOrder
@@ -5040,6 +5131,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameId
   nameWithType: ChasePigGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType
+  nameWithType: ChasePigGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.GameType
+  nameWithType: ChasePigGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_Guilds
@@ -5118,6 +5222,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Progress
   nameWithType: ChasePigGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel
+  nameWithType: ChasePigGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.RequestChannel
+  nameWithType: ChasePigGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel
+  nameWithType: ChasePigGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.ResponseChannel
+  nameWithType: ChasePigGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.ChaseThePig.ChasePigGameState.html#BurstBotShared_Shared_Models_Game_ChaseThePig_ChasePigGameState_Semaphore
@@ -6031,19 +6161,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.BaseBet
   nameWithType: ChinesePokerGameState.BaseBet
-- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel
-  nameWithType: ChinesePokerGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Channel
-  nameWithType: ChinesePokerGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.DebugNatural
   name: DebugNatural
   href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_DebugNatural
@@ -6089,6 +6206,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameId
   nameWithType: ChinesePokerGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType
+  nameWithType: ChinesePokerGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.GameType
+  nameWithType: ChinesePokerGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_Guilds
@@ -6154,6 +6284,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Progress
   nameWithType: ChinesePokerGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel
+  nameWithType: ChinesePokerGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.RequestChannel
+  nameWithType: ChinesePokerGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel
+  nameWithType: ChinesePokerGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.ResponseChannel
+  nameWithType: ChinesePokerGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.ChinesePoker.ChinesePokerGameState.html#BurstBotShared_Shared_Models_Game_ChinesePoker_ChinesePokerGameState_Semaphore
@@ -7723,19 +7879,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.BurstPlayers
   nameWithType: NinetyNineGameState.BurstPlayers
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
-  nameWithType: NinetyNineGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Channel
-  nameWithType: NinetyNineGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.CurrentPlayerOrder
   name: CurrentPlayerOrder
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_CurrentPlayerOrder
@@ -7807,6 +7950,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameId
   nameWithType: NinetyNineGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType
+  nameWithType: NinetyNineGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.GameType
+  nameWithType: NinetyNineGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_Guilds
@@ -7885,6 +8041,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Progress
   nameWithType: NinetyNineGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel
+  nameWithType: NinetyNineGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.RequestChannel
+  nameWithType: NinetyNineGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel
+  nameWithType: NinetyNineGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.ResponseChannel
+  nameWithType: NinetyNineGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_Semaphore
@@ -8907,19 +9089,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.BaseBet
   nameWithType: OldMaidGameState.BaseBet
-- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel
-  nameWithType: OldMaidGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Channel
-  nameWithType: OldMaidGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.CurrentPlayerOrder
   name: CurrentPlayerOrder
   href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_CurrentPlayerOrder
@@ -8991,6 +9160,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameId
   nameWithType: OldMaidGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType
+  nameWithType: OldMaidGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.GameType
+  nameWithType: OldMaidGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_Guilds
@@ -9069,6 +9251,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Progress
   nameWithType: OldMaidGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel
+  nameWithType: OldMaidGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.RequestChannel
+  nameWithType: OldMaidGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel
+  nameWithType: OldMaidGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.ResponseChannel
+  nameWithType: OldMaidGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.OldMaid.OldMaidGameState.html#BurstBotShared_Shared_Models_Game_OldMaid_OldMaidGameState_Semaphore
@@ -9916,19 +10124,6 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.CardsOnTable
   nameWithType: RedDotsGameState.CardsOnTable
-- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_Channel
-  commentId: P:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel
-  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel
-  nameWithType: RedDotsGameState.Channel
-- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel*
-  name: Channel
-  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_Channel_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel
-  isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Channel
-  nameWithType: RedDotsGameState.Channel
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.CurrentPlayerOrder
   name: CurrentPlayerOrder
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_CurrentPlayerOrder
@@ -9974,6 +10169,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameId
   nameWithType: RedDotsGameState.GameId
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_GameType
+  commentId: P:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType
+  nameWithType: RedDotsGameState.GameType
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType*
+  name: GameType
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_GameType_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.GameType
+  nameWithType: RedDotsGameState.GameType
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Guilds
   name: Guilds
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_Guilds
@@ -10039,6 +10247,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Progress
   nameWithType: RedDotsGameState.Progress
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_RequestChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel
+  nameWithType: RedDotsGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel*
+  name: RequestChannel
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_RequestChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.RequestChannel
+  nameWithType: RedDotsGameState.RequestChannel
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_ResponseChannel
+  commentId: P:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel
+  nameWithType: RedDotsGameState.ResponseChannel
+- uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel*
+  name: ResponseChannel
+  href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_ResponseChannel_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.ResponseChannel
+  nameWithType: RedDotsGameState.ResponseChannel
 - uid: BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.Semaphore
   name: Semaphore
   href: api/BurstBotShared.Shared.Models.Game.RedDotsPicking.RedDotsGameState.html#BurstBotShared_Shared_Models_Game_RedDotsPicking_RedDotsGameState_Semaphore
