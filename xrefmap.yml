@@ -480,19 +480,6 @@ references:
   isSpec: "True"
   fullName: BurstBotNET.Commands.Game.BuildPlayerList
   nameWithType: Game.BuildPlayerList
-- uid: BurstBotNET.Commands.Game.GenericCloseGame(System.Net.WebSockets.WebSocket,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name: GenericCloseGame(WebSocket, ILogger, CancellationTokenSource)
-  href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericCloseGame_System_Net_WebSockets_WebSocket_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
-  commentId: M:BurstBotNET.Commands.Game.GenericCloseGame(System.Net.WebSockets.WebSocket,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  fullName: BurstBotNET.Commands.Game.GenericCloseGame(System.Net.WebSockets.WebSocket, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  nameWithType: Game.GenericCloseGame(WebSocket, ILogger, CancellationTokenSource)
-- uid: BurstBotNET.Commands.Game.GenericCloseGame*
-  name: GenericCloseGame
-  href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericCloseGame_
-  commentId: Overload:BurstBotNET.Commands.Game.GenericCloseGame
-  isSpec: "True"
-  fullName: BurstBotNET.Commands.Game.GenericCloseGame
-  nameWithType: Game.GenericCloseGame
 - uid: BurstBotNET.Commands.Game.GenericJoinGame(System.Single,IEnumerable{Remora.Discord.API.Abstractions.Objects.IUser},BurstBotShared.Shared.Models.Game.Serializables.GameType,System.String,BurstBotShared.Shared.Models.Data.State,Remora.Discord.Commands.Contexts.InteractionContext,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestUserAPI,Microsoft.Extensions.Logging.ILogger)
   name: GenericJoinGame(Single, IEnumerable<IUser>, GameType, String, State, InteractionContext, IDiscordRestInteractionAPI, IDiscordRestUserAPI, ILogger)
   href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericJoinGame_System_Single_IEnumerable_Remora_Discord_API_Abstractions_Objects_IUser__BurstBotShared_Shared_Models_Game_Serializables_GameType_System_String_BurstBotShared_Shared_Models_Data_State_Remora_Discord_Commands_Contexts_InteractionContext_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestUserAPI_Microsoft_Extensions_Logging_ILogger_
@@ -509,19 +496,6 @@ references:
   isSpec: "True"
   fullName: BurstBotNET.Commands.Game.GenericJoinGame
   nameWithType: Game.GenericJoinGame
-- uid: BurstBotNET.Commands.Game.GenericOpenWebSocketSession(System.String,BurstBotShared.Shared.Models.Config.Config,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  name: GenericOpenWebSocketSession(String, Config, ILogger, CancellationTokenSource)
-  href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericOpenWebSocketSession_System_String_BurstBotShared_Shared_Models_Config_Config_Microsoft_Extensions_Logging_ILogger_CancellationTokenSource_
-  commentId: M:BurstBotNET.Commands.Game.GenericOpenWebSocketSession(System.String,BurstBotShared.Shared.Models.Config.Config,Microsoft.Extensions.Logging.ILogger,CancellationTokenSource)
-  fullName: BurstBotNET.Commands.Game.GenericOpenWebSocketSession(System.String, BurstBotShared.Shared.Models.Config.Config, Microsoft.Extensions.Logging.ILogger, CancellationTokenSource)
-  nameWithType: Game.GenericOpenWebSocketSession(String, Config, ILogger, CancellationTokenSource)
-- uid: BurstBotNET.Commands.Game.GenericOpenWebSocketSession*
-  name: GenericOpenWebSocketSession
-  href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericOpenWebSocketSession_
-  commentId: Overload:BurstBotNET.Commands.Game.GenericOpenWebSocketSession
-  isSpec: "True"
-  fullName: BurstBotNET.Commands.Game.GenericOpenWebSocketSession
-  nameWithType: Game.GenericOpenWebSocketSession
 - uid: BurstBotNET.Commands.Game.GenericStartGame(BurstBotShared.Shared.Models.Game.GenericStartGameData)
   name: GenericStartGame(GenericStartGameData)
   href: api/BurstBotNET.Commands.Game.html#BurstBotNET_Commands_Game_GenericStartGame_BurstBotShared_Shared_Models_Game_GenericStartGameData_

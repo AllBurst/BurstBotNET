@@ -137,7 +137,7 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_Dispose.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L199">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L224">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_Dispose_" data-uid="BurstBotShared.Services.AmqpService.Dispose*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_Dispose" data-uid="BurstBotShared.Services.AmqpService.Dispose">Dispose()</h4>
@@ -152,7 +152,7 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_Finalize.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.Finalize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L194">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L219">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_Finalize_" data-uid="BurstBotShared.Services.AmqpService.Finalize*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_Finalize" data-uid="BurstBotShared.Services.AmqpService.Finalize">Finalize()</h4>
@@ -167,11 +167,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_ReceiveMatchData_System_String_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.ReceiveMatchData(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L104">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L114">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_ReceiveMatchData_" data-uid="BurstBotShared.Services.AmqpService.ReceiveMatchData*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_ReceiveMatchData_System_String_" data-uid="BurstBotShared.Services.AmqpService.ReceiveMatchData(System.String)">ReceiveMatchData(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Wait for a match data for 60 seconds.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -190,7 +191,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">socketIdentifier</span></td>
-        <td></td>
+        <td><p>A unique identifier representing the player who's waiting for a game match.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -205,7 +207,8 @@
     <tbody>
       <tr>
         <td><span class="xref">Task</span>&lt;<a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.GenericJoinStatus.html">GenericJoinStatus</a>&gt;</td>
-        <td></td>
+        <td><p>A game match data with a game ID on success, or null when there are not enough players to start a game.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -214,11 +217,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_RegisterResponseChannel_System_String_System_Threading_Channels_Channel_System_Byte____.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String%2CSystem.Threading.Channels.Channel%7BSystem.Byte%5B%5D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L184">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L205">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_RegisterResponseChannel_" data-uid="BurstBotShared.Services.AmqpService.RegisterResponseChannel*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_RegisterResponseChannel_System_String_System_Threading_Channels_Channel_System_Byte____" data-uid="BurstBotShared.Services.AmqpService.RegisterResponseChannel(System.String,System.Threading.Channels.Channel{System.Byte[]})">RegisterResponseChannel(String, Channel&lt;Byte[]&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Add a channel for receiving responses of a game from the server, so the subscriber will be able to correctly route the response to the handler.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -237,12 +241,14 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">gameId</span></td>
-        <td></td>
+        <td><p>A unique identifier representing a single game.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.channels.channel-1">Channel</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]&gt;</td>
         <td><span class="parametername">channel</span></td>
-        <td></td>
+        <td><p>A unique channel for receiving responses of a single game from the server.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -251,11 +257,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_RequestMatch_BurstBotShared_Shared_Models_Game_Serializables_GameType_System_Byte___.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType%2CSystem.Byte%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L86">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L91">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_RequestMatch_" data-uid="BurstBotShared.Services.AmqpService.RequestMatch*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_RequestMatch_BurstBotShared_Shared_Models_Game_Serializables_GameType_System_Byte___" data-uid="BurstBotShared.Services.AmqpService.RequestMatch(BurstBotShared.Shared.Models.Game.Serializables.GameType,System.Byte[])">RequestMatch(GameType, Byte[])</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Request a game match based on the game type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -274,12 +281,14 @@
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.GameType.html">GameType</a></td>
         <td><span class="parametername">gameType</span></td>
-        <td></td>
+        <td><p>The game type of which to request a game match.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
         <td><span class="parametername">waitingData</span></td>
-        <td></td>
+        <td><p>Generic waiting data serialized to JSON and represented in bytes.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -303,11 +312,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_SendInGameRequestData_System_Byte___BurstBotShared_Shared_Models_Game_Serializables_GameType_System_String_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte%5B%5D%2CBurstBotShared.Shared.Models.Game.Serializables.GameType%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L166">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L182">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_SendInGameRequestData_" data-uid="BurstBotShared.Services.AmqpService.SendInGameRequestData*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_SendInGameRequestData_System_Byte___BurstBotShared_Shared_Models_Game_Serializables_GameType_System_String_" data-uid="BurstBotShared.Services.AmqpService.SendInGameRequestData(System.Byte[],BurstBotShared.Shared.Models.Game.Serializables.GameType,System.String)">SendInGameRequestData(Byte[], GameType, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Send in-game request data via a channel. The actual content of the payload depends on the game being played.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -326,17 +336,20 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
         <td><span class="parametername">payload</span></td>
-        <td></td>
+        <td><p>A in-game request data serialized to JSON and represented in bytes.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="BurstBotShared.Shared.Models.Game.Serializables.GameType.html">GameType</a></td>
         <td><span class="parametername">gameType</span></td>
-        <td></td>
+        <td><p>The game type of which to send in-game request data.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">gameId</span></td>
-        <td></td>
+        <td><p>A unique identifier representing a single game.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -360,11 +373,12 @@
     <a href="https://github.com/AllBurst/BurstBotNET/new/dev/rabbitmq/apiSpec/new?filename=BurstBotShared_Services_AmqpService_UnregisterResponseChannel_System_String_.md&amp;value=---%0Auid%3A%20BurstBotShared.Services.AmqpService.UnregisterResponseChannel(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L189">View Source</a>
+    <a href="https://github.com/AllBurst/BurstBotNET/blob/dev/rabbitmq/BurstBotShared/Services/AmqpService.cs/#L214">View Source</a>
   </span>
   <a id="BurstBotShared_Services_AmqpService_UnregisterResponseChannel_" data-uid="BurstBotShared.Services.AmqpService.UnregisterResponseChannel*"></a>
   <h4 id="BurstBotShared_Services_AmqpService_UnregisterResponseChannel_System_String_" data-uid="BurstBotShared.Services.AmqpService.UnregisterResponseChannel(System.String)">UnregisterResponseChannel(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Remove the response channel from the concurrent dictionary and stop routing response data for that game.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -383,7 +397,8 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">gameId</span></td>
-        <td></td>
+        <td><p>A unique identifier representing a single game that is finalizing.</p>
+</td>
       </tr>
     </tbody>
   </table>

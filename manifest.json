@@ -14,6 +14,18 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "CHANGELOG.md",
+      "output": {
+        ".html": {
+          "relative_path": "CHANGELOG.html",
+          "hash": "6UMiE3npLU1sOhNa/IcApRuI+H1WaSX3nT+7ClKQpvA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
@@ -126,7 +138,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.Game.html",
-          "hash": "0Otgd3o/PtHLV+bpua7b24rH5k419hm2BnUi2wai+L8="
+          "hash": "TLRXI1duvGnc6d7MbHEsEWNV897j6h8Xzvzn0RAKLyE="
         }
       },
       "is_incremental": false,
@@ -414,7 +426,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Api.BurstApi.html",
-          "hash": "yOnwS5c0ZbS/LGhD0h+Ll1RI0fl4oDE9KYSRTD1NOEc="
+          "hash": "/bSsGjzBRUjrXrJuYUqh84ZlBH6HwAfgXIb5tJ/ly+c="
         }
       },
       "is_incremental": false,
@@ -450,7 +462,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.AmqpService.html",
-          "hash": "9FGxDjg2mC+Ud8oWYbyUkkObv9hLIj5Gdm6bv3vAP6I="
+          "hash": "kNDqEnK0CaBEq2ExOOkx+nzT5vJywUguLtcOCAqWazg="
         }
       },
       "is_incremental": false,
@@ -2391,7 +2403,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 1,
+          "total_file_count": 2,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
