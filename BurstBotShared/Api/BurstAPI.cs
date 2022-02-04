@@ -1,8 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Net;
-using System.Net.WebSockets;
-using System.Text;
 using System.Text.Json;
 using BurstBotShared.Services;
 using BurstBotShared.Shared;
@@ -54,14 +52,10 @@ public sealed class BurstApi
 
     private readonly ConcurrentDictionary<ulong, List<IChannel>> _guildChannelList = new();
     private readonly string _serverEndpoint;
-    private readonly string _socketEndpoint;
-    private readonly int _socketPort;
 
     public BurstApi(Config config)
     {
         _serverEndpoint = config.ServerEndpoint;
-        _socketEndpoint = config.SocketEndpoint;
-        _socketPort = config.SocketPort;
     }
 
     public async Task<IFlurlResponse> SendRawRequest<TPayloadType>(string endpoint, ApiRequestType requestType,
@@ -163,111 +157,6 @@ public sealed class BurstApi
         }
 
         return matchData;
-    }
-
-    private async Task<GenericJoinStatus?> GenericWaitForGame(
-        GenericJoinStatus waitingData,
-        InteractionContext context,
-        IEnumerable<IGuildMember> mentionedPlayers,
-        IUser botUser,
-        string gameName,
-        string description,
-        IDiscordRestInteractionAPI interactionApi,
-        ILogger logger)
-    {
-        using var socketSession = new ClientWebSocket();
-        socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-        var cancellationTokenSource = new CancellationTokenSource();
-        var url = new Uri(_socketPort != 0 ? $"ws://{_socketEndpoint}:{_socketPort}" : $"wss://{_socketEndpoint}");
-        await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
-
-        while (true)
-            if (socketSession.State == WebSocketState.Open)
-                break;
-
-        await socketSession.SendAsync(new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(waitingData)),
-            WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, cancellationTokenSource.Token);
-
-        while (true)
-        {
-            var timeoutCancellationTokenSource = new CancellationTokenSource();
-            var receiveTask = ReceiveMatchData(socketSession, cancellationTokenSource.Token);
-            var timeoutTask = Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(60), timeoutCancellationTokenSource.Token);
-                    return new GenericJoinStatus
-                    {
-                        SocketIdentifier = null,
-                        GameId = null,
-                        StatusType = GenericJoinStatusType.TimedOut
-                    };
-                }
-                catch (TaskCanceledException)
-                {
-                }
-                finally
-                {
-                    timeoutCancellationTokenSource.Dispose();
-                }
-
-                return null;
-            }, cancellationTokenSource.Token);
-
-            var matchData = await await Task.WhenAny(new[] { receiveTask, timeoutTask });
-            if (matchData is { StatusType: GenericJoinStatusType.TimedOut })
-            {
-                const string message = "Timeout because no match game is found";
-                logger.LogDebug(message);
-                await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, message,
-                    cancellationTokenSource.Token);
-                _ = Task.Run(() =>
-                {
-                    cancellationTokenSource.Cancel();
-                    logger.LogDebug("All tasks for matching have been cancelled");
-                    cancellationTokenSource.Dispose();
-                });
-                logger.LogDebug("WebSocket closed due to timeout");
-                break;
-            }
-
-            _ = Task.Run(() =>
-            {
-                timeoutCancellationTokenSource.Cancel();
-                logger.LogDebug("Timeout task for matching has been cancelled");
-            });
-
-            if (matchData is not { StatusType: GenericJoinStatusType.Matched } || matchData.GameId == null) continue;
-
-            await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Matched.",
-                cancellationTokenSource.Token);
-            cancellationTokenSource.Dispose();
-
-            var participatingPlayers = mentionedPlayers.ToImmutableArray();
-            foreach (var player in participatingPlayers)
-            {
-                var followUpResult = await interactionApi
-                    .CreateFollowupMessageAsync(
-                        context.ApplicationID,
-                        context.Token,
-                        embeds: new[]
-                        {
-                            Utilities.BuildGameEmbed(player, botUser, matchData, gameName, description,
-                                null)
-                        });
-
-                if (!followUpResult.IsSuccess)
-                {
-                    logger.LogError("Failed to create follow-up message: {Reason}, inner: {Inner}",
-                        followUpResult.Error.Message, followUpResult.Inner);
-                } 
-            }
-            
-            return matchData;
-        }
-
-        return null;
     }
 
     public static (GenericJoinStatus?, string) HandleMatchGameHttpStatuses(IFlurlResponse response,
@@ -415,7 +304,8 @@ public sealed class BurstApi
             .EditOriginalInteractionResponseAsync(
                 context.ApplicationID,
                 context.Token,
-                Constants.GameStarted);
+                Constants.GameStarted,
+                ImmutableArray<IEmbed>.Empty);
 
         if (!startMessageResult.IsSuccess)
         {
@@ -559,16 +449,6 @@ public sealed class BurstApi
         }
         
         return (matchData, playerStates.ToImmutableArray());
-    }
-
-    private static async Task<GenericJoinStatus?> ReceiveMatchData(WebSocket socketSession,
-        CancellationToken token)
-    {
-        var buffer = new byte[BufferSize];
-        var receiveResult = await socketSession.ReceiveAsync(new Memory<byte>(buffer), token);
-        var payloadText = Encoding.UTF8.GetString(buffer[..receiveResult.Count]);
-        var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(payloadText);
-        return matchData;
     }
 
     public async Task<IChannel?> CreatePlayerChannel(

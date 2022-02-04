@@ -19,7 +19,6 @@ using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Rest.Core;
 using Remora.Results;
-using Channel = System.Threading.Channels.Channel;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
@@ -404,7 +403,7 @@ public partial class BlackJack : BlackJackGame
             Title: localization.InitialMessageTitle,
             Description: description,
             Footer: new EmbedFooter(localization.InitialMessageFooter),
-            Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+            Thumbnail: new EmbedThumbnail(Constants.BlackJackLogo),
             Image: new EmbedImage(Constants.AttachmentUri));
 
         var initialMessageResult = await channelApi
@@ -677,6 +676,7 @@ public partial class BlackJack : BlackJackGame
         var embed = new Embed(
             Author: new EmbedAuthor(currentPlayer.PlayerName, IconUrl: currentPlayer.AvatarUrl),
             Colour: BurstColor.Burst.ToColor(),
+            Thumbnail: new EmbedThumbnail(Constants.BlackJackLogo),
             Title: title,
             Image: new EmbedImage(Constants.AttachmentUri));
 

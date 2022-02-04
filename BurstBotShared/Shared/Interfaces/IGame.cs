@@ -62,7 +62,13 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
     {
         var state = gameStates
             .GetOrAdd(gameId, new TState());
-        state.Players.GetOrAdd(playerState.PlayerId, playerState);
+        state.Players.AddOrUpdate(playerState.PlayerId, playerState, (_, pState) =>
+        {
+            pState.AvatarUrl = pState.AvatarUrl == string.Empty ? playerState.AvatarUrl : pState.AvatarUrl;
+            pState.PlayerName = pState.PlayerName == string.Empty ? playerState.PlayerName : pState.PlayerName;
+            pState.TextChannel ??= playerState.TextChannel;
+            return pState;
+        });
         state.Guilds.Add(guild);
         state.RequestChannel ??= Channel.CreateUnbounded<Tuple<ulong, byte[]>>();
         state.ResponseChannel ??= Channel.CreateUnbounded<byte[]>();
@@ -75,7 +81,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
         await state.RequestChannel.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(dealRequest)));
-        Console.WriteLine("Successfully write to channel.");
     }
 
     static async Task StartListening(

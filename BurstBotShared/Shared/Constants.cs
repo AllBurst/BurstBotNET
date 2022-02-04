@@ -12,6 +12,12 @@ public static class Constants
     public const string BurstGold =
         "https://cdn.discordapp.com/attachments/811517007446671391/931060212524257280/gold02.png";
 
+    public const string BlackJackLogo =
+        "https://cdn.discordapp.com/attachments/811517007446671391/939018611740250172/logo_21.png";
+
+    public const string NinetyNineLogo =
+        "https://cdn.discordapp.com/attachments/811517007446671391/939018612352635010/logo_99.png";
+
     public const int StartingBet = 1;
     public const int BufferSize = 8192;
     public const string OutputFileName = "output.jpg";
