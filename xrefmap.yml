@@ -1800,6 +1800,12 @@ references:
   commentId: F:BurstBotShared.Shared.Constants.AttachmentUri
   fullName: BurstBotShared.Shared.Constants.AttachmentUri
   nameWithType: Constants.AttachmentUri
+- uid: BurstBotShared.Shared.Constants.BlackJackLogo
+  name: BlackJackLogo
+  href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_BlackJackLogo
+  commentId: F:BurstBotShared.Shared.Constants.BlackJackLogo
+  fullName: BurstBotShared.Shared.Constants.BlackJackLogo
+  nameWithType: Constants.BlackJackLogo
 - uid: BurstBotShared.Shared.Constants.BufferSize
   name: BufferSize
   href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_BufferSize
@@ -1836,6 +1842,12 @@ references:
   commentId: F:BurstBotShared.Shared.Constants.GameStarted
   fullName: BurstBotShared.Shared.Constants.GameStarted
   nameWithType: Constants.GameStarted
+- uid: BurstBotShared.Shared.Constants.NinetyNineLogo
+  name: NinetyNineLogo
+  href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_NinetyNineLogo
+  commentId: F:BurstBotShared.Shared.Constants.NinetyNineLogo
+  fullName: BurstBotShared.Shared.Constants.NinetyNineLogo
+  nameWithType: Constants.NinetyNineLogo
 - uid: BurstBotShared.Shared.Constants.OutputFileName
   name: OutputFileName
   href: api/BurstBotShared.Shared.Constants.html#BurstBotShared_Shared_Constants_OutputFileName
