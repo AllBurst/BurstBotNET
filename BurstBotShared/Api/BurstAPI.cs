@@ -27,7 +27,6 @@ namespace BurstBotShared.Api;
 public sealed class BurstApi
 {
     private const string CategoryName = "All-Burst-Category";
-    private const int BufferSize = 2048;
 
     private static readonly DiscordPermissionSet PlayerAllowPermissions = new(
         DiscordPermission.AddReactions,

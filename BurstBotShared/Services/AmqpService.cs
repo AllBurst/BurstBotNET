@@ -83,6 +83,11 @@ public sealed class AmqpService : IDisposable
         _logger.LogInformation("AMQP connection successfully initiated");
     }
 
+    /// <summary>
+    /// Request a game match based on the game type.
+    /// </summary>
+    /// <param name="gameType">The game type of which to request a game match.</param>
+    /// <param name="waitingData">Generic waiting data serialized to JSON and represented in bytes.</param>
     public async Task RequestMatch(GameType gameType, byte[] waitingData)
     {
         var dequeueResult = false;
@@ -101,6 +106,11 @@ public sealed class AmqpService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Wait for a match data for 60 seconds.
+    /// </summary>
+    /// <param name="socketIdentifier">A unique identifier representing the player who's waiting for a game match.</param>
+    /// <returns>A game match data with a game ID on success, or null when there are not enough players to start a game.</returns>
     public async Task<GenericJoinStatus?> ReceiveMatchData(string socketIdentifier)
     {
         var payloadChannel = _matchRequestChannels.AddOrUpdate(socketIdentifier, Channel.CreateBounded<GenericJoinStatus>(5),
@@ -163,6 +173,12 @@ public sealed class AmqpService : IDisposable
         return null;
     }
 
+    /// <summary>
+    /// Send in-game request data via a channel. The actual content of the payload depends on the game being played.
+    /// </summary>
+    /// <param name="payload">A in-game request data serialized to JSON and represented in bytes.</param>
+    /// <param name="gameType">The game type of which to send in-game request data.</param>
+    /// <param name="gameId">A unique identifier representing a single game.</param>
     public async Task SendInGameRequestData(byte[] payload, GameType gameType, string gameId)
     {
         var dequeueResult = false;
@@ -181,11 +197,20 @@ public sealed class AmqpService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Add a channel for receiving responses of a game from the server, so the subscriber will be able to correctly route the response to the handler.
+    /// </summary>
+    /// <param name="gameId">A unique identifier representing a single game.</param>
+    /// <param name="channel">A unique channel for receiving responses of a single game from the server.</param>
     public void RegisterResponseChannel(string gameId, Channel<byte[]> channel)
     {
         _inGameResponseChannels.AddOrUpdate(gameId, channel, (_, _) => channel);
     }
 
+    /// <summary>
+    /// Remove the response channel from the concurrent dictionary and stop routing response data for that game.
+    /// </summary>
+    /// <param name="gameId">A unique identifier representing a single game that is finalizing.</param>
     public void UnregisterResponseChannel(string gameId)
     {
         _inGameResponseChannels.TryRemove(gameId, out _);

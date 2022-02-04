@@ -1,9 +1,7 @@
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Net.WebSockets;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
-using BurstBotShared.Shared.Models.Config;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Data.Serializables;
 using BurstBotShared.Shared.Models.Game;
@@ -39,30 +37,19 @@ public static class Game
         return mentionedPlayers;
     }
 
-    public static async Task GenericCloseGame(WebSocket socketSession, ILogger logger, CancellationTokenSource cancellationTokenSource)
-    {
-        logger.LogDebug("Cleaning up resource...");
-        try
-        {
-            await socketSession.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Game is concluded",
-                default);
-            logger.LogDebug("Socket session closed");
-            _ = Task.Run(() =>
-            {
-                cancellationTokenSource.Cancel();
-                logger.LogDebug("All tasks cancelled");
-            });
-        }
-        catch (Exception ex)
-        {
-            logger.LogError("Failed to close socket session: {Exception}", ex);
-        }
-        finally
-        {
-            await Task.Delay(TimeSpan.FromSeconds(60));
-        }
-    }
-
+    /// <summary>
+    /// Build a player list including the invoker of the slash command, validate if all players have enough tips, send a REST call to the server to request a game match, and return the join result or error messages when failed.
+    /// </summary>
+    /// <param name="baseBet">The base bet that is required for each player to join the game.</param>
+    /// <param name="users">Invited players mentioned by using additional options in the slash command.</param>
+    /// <param name="gameType">The game type of which to request a game match.</param>
+    /// <param name="joinRequestEndpoint">The REST endpoint for requesting game matches. All games have dedicated REST endpoints.</param>
+    /// <param name="state">The container for all relevant states.</param>
+    /// <param name="context">The interaction context generated after a user invokes a slash command.</param>
+    /// <param name="interactionApi">REST API for handling Discord interactions.</param>
+    /// <param name="userApi">REST API for handling Discord users.</param>
+    /// <param name="logger">The logger.</param>
+    /// <returns>A join result on success, or null when failed.</returns>
     public static async Task<GenericJoinResult?> GenericJoinGame(
         float baseBet,
         IEnumerable<IUser?> users,
@@ -131,25 +118,11 @@ public static class Game
         };
     }
 
-    public static async Task<WebSocket> GenericOpenWebSocketSession(string gameName, Config config, ILogger logger, CancellationTokenSource cancellationTokenSource)
-    {
-        var socketSession = new ClientWebSocket();
-        socketSession.Options.KeepAliveInterval = TimeSpan.FromSeconds(30);
-        var url = new Uri(config.SocketPort != 0
-            ? $"ws://{config.SocketEndpoint}:{config.SocketPort}"
-            : $"wss://{config.SocketEndpoint}");
-        await socketSession.ConnectAsync(url, cancellationTokenSource.Token);
-        
-        logger.LogDebug("Successfully connected to WebSocket server");
-
-        while (true)
-            if (socketSession.State == WebSocketState.Open)
-                break;
-
-        logger.LogDebug("WebSocket session for {GameName} successfully established", gameName);
-        return socketSession;
-    }
-
+    /// <summary>
+    /// Build an embed and collect players' reactions/confirmations. Used when a player directly invited all players he wants to play a game with.
+    /// </summary>
+    /// <param name="startGameData">A generic container for all relevant information required to collect reactions and act accordingly.</param>
+    /// <returns>An immutable array with all players casted to guild members, and a match data with a game ID; or null when failed (e.g. the player invites other players but not all invited players confirm to join the game, resulting a failed match).</returns>
     public static async Task<(ImmutableArray<IGuildMember>, GenericJoinStatus)?> GenericStartGame(
         GenericStartGameData startGameData)
     {
@@ -196,6 +169,16 @@ public static class Game
         return null;
     }
 
+    /// <summary>
+    /// Validate if all participants have enough tips to join a game.
+    /// </summary>
+    /// <param name="invokerId">The user who invokes the slash command.</param>
+    /// <param name="playerIds">Player IDs whose tips will be validated.</param>
+    /// <param name="burstApi">A generic API service for handling HTTP requests and responses.</param>
+    /// <param name="context">The interaction context generated after a user invokes the slash command.</param>
+    /// <param name="minimumRequiredTip">Minimum amount of tips to join the game.</param>
+    /// <param name="interactionApi">REST API for handling Discord interactions.</param>
+    /// <returns>Whether all players pass the validation, and optionally the invoking player's tips.</returns>
     public static async Task<(bool, RawTip?)> ValidatePlayers(
         ulong invokerId,
         IEnumerable<ulong> playerIds,
