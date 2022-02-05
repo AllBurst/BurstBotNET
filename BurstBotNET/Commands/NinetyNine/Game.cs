@@ -108,7 +108,7 @@ public partial class NinetyNine : NinetyNineGame
                 title,
                 Description: description,
                 Colour: BurstColor.Burst.ToColor(),
-                Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
+                Thumbnail: new EmbedThumbnail(Constants.NinetyNineLogo),
                 Image: new EmbedImage(winner.AvatarUrl));
 
             foreach (var (pId, player) in state.Players)
@@ -122,7 +122,7 @@ public partial class NinetyNine : NinetyNineGame
                         pId, sendResult.Error.Message, sendResult.Inner);
             }
 
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            await state.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                 0,
                 JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
                 {
@@ -261,7 +261,7 @@ public partial class NinetyNine : NinetyNineGame
             Colour: BurstColor.Burst.ToColor(),
             Footer: new EmbedFooter(localization.InitialMessageFooter),
             Image: new EmbedImage(Constants.AttachmentUri),
-            Thumbnail: new EmbedThumbnail(Constants.BurstLogo));
+            Thumbnail: new EmbedThumbnail(Constants.NinetyNineLogo));
 
         var attachment = new[]
         {
@@ -417,7 +417,7 @@ public partial class NinetyNine : NinetyNineGame
             Author: new EmbedAuthor(nextPlayer.PlayerName, IconUrl: nextPlayer.AvatarUrl),
             Title: title,
             Colour: BurstColor.Burst.ToColor(),
-            Thumbnail: new EmbedThumbnail(Constants.BurstLogo));
+            Thumbnail: new EmbedThumbnail(Constants.NinetyNineLogo));
 
         if (!isCurrentPlayer) return embed;
 
@@ -467,7 +467,7 @@ public partial class NinetyNine : NinetyNineGame
                     .WithDescription(
                         ninetyNineLocalization.CurrentTotal.Replace("{total}", gameState.CurrentTotal.ToString()))
                     .WithColour(BurstColor.Burst.ToColor())
-                    .WithThumbnailUrl(Constants.BurstLogo)
+                    .WithThumbnailUrl(Constants.NinetyNineLogo)
                     .Build();
 
                 var result = await channelApi

@@ -15,6 +15,7 @@ public class RedDotsGameState :
     IDisposable
 {
     public string GameId { get; set; } = null!;
+    public GameType GameType => GameType.RedDotsPicking;
     public DateTime LastActiveTime { get; set; }
     public ConcurrentDictionary<ulong, RedDotsPlayerState> Players { get; init; } = new(10, 4);
     public RedDotsGameProgress Progress { get; set; }
@@ -22,7 +23,8 @@ public class RedDotsGameState :
     public int CurrentPlayerOrder { get; set; }
     public ulong PreviousPlayerId { get; set; }
     public ImmutableArray<Card> CardsOnTable { get; set; }
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

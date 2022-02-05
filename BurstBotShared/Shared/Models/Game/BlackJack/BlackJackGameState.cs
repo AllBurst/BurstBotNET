@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.BlackJack.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using ConcurrentCollections;
 using Remora.Rest.Core;
 
@@ -13,6 +14,7 @@ public class BlackJackGameState :
     IDisposable
 {
     public string GameId { get; set; } = "";
+    public GameType GameType => GameType.BlackJack;
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
     public ConcurrentDictionary<ulong, BlackJackPlayerState> Players { get; init; } = new(10, 6);
     public BlackJackGameProgress Progress { get; set; } = BlackJackGameProgress.NotAvailable;
@@ -22,7 +24,8 @@ public class BlackJackGameState :
     public float BaseBet { get; set; }
     public int HighestBet { get; set; }
     public int CurrentTurn { get; set; }
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

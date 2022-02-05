@@ -134,7 +134,7 @@ public partial class ChaseThePig
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<ChasePigPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _state.AmqpService, _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue) return;
 
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
@@ -168,7 +168,8 @@ public partial class ChaseThePig
                 PlayerName = playerState.PlayerName,
                 RequestType = ChasePigInGameRequestType.Deal
             }, _state.GameStates.ChasePigGameStates.Item1,
-            _state.GameStates.ChasePigGameStates.Item2);
+            _state.GameStates.ChasePigGameStates.Item2,
+            _state.AmqpService);
         
         await Task.Delay(TimeSpan.FromSeconds(1));
 
@@ -180,8 +181,6 @@ public partial class ChaseThePig
             ChasePigGameProgress.Closed,
             ChasePigGame.InGameRequestTypes,
             ChasePigInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,

@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Game.ChinesePoker.Serializables;
+using BurstBotShared.Shared.Models.Game.Serializables;
 using ConcurrentCollections;
 using Remora.Rest.Core;
 
@@ -13,6 +14,7 @@ public class ChinesePokerGameState :
     IDisposable
 {
     public string GameId { get; set; } = "";
+    public GameType GameType => GameType.ChinesePoker;
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
     public ConcurrentDictionary<ulong, ChinesePokerPlayerState> Players { get; init; } = new(10, 4);
     public ChinesePokerGameProgress Progress { get; set; }
@@ -20,7 +22,8 @@ public class ChinesePokerGameState :
     public Dictionary<ulong, Dictionary<ulong, int>> Units { get; set; } = new();
     public ulong PreviousPlayerId { get; init; }
     public bool DebugNatural { get; set; }
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

@@ -81,7 +81,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
     NinetyNineInGameAdjustmentType plusOrMinus,
     CancellationToken ct)
     {
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {
@@ -101,7 +101,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         NinetyNinePlayerState playerState,
         CancellationToken ct)
     {
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {

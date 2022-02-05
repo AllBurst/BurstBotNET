@@ -146,8 +146,9 @@ public partial class BlackJack
                         var waitingResult = await _state.BurstApi
                             .WaitForBlackJackGame(joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
                                 joinResult.BotUser, "",
-                            _interactionApi, _guildApi,
-                            _logger);
+                                _state.AmqpService,
+                                _interactionApi, _guildApi,
+                                _logger);
 
                         if (!waitingResult.HasValue) return;
 
@@ -186,7 +187,8 @@ public partial class BlackJack
                 ClientType = ClientType.Discord,
                 RequestType = BlackJackInGameRequestType.Deal,
             }, _state.GameStates.BlackJackGameStates.Item1,
-            _state.GameStates.BlackJackGameStates.Item2);
+            _state.GameStates.BlackJackGameStates.Item2,
+            _state.AmqpService);
                             
         await Task.Delay(TimeSpan.FromSeconds(1));
                             
@@ -199,8 +201,6 @@ public partial class BlackJack
             BlackJackGameProgress.Closed,
             BlackJackGame.InGameRequestTypes,
             BlackJackInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,

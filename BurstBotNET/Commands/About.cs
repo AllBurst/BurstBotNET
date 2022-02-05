@@ -53,7 +53,7 @@ public class About : CommandGroup
                         Colour: BurstColor.Burst.ToColor(),
                         Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
                         Description: AboutText.Value,
-                        Footer: new EmbedFooter("All Burst: Development 1.2 | 2021-12-31")
+                        Footer: new EmbedFooter("All Burst: Development 2.0.0 | 2022-02-04")
                     )
                 });
 

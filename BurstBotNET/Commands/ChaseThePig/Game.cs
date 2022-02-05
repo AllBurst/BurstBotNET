@@ -176,7 +176,7 @@ public partial class ChaseThePig : ChasePigGame
                         pId, sendResult.Error.Message, sendResult.Inner);
             }
 
-            await state.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            await state.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                 0,
                 JsonSerializer.SerializeToUtf8Bytes(new ChasePigInGameRequest
                 {
@@ -217,7 +217,7 @@ public partial class ChaseThePig : ChasePigGame
         switch (gameState.Progress)
         {
             case ChasePigGameProgress.Starting:
-                await SendInitialMessage(previousPlayerOldState, previousPlayerNewState, deserializedIncomingData,
+                await SendInitialMessage(previousPlayerOldState!, previousPlayerNewState, deserializedIncomingData,
                     state.DeckService, state.Localizations, channelApi, logger);
                 break;
             case ChasePigGameProgress.Exposing:
@@ -243,7 +243,7 @@ public partial class ChaseThePig : ChasePigGame
     }
 
     private static async Task SendInitialMessage(
-        IPlayerState? playerState,
+        IPlayerState playerState,
         RawChasePigPlayerState? newPlayerState,
         RawChasePigGameState deserializedIncomingData,
         DeckService deckService,
@@ -252,7 +252,7 @@ public partial class ChaseThePig : ChasePigGame
         ILogger logger
     )
     {
-        if (playerState?.TextChannel == null || newPlayerState == null) return;
+        if (playerState.TextChannel == null || newPlayerState == null) return;
         logger.LogDebug("Sending initial message...");
 
         var localization = localizations.GetLocalization().ChaseThePig;

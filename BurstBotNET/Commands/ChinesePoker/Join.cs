@@ -138,7 +138,7 @@ public partial class ChinesePoker
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<ChinesePokerPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _state.AmqpService, _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue) return;
 
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
@@ -173,7 +173,8 @@ public partial class ChinesePoker
                 PlayerId = playerState.PlayerId,
                 PlayerName = playerState.PlayerName
             }, _state.GameStates.ChinesePokerGameStates.Item1,
-            _state.GameStates.ChinesePokerGameStates.Item2);
+            _state.GameStates.ChinesePokerGameStates.Item2,
+            _state.AmqpService);
         
         await Task.Delay(TimeSpan.FromSeconds(1));
 
@@ -186,8 +187,6 @@ public partial class ChinesePoker
             ChinesePokerGameProgress.Closed,
             ChinesePokerGame.InGameRequestTypes,
             ChinesePokerInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,

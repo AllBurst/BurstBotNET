@@ -16,6 +16,7 @@ public class NinetyNineGameState :
     IDisposable
 {
     public string GameId { get; set; } = "";
+    public GameType GameType => GameType.NinetyNine;
     public DateTime LastActiveTime { get; set; } = DateTime.Now;
     public ConcurrentDictionary<ulong, NinetyNinePlayerState> Players { get; init; } = new(10, 8);
     public NinetyNineGameProgress Progress { get; set; }
@@ -29,7 +30,8 @@ public class NinetyNineGameState :
     public int TotalBet { get; set; }
     public ImmutableArray<ulong> BurstPlayers { get; set; } = ImmutableArray<ulong>.Empty;
     
-    public Channel<Tuple<ulong, byte[]>>? Channel { get; set; }
+    public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
+    public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);
     public ConcurrentHashSet<Snowflake> Guilds { get; } = new();
 

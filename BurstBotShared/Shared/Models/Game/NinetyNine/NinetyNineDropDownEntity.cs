@@ -153,7 +153,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             .First(p => p.Value.Order == gameState.CurrentPlayerOrder)
             .Value;
 
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             currentPlayer.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {
@@ -177,7 +177,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
     {
         var nextPlayerId = ulong.Parse(values.First());
 
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             nextPlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {

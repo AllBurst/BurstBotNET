@@ -50,7 +50,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
                 PlayerId = playerState.PlayerId,
                 Bets = raiseBet
             }));
-        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await gameState.RequestChannel!.Writer.WriteAsync(sendData, ct);
         await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, channelApi, logger, ct);
     }
     
@@ -154,7 +154,7 @@ public class BlackJackButtonEntity : IButtonInteractiveEntity, IHelpButtonEntity
                 GameId = gameState.GameId,
                 PlayerId = playerState.PlayerId
             }));
-        await gameState.Channel!.Writer.WriteAsync(sendData, ct);
+        await gameState.RequestChannel!.Writer.WriteAsync(sendData, ct);
         await Utilities.Utilities.DisableComponents(playerState.MessageReference!, true, _channelApi, _logger, ct);
     }
 

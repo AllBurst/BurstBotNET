@@ -106,7 +106,7 @@ public class ChinesePokerButtonEntity : IButtonInteractiveEntity, IHelpButtonEnt
         await Utilities.Utilities.DisableComponents(cardMessage!, true, _channelApi, _logger, ct);
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
-        await gameState.Channel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
             playerState.PlayerId,
             JsonSerializer.SerializeToUtf8Bytes(new ChinesePokerInGameRequest
             {

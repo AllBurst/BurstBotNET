@@ -134,7 +134,7 @@ public partial class OldMaid
                     {
                         var waitingResult = await _state.BurstApi.WaitForGame<OldMaidPlayerState>(
                             joinResult.JoinStatus, _context, joinResult.MentionedPlayers,
-                            joinResult.BotUser, "", GameName, _interactionApi, _guildApi, _logger);
+                            joinResult.BotUser, "", GameName, _state.AmqpService, _interactionApi, _guildApi, _logger);
                         if (!waitingResult.HasValue) return;
 
                         var guild = await Utilities.GetGuildFromContext(_context, _interactionApi, _logger);
@@ -169,7 +169,8 @@ public partial class OldMaid
                 RequestType = OldMaidInGameRequestType.Deal
             },
             _state.GameStates.OldMaidGameStates.Item1,
-            _state.GameStates.OldMaidGameStates.Item2);
+            _state.GameStates.OldMaidGameStates.Item2,
+            _state.AmqpService);
                             
         await Task.Delay(TimeSpan.FromSeconds(1));
                             
@@ -181,8 +182,6 @@ public partial class OldMaid
             OldMaidGameProgress.Closed,
             OldMaidGame.InGameRequestTypes,
             OldMaidInGameRequestType.Close,
-            Game.GenericOpenWebSocketSession,
-            Game.GenericCloseGame,
             _state,
             _channelApi,
             _guildApi,
