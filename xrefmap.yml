@@ -8304,19 +8304,19 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest
   nameWithType: NinetyNineInGameRequest
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment
-  name: Adjustment
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_Adjustment
-  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment
-  nameWithType: NinetyNineInGameRequest.Adjustment
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment*
-  name: Adjustment
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_Adjustment_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments
+  name: Adjustments
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_Adjustments
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments
+  nameWithType: NinetyNineInGameRequest.Adjustments
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments*
+  name: Adjustments
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_Adjustments_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustment
-  nameWithType: NinetyNineInGameRequest.Adjustment
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.Adjustments
+  nameWithType: NinetyNineInGameRequest.Adjustments
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.AvatarUrl
   name: AvatarUrl
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_AvatarUrl
@@ -8408,19 +8408,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.GameType
   nameWithType: NinetyNineInGameRequest.GameType
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard
-  name: PlayCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_PlayCard
-  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard
-  nameWithType: NinetyNineInGameRequest.PlayCard
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard*
-  name: PlayCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_PlayCard_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards
+  name: PlayCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_PlayCards
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards
+  nameWithType: NinetyNineInGameRequest.PlayCards
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards*
+  name: PlayCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_PlayCards_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCard
-  nameWithType: NinetyNineInGameRequest.PlayCard
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayCards
+  nameWithType: NinetyNineInGameRequest.PlayCards
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.PlayerId
   name: PlayerId
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameRequest_PlayerId
