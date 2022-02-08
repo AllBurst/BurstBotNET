@@ -159,7 +159,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             {
                 GameId = gameState.GameId,
                 PlayerId = currentPlayer.PlayerId,
-                PlayCard = extractedCard,
+                PlayCards = new[] { extractedCard },
                 RequestType = NinetyNineInGameRequestType.Play
             })), ct);
 
@@ -182,7 +182,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {
                 GameId = gameState.GameId,
-                PlayCard = playerState.UniversalCard,
+                PlayCards = new[] { playerState.UniversalCard },
                 PlayerId = playerState.PlayerId,
                 SpecifiedPlayer = nextPlayerId,
                 RequestType = NinetyNineInGameRequestType.Play

@@ -23,12 +23,12 @@ public record NinetyNineInGameRequest: IGenericDealData
     [JsonPropertyName("channel_id")] public ulong ChannelId { get; init; }
     [JsonPropertyName("player_name")] public string? PlayerName { get; init; }
     [JsonPropertyName("avatar_url")] public string? AvatarUrl { get; init; }
-    [JsonPropertyName("play_card")] public Card? PlayCard { get; init; }
+    [JsonPropertyName("play_cards")] public IEnumerable<Card>? PlayCards { get; init; }
     [JsonPropertyName("specified_player")] public ulong SpecifiedPlayer { get; init; }
 
     [JsonPropertyName("adjustment")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public NinetyNineInGameAdjustmentType Adjustment { get; init; }
+    public IEnumerable<NinetyNineInGameAdjustmentType>? Adjustments { get; init; }
 
     [JsonPropertyName("variation")]
     [JsonConverter(typeof(JsonStringEnumConverter))]

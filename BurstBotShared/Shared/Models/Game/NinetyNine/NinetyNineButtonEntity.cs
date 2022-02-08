@@ -86,9 +86,9 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
             JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
             {
                 GameId = gameState.GameId,
-                PlayCard = playerState.UniversalCard,
+                PlayCards = new[] { playerState.UniversalCard },
                 PlayerId = playerState.PlayerId,
-                Adjustment = plusOrMinus,
+                Adjustments = new[] { plusOrMinus },
                 RequestType = NinetyNineInGameRequestType.Play
             })), ct);
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
