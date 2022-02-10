@@ -35,7 +35,7 @@ public class About : CommandGroup
     }
 
     [Command("about")]
-    [Description("Show information about All Burst bot.")]
+    [Description("Show information about Jack of All Trades bot.")]
     public async Task<IResult> Handle()
     {
         var bot = await Utilities.GetBotUser(_userApi, _logger);
@@ -53,7 +53,7 @@ public class About : CommandGroup
                         Colour: BurstColor.Burst.ToColor(),
                         Thumbnail: new EmbedThumbnail(Constants.BurstLogo),
                         Description: AboutText.Value,
-                        Footer: new EmbedFooter("All Burst: Development 2.0.0 | 2022-02-04")
+                        Footer: new EmbedFooter("All Burst: Development 2.1.0 | 2022-02-10")
                     )
                 });
 
