@@ -7,6 +7,7 @@ using BurstBotNET.Commands.NinetyNine;
 using BurstBotNET.Commands.OldMaid;
 using BurstBotNET.Commands.RedDotsPicking;
 using BurstBotNET.Commands.Rewards;
+using BurstBotNET.Commands.Trade;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
@@ -33,6 +34,7 @@ public static class SlashCommandExtensions
             .WithCommandGroup<Start>()
             .WithCommandGroup<Weekly>()
             .WithCommandGroup<Help>()
+            .WithCommandGroup<ContextCommands>()
             .WithCommandGroup<Trade>()
             .WithCommandGroup<BlackJack>()
             .WithCommandGroup<ChinesePoker>()

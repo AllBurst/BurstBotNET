@@ -15,4 +15,6 @@ public record State
     public DeckService DeckService { get; init; } = null!;
 
     public AmqpService AmqpService { get; init; } = null!;
+
+    public AuthenticationService AuthenticationService { get; init; } = null!;
 };

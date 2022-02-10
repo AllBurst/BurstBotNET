@@ -2,5 +2,6 @@
 public enum NinetyNineInGameAdjustmentType
 {
     Plus,
-    Minus
+    Minus,
+    Fourteen,
 }

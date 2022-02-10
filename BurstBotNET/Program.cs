@@ -14,14 +14,12 @@ using Remora.Discord.API;
 using Remora.Discord.API.Abstractions.Gateway.Commands;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Gateway.Commands;
-using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Extensions;
 using Remora.Discord.Commands.Services;
 using Remora.Discord.Gateway;
 using Remora.Discord.Gateway.Extensions;
 using Remora.Discord.Hosting.Extensions;
 using Remora.Discord.Interactivity.Extensions;
-using ActivityType = Remora.Discord.API.Abstractions.Objects.ActivityType;
 using Constants = BurstBotShared.Shared.Constants;
 
 #pragma warning disable CA2252
@@ -102,6 +100,7 @@ namespace BurstBotNET
             var burstApi = new BurstApi(config);
             var deckService = new DeckService();
             var amqpService = new AmqpService(config);
+            var authenticationService = new AuthenticationService(config);
             var state = new State
             {
                 BurstApi = burstApi,
@@ -109,7 +108,8 @@ namespace BurstBotNET
                 GameStates = gameStates,
                 Localizations = localizations,
                 DeckService = deckService,
-                AmqpService = amqpService
+                AmqpService = amqpService,
+                AuthenticationService = authenticationService
             };
 
             return Host.CreateDefaultBuilder(args)
