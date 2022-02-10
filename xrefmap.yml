@@ -458,6 +458,41 @@ references:
   isSpec: "True"
   fullName: BurstBotNET.Commands.ChinesePoker.ChinesePoker.ToString
   nameWithType: ChinesePoker.ToString
+- uid: BurstBotNET.Commands.ContextCommands
+  name: ContextCommands
+  href: api/BurstBotNET.Commands.ContextCommands.html
+  commentId: T:BurstBotNET.Commands.ContextCommands
+  fullName: BurstBotNET.Commands.ContextCommands
+  nameWithType: ContextCommands
+- uid: BurstBotNET.Commands.ContextCommands.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.ContextCommands})
+  name: ContextCommands(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger<ContextCommands>)
+  href: api/BurstBotNET.Commands.ContextCommands.html#BurstBotNET_Commands_ContextCommands__ctor_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_BurstBotNET_Commands_ContextCommands__
+  commentId: M:BurstBotNET.Commands.ContextCommands.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.ContextCommands})
+  name.vb: ContextCommands(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger(Of ContextCommands))
+  fullName: BurstBotNET.Commands.ContextCommands.ContextCommands(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger<BurstBotNET.Commands.ContextCommands>)
+  fullName.vb: BurstBotNET.Commands.ContextCommands.ContextCommands(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger(Of BurstBotNET.Commands.ContextCommands))
+  nameWithType: ContextCommands.ContextCommands(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger<ContextCommands>)
+  nameWithType.vb: ContextCommands.ContextCommands(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger(Of ContextCommands))
+- uid: BurstBotNET.Commands.ContextCommands.#ctor*
+  name: ContextCommands
+  href: api/BurstBotNET.Commands.ContextCommands.html#BurstBotNET_Commands_ContextCommands__ctor_
+  commentId: Overload:BurstBotNET.Commands.ContextCommands.#ctor
+  isSpec: "True"
+  fullName: BurstBotNET.Commands.ContextCommands.ContextCommands
+  nameWithType: ContextCommands.ContextCommands
+- uid: BurstBotNET.Commands.ContextCommands.Donate
+  name: Donate()
+  href: api/BurstBotNET.Commands.ContextCommands.html#BurstBotNET_Commands_ContextCommands_Donate
+  commentId: M:BurstBotNET.Commands.ContextCommands.Donate
+  fullName: BurstBotNET.Commands.ContextCommands.Donate()
+  nameWithType: ContextCommands.Donate()
+- uid: BurstBotNET.Commands.ContextCommands.Donate*
+  name: Donate
+  href: api/BurstBotNET.Commands.ContextCommands.html#BurstBotNET_Commands_ContextCommands_Donate_
+  commentId: Overload:BurstBotNET.Commands.ContextCommands.Donate
+  isSpec: "True"
+  fullName: BurstBotNET.Commands.ContextCommands.Donate
+  nameWithType: ContextCommands.Donate
 - uid: BurstBotNET.Commands.Game
   name: Game
   href: api/BurstBotNET.Commands.Game.html
@@ -1145,40 +1180,46 @@ references:
   fullName: BurstBotNET.Commands.Start.ToString
   nameWithType: Start.ToString
 - uid: BurstBotNET.Commands.Trade
-  name: Trade
+  name: BurstBotNET.Commands.Trade
   href: api/BurstBotNET.Commands.Trade.html
-  commentId: T:BurstBotNET.Commands.Trade
+  commentId: N:BurstBotNET.Commands.Trade
   fullName: BurstBotNET.Commands.Trade
+  nameWithType: BurstBotNET.Commands.Trade
+- uid: BurstBotNET.Commands.Trade.Trade
+  name: Trade
+  href: api/BurstBotNET.Commands.Trade.Trade.html
+  commentId: T:BurstBotNET.Commands.Trade.Trade
+  fullName: BurstBotNET.Commands.Trade.Trade
   nameWithType: Trade
-- uid: BurstBotNET.Commands.Trade.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.Trade})
+- uid: BurstBotNET.Commands.Trade.Trade.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.Trade.Trade})
   name: Trade(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger<Trade>)
-  href: api/BurstBotNET.Commands.Trade.html#BurstBotNET_Commands_Trade__ctor_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_BurstBotNET_Commands_Trade__
-  commentId: M:BurstBotNET.Commands.Trade.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.Trade})
+  href: api/BurstBotNET.Commands.Trade.Trade.html#BurstBotNET_Commands_Trade_Trade__ctor_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Remora_Discord_API_Abstractions_Rest_IDiscordRestGuildAPI_Microsoft_Extensions_Logging_ILogger_BurstBotNET_Commands_Trade_Trade__
+  commentId: M:BurstBotNET.Commands.Trade.Trade.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI,Microsoft.Extensions.Logging.ILogger{BurstBotNET.Commands.Trade.Trade})
   name.vb: Trade(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger(Of Trade))
-  fullName: BurstBotNET.Commands.Trade.Trade(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger<BurstBotNET.Commands.Trade>)
-  fullName.vb: BurstBotNET.Commands.Trade.Trade(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger(Of BurstBotNET.Commands.Trade))
+  fullName: BurstBotNET.Commands.Trade.Trade.Trade(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger<BurstBotNET.Commands.Trade.Trade>)
+  fullName.vb: BurstBotNET.Commands.Trade.Trade.Trade(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Remora.Discord.API.Abstractions.Rest.IDiscordRestGuildAPI, Microsoft.Extensions.Logging.ILogger(Of BurstBotNET.Commands.Trade.Trade))
   nameWithType: Trade.Trade(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger<Trade>)
   nameWithType.vb: Trade.Trade(InteractionContext, State, IDiscordRestInteractionAPI, IDiscordRestGuildAPI, ILogger(Of Trade))
-- uid: BurstBotNET.Commands.Trade.#ctor*
+- uid: BurstBotNET.Commands.Trade.Trade.#ctor*
   name: Trade
-  href: api/BurstBotNET.Commands.Trade.html#BurstBotNET_Commands_Trade__ctor_
-  commentId: Overload:BurstBotNET.Commands.Trade.#ctor
+  href: api/BurstBotNET.Commands.Trade.Trade.html#BurstBotNET_Commands_Trade_Trade__ctor_
+  commentId: Overload:BurstBotNET.Commands.Trade.Trade.#ctor
   isSpec: "True"
-  fullName: BurstBotNET.Commands.Trade.Trade
+  fullName: BurstBotNET.Commands.Trade.Trade.Trade
   nameWithType: Trade.Trade
-- uid: BurstBotNET.Commands.Trade.Donate
-  name: Donate()
-  href: api/BurstBotNET.Commands.Trade.html#BurstBotNET_Commands_Trade_Donate
-  commentId: M:BurstBotNET.Commands.Trade.Donate
-  fullName: BurstBotNET.Commands.Trade.Donate()
-  nameWithType: Trade.Donate()
-- uid: BurstBotNET.Commands.Trade.Donate*
-  name: Donate
-  href: api/BurstBotNET.Commands.Trade.html#BurstBotNET_Commands_Trade_Donate_
-  commentId: Overload:BurstBotNET.Commands.Trade.Donate
+- uid: BurstBotNET.Commands.Trade.Trade.Exchange(System.Int32)
+  name: Exchange(Int32)
+  href: api/BurstBotNET.Commands.Trade.Trade.html#BurstBotNET_Commands_Trade_Trade_Exchange_System_Int32_
+  commentId: M:BurstBotNET.Commands.Trade.Trade.Exchange(System.Int32)
+  fullName: BurstBotNET.Commands.Trade.Trade.Exchange(System.Int32)
+  nameWithType: Trade.Exchange(Int32)
+- uid: BurstBotNET.Commands.Trade.Trade.Exchange*
+  name: Exchange
+  href: api/BurstBotNET.Commands.Trade.Trade.html#BurstBotNET_Commands_Trade_Trade_Exchange_
+  commentId: Overload:BurstBotNET.Commands.Trade.Trade.Exchange
   isSpec: "True"
-  fullName: BurstBotNET.Commands.Trade.Donate
-  nameWithType: Trade.Donate
+  fullName: BurstBotNET.Commands.Trade.Trade.Exchange
+  nameWithType: Trade.Exchange
 - uid: BurstBotNET.Handlers
   name: BurstBotNET.Handlers
   href: api/BurstBotNET.Handlers.html
@@ -1601,6 +1642,51 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Services.AmqpService.UnregisterResponseChannel
   nameWithType: AmqpService.UnregisterResponseChannel
+- uid: BurstBotShared.Services.AuthenticationService
+  name: AuthenticationService
+  href: api/BurstBotShared.Services.AuthenticationService.html
+  commentId: T:BurstBotShared.Services.AuthenticationService
+  fullName: BurstBotShared.Services.AuthenticationService
+  nameWithType: AuthenticationService
+- uid: BurstBotShared.Services.AuthenticationService.#ctor(BurstBotShared.Shared.Models.Config.Config)
+  name: AuthenticationService(Config)
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService__ctor_BurstBotShared_Shared_Models_Config_Config_
+  commentId: M:BurstBotShared.Services.AuthenticationService.#ctor(BurstBotShared.Shared.Models.Config.Config)
+  fullName: BurstBotShared.Services.AuthenticationService.AuthenticationService(BurstBotShared.Shared.Models.Config.Config)
+  nameWithType: AuthenticationService.AuthenticationService(Config)
+- uid: BurstBotShared.Services.AuthenticationService.#ctor*
+  name: AuthenticationService
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService__ctor_
+  commentId: Overload:BurstBotShared.Services.AuthenticationService.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AuthenticationService.AuthenticationService
+  nameWithType: AuthenticationService.AuthenticationService
+- uid: BurstBotShared.Services.AuthenticationService.Login
+  name: Login()
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService_Login
+  commentId: M:BurstBotShared.Services.AuthenticationService.Login
+  fullName: BurstBotShared.Services.AuthenticationService.Login()
+  nameWithType: AuthenticationService.Login()
+- uid: BurstBotShared.Services.AuthenticationService.Login*
+  name: Login
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService_Login_
+  commentId: Overload:BurstBotShared.Services.AuthenticationService.Login
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AuthenticationService.Login
+  nameWithType: AuthenticationService.Login
+- uid: BurstBotShared.Services.AuthenticationService.Token
+  name: Token
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService_Token
+  commentId: P:BurstBotShared.Services.AuthenticationService.Token
+  fullName: BurstBotShared.Services.AuthenticationService.Token
+  nameWithType: AuthenticationService.Token
+- uid: BurstBotShared.Services.AuthenticationService.Token*
+  name: Token
+  href: api/BurstBotShared.Services.AuthenticationService.html#BurstBotShared_Services_AuthenticationService_Token_
+  commentId: Overload:BurstBotShared.Services.AuthenticationService.Token
+  isSpec: "True"
+  fullName: BurstBotShared.Services.AuthenticationService.Token
+  nameWithType: AuthenticationService.Token
 - uid: BurstBotShared.Services.DeckService
   name: DeckService
   href: api/BurstBotShared.Services.DeckService.html
@@ -3042,6 +3128,45 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Config.Config.LogLevel
   nameWithType: Config.LogLevel
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint
+  name: LotteryEndpoint
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryEndpoint
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint
+  nameWithType: Config.LotteryEndpoint
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint*
+  name: LotteryEndpoint
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryEndpoint_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryEndpoint
+  nameWithType: Config.LotteryEndpoint
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryPassword
+  name: LotteryPassword
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryPassword
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.LotteryPassword
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryPassword
+  nameWithType: Config.LotteryPassword
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryPassword*
+  name: LotteryPassword
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryPassword_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.LotteryPassword
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryPassword
+  nameWithType: Config.LotteryPassword
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryUsername
+  name: LotteryUsername
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryUsername
+  commentId: P:BurstBotShared.Shared.Models.Config.Config.LotteryUsername
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryUsername
+  nameWithType: Config.LotteryUsername
+- uid: BurstBotShared.Shared.Models.Config.Config.LotteryUsername*
+  name: LotteryUsername
+  href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_LotteryUsername_
+  commentId: Overload:BurstBotShared.Shared.Models.Config.Config.LotteryUsername
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Config.Config.LotteryUsername
+  nameWithType: Config.LotteryUsername
 - uid: BurstBotShared.Shared.Models.Config.Config.Rabbit
   name: Rabbit
   href: api/BurstBotShared.Shared.Models.Config.Config.html#BurstBotShared_Shared_Models_Config_Config_Rabbit
@@ -3619,6 +3744,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Data.State.AmqpService
   nameWithType: State.AmqpService
+- uid: BurstBotShared.Shared.Models.Data.State.AuthenticationService
+  name: AuthenticationService
+  href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_AuthenticationService
+  commentId: P:BurstBotShared.Shared.Models.Data.State.AuthenticationService
+  fullName: BurstBotShared.Shared.Models.Data.State.AuthenticationService
+  nameWithType: State.AuthenticationService
+- uid: BurstBotShared.Shared.Models.Data.State.AuthenticationService*
+  name: AuthenticationService
+  href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_AuthenticationService_
+  commentId: Overload:BurstBotShared.Shared.Models.Data.State.AuthenticationService
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Data.State.AuthenticationService
+  nameWithType: State.AuthenticationService
 - uid: BurstBotShared.Shared.Models.Data.State.BurstApi
   name: BurstApi
   href: api/BurstBotShared.Shared.Models.Data.State.html#BurstBotShared_Shared_Models_Data_State_BurstApi
@@ -8286,6 +8424,12 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType
   nameWithType: NinetyNineInGameAdjustmentType
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Fourteen
+  name: Fourteen
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameAdjustmentType_Fourteen
+  commentId: F:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Fourteen
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Fourteen
+  nameWithType: NinetyNineInGameAdjustmentType.Fourteen
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Minus
   name: Minus
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameAdjustmentType_Minus

@@ -134,6 +134,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.ContextCommands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.ContextCommands.html",
+          "hash": "WsTUgHnYSC3rE1F3jyHB2CPg2w6IcN5na3SaoKXjRjE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotNET.Commands.Game.yml",
       "output": {
         ".html": {
@@ -314,11 +326,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotNET.Commands.Trade.Trade.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotNET.Commands.Trade.Trade.html",
+          "hash": "Bm9XVSQfXw4beIi5RJU7d7JmcyS945Ux7Cp9C9OMj9s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotNET.Commands.Trade.yml",
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.Trade.html",
-          "hash": "u8BdJFQ1OzxJZtJCnuP/9Ma8lVnOeMSFL4WmxvpE4Kg="
+          "hash": "Bswfdene2oxs50B1dZURPM1Wkmb4KY3FxpyqpOWtG50="
         }
       },
       "is_incremental": false,
@@ -330,7 +354,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.html",
-          "hash": "KxZVkyTW22eR0/3j/X3fccog5IJiPSy5EMKb1oGoiVA="
+          "hash": "7CWHr/zoKJR99nX0kYIcLaPoGfWjOudNpkxBeiHGhqU="
         }
       },
       "is_incremental": false,
@@ -366,7 +390,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
-          "hash": "LHrjD6VHyYaBBf2aI4r5rcupWnt+9ietl8r7VkpXGms="
+          "hash": "Uo5rBjHUL8qlkVQDGQEElkhjSz/AbZfPXuNdEK7W+5k="
         }
       },
       "is_incremental": false,
@@ -390,7 +414,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Program.html",
-          "hash": "NSa7zWM0zNe448ob10RryI3kyH3f5bI43fw0jucjAvU="
+          "hash": "Ic8TPcZ/xKog7PSbcaW+9b4AlGIwNRsaBkcBfrGmUOw="
         }
       },
       "is_incremental": false,
@@ -470,6 +494,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Services.AuthenticationService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Services.AuthenticationService.html",
+          "hash": "Ua5nUWRQ4/ArPnCzKxcwO8Fm8AP1JLJPyQC5twdhoAQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Services.DeckService.yml",
       "output": {
         ".html": {
@@ -498,7 +534,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.html",
-          "hash": "zjhr6Cs+G5kM7ye7f6Ei2jY0a073Xfn60dbmM3ajvak="
+          "hash": "WWdj7V2FjzUBOqyGReUY1Vw8APxrgvsAtrNYDdC7b+I="
         }
       },
       "is_incremental": false,
@@ -738,7 +774,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Config.Config.html",
-          "hash": "4vRo/AkIcFVAb5wUQNo02obXUgi8yzZrCYs5HZNPmig="
+          "hash": "Ak1icpe25/CuEpzV9bSps0fz8R+eeMoin5wprvYYM94="
         }
       },
       "is_incremental": false,
@@ -882,7 +918,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Data.State.html",
-          "hash": "2b/bEmAiWeWsri2/ayWpI3sEFVxo+AJEOsf+LO2DCYg="
+          "hash": "I33w5/iwgUHMJOShk8UdvBSjEYFVFTmbpvezONuZoBg="
         }
       },
       "is_incremental": false,
@@ -1566,7 +1602,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html",
-          "hash": "Yv1JamPUy9EENeYEztnyEOfDT8NvMzsmBTGk/NNroks="
+          "hash": "HBNa/+hvHJDIRolN5M6sLJfT9Q7B4gsuqlKzI3zRCwg="
         }
       },
       "is_incremental": false,
@@ -2370,7 +2406,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "/rBe7dgZ4o7tpqq2TetyqxP3kJHIgavLYWTJk58Tbc8="
+          "hash": "C6Pl+ptkGiqPgtm8G+NyvMNjlcubGPqZnkpUOlhrVY4="
         }
       },
       "is_incremental": false,
@@ -2409,7 +2445,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 194,
+          "total_file_count": 197,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
