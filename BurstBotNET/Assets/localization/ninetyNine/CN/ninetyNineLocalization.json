@@ -1,6 +1,8 @@
 {
   "commandList": {
-    "general": "Assets/localization/ninetyNine/CN/general.txt"
+    "generalTaiwanese": "Assets/localization/ninetyNine/CN/generalTaiwanese.txt",
+    "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt"
   },
   "initialMessagePrefix": "You currently own:\n",
   "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
@@ -22,5 +24,7 @@
   "selectPlayerMessage": "Select a player",
   "plusOrMinusMessage": "Plus or minus the current total",
   "currentTotal": "Current Total: {total}",
-  "showHelp": "Show help texts"
+  "showHelp": "Show help texts",
+  "notOnlyQueen": "You can't send a Queen with other cards at the same time!",
+  "plusOneOrFourteen": "Add 1 or 14 to the current total."
 }

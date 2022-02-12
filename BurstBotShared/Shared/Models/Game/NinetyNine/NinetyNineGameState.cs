@@ -29,7 +29,8 @@ public class NinetyNineGameState :
     public NinetyNineDifficulty Difficulty { get; set; }
     public int TotalBet { get; set; }
     public ImmutableArray<ulong> BurstPlayers { get; set; } = ImmutableArray<ulong>.Empty;
-    
+    public ImmutableArray<Card> ConsecutiveQueens { get; set; } = ImmutableArray<Card>.Empty;
+
     public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
     public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);

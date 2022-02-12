@@ -26,8 +26,7 @@ public record NinetyNineInGameRequest: IGenericDealData
     [JsonPropertyName("play_cards")] public IEnumerable<Card>? PlayCards { get; init; }
     [JsonPropertyName("specified_player")] public ulong SpecifiedPlayer { get; init; }
 
-    [JsonPropertyName("adjustment")]
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonPropertyName("adjustments")]
     public IEnumerable<NinetyNineInGameAdjustmentType>? Adjustments { get; init; }
 
     [JsonPropertyName("variation")]

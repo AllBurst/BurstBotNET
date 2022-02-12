@@ -30,11 +30,13 @@ using NinetyNineGame =
 
 public partial class NinetyNine : NinetyNineGame
 {
-    private static readonly int[] SpecialRanks =
+    private static readonly Dictionary<NinetyNineVariation, int[]> SpecialRanks = new()
     {
-        4, 5, 10, 11, 12, 13,
+        { NinetyNineVariation.Taiwanese, new[] { 4, 5, 10, 11, 12, 13 } },
+        { NinetyNineVariation.Icelandic, new[] { 1, 4, 5, 7, 9, 10, 12, 13 } },
+        { NinetyNineVariation.Standard, new[] { 1, 3, 4, 9, 10, 11, 12, 13 } }
     };
-    
+
     public static async Task<bool> HandleProgress(string messageContent, NinetyNineGameState gameState, State state,
         IDiscordRestChannelAPI channelApi, IDiscordRestGuildAPI guildApi, ILogger logger)
     {
@@ -249,7 +251,13 @@ public partial class NinetyNine : NinetyNineGame
 
         var description = localization.InitialMessageDescription
             .Replace("{baseBet}", deserializedIncomingData.BaseBet.ToString(CultureInfo.InvariantCulture))
-            .Replace("{helpText}", localization.CommandList["general"])
+            .Replace("{helpText}", deserializedIncomingData.Variation switch
+            {
+                NinetyNineVariation.Taiwanese => localization.CommandList["generalTaiwanese"],
+                NinetyNineVariation.Icelandic => localization.CommandList["generalIcelandic"],
+                NinetyNineVariation.Standard => localization.CommandList["generalStandard"],
+                _ => localization.CommandList["generalTaiwanese"]
+            })
             .Replace("{cardNames}", cardNames);
 
         await using var renderedDeck = SkiaService.RenderDeck(deckService, newPlayerState.Cards);
@@ -367,21 +375,34 @@ public partial class NinetyNine : NinetyNineGame
         RawNinetyNineGameState gameState,
         NinetyNineLocalization localization)
     {
+        var customId = gameState.Variation switch
+        {
+            NinetyNineVariation.Taiwanese => "ninety_nine_help_Taiwanese",
+            NinetyNineVariation.Icelandic => "ninety_nine_help_Icelandic",
+            NinetyNineVariation.Standard => "ninety_nine_help_Standard",
+            _ => "ninety_nine_help_Taiwanese"
+        };
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
-            new PartialEmoji(Name: "❓"), "ninety_nine_help");
+            new PartialEmoji(Name: "❓"), customId);
 
-        var availableCards = currentPlayer.Cards
-            .Where(c => SpecialRanks.Contains(c.Number) || c.Suit == Suit.Spade && c.Number == 1
-                                                        || gameState.CurrentTotal + c.Number <= 99)
+        var availableCards = GetAvailableCards(currentPlayer.Cards, gameState)
+            .ToImmutableArray();
+
+        var minValue = 1;
+        var maxValue = gameState.ConsecutiveQueens.Count == 0 ? 1 : gameState.ConsecutiveQueens.Count;
+        if (gameState.ConsecutiveQueens.Count > 0 && !availableCards.Any(c => c.Number == 12))
+            minValue = gameState.ConsecutiveQueens.Count;
+
+        if (availableCards.IsEmpty) return null;
+
+        var options = availableCards
             .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                 new PartialEmoji(c.Suit.ToSnowflake())))
             .ToImmutableArray();
 
-        if (availableCards.IsEmpty) return null;
-        
         var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
-            availableCards,
-            localization.Play, 1, 1);
+            options,
+            localization.Play, minValue, maxValue);
 
         return new IMessageComponent[]
         {
@@ -484,15 +505,15 @@ public partial class NinetyNine : NinetyNineGame
             {
                 if (previousCard == null) return;
                 
-                await using var drawCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
+                await using var previousCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
                 
                 var authorText = ninetyNineLocalization.PlayMessage
                     .Replace("{previousPlayerName}", pronoun)
                     .Replace("{card}", previousCard.ToStringSimple());
 
-                await using var imageCopy = new MemoryStream((int)drawCardImage.Length);
-                await drawCardImage.CopyToAsync(imageCopy);
-                drawCardImage.Seek(0, SeekOrigin.Begin);
+                await using var imageCopy = new MemoryStream((int)previousCardImage.Length);
+                await previousCardImage.CopyToAsync(imageCopy);
+                previousCardImage.Seek(0, SeekOrigin.Begin);
                 imageCopy.Seek(0, SeekOrigin.Begin);
 
                 var attachment = new[]
@@ -578,6 +599,41 @@ public partial class NinetyNine : NinetyNineGame
                 };
                 state.Players.AddOrUpdate(playerId, newPlayerState, (_, _) => newPlayerState);
             }
+        }
+    }
+
+    private static IEnumerable<Card> GetAvailableCards(IEnumerable<Card> cards, RawNinetyNineGameState gameState)
+    {
+        var variation = gameState.Variation;
+        var currentTotal = gameState.CurrentTotal;
+        var previousCard = gameState.PreviousCard;
+        
+        switch (variation)
+        {
+            case NinetyNineVariation.Taiwanese:
+                return cards.Where(c =>
+                    SpecialRanks[NinetyNineVariation.Taiwanese].Contains(c.Number) ||
+                    c.Suit == Suit.Spade && c.Number == 1 || currentTotal + c.Number <= 99);
+            case NinetyNineVariation.Icelandic:
+            {
+                if ((previousCard?.Number).HasValue && previousCard?.Number != 12 || previousCard == null)
+                {
+                    return cards.Where(c =>
+                        SpecialRanks[NinetyNineVariation.Icelandic].Contains(c.Number) ||
+                        currentTotal + c.Number <= 99);
+                }
+
+                var cardArr = cards.ToImmutableArray();
+                var queens = cardArr.Where(c => c.Number == 12);
+                var nonQueens = cardArr.Where(c => c.Number != 12).ToImmutableArray();
+
+                return nonQueens.Length >= gameState.ConsecutiveQueens.Count ? queens.Concat(nonQueens) : queens;
+            }
+            case NinetyNineVariation.Standard:
+            default:
+                return cards.Where(c =>
+                    SpecialRanks[variation].Contains(c.Number) ||
+                    currentTotal + c.Number <= 99);
         }
     }
 }

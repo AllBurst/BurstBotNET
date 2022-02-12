@@ -1,0 +1,17 @@
+﻿**Rules**
+- The rank of the **normal cards** the player played will be added to the current total.
+- If all of player's normal cards will cause the current total to exceed 99 when played, and the player doesn't have any **special cards**, the player loses the game.
+- The last player who still have cards to play will be the winner.
+
+**Cards**：
+*Normal cards*：
+A **(except for <:burst_spade2:930749903158792192> Spade A)**, 2, 3, 6, 7, 8, 9
+
+*Special cards*：
+<:burst_spade2:930749903158792192> Spade A - Set the current total to 0 (zero).
+4 - Reverse the current turn direction, *i.e. P1 -> P2 -> P3 to P1 <- P2 <- P3*.
+5 - Specify the player who will be playing next. The next player will be the one who plays next to the specified player, rather than the player who plays 5.
+10 - Add or deduct 10 from the current total.
+J - Skip this turn.
+Q - Add or deduct 20 from the current total.
+K - Set the current total to 99 (max).

@@ -7,7 +7,8 @@ using Remora.Discord.API.Abstractions.Objects;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
-public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress>, IPlayerState
+public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress>,
+    IPlayerState
 {
     public string GameId { get; set; } = null!;
     public ulong PlayerId { get; init; }
@@ -15,6 +16,8 @@ public class NinetyNinePlayerState : IState<NinetyNinePlayerState, RawNinetyNine
     public IChannel? TextChannel { get; set; }
     public int Order { get; set; }
     public ImmutableArray<Card> Cards { get; set; } = new();
-    public Card UniversalCard { get; set; } = new();
+    public Queue<Card> TemporaryCards { get; } = new();
+    public Queue<NinetyNineInGameAdjustmentType> TemporaryAdjustments { get; } = new();
+    public int ResponsesInWait { get; set; }
     public string AvatarUrl { get; set; } = null!;
 }

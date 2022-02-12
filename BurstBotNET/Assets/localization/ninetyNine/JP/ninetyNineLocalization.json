@@ -1,6 +1,8 @@
 {
   "commandList": {
-    "general": "Assets/localization/ninetyNine/JP/general.txt"
+    "generalTaiwanese": "Assets/localization/ninetyNine/JP/generalTaiwanese.txt",
+    "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt"
   },
   "initialMessagePrefix": "あなたのカード：\n",
   "initialMessageDescription": "**ベースベット：{baseBet}。**\n\n{helpText}\n\n{cardNames}",
@@ -22,5 +24,7 @@
   "selectPlayerMessage": "プレイヤーを選んでください",
   "plusOrMinusMessage": "現在の合計に足すか引くか",
   "currentTotal": "現在の合計：{total}",
-  "showHelp": "九十九について"
+  "showHelp": "九十九について",
+  "notOnlyQueen": "クイーンと他のトランプを一緒に出すのはできません！",
+  "plusOneOrFourteen": "合計に１か１４を足す"
 }

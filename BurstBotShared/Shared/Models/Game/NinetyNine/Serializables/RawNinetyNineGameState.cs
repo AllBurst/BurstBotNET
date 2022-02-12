@@ -73,6 +73,10 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
     [JsonProperty("burst_players")]
     public List<ulong> BurstPlayers { get; init; } = new();
 
+    [JsonPropertyName("consecutive_queens")]
+    [JsonProperty("consecutive_queens")]
+    public List<Card> ConsecutiveQueens { get; init; } = new();
+
     [Pure]
     public static RawNinetyNineGameState FromState(IState<NinetyNineGameState, RawNinetyNineGameState, NinetyNineGameProgress> state)
     {
@@ -96,7 +100,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             TotalBet = gameState.TotalBet,
             Variation = gameState.Variation,
             BaseBet = gameState.BaseBet,
-            BurstPlayers = gameState.BurstPlayers.ToList()
+            BurstPlayers = gameState.BurstPlayers.ToList(),
+            ConsecutiveQueens = gameState.ConsecutiveQueens.ToList()
         };
     }
 
@@ -125,7 +130,8 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             TotalBet = TotalBet,
             PreviousPlayerId = PreviousPlayerId,
             BaseBet = BaseBet,
-            BurstPlayers = BurstPlayers.ToImmutableArray()
+            BurstPlayers = BurstPlayers.ToImmutableArray(),
+            ConsecutiveQueens = ConsecutiveQueens.ToImmutableArray()
         };
     }
 };

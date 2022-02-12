@@ -1,0 +1,18 @@
+﻿**Rules**
+- The rank of the **normal cards** the player played will be added to the current total.
+- If all of player's normal cards will cause the current total to exceed 99 when played, and the player doesn't have any **special cards**, the player loses the game.
+- The last player who still have cards to play will be the winner.
+
+**Cards**：
+*Normal cards*：
+2, 3, 6, 8, J (11)
+
+*Special cards*：
+A - Add 1 or 14 to the total.
+4 - Reverse the current turn direction, *i.e. P1 -> P2 -> P3 to P1 <- P2 <- P3*.
+5 - Add 5 to the total, and skip the next player.
+7 - Add 7 to the total, and reverse the current turn direction.
+9 - Set the current total to 99 (max).
+10 - Add or subtract 10 from the current total.
+Q - The next player cannot draw a new card after playing a card, unless the next player also plays a Queen. In that case, the second next player will have to play 2 cards without picking up 2 new cards, unless the second next player also plays a Queen, and so forth.
+K - Skip this turn.

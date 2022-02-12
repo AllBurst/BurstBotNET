@@ -176,14 +176,19 @@ public static class Utilities
 
         return null;
     }
+
+    public static Card ExtractCard(string value)
+    {
+        var suit = value[..1];
+        var rank = value[1..];
+        var playedCard = Card.Create(suit, rank);
+        return playedCard;
+    }
     
     public static Card ExtractCard(IEnumerable<string> values)
     {
         var selection = values.FirstOrDefault()!;
-        var suit = selection[..1];
-        var rank = selection[1..];
-        var playedCard = Card.Create(suit, rank);
-        return playedCard;
+        return ExtractCard(selection);
     }
 
     public static async Task DisableComponents(
