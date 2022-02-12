@@ -186,7 +186,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.NinetyNine.NinetyNine.html",
-          "hash": "s6cuPk3gDzHNOc32hRWpALTAoZ6yGVQ9BRcstvgyVH8="
+          "hash": "UPFk+/qBeM+IMLv1JVoBHhD4LteRsj4N/lwPWe2jJNo="
         }
       },
       "is_incremental": false,
@@ -486,7 +486,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.AmqpService.html",
-          "hash": "4nkBa9wmlasY1tLG1XgRtVCbp/K/WBszwmwCq5lQcrA="
+          "hash": "pDQPRcUENqjSxVYNGY3ZxCk8bQ2qpTOalqnFsRSQi9k="
         }
       },
       "is_incremental": false,
@@ -630,7 +630,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Interfaces.IGame-6.html",
-          "hash": "E1AxRIkV9tDz5Fd/QGzA9ChU0Z157OChwaah65/miWM="
+          "hash": "o0DoMTkYXgR8E+XZM18uRb8bxlo0ItMMOfbSFGWHevM="
         }
       },
       "is_incremental": false,
@@ -786,7 +786,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Config.RabbitMqConfig.html",
-          "hash": "g4GNLmRhFGmAddrGqIULE6+nd3dz511R5iWpwLEk5tk="
+          "hash": "2o5BsOiNfMRTb2NggXVpz/JMED2j8MkfF2z4FQdTDPo="
         }
       },
       "is_incremental": false,
@@ -1518,7 +1518,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html",
-          "hash": "gBIY2+kG6X5VlRFdv6vtrkcc2pRWunK4ahjKaN93r/E="
+          "hash": "uBFsL8e45qmVWkwL2YMmrYcyOXKBl0t3fu+LEJxbCwI="
         }
       },
       "is_incremental": false,
@@ -1530,7 +1530,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html",
-          "hash": "1RVQcftxDjDwpXkH6dEl3PsLzsgeerYQJqk+21dcA+E="
+          "hash": "pfkb9R4VLSwJcczysVEnPCtv5Re842s+rZw291rTE9s="
         }
       },
       "is_incremental": false,
@@ -1542,7 +1542,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html",
-          "hash": "2LkoMi73ucnaXtknxkzh/P1b5NQ6WS+LxnQGv/58T/8="
+          "hash": "PZdnNGGBZR5FkX0Px/Hqm3CKCAGcgWceSIwDLa+5zgk="
         }
       },
       "is_incremental": false,
@@ -1554,7 +1554,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html",
-          "hash": "9OX3zVjSPPqLqDaJdrBbR3x5p6BTtd3zcl/WRUAJqCw="
+          "hash": "33cugCuTatYy7JQfJIZL6G52UCDiayFYXJhSSQobb3A="
         }
       },
       "is_incremental": false,
@@ -1602,7 +1602,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html",
-          "hash": "HBNa/+hvHJDIRolN5M6sLJfT9Q7B4gsuqlKzI3zRCwg="
+          "hash": "NicLPw4LqM7xbWv+8AejKfTWFetyiRK8t18x7ePNxPA="
         }
       },
       "is_incremental": false,
@@ -1614,7 +1614,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameRequest.html",
-          "hash": "PPM0IEUSu4MV1MnzUxm05cyEhlTrFw1qF5yuVB4SVOQ="
+          "hash": "Hg9SojPYPJ6Nu6SWi4TBOWY1DsajIZ8PEog5A2HpbiE="
         }
       },
       "is_incremental": false,
@@ -1662,7 +1662,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html",
-          "hash": "2RQAQH1K4d+MU9eWZ7LoD8xLq50fI9h64/OLWPAVhEs="
+          "hash": "tDlCKSutr+5BhGBYNF1PG5mSmP87+CtIS2s/xHQ7dFM="
         }
       },
       "is_incremental": false,
@@ -2226,7 +2226,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html",
-          "hash": "GQXJlVHUcrahyvDXtGCZKwy1Cx6Xfpc2WJt0F1To9VM="
+          "hash": "oT50ACsKwIr8+Psk/QN2WHGHB+Pb4ODB7L0qxuDoJ88="
         }
       },
       "is_incremental": false,
@@ -2358,7 +2358,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Utilities.Utilities.html",
-          "hash": "kdR4k7V2g9wtATn669gZbqEkTcgzdMeiruDh+0Q0J6U="
+          "hash": "ZYs1xDDuK9z1zxHYb6oTKMHaVANCeQOFDvoHmE35mwA="
         }
       },
       "is_incremental": false,
