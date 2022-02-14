@@ -1530,7 +1530,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html",
-          "hash": "pfkb9R4VLSwJcczysVEnPCtv5Re842s+rZw291rTE9s="
+          "hash": "wCCnnERp+F5o9tVdpOlBrfWSGLIDJWxxirc3+F1tmVc="
         }
       },
       "is_incremental": false,
@@ -2226,7 +2226,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html",
-          "hash": "oT50ACsKwIr8+Psk/QN2WHGHB+Pb4ODB7L0qxuDoJ88="
+          "hash": "s4CzK69f8tNDOXUPuiptdWUXxThrmjNWAq00niQwYxU="
         }
       },
       "is_incremental": false,

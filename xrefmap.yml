@@ -13731,6 +13731,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.GameOver
   nameWithType: NinetyNineLocalization.GameOver
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic
+  name: Icelandic
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Icelandic
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic
+  nameWithType: NinetyNineLocalization.Icelandic
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic*
+  name: Icelandic
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Icelandic_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Icelandic
+  nameWithType: NinetyNineLocalization.Icelandic
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.InitialMessageDescription
   name: InitialMessageDescription
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_InitialMessageDescription
@@ -13887,6 +13900,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOrMinusMessage
   nameWithType: NinetyNineLocalization.PlusOrMinusMessage
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific
+  name: PlusSpecific
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_PlusSpecific
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific
+  nameWithType: NinetyNineLocalization.PlusSpecific
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific*
+  name: PlusSpecific
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_PlusSpecific_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusSpecific
+  nameWithType: NinetyNineLocalization.PlusSpecific
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.SelectPlayerMessage
   name: SelectPlayerMessage
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_SelectPlayerMessage
@@ -13913,6 +13939,32 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.ShowHelp
   nameWithType: NinetyNineLocalization.ShowHelp
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard
+  name: Standard
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Standard
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard
+  nameWithType: NinetyNineLocalization.Standard
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard*
+  name: Standard
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Standard_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Standard
+  nameWithType: NinetyNineLocalization.Standard
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese
+  name: Taiwanese
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Taiwanese
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese
+  nameWithType: NinetyNineLocalization.Taiwanese
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese*
+  name: Taiwanese
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Taiwanese_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Taiwanese
+  nameWithType: NinetyNineLocalization.Taiwanese
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.TurnMessageTitle
   name: TurnMessageTitle
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_TurnMessageTitle
