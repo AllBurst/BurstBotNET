@@ -18,7 +18,7 @@
   "minus": "Minus",
   "confirm": "Confirm",
   "gameOver": "You don't have any playable cards anymore.",
-  "playMessage": "{previousPlayerName} played a {card}!",
+  "playMessage": "{previousPlayerName} played his/her cards!",
   "burstMessage": "{previousPlayerName} burst!",
   "turnMessageTitle": "It's {possessive} turn!",
   "selectPlayerMessage": "Select a player",

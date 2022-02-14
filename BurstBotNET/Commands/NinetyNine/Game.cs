@@ -33,7 +33,7 @@ public partial class NinetyNine : NinetyNineGame
     private static readonly Dictionary<NinetyNineVariation, int[]> SpecialRanks = new()
     {
         { NinetyNineVariation.Taiwanese, new[] { 4, 5, 10, 11, 12, 13 } },
-        { NinetyNineVariation.Icelandic, new[] { 1, 4, 5, 7, 9, 10, 12, 13 } },
+        { NinetyNineVariation.Icelandic, new[] { 4, 9, 10, 12, 13 } },
         { NinetyNineVariation.Standard, new[] { 1, 3, 4, 9, 10, 11, 12, 13 } }
     };
 
@@ -153,7 +153,7 @@ public partial class NinetyNine : NinetyNineGame
             {
                 var oldBurstPlayers = new List<ulong>(gameState.BurstPlayers);
                 await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
-                    deserializedIncomingData.PreviousCard, gameState.CurrentPlayerOrder, oldBurstPlayers,
+                    deserializedIncomingData.PreviousCards, gameState.CurrentPlayerOrder, oldBurstPlayers,
                     deserializedIncomingData.BurstPlayers,
                     state, channelApi, logger);
             }
@@ -216,7 +216,7 @@ public partial class NinetyNine : NinetyNineGame
             case NinetyNineGameProgress.Progressing:
             case NinetyNineGameProgress.Ending:
             {
-                var previousCard = deserializedIncomingData.PreviousCard;
+                var previousCard = deserializedIncomingData.PreviousCards;
 
                 await ShowPreviousPlayerAction(gameState, previousPlayerNewState!,
                     previousCard, previousPlayerOrder, oldBurstPlayers, newBurstPlayers, state, channelApi, logger);
@@ -454,7 +454,7 @@ public partial class NinetyNine : NinetyNineGame
     private static async Task ShowPreviousPlayerAction(
         NinetyNineGameState gameState,
         RawNinetyNinePlayerState previousPlayerNewState,
-        Card? previousCard,
+        List<Card>? previousCards,
         int previousPlayerOrder,
         IEnumerable<ulong> oldBurstPlayers,
         IEnumerable<ulong> newBurstPlayers,
@@ -503,13 +503,15 @@ public partial class NinetyNine : NinetyNineGame
             }
             else
             {
-                if (previousCard == null) return;
+                if (previousCards == null) return;
                 
-                await using var previousCardImage = SkiaService.RenderCard(state.DeckService, previousCard);
-                
+                await using var previousCardImage = SkiaService.RenderDeck(state.DeckService, previousCards);
+
+                var description = string.Join('\n', previousCards.Select(c => c.ToString())) +
+                                  $"\n\n{ninetyNineLocalization.CurrentTotal.Replace("{total}", gameState.CurrentTotal.ToString())}";
+
                 var authorText = ninetyNineLocalization.PlayMessage
-                    .Replace("{previousPlayerName}", pronoun)
-                    .Replace("{card}", previousCard.ToStringSimple());
+                    .Replace("{previousPlayerName}", pronoun);
 
                 await using var imageCopy = new MemoryStream((int)previousCardImage.Length);
                 await previousCardImage.CopyToAsync(imageCopy);
@@ -523,7 +525,7 @@ public partial class NinetyNine : NinetyNineGame
 
                 var embed = new Embed(
                     Author: new EmbedAuthor(authorText, IconUrl: previousPlayerNewState.AvatarUrl),
-                    Description: ninetyNineLocalization.CurrentTotal.Replace("{total}", gameState.CurrentTotal.ToString()),
+                    Description: description,
                     Colour: BurstColor.Burst.ToColor(),
                     Image: new EmbedImage(Constants.AttachmentUri));
 
@@ -552,7 +554,7 @@ public partial class NinetyNine : NinetyNineGame
         state.CurrentPlayerOrder = data.CurrentPlayerOrder;
         state.LastActiveTime = DateTime.Parse(data.LastActiveTime);
         state.PreviousPlayerId = data.PreviousPlayerId;
-        state.PreviousCard = data.PreviousCard;
+        state.PreviousCards = data.PreviousCards?.ToImmutableArray() ?? ImmutableArray<Card>.Empty;
         state.BaseBet = data.BaseBet;
         state.Difficulty = data.Difficulty;
         state.TotalBet = data.TotalBet;
@@ -606,7 +608,7 @@ public partial class NinetyNine : NinetyNineGame
     {
         var variation = gameState.Variation;
         var currentTotal = gameState.CurrentTotal;
-        var previousCard = gameState.PreviousCard;
+        var previousCards = gameState.PreviousCards;
         
         switch (variation)
         {
@@ -616,7 +618,7 @@ public partial class NinetyNine : NinetyNineGame
                     c.Suit == Suit.Spade && c.Number == 1 || currentTotal + c.Number <= 99);
             case NinetyNineVariation.Icelandic:
             {
-                if ((previousCard?.Number).HasValue && previousCard?.Number != 12 || previousCard == null)
+                if (previousCards == null || previousCards.Last().Number != 12)
                 {
                     return cards.Where(c =>
                         SpecialRanks[NinetyNineVariation.Icelandic].Contains(c.Number) ||

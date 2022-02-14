@@ -18,7 +18,7 @@
   "minus": "引く",
   "confirm": "はい",
   "gameOver": "あなたはもう出せるカートを持っていません。",
-  "playMessage": "{previousPlayerName}は{card}を出した！",
+  "playMessage": "{previousPlayerName}はカードを出した！",
   "burstMessage": "{previousPlayerName}はバーストした！",
   "turnMessageTitle": "{possessive}番です！",
   "selectPlayerMessage": "プレイヤーを選んでください",

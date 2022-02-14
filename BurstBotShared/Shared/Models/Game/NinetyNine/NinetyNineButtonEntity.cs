@@ -121,7 +121,8 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
                 {
                     playerState.ResponsesInWait--;
                     playerState.TemporaryAdjustments.Enqueue(plusOrMinus);
-                    break;
+                    if (playerState.ResponsesInWait > 0)
+                        break;
                 }
                 
                 await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(

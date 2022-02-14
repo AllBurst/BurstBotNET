@@ -24,7 +24,7 @@ public class NinetyNineGameState :
     public int CurrentPlayerOrder { get; set; }
     public ulong PreviousPlayerId { get; set; }
     public ushort CurrentTotal { get; set; }
-    public Card? PreviousCard { get; set; }
+    public ImmutableArray<Card> PreviousCards { get; set; }
     public NinetyNineVariation Variation { get; set; }
     public NinetyNineDifficulty Difficulty { get; set; }
     public int TotalBet { get; set; }

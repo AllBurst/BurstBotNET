@@ -15,15 +15,7 @@ public sealed class AmqpService : IDisposable
     private const string BurstMatchExchangeName = "burst_match";
     private const string BurstGameExchangeName = "burst_game";
 
-    private static readonly Dictionary<GameType, string> RoutingKeys = new()
-    {
-        { GameType.BlackJack, "match.requests.blackjack" },
-        { GameType.ChinesePoker, "match.requests.chinese_poker" },
-        { GameType.NinetyNine, "match.requests.ninety_nine" },
-        { GameType.OldMaid, "match.requests.old_maid" },
-        { GameType.RedDotsPicking, "match.requests.red_dots_picking" },
-        { GameType.ChaseThePig, "match.requests.chase_the_pig" },
-    };
+    private readonly Dictionary<GameType, string> _routingKeys = new();
 
     private readonly string _suffix;
     private readonly IConnection _publishConnection;
@@ -47,6 +39,13 @@ public sealed class AmqpService : IDisposable
         };
 
         _suffix = config.Rabbit.Suffix;
+        
+        _routingKeys.Add(GameType.BlackJack, $"match.requests.blackjack{_suffix}");
+        _routingKeys.Add(GameType.ChinesePoker, $"match.requests.chinese_poker{_suffix}");
+        _routingKeys.Add(GameType.NinetyNine, $"match.requests.ninety_nine{_suffix}");
+        _routingKeys.Add(GameType.OldMaid, $"match.requests.old_maid{_suffix}");
+        _routingKeys.Add(GameType.RedDotsPicking, $"match.requests.red_dots_picking{_suffix}");
+        _routingKeys.Add(GameType.ChaseThePig, $"match.requests.chase_the_pig{_suffix}");
 
         _publishConnection = factory.CreateConnection();
         _subscribeConnection = factory.CreateConnection();
@@ -103,7 +102,7 @@ public sealed class AmqpService : IDisposable
                 continue;
             }
             
-            channel.BasicPublish(BurstMatchExchangeName, RoutingKeys[gameType], null,
+            channel.BasicPublish(BurstMatchExchangeName, _routingKeys[gameType], null,
                 waitingData);
             _publishChannels.Enqueue(channel!);
         }
@@ -194,7 +193,7 @@ public sealed class AmqpService : IDisposable
                 continue;
             }
 
-            channel.BasicPublish(BurstGameExchangeName, $"game.{gameType}.{gameId}.requests", null,
+            channel.BasicPublish(BurstGameExchangeName, $"game.{gameType}.{gameId}.requests{_suffix}", null,
                 payload);
             _publishChannels.Enqueue(channel!);
         }
@@ -252,7 +251,11 @@ public sealed class AmqpService : IDisposable
         {
             try
             {
-                var socketIdentifier = (ea.RoutingKey[16..] ?? string.Empty).Replace(_suffix, string.Empty);
+                var socketIdentifier = ea.RoutingKey[16..] ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(_suffix))
+                {
+                    socketIdentifier = socketIdentifier.Replace(_suffix, string.Empty);
+                }
                 var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(ea.Body.Span);
                 var getChannelResult = _matchRequestChannels.TryGetValue(socketIdentifier, out var payloadChannel);
                 if (getChannelResult)
@@ -284,7 +287,11 @@ public sealed class AmqpService : IDisposable
         {
             try
             {
-                var sanitizedRoutingKey = ea.RoutingKey.Replace(_suffix, string.Empty);
+                var sanitizedRoutingKey = ea.RoutingKey;
+                if (!string.IsNullOrWhiteSpace(_suffix))
+                {
+                    sanitizedRoutingKey = sanitizedRoutingKey.Replace(_suffix, string.Empty);
+                }
                 var lastDotIndex = sanitizedRoutingKey.LastIndexOf('.');
                 var secondLastDotIndex = sanitizedRoutingKey.LastIndexOf('.', lastDotIndex - 1);
                 var gameId = sanitizedRoutingKey[(secondLastDotIndex + 1)..lastDotIndex] ?? "";
