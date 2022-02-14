@@ -486,7 +486,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.AmqpService.html",
-          "hash": "pDQPRcUENqjSxVYNGY3ZxCk8bQ2qpTOalqnFsRSQi9k="
+          "hash": "f2VclibBAXrdTvt8lvsfCe+Q6vch6iAUxfCZ5RFdo9U="
         }
       },
       "is_incremental": false,
@@ -1518,7 +1518,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html",
-          "hash": "uBFsL8e45qmVWkwL2YMmrYcyOXKBl0t3fu+LEJxbCwI="
+          "hash": "0Yx1Fr7poRvO55y6zm9k9w+eMnUx99fgTEgFaPdnqAI="
         }
       },
       "is_incremental": false,
@@ -1542,7 +1542,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html",
-          "hash": "PZdnNGGBZR5FkX0Px/Hqm3CKCAGcgWceSIwDLa+5zgk="
+          "hash": "AYiVhFx1AF+aOtRJL2pjxaGaYrLeexEXe9deNkWTGeo="
         }
       },
       "is_incremental": false,
@@ -1662,7 +1662,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html",
-          "hash": "tDlCKSutr+5BhGBYNF1PG5mSmP87+CtIS2s/xHQ7dFM="
+          "hash": "4/XmYuwIozd4jJk6XOTvj5vly5CPiBe0wp//OESpLEw="
         }
       },
       "is_incremental": false,

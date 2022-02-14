@@ -8158,19 +8158,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.Players
   nameWithType: NinetyNineGameState.Players
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard
-  name: PreviousCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_PreviousCard
-  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard
-  nameWithType: NinetyNineGameState.PreviousCard
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard*
-  name: PreviousCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_PreviousCard_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards
+  name: PreviousCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_PreviousCards
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards
+  nameWithType: NinetyNineGameState.PreviousCards
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards*
+  name: PreviousCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_PreviousCards_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCard
-  nameWithType: NinetyNineGameState.PreviousCard
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousCards
+  nameWithType: NinetyNineGameState.PreviousCards
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.PreviousPlayerId
   name: PreviousPlayerId
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNineGameState_PreviousPlayerId
@@ -8958,19 +8958,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.Players
   nameWithType: RawNinetyNineGameState.Players
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard
-  name: PreviousCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_PreviousCard
-  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard
-  nameWithType: RawNinetyNineGameState.PreviousCard
-- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard*
-  name: PreviousCard
-  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_PreviousCard_
-  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards
+  name: PreviousCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_PreviousCards
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards
+  nameWithType: RawNinetyNineGameState.PreviousCards
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards*
+  name: PreviousCards
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_PreviousCards_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards
   isSpec: "True"
-  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCard
-  nameWithType: RawNinetyNineGameState.PreviousCard
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousCards
+  nameWithType: RawNinetyNineGameState.PreviousCards
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.PreviousPlayerId
   name: PreviousPlayerId
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNineGameState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNineGameState_PreviousPlayerId
