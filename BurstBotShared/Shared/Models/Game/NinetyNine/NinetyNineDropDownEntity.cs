@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Collections.Immutable;
+using System.Globalization;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables;
@@ -141,10 +142,12 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 case 1:
                 {
                     playerState.ResponsesInWait++;
-                    
-                    var plusOne = new ButtonComponent(ButtonComponentStyle.Success, $"{localization.Plus} 1",
+
+                    var plusOne = new ButtonComponent(ButtonComponentStyle.Success,
+                        localization.PlusSpecific.Replace("{number}", 1.ToString(CultureInfo.InvariantCulture)),
                         new PartialEmoji(Name: "➕"), $"plus1");
-                    var plusFourteen = new ButtonComponent(ButtonComponentStyle.Success, $"{localization.Plus} 14",
+                    var plusFourteen = new ButtonComponent(ButtonComponentStyle.Success,
+                        localization.PlusSpecific.Replace("{number}", 14.ToString(CultureInfo.InvariantCulture)),
                         new PartialEmoji(Name: "➕"), $"plus14");
                     
                     var buttonComponents = new List<IMessageComponent>();

@@ -31,6 +31,7 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
     [JsonPropertyName("plus")] public string Plus { get; init; } = "";
+    [JsonPropertyName("plusSpecific")] public string PlusSpecific { get; init; } = "";
     [JsonPropertyName("minus")] public string Minus { get; init; } = "";
     [JsonPropertyName("confirm")] public string Confirm { get; init; } = "";
     [JsonPropertyName("gameOver")] public string GameOver { get; init; } = "";
@@ -41,5 +42,9 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
 
     [JsonPropertyName("plusOneOrFourteen")]
     public string PlusOneOrFourteen { get; init; } = "";
+
+    [JsonPropertyName("taiwanese")] public string Taiwanese { get; init; } = "";
+    [JsonPropertyName("icelandic")] public string Icelandic { get; init; } = "";
+    [JsonPropertyName("standard")] public string Standard { get; init; } = "";
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

@@ -251,6 +251,13 @@ public partial class NinetyNine : NinetyNineGame
 
         var description = localization.InitialMessageDescription
             .Replace("{baseBet}", deserializedIncomingData.BaseBet.ToString(CultureInfo.InvariantCulture))
+            .Replace("{variation}", deserializedIncomingData.Variation switch
+            {
+                NinetyNineVariation.Taiwanese => localization.Taiwanese,
+                NinetyNineVariation.Icelandic => localization.Icelandic,
+                NinetyNineVariation.Standard => localization.Standard,
+                _ => localization.Taiwanese
+            })
             .Replace("{helpText}", deserializedIncomingData.Variation switch
             {
                 NinetyNineVariation.Taiwanese => localization.CommandList["generalTaiwanese"],
@@ -300,6 +307,9 @@ public partial class NinetyNine : NinetyNineGame
             .Players
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
+
+        await using var renderedHiddenImage =
+            SkiaService.RenderDeck(deckService, nextPlayer.Cards.Select(c => c with { IsFront = false }));
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
@@ -360,9 +370,28 @@ public partial class NinetyNine : NinetyNineGame
             }
             else
             {
+                var randomFileName = Utilities.GenerateRandomString() + ".jpg";
+                var randomAttachmentUri = $"attachment://{randomFileName}";
+
+                await using var imageCopy = new MemoryStream((int)renderedHiddenImage.Length);
+                await renderedHiddenImage.CopyToAsync(imageCopy);
+                imageCopy.Seek(0, SeekOrigin.Begin);
+                renderedHiddenImage.Seek(0, SeekOrigin.Begin);
+
+                embed = embed with
+                {
+                    Image = new EmbedImage(randomAttachmentUri)
+                };
+
+                var attachment = new OneOf<FileData, IPartialAttachment>[]
+                {
+                    new FileData(randomFileName, imageCopy)
+                };
+
                 var sendResult = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
-                        embeds: new[] { embed });
+                        embeds: new[] { embed },
+                        attachments: attachment);
                 if (!sendResult.IsSuccess)
                     logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                         playerId, sendResult.Error.Message, sendResult.Inner);
@@ -419,7 +448,7 @@ public partial class NinetyNine : NinetyNineGame
     }
 
     private static Embed BuildTurnMessage(
-        NinetyNinePlayerState playerState,
+        IPlayerState playerState,
         RawNinetyNinePlayerState nextPlayer,
         ushort currentTotal,
         Localizations localizations)
@@ -454,7 +483,7 @@ public partial class NinetyNine : NinetyNineGame
     private static async Task ShowPreviousPlayerAction(
         NinetyNineGameState gameState,
         RawNinetyNinePlayerState previousPlayerNewState,
-        List<Card>? previousCards,
+        IReadOnlyCollection<Card>? previousCards,
         int previousPlayerOrder,
         IEnumerable<ulong> oldBurstPlayers,
         IEnumerable<ulong> newBurstPlayers,
@@ -627,7 +656,11 @@ public partial class NinetyNine : NinetyNineGame
 
                 var cardArr = cards.ToImmutableArray();
                 var queens = cardArr.Where(c => c.Number == 12);
-                var nonQueens = cardArr.Where(c => c.Number != 12).ToImmutableArray();
+                var nonQueens = cardArr
+                    .Where(c => SpecialRanks[NinetyNineVariation.Icelandic].Contains(c.Number) ||
+                                currentTotal + c.Number <= 99)
+                    .Where(c => c.Number != 12)
+                    .ToImmutableArray();
 
                 return nonQueens.Length >= gameState.ConsecutiveQueens.Count ? queens.Concat(nonQueens) : queens;
             }
