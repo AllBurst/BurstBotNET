@@ -186,7 +186,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.NinetyNine.NinetyNine.html",
-          "hash": "UPFk+/qBeM+IMLv1JVoBHhD4LteRsj4N/lwPWe2jJNo="
+          "hash": "Apt2NO6F+XcKO3Vvh0mlaUH/5ktETDZdtBVHxwxhAwM="
         }
       },
       "is_incremental": false,
@@ -510,7 +510,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Services.DeckService.html",
-          "hash": "vPF0FgLtVZlXck+CokvgUlmNu4JW4EHben2MUsQ2WD8="
+          "hash": "F5Qv9rOFyHEvfmVVic1SCo42RLQHCPR8xHXlFdmeEvc="
         }
       },
       "is_incremental": false,
@@ -1518,7 +1518,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html",
-          "hash": "0Yx1Fr7poRvO55y6zm9k9w+eMnUx99fgTEgFaPdnqAI="
+          "hash": "WgC7oSFTBM/bqxYUGfXmabFo7yqU1VvnTyfTvZIZl1E="
         }
       },
       "is_incremental": false,
@@ -1530,7 +1530,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineDropDownEntity.html",
-          "hash": "wCCnnERp+F5o9tVdpOlBrfWSGLIDJWxxirc3+F1tmVc="
+          "hash": "xdjQlBLTrJ+MshyGDsD6SeYrAWLayCHOiBfx+iC8vFU="
         }
       },
       "is_incremental": false,
@@ -1554,7 +1554,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html",
-          "hash": "33cugCuTatYy7JQfJIZL6G52UCDiayFYXJhSSQobb3A="
+          "hash": "3UvZBesi9hzwCx6OAHDS3GqQRe8pg42nqEQ/ndw8xio="
         }
       },
       "is_incremental": false,
@@ -1602,7 +1602,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html",
-          "hash": "NicLPw4LqM7xbWv+8AejKfTWFetyiRK8t18x7ePNxPA="
+          "hash": "n8XWMFlNl8HsCyiX/uA/WfVKat3U01wJCr7ZFvJ4TJ4="
         }
       },
       "is_incremental": false,
@@ -1650,7 +1650,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.html",
-          "hash": "RUCdpr2KE03j91GrTm/kNTi+/x1w1/tZc7KDgANPqUc="
+          "hash": "OQx7mLKF5ZNznOcQMg3tNJkTtudhKP/ttulYvJlhch0="
         }
       },
       "is_incremental": false,
@@ -1674,7 +1674,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html",
-          "hash": "CL8lVcDOoHDgCZOt0DSUqQXzRNWRJMMJ0yw+kCVS9vA="
+          "hash": "TOpWoiDppWzeHaUm2wX0afGUdbEXJdHTJ/VzLt6WR1U="
         }
       },
       "is_incremental": false,
@@ -2226,7 +2226,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html",
-          "hash": "s4CzK69f8tNDOXUPuiptdWUXxThrmjNWAq00niQwYxU="
+          "hash": "A7BF6o5KZ70CSEOlx/NHtQHrCGgIaf4onY6U6mq5OmA="
         }
       },
       "is_incremental": false,

@@ -8307,6 +8307,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.GameId
   nameWithType: NinetyNinePlayerState.GameId
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn
+  name: IsDrawn
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_IsDrawn
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn
+  nameWithType: NinetyNinePlayerState.IsDrawn
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn*
+  name: IsDrawn
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_IsDrawn_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.IsDrawn
+  nameWithType: NinetyNinePlayerState.IsDrawn
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.Order
   name: Order
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_Order
@@ -8320,6 +8333,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.Order
   nameWithType: NinetyNinePlayerState.Order
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes
+  name: PassTimes
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_PassTimes
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes
+  nameWithType: NinetyNinePlayerState.PassTimes
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes*
+  name: PassTimes
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_PassTimes_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PassTimes
+  nameWithType: NinetyNinePlayerState.PassTimes
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.PlayerId
   name: PlayerId
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_NinetyNinePlayerState_PlayerId
@@ -8482,6 +8508,12 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType
   nameWithType: NinetyNineInGameAdjustmentType
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Eleven
+  name: Eleven
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameAdjustmentType_Eleven
+  commentId: F:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Eleven
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Eleven
+  nameWithType: NinetyNineInGameAdjustmentType.Eleven
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.Fourteen
   name: Fourteen
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineInGameAdjustmentType.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineInGameAdjustmentType_Fourteen
@@ -8801,6 +8833,12 @@ references:
   commentId: T:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation
   nameWithType: NinetyNineVariation
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.Bloody
+  name: Bloody
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineVariation_Bloody
+  commentId: F:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.Bloody
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.Bloody
+  nameWithType: NinetyNineVariation.Bloody
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.Icelandic
   name: Icelandic
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.NinetyNineVariation.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_NinetyNineVariation_Icelandic
@@ -9110,6 +9148,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.GameId
   nameWithType: RawNinetyNinePlayerState.GameId
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn
+  name: IsDrawn
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_IsDrawn
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn
+  nameWithType: RawNinetyNinePlayerState.IsDrawn
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn*
+  name: IsDrawn
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_IsDrawn_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.IsDrawn
+  nameWithType: RawNinetyNinePlayerState.IsDrawn
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.Order
   name: Order
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_Order
@@ -9123,6 +9174,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.Order
   nameWithType: RawNinetyNinePlayerState.Order
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes
+  name: PassTimes
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_PassTimes
+  commentId: P:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes
+  nameWithType: RawNinetyNinePlayerState.PassTimes
+- uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes*
+  name: PassTimes
+  href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_PassTimes_
+  commentId: Overload:BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PassTimes
+  nameWithType: RawNinetyNinePlayerState.PassTimes
 - uid: BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.PlayerId
   name: PlayerId
   href: api/BurstBotShared.Shared.Models.Game.NinetyNine.Serializables.RawNinetyNinePlayerState.html#BurstBotShared_Shared_Models_Game_NinetyNine_Serializables_RawNinetyNinePlayerState_PlayerId
@@ -13653,6 +13717,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.AvailableCommands
   nameWithType: NinetyNineLocalization.AvailableCommands
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody
+  name: Bloody
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Bloody
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody
+  nameWithType: NinetyNineLocalization.Bloody
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody*
+  name: Bloody
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_Bloody_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Bloody
+  nameWithType: NinetyNineLocalization.Bloody
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.BurstMessage
   name: BurstMessage
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_BurstMessage
@@ -13874,6 +13951,19 @@ references:
   isSpec: "True"
   fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.Plus
   nameWithType: NinetyNineLocalization.Plus
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven
+  name: PlusOneOrEleven
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_PlusOneOrEleven
+  commentId: P:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven
+  nameWithType: NinetyNineLocalization.PlusOneOrEleven
+- uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven*
+  name: PlusOneOrEleven
+  href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_PlusOneOrEleven_
+  commentId: Overload:BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrEleven
+  nameWithType: NinetyNineLocalization.PlusOneOrEleven
 - uid: BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.PlusOneOrFourteen
   name: PlusOneOrFourteen
   href: api/BurstBotShared.Shared.Models.Localization.NinetyNine.Serializables.NinetyNineLocalization.html#BurstBotShared_Shared_Models_Localization_NinetyNine_Serializables_NinetyNineLocalization_PlusOneOrFourteen
