@@ -677,8 +677,8 @@ public partial class NinetyNine : NinetyNineGame
                 var cardsArr = cards.ToImmutableArray();
                 var availableCards = cardsArr
                     .Where(c =>
-                        SpecialRanks[variation].Contains(c.Number) ||
-                        currentTotal + c.Number <= 99).ToList();
+                        (SpecialRanks[variation].Contains(c.Number) ||
+                         currentTotal + c.Number <= 99) && c.Number != 11 && c.Number != 12).ToList();
                 var jackAndQueens = cardsArr.Where(c => c.Number is 11 or 12);
                 if (currentTotal + 10 <= 99)
                     availableCards.AddRange(jackAndQueens);

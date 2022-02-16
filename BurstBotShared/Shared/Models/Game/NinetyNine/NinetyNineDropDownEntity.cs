@@ -81,7 +81,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
     private static IMessageComponent[] BuildPlayerSelectMenu(NinetyNineGameState gameState, NinetyNinePlayerState playerState, NinetyNineLocalization localization)
     {
         var playerNameList = gameState.Players
-            .Where(p => p.Value.PlayerId != playerState.PlayerId && !gameState.BurstPlayers.Contains(p.Value.PlayerId))
+            .Where(p => p.Value.PlayerId != playerState.PlayerId && !gameState.BurstPlayers.Contains(p.Value.PlayerId) && p.Value.PassTimes == 0)
             .Select(p => new SelectOption(p.Value.PlayerName, p.Key.ToString()));
 
         var selectMenu = new SelectMenuComponent(PlayerSelectionCustomId,
@@ -201,8 +201,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 GameId = gameState.GameId,
                 PlayerId = playerState.PlayerId,
                 PlayCards = new[] { extractedCard },
-                RequestType = NinetyNineInGameRequestType.Play,
-                Adjustments = Enumerable.Empty<NinetyNineInGameAdjustmentType>()
+                RequestType = NinetyNineInGameRequestType.Play
             })), ct);
 
         return Result.FromSuccess();
@@ -305,8 +304,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 GameId = gameState.GameId,
                 PlayerId = playerState.PlayerId,
                 PlayCards = playerState.TemporaryCards,
-                RequestType = NinetyNineInGameRequestType.Play,
-                Adjustments = Enumerable.Empty<NinetyNineInGameAdjustmentType>()
+                RequestType = NinetyNineInGameRequestType.Play
             })), ct);
 
         playerState.TemporaryCards.Clear();
@@ -431,8 +429,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 GameId = gameState.GameId,
                 PlayerId = currentPlayer.PlayerId,
                 PlayCards = new[] { extractedCard },
-                RequestType = NinetyNineInGameRequestType.Play,
-                Adjustments = Enumerable.Empty<NinetyNineInGameAdjustmentType>()
+                RequestType = NinetyNineInGameRequestType.Play
             })), ct);
 
         return Result.FromSuccess();
