@@ -2,7 +2,8 @@
   "commandList": {
     "generalTaiwanese": "Assets/localization/ninetyNine/JP/generalTaiwanese.txt",
     "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
-    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt"
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt",
+    "generalBloody": "Assets/localization/ninetyNine/EN/generalBloody.txt"
   },
   "initialMessagePrefix": "あなたのカード：\n",
   "initialMessageDescription": "**ベースベット：{baseBet}。\nバリエーション：{variation}**\n\n{helpText}\n\n{cardNames}",
@@ -28,7 +29,9 @@
   "showHelp": "九十九について",
   "notOnlyQueen": "クイーンと他のトランプを一緒に出すのはできません！",
   "plusOneOrFourteen": "合計に１か１４を足す",
+  "plusOneOrEleven": "合計に１か１１を足す",
   "taiwanese": "台湾式",
   "icelandic": "アイスランド式",
-  "standard": "標準式"
+  "standard": "標準式",
+  "bloody": "血まみれ式"
 }

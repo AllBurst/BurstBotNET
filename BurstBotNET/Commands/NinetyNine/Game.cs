@@ -34,7 +34,8 @@ public partial class NinetyNine : NinetyNineGame
     {
         { NinetyNineVariation.Taiwanese, new[] { 4, 5, 10, 11, 12, 13 } },
         { NinetyNineVariation.Icelandic, new[] { 4, 9, 10, 12, 13 } },
-        { NinetyNineVariation.Standard, new[] { 1, 3, 4, 9, 10, 11, 12, 13 } }
+        { NinetyNineVariation.Standard, new[] { 4, 9, 10, 13 } },
+        { NinetyNineVariation.Bloody, new[] { 1, 4, 5, 7, 8, 9, 10, 11, 12, 13 } }
     };
 
     public static async Task<bool> HandleProgress(string messageContent, NinetyNineGameState gameState, State state,
@@ -105,7 +106,7 @@ public partial class NinetyNine : NinetyNineGame
                 .Replace("{playerName}", winner.PlayerName)
                 .Replace("{verb}", localization.Won)
                 .Replace("{totalRewards}", endingData.TotalRewards.ToString());
-            
+
             var embed = new Embed(
                 title,
                 Description: description,
@@ -158,7 +159,7 @@ public partial class NinetyNine : NinetyNineGame
                     state, channelApi, logger);
             }
         }
-        
+
         switch (deserializedIncomingData.Progress)
         {
             case NinetyNineGameProgress.Ending:
@@ -256,6 +257,7 @@ public partial class NinetyNine : NinetyNineGame
                 NinetyNineVariation.Taiwanese => localization.Taiwanese,
                 NinetyNineVariation.Icelandic => localization.Icelandic,
                 NinetyNineVariation.Standard => localization.Standard,
+                NinetyNineVariation.Bloody => localization.Bloody,
                 _ => localization.Taiwanese
             })
             .Replace("{helpText}", deserializedIncomingData.Variation switch
@@ -263,6 +265,7 @@ public partial class NinetyNine : NinetyNineGame
                 NinetyNineVariation.Taiwanese => localization.CommandList["generalTaiwanese"],
                 NinetyNineVariation.Icelandic => localization.CommandList["generalIcelandic"],
                 NinetyNineVariation.Standard => localization.CommandList["generalStandard"],
+                NinetyNineVariation.Bloody => localization.CommandList["generalBloody"],
                 _ => localization.CommandList["generalTaiwanese"]
             })
             .Replace("{cardNames}", cardNames);
@@ -332,22 +335,23 @@ public partial class NinetyNine : NinetyNineGame
                     var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
                         new PartialEmoji(Name: "😫"), "confirm");
 
-                    var newComponent = (new IMessageComponent[] {
-                        new ActionRowComponent(new []
+                    var newComponent = (new IMessageComponent[]
+                    {
+                        new ActionRowComponent(new[]
                         {
-                            confirmButton 
+                            confirmButton
                         })
                     });
 
                     embed = embed with
                     {
                         Description = localization.GameOver +
-                        $"\n\n{localization.Cards}" +
-                        $"\n\n{ string.Join('\n', nextPlayer.Cards)}" +
-                        $"\n\n{ localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
+                                      $"\n\n{localization.Cards}" +
+                                      $"\n\n{string.Join('\n', nextPlayer.Cards)}" +
+                                      $"\n\n{localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
                         Image = new EmbedImage(Constants.AttachmentUri)
                     };
-                    
+
                     var sendResult = await channelApi
                         .CreateMessageAsync(playerState.TextChannel.ID,
                             embeds: new[] { embed },
@@ -359,6 +363,7 @@ public partial class NinetyNine : NinetyNineGame
                             playerId, sendResult.Error.Message, sendResult.Inner);
                     continue;
                 }
+
                 var result = await channelApi
                     .CreateMessageAsync(playerState.TextChannel.ID,
                         embeds: new[] { embed },
@@ -409,6 +414,7 @@ public partial class NinetyNine : NinetyNineGame
             NinetyNineVariation.Taiwanese => "ninety_nine_help_Taiwanese",
             NinetyNineVariation.Icelandic => "ninety_nine_help_Icelandic",
             NinetyNineVariation.Standard => "ninety_nine_help_Standard",
+            NinetyNineVariation.Bloody => "ninety_nine_help_Bloody",
             _ => "ninety_nine_help_Taiwanese"
         };
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
@@ -444,7 +450,6 @@ public partial class NinetyNine : NinetyNineGame
                 helpButton
             })
         };
-
     }
 
     private static Embed BuildTurnMessage(
@@ -473,7 +478,8 @@ public partial class NinetyNine : NinetyNineGame
 
         embed = embed with
         {
-            Description = $"{localization.NinetyNine.Cards}\n\n{string.Join('\n', nextPlayer.Cards)}\n\n{localization.NinetyNine.CurrentTotal.Replace("{total}", currentTotal.ToString())}",
+            Description =
+            $"{localization.NinetyNine.Cards}\n\n{string.Join('\n', nextPlayer.Cards)}\n\n{localization.NinetyNine.CurrentTotal.Replace("{total}", currentTotal.ToString())}",
             Image = new EmbedImage(Constants.AttachmentUri)
         };
 
@@ -523,7 +529,7 @@ public partial class NinetyNine : NinetyNineGame
                 var result = await channelApi
                     .CreateMessageAsync(player.TextChannel.ID,
                         embeds: new[] { embed.Entity });
-                
+
                 if (!result.IsSuccess)
                 {
                     logger.LogError("Failed to show previous player {PlayerId}'s action: {Reason}, inner: {Inner}",
@@ -533,7 +539,7 @@ public partial class NinetyNine : NinetyNineGame
             else
             {
                 if (previousCards == null) return;
-                
+
                 await using var previousCardImage = SkiaService.RenderDeck(state.DeckService, previousCards);
 
                 var description = string.Join('\n', previousCards.Select(c => c.ToString())) +
@@ -601,6 +607,8 @@ public partial class NinetyNine : NinetyNineGame
                 oldPlayerState.AvatarUrl = playerState.AvatarUrl;
                 oldPlayerState.PlayerName = playerState.PlayerName;
                 oldPlayerState.Order = playerState.Order;
+                oldPlayerState.IsDrawn = playerState.IsDrawn;
+                oldPlayerState.PassTimes = playerState.PassTimes;
 
                 if (playerState.ChannelId == 0 || oldPlayerState.TextChannel != null) continue;
                 foreach (var guild in state.Guilds)
@@ -638,7 +646,7 @@ public partial class NinetyNine : NinetyNineGame
         var variation = gameState.Variation;
         var currentTotal = gameState.CurrentTotal;
         var previousCards = gameState.PreviousCards;
-        
+
         switch (variation)
         {
             case NinetyNineVariation.Taiwanese:
@@ -665,6 +673,18 @@ public partial class NinetyNine : NinetyNineGame
                 return nonQueens.Length >= gameState.ConsecutiveQueens.Count ? queens.Concat(nonQueens) : queens;
             }
             case NinetyNineVariation.Standard:
+            {
+                var cardsArr = cards.ToImmutableArray();
+                var availableCards = cardsArr
+                    .Where(c =>
+                        SpecialRanks[variation].Contains(c.Number) ||
+                        currentTotal + c.Number <= 99).ToList();
+                var jackAndQueens = cardsArr.Where(c => c.Number is 11 or 12);
+                if (currentTotal + 10 <= 99)
+                    availableCards.AddRange(jackAndQueens);
+
+                return availableCards;
+            }
             default:
                 return cards.Where(c =>
                     SpecialRanks[variation].Contains(c.Number) ||

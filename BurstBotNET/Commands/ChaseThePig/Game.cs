@@ -857,7 +857,7 @@ public partial class ChaseThePig : ChasePigGame
                 player.AvatarUrl = playerState.AvatarUrl;
                 player.CollectedCards = playerState.CollectedCards.ToImmutableArray();
                 player.PlayerName = playerState.PlayerName;
-                
+
                 if (player.TextChannel != null || playerState.ChannelId == 0) continue;
 
                 player.TextChannel =

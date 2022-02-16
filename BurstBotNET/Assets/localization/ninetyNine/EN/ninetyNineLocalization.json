@@ -2,7 +2,8 @@
   "commandList": {
     "generalTaiwanese": "Assets/localization/ninetyNine/EN/generalTaiwanese.txt",
     "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
-    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt"
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt",
+    "generalBloody": "Assets/localization/ninetyNine/EN/generalBloody.txt"
   },
   "initialMessagePrefix": "You currently own:\n",
   "initialMessageDescription": "**Base bet: {baseBet}.\nVariation: {variation}.**\n\n{helpText}\n\n{cardNames}",
@@ -28,7 +29,9 @@
   "showHelp": "Show help texts",
   "notOnlyQueen": "You can't send a Queen with other cards at the same time!",
   "plusOneOrFourteen": "Add 1 or 14 to the current total.",
+  "plusOneOrEleven": "Add 1 or 11 to the current total.",
   "taiwanese": "Taiwanese",
   "icelandic": "Icelandic",
-  "standard": "Standard"
+  "standard": "Standard",
+  "bloody": "Bloody"
 }

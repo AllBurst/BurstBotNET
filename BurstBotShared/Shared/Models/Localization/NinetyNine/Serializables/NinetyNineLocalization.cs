@@ -43,8 +43,10 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("plusOneOrFourteen")]
     public string PlusOneOrFourteen { get; init; } = "";
 
+    [JsonPropertyName("plusOneOrEleven")] public string PlusOneOrEleven { get; init; } = "";
     [JsonPropertyName("taiwanese")] public string Taiwanese { get; init; } = "";
     [JsonPropertyName("icelandic")] public string Icelandic { get; init; } = "";
     [JsonPropertyName("standard")] public string Standard { get; init; } = "";
+    [JsonPropertyName("bloody")] public string Bloody { get; init; } = "";
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

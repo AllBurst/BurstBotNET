@@ -41,6 +41,14 @@ public record RawNinetyNinePlayerState : IRawState<NinetyNinePlayerState, RawNin
     [JsonPropertyName("avatar_url")]
     [JsonProperty("avatar_url")]
     public string AvatarUrl { get; init; } = "";
+    
+    [JsonPropertyName("is_drawn")]
+    [JsonProperty("is_drawn")]
+    public bool IsDrawn { get; init; }
+    
+    [JsonPropertyName("pass_times")]
+    [JsonProperty("pass_times")]
+    public ushort PassTimes { get; init; }
 
     [Pure]
     public static RawNinetyNinePlayerState FromState(IState<NinetyNinePlayerState, RawNinetyNinePlayerState, NinetyNineGameProgress> state)
@@ -54,7 +62,9 @@ public record RawNinetyNinePlayerState : IRawState<NinetyNinePlayerState, RawNin
             GameId = playerState.GameId,
             Order = playerState.Order,
             PlayerId = playerState.PlayerId,
-            PlayerName = playerState.PlayerName
+            PlayerName = playerState.PlayerName,
+            IsDrawn = playerState.IsDrawn,
+            PassTimes = playerState.PassTimes
         };
     }
 
@@ -75,7 +85,9 @@ public record RawNinetyNinePlayerState : IRawState<NinetyNinePlayerState, RawNin
             Order = Order,
             PlayerId = PlayerId,
             PlayerName = PlayerName,
-            TextChannel = channel
+            TextChannel = channel,
+            IsDrawn = IsDrawn,
+            PassTimes = PassTimes
         };
     }
 };

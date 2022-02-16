@@ -9,4 +9,5 @@ public enum NinetyNineInGameAdjustmentType
     Minus,
     One,
     Fourteen,
+    Eleven
 }
