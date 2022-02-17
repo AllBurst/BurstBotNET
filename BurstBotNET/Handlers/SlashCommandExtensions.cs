@@ -8,6 +8,7 @@ using BurstBotNET.Commands.OldMaid;
 using BurstBotNET.Commands.RedDotsPicking;
 using BurstBotNET.Commands.Rewards;
 using BurstBotNET.Commands.Trade;
+using BurstBotShared.Shared.Models;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
@@ -45,6 +46,7 @@ public static class SlashCommandExtensions
         
         return serviceCollection
             .AddPagination()
+            .AddInteractiveEntity<HelpDropDownEntity>()
             .AddInteractiveEntity<BlackJackDropDownEntity>()
             .AddInteractiveEntity<BlackJackButtonEntity>()
             .AddInteractiveEntity<ChinesePokerDropDownEntity>()

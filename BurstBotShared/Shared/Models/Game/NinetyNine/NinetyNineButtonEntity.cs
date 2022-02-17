@@ -32,8 +32,9 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         _channelApi = channelApi;
         _logger = logger;
     }
+
     private readonly string[] _validCustomIds =
-{
+    {
         "plus10",
         "plus20",
         "plus1",
@@ -48,7 +49,8 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
         "ninety_nine_help_Bloody"
     };
 
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
+    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId,
+        CancellationToken ct = new())
     {
         return componentType is not ComponentType.Button
             ? Task.FromResult<Result<bool>>(false)
@@ -98,14 +100,14 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
     }
 
     private async Task<Result> PlusOrMinus(
-    IMessage message,
-    NinetyNineGameState gameState,
-    NinetyNinePlayerState playerState,
-    NinetyNineInGameAdjustmentType plusOrMinus,
-    CancellationToken ct)
+        IMessage message,
+        NinetyNineGameState gameState,
+        NinetyNinePlayerState playerState,
+        NinetyNineInGameAdjustmentType plusOrMinus,
+        CancellationToken ct)
     {
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
-        
+
         switch (gameState.Variation)
         {
             case NinetyNineVariation.Icelandic:
@@ -117,7 +119,7 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
                     if (playerState.ResponsesInWait > 0)
                         break;
                 }
-                
+
                 await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
                     playerState.PlayerId,
                     JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
@@ -128,11 +130,11 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
                         Adjustments = playerState.TemporaryAdjustments,
                         RequestType = NinetyNineInGameRequestType.Play
                     })), ct);
-                
+
                 playerState.TemporaryCards.Clear();
                 playerState.TemporaryAdjustments.Clear();
                 playerState.ResponsesInWait = 0;
-                
+
                 break;
             }
             default:
@@ -147,15 +149,16 @@ public class NinetyNineButtonEntity : IButtonInteractiveEntity, IHelpButtonEntit
                         Adjustments = new[] { plusOrMinus },
                         RequestType = NinetyNineInGameRequestType.Play
                     })), ct);
-                
+
                 playerState.TemporaryCards.Clear();
 
                 break;
             }
         }
-        
+
         return Result.FromSuccess();
     }
+
     private async Task<Result> GiveUp(
         IMessage message,
         NinetyNineGameState gameState,
