@@ -78,10 +78,15 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         };
     }
     
-    private static IMessageComponent[] BuildPlayerSelectMenu(NinetyNineGameState gameState, NinetyNinePlayerState playerState, NinetyNineLocalization localization)
+    private static IMessageComponent[] BuildPlayerSelectMenu(Card card, NinetyNineGameState gameState, NinetyNinePlayerState playerState, NinetyNineLocalization localization)
     {
         var playerNameList = gameState.Players
-            .Where(p => p.Value.PlayerId != playerState.PlayerId && !gameState.BurstPlayers.Contains(p.Value.PlayerId) && p.Value.PassTimes == 0)
+            .Where(p => p.Value.PlayerId != playerState.PlayerId && !gameState.BurstPlayers.Contains(p.Value.PlayerId))
+            .Where(p =>
+            {
+                var (_, pState) = p;
+                return card.Number != 5 || pState.PassTimes == 0;
+            })
             .Select(p => new SelectOption(p.Value.PlayerName, p.Key.ToString()));
 
         var selectMenu = new SelectMenuComponent(PlayerSelectionCustomId,
@@ -330,7 +335,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             {
                 playerState.TemporaryCards.Enqueue(extractedCard);
 
-                var component = BuildPlayerSelectMenu(gameState, playerState, localization);
+                var component = BuildPlayerSelectMenu(extractedCard, gameState, playerState, localization);
 
                 var sendResult = await _channelApi
                     .CreateMessageAsync(message.ChannelID,
@@ -367,7 +372,7 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                     if (extractedCard.Suit == Suit.Spade) break;
                     
                     playerState.TemporaryCards.Enqueue(extractedCard);
-                    var component = BuildPlayerSelectMenu(gameState, playerState, localization);
+                    var component = BuildPlayerSelectMenu(extractedCard, gameState, playerState, localization);
 
                     var sendResult = await _channelApi
                         .CreateMessageAsync(message.ChannelID,

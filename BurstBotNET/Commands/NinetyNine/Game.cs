@@ -311,8 +311,9 @@ public partial class NinetyNine : NinetyNineGame
             .First(pair => pair.Value.Order == deserializedIncomingData.CurrentPlayerOrder)
             .Value;
 
-        await using var renderedHiddenImage =
-            SkiaService.RenderDeck(deckService, nextPlayer.Cards.Select(c => c with { IsFront = false }));
+        await using var renderedHiddenImage = nextPlayer.Cards.Count == 0
+            ? null
+            : SkiaService.RenderDeck(deckService, nextPlayer.Cards.Select(c => c with { IsFront = false }));
 
         foreach (var (playerId, playerState) in gameState.Players)
         {
@@ -322,84 +323,115 @@ public partial class NinetyNine : NinetyNineGame
 
             if (nextPlayer.PlayerId == playerId)
             {
-                await using var renderedImage = SkiaService.RenderDeck(deckService, nextPlayer.Cards);
-                var attachment = new[]
+                await using var renderedImage = nextPlayer.Cards.Count == 0
+                    ? null
+                    : SkiaService.RenderDeck(deckService, nextPlayer.Cards);
+
+                if (renderedImage != null)
                 {
-                    OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
+                    var attachment = new[]
+                    {
+                        OneOf<FileData, IPartialAttachment>.FromT0(new FileData(Constants.OutputFileName, renderedImage))
+                    };
+                    
+                    var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
+
+                    if (component == null)
+                    {
+                        var newComponent = BuildConfirmButton(localization);
+
+                        embed = embed with
+                        {
+                            Description = localization.GameOver +
+                                          $"\n\n{localization.Cards}" +
+                                          $"\n\n{string.Join('\n', nextPlayer.Cards)}" +
+                                          $"\n\n{localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
+                            Image = new EmbedImage(Constants.AttachmentUri)
+                        };
+
+                        var sendResult = await channelApi
+                            .CreateMessageAsync(playerState.TextChannel.ID,
+                                embeds: new[] { embed },
+                                attachments: attachment,
+                                components: newComponent);
+
+                        if (!sendResult.IsSuccess)
+                            logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                                playerId, sendResult.Error.Message, sendResult.Inner);
+                        continue;
+                    }
+                    
+                    var result = await channelApi
+                        .CreateMessageAsync(playerState.TextChannel.ID,
+                            embeds: new[] { embed },
+                            attachments: attachment,
+                            components: component);
+                    if (!result.IsSuccess)
+                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                            playerId, result.Error.Message, result.Inner);
+
+                    continue;
+                }
+
+                var confirmComponent = BuildConfirmButton(localization);
+
+                embed = embed with
+                {
+                    Description = localization.GameOver +
+                                  $"\n\n{localization.Cards}" +
+                                  $"\n\n{string.Join('\n', nextPlayer.Cards)}" +
+                                  $"\n\n{localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
+                    Image = new EmbedImage(Constants.AttachmentUri)
                 };
 
-                var component = BuildComponents(nextPlayer, deserializedIncomingData, localization);
+                var sendConfirmButtonResult = await channelApi
+                    .CreateMessageAsync(playerState.TextChannel.ID,
+                        embeds: new[] { embed },
+                        components: confirmComponent);
 
-                if (component == null)
+                if (!sendConfirmButtonResult.IsSuccess)
+                    logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                        playerId, sendConfirmButtonResult.Error.Message, sendConfirmButtonResult.Inner);
+            }
+            else
+            {
+                if (renderedHiddenImage != null)
                 {
-                    var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
-                        new PartialEmoji(Name: "😫"), "confirm");
+                    var randomFileName = Utilities.GenerateRandomString() + ".jpg";
+                    var randomAttachmentUri = $"attachment://{randomFileName}";
 
-                    var newComponent = (new IMessageComponent[]
-                    {
-                        new ActionRowComponent(new[]
-                        {
-                            confirmButton
-                        })
-                    });
+                    await using var imageCopy = new MemoryStream((int)renderedHiddenImage.Length);
+                    await renderedHiddenImage.CopyToAsync(imageCopy);
+                    imageCopy.Seek(0, SeekOrigin.Begin);
+                    renderedHiddenImage.Seek(0, SeekOrigin.Begin);
 
                     embed = embed with
                     {
-                        Description = localization.GameOver +
-                                      $"\n\n{localization.Cards}" +
-                                      $"\n\n{string.Join('\n', nextPlayer.Cards)}" +
-                                      $"\n\n{localization.CurrentTotal.Replace("{total}", deserializedIncomingData.CurrentTotal.ToString())}",
-                        Image = new EmbedImage(Constants.AttachmentUri)
+                        Image = new EmbedImage(randomAttachmentUri)
+                    };
+
+                    var attachment = new OneOf<FileData, IPartialAttachment>[]
+                    {
+                        new FileData(randomFileName, imageCopy)
                     };
 
                     var sendResult = await channelApi
                         .CreateMessageAsync(playerState.TextChannel.ID,
                             embeds: new[] { embed },
-                            attachments: attachment,
-                            components: newComponent);
-
+                            attachments: attachment);
                     if (!sendResult.IsSuccess)
                         logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
                             playerId, sendResult.Error.Message, sendResult.Inner);
-                    continue;
                 }
-
-                var result = await channelApi
-                    .CreateMessageAsync(playerState.TextChannel.ID,
-                        embeds: new[] { embed },
-                        attachments: attachment,
-                        components: component);
-                if (!result.IsSuccess)
-                    logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
-                        playerId, result.Error.Message, result.Inner);
-            }
-            else
-            {
-                var randomFileName = Utilities.GenerateRandomString() + ".jpg";
-                var randomAttachmentUri = $"attachment://{randomFileName}";
-
-                await using var imageCopy = new MemoryStream((int)renderedHiddenImage.Length);
-                await renderedHiddenImage.CopyToAsync(imageCopy);
-                imageCopy.Seek(0, SeekOrigin.Begin);
-                renderedHiddenImage.Seek(0, SeekOrigin.Begin);
-
-                embed = embed with
+                else
                 {
-                    Image = new EmbedImage(randomAttachmentUri)
-                };
-
-                var attachment = new OneOf<FileData, IPartialAttachment>[]
-                {
-                    new FileData(randomFileName, imageCopy)
-                };
-
-                var sendResult = await channelApi
-                    .CreateMessageAsync(playerState.TextChannel.ID,
-                        embeds: new[] { embed },
-                        attachments: attachment);
-                if (!sendResult.IsSuccess)
-                    logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
-                        playerId, sendResult.Error.Message, sendResult.Inner);
+                    var sendResult = await channelApi
+                        .CreateMessageAsync(playerState.TextChannel.ID,
+                            embeds: new[] { embed });
+                    if (!sendResult.IsSuccess)
+                        logger.LogError("Failed to send drawing message to player {PlayerId}: {Reason}, inner: {Inner}",
+                            playerId, sendResult.Error.Message, sendResult.Inner);
+                }
             }
         }
     }
@@ -420,7 +452,7 @@ public partial class NinetyNine : NinetyNineGame
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
             new PartialEmoji(Name: "❓"), customId);
 
-        var availableCards = GetAvailableCards(currentPlayer.Cards, gameState)
+        var availableCards = GetAvailableCards(currentPlayer.Cards, gameState, currentPlayer)
             .ToImmutableArray();
 
         var minValue = 1;
@@ -641,7 +673,10 @@ public partial class NinetyNine : NinetyNineGame
         }
     }
 
-    private static IEnumerable<Card> GetAvailableCards(IEnumerable<Card> cards, RawNinetyNineGameState gameState)
+    private static IEnumerable<Card> GetAvailableCards(
+        IEnumerable<Card> cards,
+        RawNinetyNineGameState gameState,
+        RawNinetyNinePlayerState playerState)
     {
         var variation = gameState.Variation;
         var currentTotal = gameState.CurrentTotal;
@@ -685,10 +720,43 @@ public partial class NinetyNine : NinetyNineGame
 
                 return availableCards;
             }
+            case NinetyNineVariation.Bloody:
+            {
+                var availableCards = cards.Where(c =>
+                        SpecialRanks[variation].Contains(c.Number) ||
+                        currentTotal + c.Number <= 99)
+                    .ToImmutableArray();
+                var availablePlayers = gameState
+                    .Players
+                    .Where(p =>
+                    {
+                        var (pId, pState) = p;
+                        var notBurst = !gameState.BurstPlayers.Contains(pId);
+                        var isNotPassing = pState.PassTimes == 0;
+                        var notSelf = pId != playerState.PlayerId;
+                        return notBurst && isNotPassing && notSelf;
+                    })
+                    .Select(p => p.Key)
+                    .ToImmutableArray();
+
+                return availablePlayers.IsEmpty ? availableCards.Where(c => c.Number != 5) : availableCards;
+            }
             default:
-                return cards.Where(c =>
-                    SpecialRanks[variation].Contains(c.Number) ||
-                    currentTotal + c.Number <= 99);
+                return Enumerable.Empty<Card>();
         }
+    }
+
+    private static IMessageComponent[] BuildConfirmButton(NinetyNineLocalization localization)
+    {
+        var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
+            new PartialEmoji(Name: "😫"), "confirm");
+
+        return new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                confirmButton
+            })
+        };
     }
 }
