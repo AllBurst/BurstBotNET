@@ -3090,6 +3090,12 @@ references:
   fullName.vb: BurstBotShared.Shared.Interfaces.IValueRealizable(Of T).GetChinesePokerValue
   nameWithType: IValueRealizable<T>.GetChinesePokerValue
   nameWithType.vb: IValueRealizable(Of T).GetChinesePokerValue
+- uid: BurstBotShared.Shared.Models
+  name: BurstBotShared.Shared.Models
+  href: api/BurstBotShared.Shared.Models.html
+  commentId: N:BurstBotShared.Shared.Models
+  fullName: BurstBotShared.Shared.Models
+  nameWithType: BurstBotShared.Shared.Models
 - uid: BurstBotShared.Shared.Models.Config
   name: BurstBotShared.Shared.Models.Config
   href: api/BurstBotShared.Shared.Models.Config.html
@@ -11768,6 +11774,57 @@ references:
   commentId: F:BurstBotShared.Shared.Models.Game.Serializables.Suit.Spade
   fullName: BurstBotShared.Shared.Models.Game.Serializables.Suit.Spade
   nameWithType: Suit.Spade
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity
+  name: HelpDropDownEntity
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html
+  commentId: T:BurstBotShared.Shared.Models.HelpDropDownEntity
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity
+  nameWithType: HelpDropDownEntity
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.HelpDropDownEntity})
+  name: HelpDropDownEntity(InteractionContext, State, IDiscordRestInteractionAPI, ILogger<HelpDropDownEntity>)
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity__ctor_Remora_Discord_Commands_Contexts_InteractionContext_BurstBotShared_Shared_Models_Data_State_Remora_Discord_API_Abstractions_Rest_IDiscordRestInteractionAPI_Microsoft_Extensions_Logging_ILogger_BurstBotShared_Shared_Models_HelpDropDownEntity__
+  commentId: M:BurstBotShared.Shared.Models.HelpDropDownEntity.#ctor(Remora.Discord.Commands.Contexts.InteractionContext,BurstBotShared.Shared.Models.Data.State,Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI,Microsoft.Extensions.Logging.ILogger{BurstBotShared.Shared.Models.HelpDropDownEntity})
+  name.vb: HelpDropDownEntity(InteractionContext, State, IDiscordRestInteractionAPI, ILogger(Of HelpDropDownEntity))
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.HelpDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Microsoft.Extensions.Logging.ILogger<BurstBotShared.Shared.Models.HelpDropDownEntity>)
+  fullName.vb: BurstBotShared.Shared.Models.HelpDropDownEntity.HelpDropDownEntity(Remora.Discord.Commands.Contexts.InteractionContext, BurstBotShared.Shared.Models.Data.State, Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI, Microsoft.Extensions.Logging.ILogger(Of BurstBotShared.Shared.Models.HelpDropDownEntity))
+  nameWithType: HelpDropDownEntity.HelpDropDownEntity(InteractionContext, State, IDiscordRestInteractionAPI, ILogger<HelpDropDownEntity>)
+  nameWithType.vb: HelpDropDownEntity.HelpDropDownEntity(InteractionContext, State, IDiscordRestInteractionAPI, ILogger(Of HelpDropDownEntity))
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.#ctor*
+  name: HelpDropDownEntity
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity__ctor_
+  commentId: Overload:BurstBotShared.Shared.Models.HelpDropDownEntity.#ctor
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.HelpDropDownEntity
+  nameWithType: HelpDropDownEntity.HelpDropDownEntity
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name: HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity_HandleInteractionAsync_Remora_Discord_API_Abstractions_Objects_IUser_System_String_IReadOnlyList_System_String__CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser,System.String,IReadOnlyList{System.String},CancellationToken)
+  name.vb: HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList<System.String>, CancellationToken)
+  fullName.vb: BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync(Remora.Discord.API.Abstractions.Objects.IUser, System.String, IReadOnlyList(Of System.String), CancellationToken)
+  nameWithType: HelpDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken)
+  nameWithType.vb: HelpDropDownEntity.HandleInteractionAsync(IUser, String, IReadOnlyList(Of String), CancellationToken)
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync*
+  name: HandleInteractionAsync
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity_HandleInteractionAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.HandleInteractionAsync
+  nameWithType: HelpDropDownEntity.HandleInteractionAsync
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  name: IsInterestedAsync(ComponentType, String, CancellationToken)
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity_IsInterestedAsync_Remora_Discord_API_Abstractions_Objects_ComponentType_System_String_CancellationToken_
+  commentId: M:BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType,System.String,CancellationToken)
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync(Remora.Discord.API.Abstractions.Objects.ComponentType, System.String, CancellationToken)
+  nameWithType: HelpDropDownEntity.IsInterestedAsync(ComponentType, String, CancellationToken)
+- uid: BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync*
+  name: IsInterestedAsync
+  href: api/BurstBotShared.Shared.Models.HelpDropDownEntity.html#BurstBotShared_Shared_Models_HelpDropDownEntity_IsInterestedAsync_
+  commentId: Overload:BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync
+  isSpec: "True"
+  fullName: BurstBotShared.Shared.Models.HelpDropDownEntity.IsInterestedAsync
+  nameWithType: HelpDropDownEntity.IsInterestedAsync
 - uid: BurstBotShared.Shared.Models.Localization
   name: BurstBotShared.Shared.Models.Localization
   href: api/BurstBotShared.Shared.Models.Localization.html

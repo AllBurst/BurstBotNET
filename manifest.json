@@ -162,7 +162,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Commands.Help.Help.html",
-          "hash": "q0J/8NyQ4NKpaHw1t++lvIGYRtHj5eL0Hz4F0omGmp4="
+          "hash": "iza6PbvHrVNUSHGtRsiIaURCLMktPBHaqk/1zxlLNOE="
         }
       },
       "is_incremental": false,
@@ -390,7 +390,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotNET.Handlers.SlashCommandExtensions.html",
-          "hash": "Uo5rBjHUL8qlkVQDGQEElkhjSz/AbZfPXuNdEK7W+5k="
+          "hash": "XbWr9RM+ZooYBdymcnW5X8fxNAUZ2ZMfca089FYjhZE="
         }
       },
       "is_incremental": false,
@@ -1518,7 +1518,7 @@
       "output": {
         ".html": {
           "relative_path": "api/BurstBotShared.Shared.Models.Game.NinetyNine.NinetyNineButtonEntity.html",
-          "hash": "WgC7oSFTBM/bqxYUGfXmabFo7yqU1VvnTyfTvZIZl1E="
+          "hash": "XpPDwwvhuLt07Fm/v/WfmpWzk/Pnj40el8sT+22BxoI="
         }
       },
       "is_incremental": false,
@@ -2114,6 +2114,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.HelpDropDownEntity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.HelpDropDownEntity.html",
+          "hash": "yTREKiNoIQ4ggiJVPrn0XJY9qnsYQLPkBf2z4O56ZQQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.BlackJackLocalization.yml",
       "output": {
         ".html": {
@@ -2354,6 +2366,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/BurstBotShared.Shared.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/BurstBotShared.Shared.Models.html",
+          "hash": "R9Ie/DikSjhIBaQB315Hh7g3aOySc6DXCQbtMHneJVU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/BurstBotShared.Shared.Utilities.Utilities.yml",
       "output": {
         ".html": {
@@ -2406,7 +2430,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "C6Pl+ptkGiqPgtm8G+NyvMNjlcubGPqZnkpUOlhrVY4="
+          "hash": "WnV7yiDG5QXvTjwt0lBSMbS/CuTEC8LoQ2TNMlBytpo="
         }
       },
       "is_incremental": false,
@@ -2445,7 +2469,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 197,
+          "total_file_count": 199,
           "skipped_file_count": 0
         },
         "TocDocumentProcessor": {

@@ -874,6 +874,16 @@
     "title": "Enum Suit | Jack of All Trades",
     "keywords": "Enum Suit Namespace : BurstBotShared.Shared.Models.Game.Serializables Assembly : BurstBotShared.dll Syntax public enum Suit Fields Name Description Club Diamond Heart Spade Extension Methods BurstExtensions.ToSuitPretty() BurstExtensions.ToSnowflake()"
   },
+  "api/BurstBotShared.Shared.Models.HelpDropDownEntity.html": {
+    "href": "api/BurstBotShared.Shared.Models.HelpDropDownEntity.html",
+    "title": "Class HelpDropDownEntity | Jack of All Trades",
+    "keywords": "Class HelpDropDownEntity Inheritance Object HelpDropDownEntity Implements Remora.Discord.Interactivity.ISelectMenuInteractiveEntity Remora.Discord.Interactivity.IInteractiveEntity Inherited Members Object.Equals(Object) Object.Equals(Object, Object) Object.GetHashCode() Object.GetType() Object.MemberwiseClone() Object.ReferenceEquals(Object, Object) Object.ToString() Namespace : BurstBotShared.Shared.Models Assembly : BurstBotShared.dll Syntax public class HelpDropDownEntity : ISelectMenuInteractiveEntity, IInteractiveEntity Constructors | Improve this Doc View Source HelpDropDownEntity(InteractionContext, State, IDiscordRestInteractionAPI, ILogger<HelpDropDownEntity>) Declaration public HelpDropDownEntity(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi, ILogger<HelpDropDownEntity> logger) Parameters Type Name Description Remora.Discord.Commands.Contexts.InteractionContext context State state Remora.Discord.API.Abstractions.Rest.IDiscordRestInteractionAPI interactionApi ILogger < HelpDropDownEntity > logger Methods | Improve this Doc View Source HandleInteractionAsync(IUser, String, IReadOnlyList<String>, CancellationToken) Declaration public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values, CancellationToken ct = null) Parameters Type Name Description Remora.Discord.API.Abstractions.Objects.IUser user String customId IReadOnlyList < String > values CancellationToken ct Returns Type Description Task < Remora.Results.Result > | Improve this Doc View Source IsInterestedAsync(ComponentType, String, CancellationToken) Declaration public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = null) Parameters Type Name Description Remora.Discord.API.Abstractions.Objects.ComponentType componentType String customId CancellationToken ct Returns Type Description Task < Remora.Results.Result < Boolean >> Implements Remora.Discord.Interactivity.ISelectMenuInteractiveEntity Remora.Discord.Interactivity.IInteractiveEntity"
+  },
+  "api/BurstBotShared.Shared.Models.html": {
+    "href": "api/BurstBotShared.Shared.Models.html",
+    "title": "Namespace BurstBotShared.Shared.Models | Jack of All Trades",
+    "keywords": "Namespace BurstBotShared.Shared.Models Classes HelpDropDownEntity"
+  },
   "api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.BlackJackLocalization.html": {
     "href": "api/BurstBotShared.Shared.Models.Localization.BlackJack.Serializables.BlackJackLocalization.html",
     "title": "Class BlackJackLocalization | Jack of All Trades",
