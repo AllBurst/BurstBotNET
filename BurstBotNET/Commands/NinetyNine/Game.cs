@@ -464,7 +464,7 @@ public partial class NinetyNine : NinetyNineGame
 
         var options = availableCards
             .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
-                new PartialEmoji(c.Suit.ToSnowflake())))
+                c.Number != 0 ? new PartialEmoji(c.Suit.ToSnowflake()) : new PartialEmoji(Name: "🃏")))
             .ToImmutableArray();
 
         var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
