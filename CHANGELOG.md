@@ -1,3 +1,7 @@
+## 2.2.0
+- Add other variations (Icelandic, Standard, and Bloody) of Ninety-Nine game.
+- Hide donee's amount of tips so players cannot use donate function to see other people's tips.
+
 ## 2.1.0
 - Add exchange function so players can exchange for lottery credits with tips.
 - Minor fix on about command's description.
