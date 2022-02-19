@@ -63,6 +63,15 @@
         <None Update="Assets\localization\ninetyNine\CN\ninetyNineLocalization.json">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Assets\localization\ninetyNine\EN\generalIcelandic.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\ninetyNine\EN\generalStandard.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\localization\ninetyNine\EN\generalBloody.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

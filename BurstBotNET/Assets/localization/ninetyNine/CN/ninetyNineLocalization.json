@@ -1,9 +1,12 @@
 {
   "commandList": {
-    "general": "Assets/localization/ninetyNine/CN/general.txt"
+    "generalTaiwanese": "Assets/localization/ninetyNine/CN/generalTaiwanese.txt",
+    "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt",
+    "generalBloody": "Assets/localization/ninetyNine/EN/generalBloody.txt"
   },
   "initialMessagePrefix": "You currently own:\n",
-  "initialMessageDescription": "**Base bet: {baseBet}.**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageDescription": "**Base bet: {baseBet}.\nVariation: {variation}.**\n\n{helpText}\n\n{cardNames}",
   "initialMessageTitle": "The Ninety Nine game is starting!",
   "initialMessageFooter": "Please wait until all players are ready.",
   "winTitle": "{playerName} is the biggest winner!",
@@ -13,14 +16,22 @@
   "cards": "Your cards:",
   "play": "Play",
   "plus": "Plus",
+  "plusSpecific": "Plus {number}",
   "minus": "Minus",
   "confirm": "Confirm",
   "gameOver": "You don't have any playable cards anymore.",
-  "playMessage": "{previousPlayerName} played a {card}!",
+  "playMessage": "{previousPlayerName} played his/her cards!",
   "burstMessage": "{previousPlayerName} burst!",
   "turnMessageTitle": "It's {possessive} turn!",
   "selectPlayerMessage": "Select a player",
   "plusOrMinusMessage": "Plus or minus the current total",
   "currentTotal": "Current Total: {total}",
-  "showHelp": "Show help texts"
+  "showHelp": "Show help texts",
+  "notOnlyQueen": "You can't send a Queen with other cards at the same time!",
+  "plusOneOrFourteen": "Add 1 or 14 to the current total.",
+  "plusOneOrEleven": "Add 1 or 11 to the current total.",
+  "taiwanese": "Taiwanese",
+  "icelandic": "Icelandic",
+  "standard": "Standard",
+  "bloody": "Bloody"
 }

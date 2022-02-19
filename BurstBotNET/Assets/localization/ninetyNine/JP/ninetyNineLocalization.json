@@ -1,9 +1,12 @@
 {
   "commandList": {
-    "general": "Assets/localization/ninetyNine/JP/general.txt"
+    "generalTaiwanese": "Assets/localization/ninetyNine/JP/generalTaiwanese.txt",
+    "generalIcelandic": "Assets/localization/ninetyNine/EN/generalIcelandic.txt",
+    "generalStandard": "Assets/localization/ninetyNine/EN/generalStandard.txt",
+    "generalBloody": "Assets/localization/ninetyNine/EN/generalBloody.txt"
   },
   "initialMessagePrefix": "あなたのカード：\n",
-  "initialMessageDescription": "**ベースベット：{baseBet}。**\n\n{helpText}\n\n{cardNames}",
+  "initialMessageDescription": "**ベースベット：{baseBet}。\nバリエーション：{variation}**\n\n{helpText}\n\n{cardNames}",
   "initialMessageTitle": "九十九が始まりました！",
   "initialMessageFooter": "他のプレイヤーをお待ちください。",
   "winTitle": "{playerName}の勝ちです！",
@@ -13,14 +16,22 @@
   "cards": "あなたのカード：",
   "play": "出す",
   "plus": "足す",
+  "plusSpecific": "{number}を足す",
   "minus": "引く",
   "confirm": "はい",
   "gameOver": "あなたはもう出せるカートを持っていません。",
-  "playMessage": "{previousPlayerName}は{card}を出した！",
+  "playMessage": "{previousPlayerName}はカードを出した！",
   "burstMessage": "{previousPlayerName}はバーストした！",
   "turnMessageTitle": "{possessive}番です！",
   "selectPlayerMessage": "プレイヤーを選んでください",
   "plusOrMinusMessage": "現在の合計に足すか引くか",
   "currentTotal": "現在の合計：{total}",
-  "showHelp": "九十九について"
+  "showHelp": "九十九について",
+  "notOnlyQueen": "クイーンと他のトランプを一緒に出すのはできません！",
+  "plusOneOrFourteen": "合計に１か１４を足す",
+  "plusOneOrEleven": "合計に１か１１を足す",
+  "taiwanese": "台湾式",
+  "icelandic": "アイスランド式",
+  "standard": "標準式",
+  "bloody": "血まみれ式"
 }

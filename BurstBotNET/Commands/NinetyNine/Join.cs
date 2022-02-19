@@ -27,7 +27,7 @@ public partial class NinetyNine
     {
         _difficulty = difficulty;
         _variation = variation;
-        
+
         var joinResult = await Game.GenericJoinGame(
             baseBet, users, GameType.NinetyNine, "/ninety_nine/join",
             _state, _context, _interactionApi, _userApi, _logger
@@ -184,7 +184,8 @@ public partial class NinetyNine
                 PlayerName = playerState.PlayerName,
                 RequestType = NinetyNineInGameRequestType.Deal,
                 Variation = _variation,
-                Difficulty = _difficulty
+                Difficulty = _difficulty,
+                Direction = NinetyNineDirection.Clockwise
             }, _state.GameStates.NinetyNineGameStates.Item1,
             _state.GameStates.NinetyNineGameStates.Item2,
             _state.AmqpService);

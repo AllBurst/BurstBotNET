@@ -5,4 +5,5 @@ public record RabbitMqConfig
     public string Endpoint { get; init; } = "";
     public string Username { get; init; } = "";
     public string Password { get; init; } = "";
+    public string Suffix { get; init; } = "";
 };

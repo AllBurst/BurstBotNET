@@ -49,9 +49,9 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
     [JsonProperty("current_total")]
     public ushort CurrentTotal { get; init; }
     
-    [JsonPropertyName("previous_card")]
-    [JsonProperty("previous_card")]
-    public Card? PreviousCard { get; init; }
+    [JsonPropertyName("previous_cards")]
+    [JsonProperty("previous_cards")]
+    public List<Card>? PreviousCards { get; init; }
     
     [JsonPropertyName("variation")]
     [JsonProperty("variation")]
@@ -73,6 +73,10 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
     [JsonProperty("burst_players")]
     public List<ulong> BurstPlayers { get; init; } = new();
 
+    [JsonPropertyName("consecutive_queens")]
+    [JsonProperty("consecutive_queens")]
+    public List<Card> ConsecutiveQueens { get; init; } = new();
+
     [Pure]
     public static RawNinetyNineGameState FromState(IState<NinetyNineGameState, RawNinetyNineGameState, NinetyNineGameProgress> state)
     {
@@ -90,13 +94,14 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             GameId = gameState.GameId,
             LastActiveTime = gameState.LastActiveTime.ToString(CultureInfo.InvariantCulture),
             Players = players,
-            PreviousCard = gameState.PreviousCard,
+            PreviousCards = gameState.PreviousCards.ToList(),
             PreviousPlayerId = gameState.PreviousPlayerId,
             Progress = gameState.Progress,
             TotalBet = gameState.TotalBet,
             Variation = gameState.Variation,
             BaseBet = gameState.BaseBet,
-            BurstPlayers = gameState.BurstPlayers.ToList()
+            BurstPlayers = gameState.BurstPlayers.ToList(),
+            ConsecutiveQueens = gameState.ConsecutiveQueens.ToList()
         };
     }
 
@@ -120,12 +125,13 @@ public record RawNinetyNineGameState : IRawState<NinetyNineGameState, RawNinetyN
             Progress = Progress,
             LastActiveTime = DateTime.Parse(LastActiveTime),
             Players = new ConcurrentDictionary<ulong, NinetyNinePlayerState>(players),
-            PreviousCard = PreviousCard,
+            PreviousCards = PreviousCards?.ToImmutableArray() ?? ImmutableArray<Card>.Empty,
             Variation = Variation,
             TotalBet = TotalBet,
             PreviousPlayerId = PreviousPlayerId,
             BaseBet = BaseBet,
-            BurstPlayers = BurstPlayers.ToImmutableArray()
+            BurstPlayers = BurstPlayers.ToImmutableArray(),
+            ConsecutiveQueens = ConsecutiveQueens.ToImmutableArray()
         };
     }
 };

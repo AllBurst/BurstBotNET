@@ -102,7 +102,6 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
 
         var gameState = gameStateTuple.Item1
             .GetOrAdd(gameId, new TState());
-        logger.LogDebug("{GameName} game progress: {Progress}", gameName, gameState.Progress);
         
         await gameState.Semaphore.WaitAsync();
         logger.LogDebug("Semaphore acquired in StartListening");
@@ -151,7 +150,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             cancellationTokenSource.Cancel();
             logger.LogDebug("All tasks cancelled");
             cancellationTokenSource.Dispose();
-        });
+        }, default);
         
         await Task.Delay(TimeSpan.FromSeconds(60), default);
         
@@ -166,7 +165,7 @@ public interface IGame<in TState, in TRaw, TGame, in TPlayerState, TProgress, TI
             var channelId = value.TextChannel.ID;
 
             var deleteResult = await channelApi
-                .DeleteChannelAsync(channelId);
+                .DeleteChannelAsync(channelId, ct: CancellationToken.None);
             if (!deleteResult.IsSuccess)
                 logger.LogError("Failed to delete player's channel: {Reason}, inner: {Inner}",
                     deleteResult.Error.Message, deleteResult.Inner);

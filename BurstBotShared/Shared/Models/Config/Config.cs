@@ -14,6 +14,9 @@ public record Config
     public string SocketEndpoint { get; init; } = "";
     public int SocketPort { get; init; }
     public long Timeout { get; init; }
+    public string LotteryEndpoint { get; init; } = "";
+    public string LotteryUsername { get; init; } = "";
+    public string LotteryPassword { get; init; } = "";
     public RabbitMqConfig Rabbit { get; init; } = new();
 
     private const string ConfigDirectoryName = "Config";

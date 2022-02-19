@@ -24,12 +24,13 @@ public class NinetyNineGameState :
     public int CurrentPlayerOrder { get; set; }
     public ulong PreviousPlayerId { get; set; }
     public ushort CurrentTotal { get; set; }
-    public Card? PreviousCard { get; set; }
+    public ImmutableArray<Card> PreviousCards { get; set; }
     public NinetyNineVariation Variation { get; set; }
     public NinetyNineDifficulty Difficulty { get; set; }
     public int TotalBet { get; set; }
     public ImmutableArray<ulong> BurstPlayers { get; set; } = ImmutableArray<ulong>.Empty;
-    
+    public ImmutableArray<Card> ConsecutiveQueens { get; set; } = ImmutableArray<Card>.Empty;
+
     public Channel<Tuple<ulong, byte[]>>? RequestChannel { get; set; }
     public Channel<byte[]>? ResponseChannel { get; set; }
     public SemaphoreSlim Semaphore { get; } = new(1, 1);

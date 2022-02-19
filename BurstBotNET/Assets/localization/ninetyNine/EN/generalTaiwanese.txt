@@ -1,6 +1,6 @@
 ﻿**Rules**
 - The rank of the **normal cards** the player played will be added to the current total.
-- If all of player's normal cards will cause the current total to exceed 99 when played, and the player doesn't have any **special cards**, the player lose the game.
+- If all of player's normal cards will cause the current total to exceed 99 when played, and the player doesn't have any **special cards**, the player loses the game.
 - The last player who still have cards to play will be the winner.
 
 **Cards**：

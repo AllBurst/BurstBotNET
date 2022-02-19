@@ -31,11 +31,22 @@ public record NinetyNineLocalization : ILocalization<NinetyNineLocalization>
     [JsonPropertyName("turnMessageTitle")] public string TurnMessageTitle { get; init; } = "";
     [JsonPropertyName("showHelp")] public string ShowHelp { get; init; } = "";
     [JsonPropertyName("plus")] public string Plus { get; init; } = "";
+    [JsonPropertyName("plusSpecific")] public string PlusSpecific { get; init; } = "";
     [JsonPropertyName("minus")] public string Minus { get; init; } = "";
     [JsonPropertyName("confirm")] public string Confirm { get; init; } = "";
     [JsonPropertyName("gameOver")] public string GameOver { get; init; } = "";
     [JsonPropertyName("selectPlayerMessage")] public string SelectPlayerMessage { get; init; } = "";
     [JsonPropertyName("plusOrMinusMessage")] public string PlusOrMinusMessage { get; init; } = "";
     [JsonPropertyName("currentTotal")] public string CurrentTotal { get; init; } = "";
+    [JsonPropertyName("notOnlyQueen")] public string NotOnlyQueen { get; init; } = "";
+
+    [JsonPropertyName("plusOneOrFourteen")]
+    public string PlusOneOrFourteen { get; init; } = "";
+
+    [JsonPropertyName("plusOneOrEleven")] public string PlusOneOrEleven { get; init; } = "";
+    [JsonPropertyName("taiwanese")] public string Taiwanese { get; init; } = "";
+    [JsonPropertyName("icelandic")] public string Icelandic { get; init; } = "";
+    [JsonPropertyName("standard")] public string Standard { get; init; } = "";
+    [JsonPropertyName("bloody")] public string Bloody { get; init; } = "";
     public Dictionary<string, string> AvailableCommands => CommandList;
 };

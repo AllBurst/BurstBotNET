@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using BurstBotShared.Api;
 using BurstBotShared.Shared;
 using BurstBotShared.Shared.Extensions;
@@ -18,19 +17,19 @@ using Remora.Results;
 
 namespace BurstBotNET.Commands;
 
-public class Trade : CommandGroup
+public class ContextCommands : CommandGroup
 {
     private readonly InteractionContext _context;
     private readonly State _state;
     private readonly IDiscordRestInteractionAPI _interactionApi;
-    private readonly ILogger<Trade> _logger;
+    private readonly ILogger<ContextCommands> _logger;
     private readonly IDiscordRestGuildAPI _guildApi;
 
-    public Trade(InteractionContext context,
+    public ContextCommands(InteractionContext context,
         State state,
         IDiscordRestInteractionAPI interactionApi,
         IDiscordRestGuildAPI guildApi,
-        ILogger<Trade> logger)
+        ILogger<ContextCommands> logger)
     {
         _context = context;
         _state = state;
@@ -65,7 +64,7 @@ public class Trade : CommandGroup
             .GetGuildMemberAsync(guild, donee.ID);
 
         if (donorMember == null || !doneeMember.IsSuccess) return Result.FromSuccess();
-        
+
         var (isValid, invokerTip) = await Game.ValidatePlayers(
             donor.ID.Value,
             new[] { donor.ID.Value, donee.ID.Value },
@@ -98,7 +97,7 @@ public class Trade : CommandGroup
                 .CreateFollowupMessageAsync(_context.ApplicationID,
                     _context.Token,
                     $"An error occurred when donating the player {donee.ID.Value}: {response.ResponseMessage.StatusCode} - {response.ResponseMessage.ReasonPhrase}");
-            
+
             return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
         }
 
@@ -114,17 +113,12 @@ public class Trade : CommandGroup
                 .CreateFollowupMessageAsync(_context.ApplicationID,
                     _context.Token,
                     $"An error occurred when donating the player {donee.ID.Value}: {response.ResponseMessage.StatusCode} - {response.ResponseMessage.ReasonPhrase}");
-            
+
             return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
         }
 
         var donorTip = await _state.BurstApi
             .SendRawRequest<object>($"/tip/{invokerTip.PlayerId}",
-                ApiRequestType.Get, null)
-            .ReceiveJson<RawTip>();
-        
-        var doneeTip = await _state.BurstApi
-            .SendRawRequest<object>($"/tip/{donee.ID.Value}",
                 ApiRequestType.Get, null)
             .ReceiveJson<RawTip>();
 
@@ -135,7 +129,6 @@ public class Trade : CommandGroup
             .WithTitle($"You donated 500 tips to {doneeMember.Entity.GetDisplayName()}!");
 
         embed.AddField($"{donorMember.GetDisplayName()}'s Tip", donorTip.Amount.ToString(), true);
-        embed.AddField($"{doneeMember.Entity.GetDisplayName()}'s Tip", doneeTip.Amount.ToString(), true);
 
         var result = await _interactionApi
             .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token,

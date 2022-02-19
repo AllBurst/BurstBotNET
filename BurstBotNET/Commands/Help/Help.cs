@@ -1,15 +1,18 @@
+using System.Collections.Immutable;
 using System.ComponentModel;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
 using BurstBotShared.Shared.Models.Game.ChinesePoker;
-using BurstBotShared.Shared.Models.Game.NinetyNine;
+using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Game.OldMaid;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking;
 using BurstBotShared.Shared.Models.Game.Serializables;
 using Remora.Commands.Attributes;
 using Remora.Commands.Groups;
+using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
+using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
 using Remora.Results;
 
@@ -59,10 +62,31 @@ public class Help : CommandGroup
         {
             GameType.BlackJack => await BlackJackButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChinesePoker => await ChinesePokerButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
-            GameType.NinetyNine => await NinetyNineButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.NinetyNine => await ShowNinetyNineMenu(),
             GameType.OldMaid => await OldMaidButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.RedDotsPicking => await RedDotsButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.ChaseThePig => await ChasePigButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()
         };
+
+    private async Task<Result> ShowNinetyNineMenu()
+    {
+        var options = Enum
+            .GetNames<NinetyNineVariation>()
+            .Select(s => new SelectOption(s, s))
+            .ToImmutableArray();
+
+        var component = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent("ninety_nine_variation_selection", options, "Variations", 1, 1)
+            })
+        };
+
+        var sendResult = await _interactionApi
+            .CreateFollowupMessageAsync(_context.ApplicationID, _context.Token, "Please select a variation.",
+                components: component);
+        return sendResult.IsSuccess ? Result.FromSuccess() : Result.FromError(sendResult);
+    }
 }

@@ -15,16 +15,9 @@ public sealed class AmqpService : IDisposable
     private const string BurstMatchExchangeName = "burst_match";
     private const string BurstGameExchangeName = "burst_game";
 
-    private static readonly Dictionary<GameType, string> RoutingKeys = new()
-    {
-        { GameType.BlackJack, "match.requests.blackjack" },
-        { GameType.ChinesePoker, "match.requests.chinese_poker" },
-        { GameType.NinetyNine, "match.requests.ninety_nine" },
-        { GameType.OldMaid, "match.requests.old_maid" },
-        { GameType.RedDotsPicking, "match.requests.red_dots_picking" },
-        { GameType.ChaseThePig, "match.requests.chase_the_pig" },
-    };
+    private readonly Dictionary<GameType, string> _routingKeys = new();
 
+    private readonly string _suffix;
     private readonly IConnection _publishConnection;
     private readonly IConnection _subscribeConnection;
     private readonly ILogger<AmqpService> _logger;
@@ -44,6 +37,15 @@ public sealed class AmqpService : IDisposable
             UserName = config.Rabbit.Username,
             Password = config.Rabbit.Password
         };
+
+        _suffix = config.Rabbit.Suffix;
+        
+        _routingKeys.Add(GameType.BlackJack, $"match.requests.blackjack{_suffix}");
+        _routingKeys.Add(GameType.ChinesePoker, $"match.requests.chinese_poker{_suffix}");
+        _routingKeys.Add(GameType.NinetyNine, $"match.requests.ninety_nine{_suffix}");
+        _routingKeys.Add(GameType.OldMaid, $"match.requests.old_maid{_suffix}");
+        _routingKeys.Add(GameType.RedDotsPicking, $"match.requests.red_dots_picking{_suffix}");
+        _routingKeys.Add(GameType.ChaseThePig, $"match.requests.chase_the_pig{_suffix}");
 
         _publishConnection = factory.CreateConnection();
         _subscribeConnection = factory.CreateConnection();
@@ -100,7 +102,7 @@ public sealed class AmqpService : IDisposable
                 continue;
             }
             
-            channel.BasicPublish(BurstMatchExchangeName, RoutingKeys[gameType], null,
+            channel.BasicPublish(BurstMatchExchangeName, _routingKeys[gameType], null,
                 waitingData);
             _publishChannels.Enqueue(channel!);
         }
@@ -191,7 +193,7 @@ public sealed class AmqpService : IDisposable
                 continue;
             }
 
-            channel.BasicPublish(BurstGameExchangeName, $"game.{gameType}.{gameId}.requests", null,
+            channel.BasicPublish(BurstGameExchangeName, $"game.{gameType}.{gameId}.requests{_suffix}", null,
                 payload);
             _publishChannels.Enqueue(channel!);
         }
@@ -243,14 +245,17 @@ public sealed class AmqpService : IDisposable
         }
         
         var queue = channel!.QueueDeclare().QueueName;
-        channel.QueueBind(queue, BurstMatchExchangeName, "match.responses.*");
+        channel.QueueBind(queue, BurstMatchExchangeName, $"match.responses.*{_suffix}");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.Received += async (_, ea) =>
         {
             try
             {
                 var socketIdentifier = ea.RoutingKey[16..] ?? string.Empty;
-                Console.WriteLine($"Raw match data: {Encoding.UTF8.GetString(ea.Body.Span)}");
+                if (!string.IsNullOrWhiteSpace(_suffix))
+                {
+                    socketIdentifier = socketIdentifier.Replace(_suffix, string.Empty);
+                }
                 var matchData = JsonSerializer.Deserialize<GenericJoinStatus>(ea.Body.Span);
                 var getChannelResult = _matchRequestChannels.TryGetValue(socketIdentifier, out var payloadChannel);
                 if (getChannelResult)
@@ -262,7 +267,7 @@ public sealed class AmqpService : IDisposable
             }
         };
         
-        channel.BasicConsume(consumer, queue, true, "game.matches.responses.consumer");
+        channel.BasicConsume(consumer, queue, true, $"game.matches.responses.consumer{_suffix}");
         _subscribeChannels.Enqueue(channel!);
     }
     
@@ -276,26 +281,31 @@ public sealed class AmqpService : IDisposable
         }
         
         var queue = channel!.QueueDeclare().QueueName;
-        channel.QueueBind(queue, BurstGameExchangeName, "game.*.*.responses");
+        channel.QueueBind(queue, BurstGameExchangeName, $"game.*.*.responses{_suffix}");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.Received += async (_, ea) =>
         {
             try
             {
-                var lastDotIndex = ea.RoutingKey.LastIndexOf('.');
-                var secondLastDotIndex = ea.RoutingKey.LastIndexOf('.', lastDotIndex - 1);
-                var gameId = ea.RoutingKey[(secondLastDotIndex + 1)..lastDotIndex] ?? "";
+                var sanitizedRoutingKey = ea.RoutingKey;
+                if (!string.IsNullOrWhiteSpace(_suffix))
+                {
+                    sanitizedRoutingKey = sanitizedRoutingKey.Replace(_suffix, string.Empty);
+                }
+                var lastDotIndex = sanitizedRoutingKey.LastIndexOf('.');
+                var secondLastDotIndex = sanitizedRoutingKey.LastIndexOf('.', lastDotIndex - 1);
+                var gameId = sanitizedRoutingKey[(secondLastDotIndex + 1)..lastDotIndex] ?? "";
                 var getChannelResult = _inGameResponseChannels.TryGetValue(gameId, out var payloadChannel);
                 if (getChannelResult)
                     await payloadChannel!.Writer.WriteAsync(ea.Body.ToArray());
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to receive match data from queue: {Exception}, routing key: {Identifier}", ex, ea.RoutingKey);
+                _logger.LogError("Failed to receive game data from queue: {Exception}, routing key: {Identifier}", ex, ea.RoutingKey);
             }
         };
         
-        channel.BasicConsume(consumer, queue, true, "game.responses.consumer");
+        channel.BasicConsume(consumer, queue, true, $"game.responses.consumer{_suffix}");
         _subscribeChannels.Enqueue(channel!);
     }
 
