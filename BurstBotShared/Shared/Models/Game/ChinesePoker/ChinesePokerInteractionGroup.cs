@@ -20,7 +20,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.ChinesePoker;
 
-public class ChinesePokerInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class ChinesePokerInteractionGroup : InteractionGroup, IHelpInteraction
 {
     public const string ChinesePokerCards = "chinese_poker_cards";
     public const string NaturalCards = "naturals";

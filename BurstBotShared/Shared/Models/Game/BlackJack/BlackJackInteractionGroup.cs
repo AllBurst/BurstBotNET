@@ -12,7 +12,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.BlackJack;
 
-public class BlackJackInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class BlackJackInteractionGroup : InteractionGroup, IHelpInteraction
 {
     public const string DrawCustomId = "draw";
     public const string StandCustomId = "stand";

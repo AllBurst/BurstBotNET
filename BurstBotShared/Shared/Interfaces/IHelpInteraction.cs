@@ -5,7 +5,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Interfaces;
 
-public interface IHelpButtonEntity
+public interface IHelpInteraction
 {
     static abstract Task<Result> ShowHelpMenu(InteractionContext context, State state,
         IDiscordRestInteractionAPI interactionApi);

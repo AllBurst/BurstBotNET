@@ -19,7 +19,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.RedDotsPicking;
 
-public class RedDotsInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class RedDotsInteractionGroup : InteractionGroup, IHelpInteraction
 {
     public const string ForceFiveCustomId = "red_dots_force_five_selection";
     public const string UserSelectionCustomId = "red_dots_user_selection";

@@ -16,7 +16,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.ChaseThePig;
 
-public class ChasePigInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class ChasePigInteractionGroup : InteractionGroup, IHelpInteraction
 {
     private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly InteractionContext _context;

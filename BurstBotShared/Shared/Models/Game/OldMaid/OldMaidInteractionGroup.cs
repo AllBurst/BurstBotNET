@@ -11,7 +11,7 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.OldMaid;
 
-public class OldMaidInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class OldMaidInteractionGroup : InteractionGroup, IHelpInteraction
 {
     public const string DrawCustomId = "old_maid_draw";
     public const string HelpCustomId = "old_maid_help";

@@ -16,7 +16,7 @@ using Remora.Discord.API.Objects;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
-public class NinetyNineInteractionGroup : InteractionGroup, IHelpButtonEntity
+public class NinetyNineInteractionGroup : InteractionGroup, IHelpInteraction
 {
     public const string PlayerSelectionCustomId = "ninety_nine_player_selection";
     public const string UserSelectionCustomId = "ninety_nine_user_selection";
