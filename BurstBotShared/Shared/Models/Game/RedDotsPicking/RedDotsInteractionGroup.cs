@@ -1,9 +1,12 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text.Json;
 using BurstBotShared.Shared.Extensions;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.RedDotsPicking.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
+using BurstBotShared.Shared.Models.Localization.RedDotsPicking.Serializables;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
@@ -16,29 +19,28 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models.Game.RedDotsPicking;
 
-public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
+public class RedDotsInteractionGroup : InteractionGroup, IHelpButtonEntity
 {
+    public const string ForceFiveCustomId = "red_dots_force_five_selection";
+    public const string UserSelectionCustomId = "red_dots_user_selection";
+    public const string TableSelectionCustomId = "red_dots_table_selection";
+    public const string GiveUpSelectionCustomId = "red_dots_give_up_selection";
+    public const string HelpSelectionCustomId = "red_dots_help_selection";
+    public const string HelpCustomId = "red_dots_help";
+    
+    private static readonly TextInfo TextInfo = CultureInfo.InvariantCulture.TextInfo;
     private readonly InteractionContext _context;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly State _state;
 
-    private readonly string[] _validCustomIds =
-    {
-        "red_dots_force_five_selection",
-        "red_dots_user_selection",
-        "red_dots_table_selection",
-        "red_dots_give_up_selection",
-        "red_dots_help_selection"
-    };
+    private readonly ILogger<RedDotsInteractionGroup> _logger;
 
-    private readonly ILogger<RedDotsDropDownEntity> _logger;
-
-    public RedDotsDropDownEntity(InteractionContext context,
+    public RedDotsInteractionGroup(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestInteractionAPI interactionApi,
         State state,
-        ILogger<RedDotsDropDownEntity> logger)
+        ILogger<RedDotsInteractionGroup> logger)
     {
         _context = context;
         _channelApi = channelApi;
@@ -47,14 +49,62 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
         _logger = logger;
     }
     
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi)
     {
-        return componentType is not ComponentType.SelectMenu
-            ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(_validCustomIds.Contains(customId));
+        var localization = state.Localizations.GetLocalization().RedDotsPicking;
+
+        var options = localization
+            .CommandList
+            .Keys
+            .Select(k =>
+            {
+                var (desc, emoji) = GetHelpMenuItemDescription(k, localization);
+                return (k, desc, emoji);
+            })
+            .Select(item => new SelectOption(TextInfo.ToTitleCase(item.k), item.k, item.desc, item.emoji));
+
+        var components = new IMessageComponent[]
+        {
+            new ActionRowComponent(new[]
+            {
+                new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(HelpSelectionCustomId), options.ToImmutableArray(), localization.ShowHelp, 1,
+                    1)
+            })
+        };
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                localization.About,
+                components: components);
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
-    public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
+    [SelectMenu(ForceFiveCustomId)]
+    public async Task<IResult> ForceFive(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, ForceFiveCustomId, values);
+    
+    [SelectMenu(UserSelectionCustomId)]
+    public async Task<IResult> SelectUserCard(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, UserSelectionCustomId, values);
+    
+    [SelectMenu(TableSelectionCustomId)]
+    public async Task<IResult> SelectTableCard(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, TableSelectionCustomId, values);
+    
+    [SelectMenu(GiveUpSelectionCustomId)]
+    public async Task<IResult> SelectGiveUpCard(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, GiveUpSelectionCustomId, values);
+    
+    [SelectMenu(HelpSelectionCustomId)]
+    public async Task<IResult> SelectHelp(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, HelpSelectionCustomId, values);
+    
+    [SelectMenu(HelpCustomId)]
+    public async Task<IResult> Help() =>
+        await HandleInteractionAsync(_context.User, HelpCustomId);
+
+    private async Task<Result> HandleInteractionAsync(IUser user, string customId, IEnumerable<string> values,
         CancellationToken ct = new())
     {
         var hasMessage = _context.Message.IsDefined(out var message);
@@ -74,18 +124,35 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 
             return sanitizedCustomId switch
             {
-                "red_dots_force_five_selection" => await PlayForceFive(message!, gameState, playerState, values, ct),
-                "red_dots_user_selection" or "red_dots_table_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, customId, 2, ct),
-                "red_dots_give_up_selection" => await PlayCollectOrGiveUp(message!, gameState, playerState, values, null, 1, ct),
-                "red_dots_help_selection" => await ShowHelpText(values, ct),
+                ForceFiveCustomId => await PlayForceFive(message!, gameState, playerState, values, ct),
+                UserSelectionCustomId or TableSelectionCustomId => await PlayCollectOrGiveUp(message!, gameState, playerState, values, customId, 2, ct),
+                GiveUpSelectionCustomId => await PlayCollectOrGiveUp(message!, gameState, playerState, values, null, 1, ct),
+                HelpSelectionCustomId => await ShowHelpText(values, ct),
                 _ => Result.FromSuccess()
             };
         }
 
-        if (sanitizedCustomId == "red_dots_help_selection")
+        if (sanitizedCustomId == HelpSelectionCustomId)
             return await ShowHelpText(values, ct);
         
         return Result.FromSuccess();
+    }
+    
+    private async Task<Result> HandleInteractionAsync(IUser user, string customId, CancellationToken ct = new())
+    {
+        var hasMessage = _context.Message.IsDefined(out var _);
+        if (!hasMessage) return Result.FromSuccess();
+
+        var _ = Utilities.Utilities
+            .GetGameState<RedDotsGameState, RedDotsPlayerState, RedDotsGameProgress>(user,
+                _state.GameStates.RedDotsGameStates.Item1,
+                _state.GameStates.RedDotsGameStates.Item2,
+                _context,
+                out var playerState);
+        
+        if (playerState?.TextChannel == null) return Result.FromSuccess();
+
+        return await ShowHelpMenu(_context, _state, _interactionApi);
     }
 
     private static bool Validate(RedDotsPlayerState playerState, int count) => playerState.PlayedCards.Count == count;
@@ -146,13 +213,13 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
                             {
                                 var availableTableCards = menu.CustomID switch
                                 {
-                                    "red_dots_user_selection" => playerState
+                                    UserSelectionCustomId => playerState
                                         .Cards
                                         .Where(c => Card.CanCombine(selectedCard, c))
                                         .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(),
                                             c.ToStringSimple(),
                                             new PartialEmoji(c.Suit.ToSnowflake()))),
-                                    "red_dots_table_selection" => gameState
+                                    TableSelectionCustomId => gameState
                                         .CardsOnTable
                                         .Where(c => Card.CanCombine(selectedCard, c))
                                         .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(),
@@ -181,6 +248,15 @@ public class RedDotsDropDownEntity : ISelectMenuInteractiveEntity
 
         return newComponents;
     }
+    
+    private static (string, PartialEmoji) GetHelpMenuItemDescription(string key, RedDotsLocalization localization)
+        => key switch
+        {
+            "general" => (localization.ShowGeneral, new PartialEmoji(Name: "ℹ️")),
+            "scoring" => (localization.ShowScoring, new PartialEmoji(Name: "💯")),
+            "flows" => (localization.ShowFlows, new PartialEmoji(Name: "➡️")),
+            _ => ("", new PartialEmoji(Name: "❓"))
+        };
 
     private async Task<Result> PlayCollectOrGiveUp(
         IMessage message,

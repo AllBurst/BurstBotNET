@@ -63,6 +63,9 @@ public class Balance : CommandGroup
         if (bot == null) return Result.FromSuccess();
 
         var displayName = member.GetDisplayName();
+
+        var payload = await playerData.GetJsonAsync<RawPlayer>();
+
         var embed = new Embed(
             Author: new EmbedAuthor(displayName, IconUrl: member.User.Value.GetAvatarUrl()),
             Colour: BurstColor.Burst.ToColor(),

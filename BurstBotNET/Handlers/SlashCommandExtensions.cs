@@ -46,18 +46,12 @@ public static class SlashCommandExtensions
         
         return serviceCollection
             .AddPagination()
-            .AddInteractiveEntity<HelpDropDownEntity>()
-            .AddInteractiveEntity<BlackJackDropDownEntity>()
-            .AddInteractiveEntity<BlackJackButtonEntity>()
-            .AddInteractiveEntity<ChinesePokerDropDownEntity>()
-            .AddInteractiveEntity<ChinesePokerButtonEntity>()
-            .AddInteractiveEntity<OldMaidButtonEntity>()
-            .AddInteractiveEntity<OldMaidDropDownEntity>()
-            .AddInteractiveEntity<RedDotsDropDownEntity>()
-            .AddInteractiveEntity<RedDotsButtonEntity>()
-            .AddInteractiveEntity<ChasePigDropDownEntity>()
-            .AddInteractiveEntity<ChasePigButtonEntity>()
-            .AddInteractiveEntity<NinetyNineDropDownEntity>()
-            .AddInteractiveEntity<NinetyNineButtonEntity>();
+            .AddInteractionGroup<HelpInteractionGroup>()
+            .AddInteractionGroup<BlackJackInteractionGroup>()
+            .AddInteractionGroup<ChinesePokerInteractionGroup>()
+            .AddInteractionGroup<OldMaidInteractionGroup>()
+            .AddInteractionGroup<RedDotsInteractionGroup>()
+            .AddInteractionGroup<ChasePigInteractionGroup>()
+            .AddInteractionGroup<NinetyNineInteractionGroup>();
     }
 }

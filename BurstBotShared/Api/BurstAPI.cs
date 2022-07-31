@@ -37,7 +37,7 @@ public sealed class BurstApi
         DiscordPermission.ViewChannel);
 
     private static readonly DiscordPermissionSet PlayerDenyPermissions = new(
-        DiscordPermission.UseSlashCommands);
+        DiscordPermission.UseApplicationCommands);
 
     private static readonly DiscordPermissionSet BotPermissions = new(
         DiscordPermission.AddReactions,
@@ -527,7 +527,7 @@ public sealed class BurstApi
         if (_guildChannelList.ContainsKey(guild.Value))
         {
             var category = _guildChannelList[guild.Value]
-                .Where(c => c.Name.Value.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
+                .Where(c => c.Name.Value!.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
                 .ToImmutableArray();
             if (!category.IsEmpty) return category.First();
 
@@ -558,7 +558,7 @@ public sealed class BurstApi
 
         var retrievedCategory = channels
             .Entity
-            .Where(c => c.Name.Value.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
+            .Where(c => c.Name.Value!.ToLowerInvariant().Equals(CategoryName.ToLowerInvariant()))
             .ToImmutableArray();
         if (!retrievedCategory.IsEmpty) return retrievedCategory.First();
 

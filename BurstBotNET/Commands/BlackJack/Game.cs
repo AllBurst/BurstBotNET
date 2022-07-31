@@ -17,8 +17,10 @@ using Remora.Discord.API.Abstractions.Gateway.Events;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Discord.Interactivity;
 using Remora.Rest.Core;
 using Remora.Results;
+using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.BlackJack;
@@ -225,7 +227,7 @@ public partial class BlackJack : BlackJackGame
             return;
         }
 
-        await BlackJackButtonEntity.SendRaiseData(state, playerState, raiseBet, channelApi, logger, ct);
+        await BlackJackInteractionGroup.SendRaiseData(state, playerState, raiseBet, channelApi, logger, ct);
     }
 
     public static async Task<bool> HandleProgressChange(
@@ -700,11 +702,11 @@ public partial class BlackJack : BlackJackGame
                     new ActionRowComponent(new[]
                     {
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Draw,
-                            new PartialEmoji(Name: "🎴"), "draw"),
+                            new PartialEmoji(Name: "🎴"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.DrawCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Stand,
-                            new PartialEmoji(Name: "😑"), "stand"),
+                            new PartialEmoji(Name: "😑"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.StandCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
-                            new PartialEmoji(Name: "❓"), "blackjack_help")
+                            new PartialEmoji(Name: "❓"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.HelpCustomId))
                     })
                 }.ToImmutableArray();
 
@@ -736,15 +738,15 @@ public partial class BlackJack : BlackJackGame
                     new ActionRowComponent(new[]
                     {
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Call,
-                            new PartialEmoji(Name: "🤔"), "call"),
+                            new PartialEmoji(Name: "🤔"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.CallCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Fold,
-                            new PartialEmoji(Name: "😫"), "fold"),
+                            new PartialEmoji(Name: "😫"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.FoldCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.Raise,
-                            new PartialEmoji(Name: "🤑"), "raise"),
+                            new PartialEmoji(Name: "🤑"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.RaiseCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.AllIn,
-                            new PartialEmoji(Name: "😈"), "allin"),
+                            new PartialEmoji(Name: "😈"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.AllInCustomId)),
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.BlackJack.ShowHelp,
-                            new PartialEmoji(Name: "❓"), "blackjack_help")
+                            new PartialEmoji(Name: "❓"), CustomIDHelpers.CreateButtonID(BlackJackInteractionGroup.HelpCustomId))
                     })
                 }.ToImmutableArray();
 

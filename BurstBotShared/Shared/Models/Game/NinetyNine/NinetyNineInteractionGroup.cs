@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Collections.Immutable;
 using System.Globalization;
+using BurstBotShared.Shared.Interfaces;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.NinetyNine.Serializables;
 using BurstBotShared.Shared.Models.Game.Serializables;
@@ -15,27 +16,56 @@ using Remora.Discord.API.Objects;
 
 namespace BurstBotShared.Shared.Models.Game.NinetyNine;
 
-public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
+public class NinetyNineInteractionGroup : InteractionGroup, IHelpButtonEntity
 {
-    private const string PlayerSelectionCustomId = "ninety_nine_player_selection";
+    public const string PlayerSelectionCustomId = "ninety_nine_player_selection";
+    public const string UserSelectionCustomId = "ninety_nine_user_selection";
+    public const string PlusTenCustomId = "plus10";
+    public const string PlusTwentyCustomId = "plus20";
+    public const string PlusOneCustomId = "plus1";
+    public const string PlusElevenCustomId = "plus11";
+    public const string PlusFourteenCustomId = "plus14";
+    public const string MinusTenCustomId = "minus10";
+    public const string MinusTwentyCustomId = "minus20";
+    public const string ConfirmCustomId = "ninety_nine_confirm";
+    public const string HelpTaiwaneseCustomId = "ninety_nine_help_Taiwanese";
+    public const string HelpIcelandicCustomId = "ninety_nine_help_Icelandic";
+    public const string HelpStandardCustomId = "ninety_nine_help_Standard";
+    public const string HelpBloodyCustomId = "ninety_nine_help_Bloody";
     
     private readonly InteractionContext _context;
     private readonly IDiscordRestChannelAPI _channelApi;
     private readonly IDiscordRestInteractionAPI _interactionApi;
     private readonly State _state;
-    private readonly ILogger<NinetyNineDropDownEntity> _logger;
+    private readonly ILogger<NinetyNineInteractionGroup> _logger;
 
-    private readonly string[] _validCustomIds =
+    private readonly string[] _validSelectMenuCustomIds =
     {
-        "ninety_nine_user_selection",
+        UserSelectionCustomId,
         PlayerSelectionCustomId
     };
+    
+    private readonly string[] _validButtonCustomIds =
+    {
+        PlusTenCustomId,
+        PlusTwentyCustomId,
+        PlusOneCustomId,
+        PlusElevenCustomId,
+        PlusFourteenCustomId,
+        MinusTenCustomId,
+        MinusTwentyCustomId,
+        ConfirmCustomId,
+        HelpTaiwaneseCustomId,
+        HelpIcelandicCustomId,
+        HelpStandardCustomId,
+        HelpBloodyCustomId
+    };
 
-    public NinetyNineDropDownEntity(InteractionContext context,
+    public NinetyNineInteractionGroup(InteractionContext context,
         IDiscordRestChannelAPI channelApi,
         IDiscordRestInteractionAPI interactionApi,
         State state,
-        ILogger<NinetyNineDropDownEntity> logger)
+        ILogger<NinetyNineInteractionGroup> logger)
     {
         _context = context;
         _channelApi = channelApi;
@@ -43,40 +73,69 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         _state = state;
         _logger = logger;
     }
+    
+    public static async Task<Result> ShowHelpMenu(InteractionContext context, State state,
+        IDiscordRestInteractionAPI interactionApi)
+        => await ShowHelpMenu(NinetyNineVariation.Taiwanese, context, state, interactionApi);
 
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId,
-        CancellationToken ct = new())
+    public static async Task<Result> ShowHelpMenu(NinetyNineVariation variation, InteractionContext context,
+        State state, IDiscordRestInteractionAPI interactionApi)
     {
-        return componentType is not ComponentType.SelectMenu
-            ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(_validCustomIds.Contains(customId));
+        var localization = state.Localizations.GetLocalization().NinetyNine;
+
+        var result = await interactionApi
+            .CreateFollowupMessageAsync(context.ApplicationID, context.Token,
+                variation switch
+                {
+                    NinetyNineVariation.Taiwanese => localization.CommandList["generalTaiwanese"],
+                    NinetyNineVariation.Icelandic => localization.CommandList["generalIcelandic"],
+                    NinetyNineVariation.Standard => localization.CommandList["generalStandard"],
+                    NinetyNineVariation.Bloody => localization.CommandList["generalBloody"],
+                    _ => localization.CommandList["generalTaiwanese"]
+                });
+
+        return !result.IsSuccess ? Result.FromError(result) : Result.FromSuccess();
     }
 
-    public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
-        CancellationToken ct = new())
-    {
-        var hasMessage = _context.Message.IsDefined(out var message);
-        if (!hasMessage) return Result.FromSuccess();
+    [SelectMenu(UserSelectionCustomId)]
+    public async Task<IResult> SelectUser(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, UserSelectionCustomId, values);
 
-        var gameState = Utilities.Utilities
-            .GetGameState<NinetyNineGameState, NinetyNinePlayerState, NinetyNineGameProgress>(user,
-                _state.GameStates.NinetyNineGameStates.Item1,
-                _state.GameStates.NinetyNineGameStates.Item2,
-                _context,
-                out var playerState);
-
-        if (playerState == null) return Result.FromSuccess();
-
-        var sanitizedCustomId = customId.Trim();
-
-        return sanitizedCustomId switch
-        {
-            "ninety_nine_user_selection" => await Play(message!, gameState, playerState, values, ct),
-            var id when string.Equals(id, PlayerSelectionCustomId) => await PlayFive(message!, gameState, playerState,
-                values, ct),
-            _ => Result.FromSuccess()
-        };
-    }
+    [Button(PlusTenCustomId)]
+    public async Task<IResult> Plus10() => await HandleInteractionAsync(_context.User, PlusTenCustomId);
+    
+    [Button(PlusTwentyCustomId)]
+    public async Task<IResult> Plus20() => await HandleInteractionAsync(_context.User, PlusTwentyCustomId);
+    
+    [Button(PlusOneCustomId)]
+    public async Task<IResult> Plus1() => await HandleInteractionAsync(_context.User, PlusOneCustomId);
+    
+    [Button(PlusElevenCustomId)]
+    public async Task<IResult> Plus11() => await HandleInteractionAsync(_context.User, PlusElevenCustomId);
+    
+    [Button(PlusFourteenCustomId)]
+    public async Task<IResult> Plus14() => await HandleInteractionAsync(_context.User, PlusFourteenCustomId);
+    
+    [Button(MinusTenCustomId)]
+    public async Task<IResult> Minus10() => await HandleInteractionAsync(_context.User, MinusTenCustomId);
+    
+    [Button(MinusTwentyCustomId)]
+    public async Task<IResult> Minus20() => await HandleInteractionAsync(_context.User, MinusTwentyCustomId);
+    
+    [Button(ConfirmCustomId)]
+    public async Task<IResult> Confirm() => await HandleInteractionAsync(_context.User, ConfirmCustomId);
+    
+    [Button(HelpTaiwaneseCustomId)]
+    public async Task<IResult> HelpTaiwanese() => await HandleInteractionAsync(_context.User, HelpTaiwaneseCustomId);
+    
+    [Button(HelpIcelandicCustomId)]
+    public async Task<IResult> HelpIcelandic() => await HandleInteractionAsync(_context.User, HelpIcelandicCustomId);
+    
+    [Button(HelpStandardCustomId)]
+    public async Task<IResult> HelpStandard() => await HandleInteractionAsync(_context.User, HelpStandardCustomId);
+    
+    [Button(HelpBloodyCustomId)]
+    public async Task<IResult> HelpBloody() => await HandleInteractionAsync(_context.User, HelpBloodyCustomId);
     
     private static IMessageComponent[] BuildPlayerSelectMenu(Card card, NinetyNineGameState gameState, NinetyNinePlayerState playerState, NinetyNineLocalization localization)
     {
@@ -105,9 +164,9 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
     private static IMessageComponent[] BuildPlusMinusButtons(int number, int currentTotal, NinetyNineLocalization localization)
     {
         var plusButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Plus,
-            new PartialEmoji(Name: "➕"), $"plus{number}");
+            new PartialEmoji(Name: "➕"), CustomIDHelpers.CreateButtonID($"plus{number}"));
         var minusButton = new ButtonComponent(ButtonComponentStyle.Danger, localization.Minus,
-            new PartialEmoji(Name: "➖"), $"minus{number}");
+            new PartialEmoji(Name: "➖"), CustomIDHelpers.CreateButtonID($"minus{number}"));
 
         var buttonComponents = new List<IMessageComponent>();
 
@@ -119,6 +178,74 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
         return new IMessageComponent[]
         {
             new ActionRowComponent(buttonComponents)
+        };
+    }
+    
+    private async Task<IResult> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
+        CancellationToken ct = new())
+    {
+        var hasMessage = _context.Message.IsDefined(out var message);
+        if (!hasMessage) return Result.FromSuccess();
+
+        var gameState = Utilities.Utilities
+            .GetGameState<NinetyNineGameState, NinetyNinePlayerState, NinetyNineGameProgress>(user,
+                _state.GameStates.NinetyNineGameStates.Item1,
+                _state.GameStates.NinetyNineGameStates.Item2,
+                _context,
+                out var playerState);
+
+        if (playerState == null) return Result.FromSuccess();
+
+        var sanitizedCustomId = customId.Trim();
+
+        return sanitizedCustomId switch
+        {
+            UserSelectionCustomId => await Play(message!, gameState, playerState, values, ct),
+            var id when string.Equals(id, PlayerSelectionCustomId) => await PlayFive(message!, gameState, playerState,
+                values, ct),
+            _ => Result.FromSuccess()
+        };
+    }
+    
+    private async Task<Result> HandleInteractionAsync(IUser user, string customId, CancellationToken ct = new())
+    {
+        var hasMessage = _context.Message.IsDefined(out var message);
+        if (!hasMessage) return Result.FromSuccess();
+
+        var gameState = Utilities.Utilities
+            .GetGameState<NinetyNineGameState, NinetyNinePlayerState, NinetyNineGameProgress>(user,
+                _state.GameStates.NinetyNineGameStates.Item1,
+                _state.GameStates.NinetyNineGameStates.Item2,
+                _context,
+                out var playerState);
+
+        if (playerState?.TextChannel == null) return Result.FromSuccess();
+
+        var sanitizedCustomId = customId.Trim();
+        return sanitizedCustomId switch
+        {
+            PlusTenCustomId or PlusTwentyCustomId => await PlusOrMinus(message!, gameState, playerState,
+                NinetyNineInGameAdjustmentType.Plus, ct),
+            MinusTenCustomId or MinusTwentyCustomId => await PlusOrMinus(message!, gameState, playerState,
+                NinetyNineInGameAdjustmentType.Minus, ct),
+            PlusOneCustomId or PlusElevenCustomId or PlusFourteenCustomId => await PlusOrMinus(message!, gameState, playerState,
+                sanitizedCustomId switch
+                {
+                    PlusOneCustomId => NinetyNineInGameAdjustmentType.One,
+                    PlusElevenCustomId => NinetyNineInGameAdjustmentType.Eleven,
+                    PlusFourteenCustomId => NinetyNineInGameAdjustmentType.Fourteen,
+                    _ => NinetyNineInGameAdjustmentType.One
+                }, ct),
+            HelpTaiwaneseCustomId => await ShowHelpMenu(NinetyNineVariation.Taiwanese, _context, _state,
+                _interactionApi),
+            HelpIcelandicCustomId => await ShowHelpMenu(NinetyNineVariation.Icelandic, _context, _state,
+                _interactionApi),
+            HelpStandardCustomId => await ShowHelpMenu(NinetyNineVariation.Standard, _context, _state,
+                _interactionApi),
+            HelpBloodyCustomId => await ShowHelpMenu(NinetyNineVariation.Bloody, _context, _state,
+                _interactionApi),
+            ConfirmCustomId => await GiveUp(message!, gameState, playerState, ct),
+            _ => Result.FromSuccess()
         };
     }
 
@@ -158,10 +285,10 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
                 
                 var plusOne = new ButtonComponent(ButtonComponentStyle.Success,
                     localization.PlusSpecific.Replace("{number}", 1.ToString(CultureInfo.InvariantCulture)),
-                    new PartialEmoji(Name: "➕"), $"plus1");
+                    new PartialEmoji(Name: "➕"), CustomIDHelpers.CreateButtonID(PlusOneCustomId));
                 var plusEleven = new ButtonComponent(ButtonComponentStyle.Success,
                     localization.PlusSpecific.Replace("{number}", 11.ToString(CultureInfo.InvariantCulture)),
-                    new PartialEmoji(Name: "➕"), $"plus11");
+                    new PartialEmoji(Name: "➕"), CustomIDHelpers.CreateButtonID(PlusElevenCustomId));
                     
                 var buttonComponents = new List<IMessageComponent>();
 
@@ -248,10 +375,10 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
 
                     var plusOne = new ButtonComponent(ButtonComponentStyle.Success,
                         localization.PlusSpecific.Replace("{number}", 1.ToString(CultureInfo.InvariantCulture)),
-                        new PartialEmoji(Name: "➕"), $"plus1");
+                        new PartialEmoji(Name: "➕"), CustomIDHelpers.CreateButtonID(PlusOneCustomId));
                     var plusFourteen = new ButtonComponent(ButtonComponentStyle.Success,
                         localization.PlusSpecific.Replace("{number}", 14.ToString(CultureInfo.InvariantCulture)),
-                        new PartialEmoji(Name: "➕"), $"plus14");
+                        new PartialEmoji(Name: "➕"), CustomIDHelpers.CreateButtonID(PlusFourteenCustomId));
                     
                     var buttonComponents = new List<IMessageComponent>();
 
@@ -461,6 +588,87 @@ public class NinetyNineDropDownEntity : ISelectMenuInteractiveEntity
             })), ct);
 
         playerState.TemporaryCards.Clear();
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
+
+        return Result.FromSuccess();
+    }
+    
+    
+
+    private async Task<Result> PlusOrMinus(
+        IMessage message,
+        NinetyNineGameState gameState,
+        NinetyNinePlayerState playerState,
+        NinetyNineInGameAdjustmentType plusOrMinus,
+        CancellationToken ct)
+    {
+        await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
+
+        switch (gameState.Variation)
+        {
+            case NinetyNineVariation.Icelandic:
+            {
+                if (playerState.ResponsesInWait > 0)
+                {
+                    playerState.ResponsesInWait--;
+                    playerState.TemporaryAdjustments.Enqueue(plusOrMinus);
+                    if (playerState.ResponsesInWait > 0)
+                        break;
+                }
+
+                await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                    playerState.PlayerId,
+                    JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
+                    {
+                        GameId = gameState.GameId,
+                        PlayCards = playerState.TemporaryCards,
+                        PlayerId = playerState.PlayerId,
+                        Adjustments = playerState.TemporaryAdjustments,
+                        RequestType = NinetyNineInGameRequestType.Play
+                    })), ct);
+
+                playerState.TemporaryCards.Clear();
+                playerState.TemporaryAdjustments.Clear();
+                playerState.ResponsesInWait = 0;
+
+                break;
+            }
+            default:
+            {
+                await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+                    playerState.PlayerId,
+                    JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
+                    {
+                        GameId = gameState.GameId,
+                        PlayCards = playerState.TemporaryCards,
+                        PlayerId = playerState.PlayerId,
+                        Adjustments = new[] { plusOrMinus },
+                        RequestType = NinetyNineInGameRequestType.Play
+                    })), ct);
+
+                playerState.TemporaryCards.Clear();
+
+                break;
+            }
+        }
+
+        return Result.FromSuccess();
+    }
+
+    private async Task<Result> GiveUp(
+        IMessage message,
+        NinetyNineGameState gameState,
+        NinetyNinePlayerState playerState,
+        CancellationToken ct)
+    {
+        await gameState.RequestChannel!.Writer.WriteAsync(new Tuple<ulong, byte[]>(
+            playerState.PlayerId,
+            JsonSerializer.SerializeToUtf8Bytes(new NinetyNineInGameRequest
+            {
+                GameId = gameState.GameId,
+                PlayerId = playerState.PlayerId,
+                RequestType = NinetyNineInGameRequestType.Burst
+            })), ct);
         await Utilities.Utilities.DisableComponents(message, true, _channelApi, _logger, ct);
 
         return Result.FromSuccess();

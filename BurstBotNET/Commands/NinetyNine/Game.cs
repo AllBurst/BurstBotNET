@@ -19,6 +19,7 @@ using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Extensions.Embeds;
+using Remora.Discord.Interactivity;
 using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -443,11 +444,11 @@ public partial class NinetyNine : NinetyNineGame
     {
         var customId = gameState.Variation switch
         {
-            NinetyNineVariation.Taiwanese => "ninety_nine_help_Taiwanese",
-            NinetyNineVariation.Icelandic => "ninety_nine_help_Icelandic",
-            NinetyNineVariation.Standard => "ninety_nine_help_Standard",
-            NinetyNineVariation.Bloody => "ninety_nine_help_Bloody",
-            _ => "ninety_nine_help_Taiwanese"
+            NinetyNineVariation.Taiwanese => NinetyNineInteractionGroup.HelpTaiwaneseCustomId,
+            NinetyNineVariation.Icelandic => NinetyNineInteractionGroup.HelpIcelandicCustomId,
+            NinetyNineVariation.Standard => NinetyNineInteractionGroup.HelpStandardCustomId,
+            NinetyNineVariation.Bloody => NinetyNineInteractionGroup.HelpBloodyCustomId,
+            _ => NinetyNineInteractionGroup.HelpTaiwaneseCustomId
         };
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
             new PartialEmoji(Name: "❓"), customId);
@@ -467,7 +468,7 @@ public partial class NinetyNine : NinetyNineGame
                 c.Number != 0 ? new PartialEmoji(c.Suit.ToSnowflake()) : new PartialEmoji(Name: "🃏")))
             .ToImmutableArray();
 
-        var userSelectMenu = new SelectMenuComponent("ninety_nine_user_selection",
+        var userSelectMenu = new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(NinetyNineInteractionGroup.UserSelectionCustomId),
             options,
             localization.Play, minValue, maxValue);
 
@@ -749,7 +750,7 @@ public partial class NinetyNine : NinetyNineGame
     private static IMessageComponent[] BuildConfirmButton(NinetyNineLocalization localization)
     {
         var confirmButton = new ButtonComponent(ButtonComponentStyle.Success, localization.Confirm,
-            new PartialEmoji(Name: "😫"), "confirm");
+            new PartialEmoji(Name: "😫"), CustomIDHelpers.CreateButtonID(NinetyNineInteractionGroup.ConfirmCustomId));
 
         return new IMessageComponent[]
         {

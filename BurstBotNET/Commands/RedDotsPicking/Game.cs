@@ -17,7 +17,9 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Discord.Interactivity;
 using Remora.Rest.Results;
+using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.RedDotsPicking;
@@ -402,7 +404,7 @@ public partial class RedDotsPicking : RedDotsGame
         out RedDotsSelectMenuType selectMenuType)
     {
         var helpButton = new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
-            new PartialEmoji(Name: "❓"), "red_dots_help");
+            new PartialEmoji(Name: "❓"), CustomIDHelpers.CreateButtonID(RedDotsInteractionGroup.HelpCustomId));
         
         // Force player to eliminate red fives
         var hasRedFives = deserializedIncomingData
@@ -418,7 +420,7 @@ public partial class RedDotsPicking : RedDotsGame
                 .Cards
                 .Where(c => c.Number == 5)
                 .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(), new PartialEmoji(c.Suit.ToSnowflake())));
-            var selectMenu = new SelectMenuComponent("red_dots_force_five_selection",
+            var selectMenu = new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(RedDotsInteractionGroup.ForceFiveCustomId),
                 selectOptions.ToImmutableArray(),
                 localization.Use, 1, 1);
 
@@ -465,7 +467,7 @@ public partial class RedDotsPicking : RedDotsGame
                 .Distinct()
                 .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                     new PartialEmoji(c.Suit.ToSnowflake())));
-            var userSelectMenu = new SelectMenuComponent("red_dots_user_selection",
+            var userSelectMenu = new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(RedDotsInteractionGroup.UserSelectionCustomId),
                 userSelectOptions.ToImmutableArray(),
                 localization.Use, 1, 1);
             
@@ -473,7 +475,7 @@ public partial class RedDotsPicking : RedDotsGame
                 .Distinct()
                 .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                     new PartialEmoji(c.Suit.ToSnowflake())));
-            var tableSelectMenu = new SelectMenuComponent("red_dots_table_selection",
+            var tableSelectMenu = new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(RedDotsInteractionGroup.TableSelectionCustomId),
                 tableSelectOptions.ToImmutableArray(),
                 localization.Use, 1, 1);
             
@@ -500,7 +502,7 @@ public partial class RedDotsPicking : RedDotsGame
             .Cards
             .Select(c => new SelectOption(c.ToStringSimple(), c.ToSpecifier(), c.ToStringSimple(),
                 new PartialEmoji(c.Suit.ToSnowflake())));
-        var menu = new SelectMenuComponent("red_dots_give_up_selection",
+        var menu = new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(RedDotsInteractionGroup.GiveUpSelectionCustomId),
             remainingOptions.ToImmutableArray(),
             localization.GiveUp, 1, 1);
 

@@ -19,6 +19,7 @@ using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Extensions.Embeds;
+using Remora.Discord.Interactivity;
 using Remora.Rest.Core;
 using Remora.Rest.Results;
 using Channel = System.Threading.Channels.Channel;
@@ -551,13 +552,13 @@ public partial class ChinesePoker : ChinesePokerGame
         {
             new ActionRowComponent(new[]
             {
-                new SelectMenuComponent("chinese_poker_cards", activeCards, placeholder, requiredCardCount,
+                new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(ChinesePokerInteractionGroup.ChinesePokerCards), activeCards, placeholder, requiredCardCount,
                     requiredCardCount, false)
             }),
             new ActionRowComponent(new[]
             {
                 new ButtonComponent(ButtonComponentStyle.Primary, chinesePokerLocalization.ShowHelp,
-                    new PartialEmoji(Name: "❓"), "chinese_poker_help")
+                    new PartialEmoji(Name: "❓"), CustomIDHelpers.CreateButtonID(ChinesePokerInteractionGroup.HelpCustomId))
             })
         };
 
@@ -596,7 +597,7 @@ public partial class ChinesePoker : ChinesePokerGame
         {
             new ActionRowComponent(new[]
             {
-                new SelectMenuComponent("naturals", allNaturals, chinesePokerLocalization.DeclareNatural, 0, 1, false)
+                new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(ChinesePokerInteractionGroup.NaturalCards), allNaturals, chinesePokerLocalization.DeclareNatural, 0, 1, false)
             })
         };
 

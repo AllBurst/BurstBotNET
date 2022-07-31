@@ -42,7 +42,7 @@ public class ContextCommands : CommandGroup
     [CommandType(ApplicationCommandType.User)]
     public async Task<IResult> Donate()
     {
-        var resolveResult = _context.Data.Resolved.IsDefined(out var resolved);
+        var resolveResult = _context.Data.AsT0.Resolved.IsDefined(out var resolved);
         if (!resolveResult)
             return Result.FromSuccess();
 

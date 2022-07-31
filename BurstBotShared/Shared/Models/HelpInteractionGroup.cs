@@ -10,19 +10,16 @@ using Remora.Results;
 
 namespace BurstBotShared.Shared.Models;
 
-public class HelpDropDownEntity : ISelectMenuInteractiveEntity
+public class HelpInteractionGroup : InteractionGroup
 {
-    private readonly string[] _validCustomIds =
-    {
-        "ninety_nine_variation_selection"
-    };
+    public const string VariationSelection = "ninety_nine_variation_selection";
 
     private readonly InteractionContext _context;
     private readonly IDiscordRestInteractionAPI _interactionApi;
-    private readonly ILogger<HelpDropDownEntity> _logger;
+    private readonly ILogger<HelpInteractionGroup> _logger;
     private readonly State _state;
 
-    public HelpDropDownEntity(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi, ILogger<HelpDropDownEntity> logger)
+    public HelpInteractionGroup(InteractionContext context, State state, IDiscordRestInteractionAPI interactionApi, ILogger<HelpInteractionGroup> logger)
     {
         _context = context;
         _state = state;
@@ -30,14 +27,11 @@ public class HelpDropDownEntity : ISelectMenuInteractiveEntity
         _logger = logger;
     }
 
-    public Task<Result<bool>> IsInterestedAsync(ComponentType componentType, string customId, CancellationToken ct = new())
-    {
-        return componentType is not ComponentType.SelectMenu
-            ? Task.FromResult<Result<bool>>(false)
-            : Task.FromResult<Result<bool>>(_validCustomIds.Contains(customId));
-    }
+    [SelectMenu(VariationSelection)]
+    public async Task<IResult> SelectionVariation(IReadOnlyList<string> values) =>
+        await HandleInteractionAsync(_context.User, VariationSelection, values);
 
-    public async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
+    private async Task<Result> HandleInteractionAsync(IUser user, string customId, IReadOnlyList<string> values,
         CancellationToken ct = new())
     {
         var hasMessage = _context.Message.IsDefined(out _);
@@ -45,6 +39,6 @@ public class HelpDropDownEntity : ISelectMenuInteractiveEntity
 
         var selection = values[0].Trim();
         var variation = Enum.Parse<NinetyNineVariation>(selection);
-        return await NinetyNineButtonEntity.ShowHelpMenu(variation, _context, _state, _interactionApi);
+        return await NinetyNineInteractionGroup.ShowHelpMenu(variation, _context, _state, _interactionApi);
     }
 }

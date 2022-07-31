@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.ComponentModel;
+using BurstBotShared.Shared.Models;
 using BurstBotShared.Shared.Models.Data;
 using BurstBotShared.Shared.Models.Game.BlackJack;
 using BurstBotShared.Shared.Models.Game.ChaseThePig;
@@ -14,6 +15,7 @@ using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Commands.Contexts;
+using Remora.Discord.Interactivity;
 using Remora.Results;
 
 namespace BurstBotNET.Commands.Help;
@@ -60,12 +62,12 @@ public class Help : CommandGroup
     private async Task<Result> DispatchHelp(GameType gameType)
         => gameType switch
         {
-            GameType.BlackJack => await BlackJackButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
-            GameType.ChinesePoker => await ChinesePokerButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.BlackJack => await BlackJackInteractionGroup.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.ChinesePoker => await ChinesePokerInteractionGroup.ShowHelpMenu(_context, _state, _interactionApi),
             GameType.NinetyNine => await ShowNinetyNineMenu(),
-            GameType.OldMaid => await OldMaidButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
-            GameType.RedDotsPicking => await RedDotsButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
-            GameType.ChaseThePig => await ChasePigButtonEntity.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.OldMaid => await OldMaidInteractionGroup.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.RedDotsPicking => await RedDotsInteractionGroup.ShowHelpMenu(_context, _state, _interactionApi),
+            GameType.ChaseThePig => await ChasePigInteractionGroup.ShowHelpMenu(_context, _state, _interactionApi),
             _ => Result.FromSuccess()
         };
 
@@ -80,7 +82,7 @@ public class Help : CommandGroup
         {
             new ActionRowComponent(new[]
             {
-                new SelectMenuComponent("ninety_nine_variation_selection", options, "Variations", 1, 1)
+                new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(HelpInteractionGroup.VariationSelection), options, "Variations", 1, 1)
             })
         };
 

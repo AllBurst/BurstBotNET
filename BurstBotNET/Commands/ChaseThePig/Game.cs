@@ -16,6 +16,8 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Discord.Interactivity;
+using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.ChaseThePig;
@@ -349,11 +351,11 @@ public partial class ChaseThePig : ChasePigGame
                             new ActionRowComponent(new[]
                             {
                                 new ButtonComponent(ButtonComponentStyle.Primary, localization.GenericWords.Confirm,
-                                    new PartialEmoji(Name: Constants.CheckMark), "chase_pig_confirm_no_exposable_cards"),
+                                    new PartialEmoji(Name: Constants.CheckMark), CustomIDHelpers.CreateButtonID("chase_pig_confirm_no_exposable_cards")),
                                 new ButtonComponent(ButtonComponentStyle.Primary,
                                     localization.ChaseThePig.ShowHelp,
                                     new PartialEmoji(Name: Constants.QuestionMark),
-                                    "chase_pig_help")
+                                    CustomIDHelpers.CreateButtonID("chase_pig_help"))
                             })
                         };
                         
@@ -422,7 +424,7 @@ public partial class ChaseThePig : ChasePigGame
                         {
                             new ActionRowComponent(new[]
                             {
-                                new SelectMenuComponent("chase_pig_expose_menu", selectOptions,
+                                new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID("chase_pig_expose_menu"), selectOptions,
                                     localization.ChaseThePig.Expose, 0, selectOptions.Length)
                             }),
                             new ActionRowComponent(new[]
@@ -430,11 +432,11 @@ public partial class ChaseThePig : ChasePigGame
                                 new ButtonComponent(ButtonComponentStyle.Danger,
                                     localization.ChaseThePig.NoExpose,
                                     new PartialEmoji(Name: Constants.CrossMark),
-                                    "chase_pig_decline_expose"),
+                                    CustomIDHelpers.CreateButtonID("chase_pig_decline_expose")),
                                 new ButtonComponent(ButtonComponentStyle.Primary,
                                     localization.ChaseThePig.ShowHelp,
                                     new PartialEmoji(Name: Constants.QuestionMark),
-                                    "chase_pig_help")
+                                    CustomIDHelpers.CreateButtonID("chase_pig_help"))
                             })
                         };
                         
@@ -536,7 +538,7 @@ public partial class ChaseThePig : ChasePigGame
                 {
                     new ActionRowComponent(new[]
                     {
-                        new SelectMenuComponent("chase_pig_card_selection", selectOptions.ToImmutableArray(),
+                        new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID("chase_pig_card_selection"), selectOptions.ToImmutableArray(),
                             localization.ChaseThePig.Play, 1, 1)
                     }),
                     new ActionRowComponent(new[]
@@ -544,7 +546,7 @@ public partial class ChaseThePig : ChasePigGame
                         new ButtonComponent(ButtonComponentStyle.Primary,
                             localization.ChaseThePig.ShowHelp,
                             new PartialEmoji(Name: Constants.QuestionMark),
-                            "chase_pig_help")
+                            CustomIDHelpers.CreateButtonID("chase_pig_help"))
                     })
                 };
 

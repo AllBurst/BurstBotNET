@@ -17,9 +17,11 @@ using OneOf;
 using Remora.Discord.API.Abstractions.Objects;
 using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
+using Remora.Discord.Interactivity;
 using Remora.Rest.Core;
 using Remora.Rest.Results;
 using Channel = System.Threading.Channels.Channel;
+using Constants = BurstBotShared.Shared.Constants;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BurstBotNET.Commands.OldMaid;
@@ -334,12 +336,12 @@ public partial class OldMaid : OldMaidGame
                 {
                     new ActionRowComponent(new []
                     {
-                        new SelectMenuComponent("old_maid_draw", previousPlayerCards, localization.Draw, 1, 1)
+                        new SelectMenuComponent(CustomIDHelpers.CreateSelectMenuID(OldMaidInteractionGroup.DrawCustomId), previousPlayerCards, localization.Draw, 1, 1)
                     }),
                     new ActionRowComponent(new[]
                     {
                         new ButtonComponent(ButtonComponentStyle.Primary, localization.ShowHelp,
-                            new PartialEmoji(Name: "❓"), "old_maid_help")
+                            new PartialEmoji(Name: "❓"), CustomIDHelpers.CreateButtonID(OldMaidInteractionGroup.HelpCustomId))
                     })
                 };
 
