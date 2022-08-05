@@ -5,7 +5,9 @@ namespace BurstBotShared.Shared.Models.Data.Serializables;
 
 public record RewardResponse
 {
-    [JsonProperty("type")] public string Type { get; init; } = "";
+    [JsonProperty("type")]
+    [JsonPropertyName("type")]
+    public string Type { get; init; } = "";
     
     [JsonProperty("player_id")]
     [JsonPropertyName("player_id")]
